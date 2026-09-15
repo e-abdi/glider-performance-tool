@@ -7,6 +7,10 @@ name: Render and Publish
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    # Publishing pushes the rendered site to the gh-pages branch; new repositories give
+    # workflows read-only access by default, so ask for write access here.
+    permissions:
+      contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
