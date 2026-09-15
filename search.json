@@ -1,0 +1,132 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Glider Performance Tool",
+    "section": "",
+    "text": "Comparing the PAM-equipped gliders of the NOAA Fisheries Glider Rodeo 2026 across mission modes: how each platform was piloted, how well it navigated, how long its battery and storage last, and how much noise it makes.\nSeven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#approach",
+    "href": "index.html#approach",
+    "title": "Glider Performance Tool",
+    "section": "Approach",
+    "text": "Approach\n\nConvert every glider’s data to the OceanGliders OG1.0 format with glider-og1.\nSplit each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).\nCompute the same performance metrics for every glider from the OG1 files only.\nCompare platforms and modes.\n\nSee Project Info for goals and datasets, and Workflow for how to reproduce the analysis.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "content/results.html",
+    "href": "content/results.html",
+    "title": "Results",
+    "section": "",
+    "text": "TODO: figures and tables comparing gliders and mission modes.",
+    "crumbs": [
+      "Results"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html",
+    "href": "content/project-info.html",
+    "title": "Project Info",
+    "section": "",
+    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#team-members",
+    "href": "content/project-info.html#team-members",
+    "title": "Project Info",
+    "section": "",
+    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#background",
+    "href": "content/project-info.html#background",
+    "title": "Project Info",
+    "section": "Background",
+    "text": "Background\nThe Glider Rodeo field-tested PAM-glider platforms under the same conditions to give data-driven guidance on what each system can do in different operational environments and for different research questions. Each glider was flown through a sequence of mission modes:\n\n\n\nPhase\nMode\nStart (UTC)\nStop (UTC)\n\n\n\n\n1\nshakedown\n2026-01-28 22:00\n2026-01-30 06:00\n\n\n2\nfast\n2026-01-30 06:00\n2026-02-01 18:00\n\n\n3\nslow\n2026-02-01 18:00\n2026-02-04 18:00\n\n\n4\nintermediate\n2026-02-04 18:00\n2026-02-06 18:00\n\n\n5\ndrift (20 min at 800 m)\n2026-02-06 18:00\n2026-02-08 18:00\n\n\n6\nmini-rodeo: slow\n2026-02-08 18:00\n2026-02-09 06:00\n\n\n6\nmini-rodeo: intermediate\n2026-02-09 06:00\n2026-02-09 18:00\n\n\n6\nmini-rodeo: fast\n2026-02-09 18:00\n2026-02-10 06:00\n\n\n7\nrecovery\n2026-02-10 06:00\n\n\n\n\nSource: Glider Rodeo fieldwork plan.",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#goals",
+    "href": "content/project-info.html#goals",
+    "title": "Project Info",
+    "section": "Goals",
+    "text": "Goals\nAnswer, for every glider and mission mode:\n\nPiloting: how do pilots achieve each mission mode (pitch, buoyancy, dive depth, yos per surfacing)?\nNavigation: how well does each glider hold the trackline, and how is that affected by currents?\nEndurance: how does mission mode affect battery use and data storage?\nNoise: how much self-noise (pumping, motors, flow) does each glider make?",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#datasets",
+    "href": "content/project-info.html#datasets",
+    "title": "Project Info",
+    "section": "Datasets",
+    "text": "Datasets\n\nGlider Rodeo deployment data (engineering, science, GPS): on the Glider Rodeo JupyterHub in shared-public/GliderRodeo/, one folder per deployment. Converted to OG1 with glider-og1.\nSoundscape metrics (60 s averaged spectra per glider): shared-public/GliderRodeo/Noise/.\nGlider specifications: shared-public/GliderRodeo/PAM_Glider_Specs.csv.\n\nThe source data are preliminary. Known issues found during conversion are listed in the glider-og1 README.",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#references",
+    "href": "content/project-info.html#references",
+    "title": "Project Info",
+    "section": "References",
+    "text": "References\n\nOceanGliders OG1.0 format: https://oceangliderscommunity.github.io/OG-format-user-manual/OG_Format.html\nNOAA Fisheries PAM-Glider Rodeo: https://nmfs-pam-glider.github.io/GliderRodeo/",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#links",
+    "href": "content/project-info.html#links",
+    "title": "Project Info",
+    "section": "Links",
+    "text": "Links\n\nHackathon shared repository: https://github.com/NMFS-PAM-Glider/hackathon-shared-repo",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/workflow.html",
+    "href": "content/workflow.html",
+    "title": "Workflow",
+    "section": "",
+    "text": "On the Glider Rodeo JupyterHub, in a clone of the hackathon shared repository on the ehsan-abdi branch:\npip install -r glider-og1/requirements.txt\npython glider-og1/convert.py --data-dir ~/shared-public/GliderRodeo --out-dir ~/og1 --all\nThis writes one &lt;platform_serial&gt;_&lt;start&gt;_delayed.nc file per glider and checks each against the OG1 specification.",
+    "crumbs": [
+      "Workflow"
+    ]
+  },
+  {
+    "objectID": "content/workflow.html#make-the-og1-files",
+    "href": "content/workflow.html#make-the-og1-files",
+    "title": "Workflow",
+    "section": "",
+    "text": "On the Glider Rodeo JupyterHub, in a clone of the hackathon shared repository on the ehsan-abdi branch:\npip install -r glider-og1/requirements.txt\npython glider-og1/convert.py --data-dir ~/shared-public/GliderRodeo --out-dir ~/og1 --all\nThis writes one &lt;platform_serial&gt;_&lt;start&gt;_delayed.nc file per glider and checks each against the OG1 specification.",
+    "crumbs": [
+      "Workflow"
+    ]
+  },
+  {
+    "objectID": "content/workflow.html#run-the-performance-analysis",
+    "href": "content/workflow.html#run-the-performance-analysis",
+    "title": "Workflow",
+    "section": "2. Run the performance analysis",
+    "text": "2. Run the performance analysis\nTODO: document the analysis steps as the code in code/ is written.",
+    "crumbs": [
+      "Workflow"
+    ]
+  }
+]
