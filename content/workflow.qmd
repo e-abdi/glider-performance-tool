@@ -3,18 +3,6 @@ title: "Workflow"
 format: html
 ---
 
-## 1. Make the OG1 files
-
-On the Glider Rodeo JupyterHub, in a clone of the hackathon shared repository on the
-`ehsan-abdi` branch:
-
-```bash
-pip install -r glider-og1/requirements.txt
-python glider-og1/convert.py --data-dir ~/shared-public/GliderRodeo --out-dir ~/og1 --all
-```
-
-This writes one `<platform_serial>_<start>_delayed.nc` file per glider and checks each against the OG1 specification.
-
-## 2. Run the performance analysis
+## Run the performance analysis
 
 **TODO:** document the analysis steps as the code in `code/` is written.

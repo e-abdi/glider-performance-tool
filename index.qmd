@@ -18,11 +18,9 @@ Seven gliders from four platform types flew the same trackline off the coast of 
 
 ## Approach
 
-1. Convert every glider's data to the OceanGliders OG1.0 format with
-   [glider-og1](https://github.com/NMFS-PAM-Glider/hackathon-shared-repo/tree/ehsan-abdi/glider-og1).
-2. Split each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).
-3. Compute the same performance metrics for every glider from the OG1 files only.
-4. Compare platforms and modes.
+1. Split each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).
+2. Compute the same performance metrics for every glider.
+3. Compare platforms and modes.
 
 See [Project Info](content/project-info.qmd) for goals and datasets, and
 [Workflow](content/workflow.qmd) for how to reproduce the analysis.

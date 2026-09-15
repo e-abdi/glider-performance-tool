@@ -35,15 +35,13 @@ Answer, for every glider and mission mode:
 
 ## Datasets
 - **Glider Rodeo deployment data** (engineering, science, GPS): on the Glider Rodeo JupyterHub in
-  `shared-public/GliderRodeo/`, one folder per deployment. Converted to OG1 with glider-og1.
+  `shared-public/GliderRodeo/`, one folder per deployment.
 - **Soundscape metrics** (60 s averaged spectra per glider): `shared-public/GliderRodeo/Noise/`.
 - **Glider specifications:** `shared-public/GliderRodeo/PAM_Glider_Specs.csv`.
 
-The source data are preliminary. Known issues found during conversion are listed in the
-[glider-og1 README](https://github.com/NMFS-PAM-Glider/hackathon-shared-repo/tree/ehsan-abdi/glider-og1#known-data-issues).
+The source data are preliminary.
 
 ## References
-- OceanGliders OG1.0 format: <https://oceangliderscommunity.github.io/OG-format-user-manual/OG_Format.html>
 - NOAA Fisheries PAM-Glider Rodeo: <https://nmfs-pam-glider.github.io/GliderRodeo/>
 
 ## Links

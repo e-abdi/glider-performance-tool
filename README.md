@@ -4,11 +4,6 @@ Research compendium for comparing how the PAM-equipped gliders of the NOAA Fishe
 Glider Rodeo 2026 performed across mission modes (fast, slow, intermediate, drift):
 piloting, navigation, endurance and self-noise.
 
-The tool works only on [OceanGliders OG1.0](https://oceangliderscommunity.github.io/OG-format-user-manual/OG_Format.html)
-NetCDF files, so the same analysis runs on every glider type (Slocum, Seaglider,
-SeaExplorer, Oceanscout) and on future deployments. The OG1 files are produced by
-[glider-og1](https://github.com/NMFS-PAM-Glider/hackathon-shared-repo/tree/ehsan-abdi/glider-og1).
-
 ## Link to Final Report
 **TODO: link to the project website once GitHub Pages is on**
 
@@ -39,9 +34,8 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Input data: OG1 files for the rodeo gliders. Make them with glider-og1 (on the Glider
-Rodeo JupyterHub the source data is in `~/shared-public/GliderRodeo`), then point the
-tool at the output folder. See [data/ReadMe.md](data/ReadMe.md).
+Input data: the Glider Rodeo deployment data, on the Glider Rodeo JupyterHub in
+`~/shared-public/GliderRodeo`. See [data/ReadMe.md](data/ReadMe.md).
 
 ## Collaborators
 Ehsan Abdi, Akvaplan-niva, eab@akvaplan.niva.no
