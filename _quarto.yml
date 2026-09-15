@@ -1,0 +1,56 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+
+website:
+  page-navigation: true
+  title: "Glider Performance Tool"
+  site-url: "https://e-abdi.github.io/glider-performance-tool/"
+  repo-url: "https://github.com/e-abdi/glider-performance-tool"
+  repo-actions: [edit, source, issue]
+  favicon: content/images/GliderRodeo.png
+
+  page-footer:
+    right: "This page is built with [Quarto](https://quarto.org/)."
+    left: "&copy; CC-1.0"
+
+  sidebar:
+    background: "#D9E3E4"
+    logo: content/images/GliderRodeo.png
+    pinned: true
+    align: center
+    tools:
+      - icon: globe
+        href: https://nmfs-pam-glider.github.io/GliderRodeo/
+        text: "NOAA Fisheries PAM-Glider Rodeo"
+      - icon: github
+        href: https://github.com/e-abdi/glider-performance-tool
+        text: "Source code"
+
+    style: "docked"
+    search: true
+    collapse-level: 1
+    contents:
+      - href: index.qmd
+        text: Home
+      - href: content/project-info.qmd
+        text: Project Info
+      - href: content/workflow.qmd
+        text: Workflow
+      - href: content/results.qmd
+        text: Results
+
+format:
+  html:
+    theme:
+      light: [cosmo, theme.scss]
+      dark: [cosmo, theme-dark.scss]
+    code-copy: true
+    code-overflow: wrap
+    toc: true
+
+filters:
+  - include-files.lua
+  - quarto

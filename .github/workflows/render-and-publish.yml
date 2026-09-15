@@ -1,0 +1,27 @@
+on:
+  push:
+    branches: main
+
+name: Render and Publish
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      # When pages start running Python code, add here:
+      #   - uses: actions/setup-python@v5
+      #     with: {python-version: "3.12"}
+      #   - run: pip install -r requirements.txt
+
+      - name: Publish to GitHub Pages (and render)
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this secret is always available for github actions

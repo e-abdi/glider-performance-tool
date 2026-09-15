@@ -1,0 +1,50 @@
+---
+title: "Project Info"
+format: html
+---
+
+## Team Members
+- Ehsan Abdi, Akvaplan-niva ([eab@akvaplan.niva.no](mailto:eab@akvaplan.niva.no))
+
+## Background
+The Glider Rodeo field-tested PAM-glider platforms under the same conditions to give data-driven
+guidance on what each system can do in different operational environments and for different
+research questions. Each glider was flown through a sequence of mission modes:
+
+| Phase | Mode | Start (UTC) | Stop (UTC) |
+|---|---|---|---|
+| 1 | shakedown | 2026-01-28 22:00 | 2026-01-30 06:00 |
+| 2 | fast | 2026-01-30 06:00 | 2026-02-01 18:00 |
+| 3 | slow | 2026-02-01 18:00 | 2026-02-04 18:00 |
+| 4 | intermediate | 2026-02-04 18:00 | 2026-02-06 18:00 |
+| 5 | drift (20 min at 800 m) | 2026-02-06 18:00 | 2026-02-08 18:00 |
+| 6 | mini-rodeo: slow | 2026-02-08 18:00 | 2026-02-09 06:00 |
+| 6 | mini-rodeo: intermediate | 2026-02-09 06:00 | 2026-02-09 18:00 |
+| 6 | mini-rodeo: fast | 2026-02-09 18:00 | 2026-02-10 06:00 |
+| 7 | recovery | 2026-02-10 06:00 | |
+
+Source: [Glider Rodeo fieldwork plan](https://nmfs-pam-glider.github.io/GliderRodeo/content/fieldwork.html).
+
+## Goals
+Answer, for every glider and mission mode:
+
+- **Piloting:** how do pilots achieve each mission mode (pitch, buoyancy, dive depth, yos per surfacing)?
+- **Navigation:** how well does each glider hold the trackline, and how is that affected by currents?
+- **Endurance:** how does mission mode affect battery use and data storage?
+- **Noise:** how much self-noise (pumping, motors, flow) does each glider make?
+
+## Datasets
+- **Glider Rodeo deployment data** (engineering, science, GPS): on the Glider Rodeo JupyterHub in
+  `shared-public/GliderRodeo/`, one folder per deployment. Converted to OG1 with glider-og1.
+- **Soundscape metrics** (60 s averaged spectra per glider): `shared-public/GliderRodeo/Noise/`.
+- **Glider specifications:** `shared-public/GliderRodeo/PAM_Glider_Specs.csv`.
+
+The source data are preliminary. Known issues found during conversion are listed in the
+[glider-og1 README](https://github.com/NMFS-PAM-Glider/hackathon-shared-repo/tree/ehsan-abdi/glider-og1#known-data-issues).
+
+## References
+- OceanGliders OG1.0 format: <https://oceangliderscommunity.github.io/OG-format-user-manual/OG_Format.html>
+- NOAA Fisheries PAM-Glider Rodeo: <https://nmfs-pam-glider.github.io/GliderRodeo/>
+
+## Links
+- Hackathon shared repository: <https://github.com/NMFS-PAM-Glider/hackathon-shared-repo>

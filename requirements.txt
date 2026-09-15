@@ -1,0 +1,10 @@
+# Python packages for the Glider Performance Tool
+#
+#   pip install -r requirements.txt
+
+numpy
+pandas
+xarray
+netcdf4
+matplotlib
+jupyterlab

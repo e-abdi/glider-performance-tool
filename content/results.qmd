@@ -1,0 +1,6 @@
+---
+title: "Results"
+format: html
+---
+
+**TODO:** figures and tables comparing gliders and mission modes.

@@ -1,0 +1,31 @@
+# Quarto (the website is rendered by GitHub Actions to the gh-pages branch)
+/.quarto/
+/_site/
+/docs/
+**/*.quarto_ipynb
+
+# Data: keep only the ReadMe files in git
+data/*
+!data/ReadMe.md
+output/*
+!output/ReadMe.md
+*.nc
+*.h5
+*.parquet
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# R / RStudio
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# OS
+.DS_Store
