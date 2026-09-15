@@ -14,7 +14,7 @@
     "href": "index.html#approach",
     "title": "Glider Performance Tool",
     "section": "Approach",
-    "text": "Approach\n\nConvert every glider’s data to the OceanGliders OG1.0 format with glider-og1.\nSplit each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).\nCompute the same performance metrics for every glider from the OG1 files only.\nCompare platforms and modes.\n\nSee Project Info for goals and datasets, and Workflow for how to reproduce the analysis.",
+    "text": "Approach\n\nSplit each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).\nCompute the same performance metrics for every glider.\nCompare platforms and modes.\n\nSee Project Info for goals and datasets, and Workflow for how to reproduce the analysis.",
     "crumbs": [
       "Home"
     ]
@@ -74,7 +74,7 @@
     "href": "content/project-info.html#datasets",
     "title": "Project Info",
     "section": "Datasets",
-    "text": "Datasets\n\nGlider Rodeo deployment data (engineering, science, GPS): on the Glider Rodeo JupyterHub in shared-public/GliderRodeo/, one folder per deployment. Converted to OG1 with glider-og1.\nSoundscape metrics (60 s averaged spectra per glider): shared-public/GliderRodeo/Noise/.\nGlider specifications: shared-public/GliderRodeo/PAM_Glider_Specs.csv.\n\nThe source data are preliminary. Known issues found during conversion are listed in the glider-og1 README.",
+    "text": "Datasets\n\nGlider Rodeo deployment data (engineering, science, GPS): on the Glider Rodeo JupyterHub in shared-public/GliderRodeo/, one folder per deployment.\nSoundscape metrics (60 s averaged spectra per glider): shared-public/GliderRodeo/Noise/.\nGlider specifications: shared-public/GliderRodeo/PAM_Glider_Specs.csv.\n\nThe source data are preliminary.",
     "crumbs": [
       "Project Info"
     ]
@@ -84,7 +84,7 @@
     "href": "content/project-info.html#references",
     "title": "Project Info",
     "section": "References",
-    "text": "References\n\nOceanGliders OG1.0 format: https://oceangliderscommunity.github.io/OG-format-user-manual/OG_Format.html\nNOAA Fisheries PAM-Glider Rodeo: https://nmfs-pam-glider.github.io/GliderRodeo/",
+    "text": "References\n\nNOAA Fisheries PAM-Glider Rodeo: https://nmfs-pam-glider.github.io/GliderRodeo/",
     "crumbs": [
       "Project Info"
     ]
@@ -104,17 +104,7 @@
     "href": "content/workflow.html",
     "title": "Workflow",
     "section": "",
-    "text": "On the Glider Rodeo JupyterHub, in a clone of the hackathon shared repository on the ehsan-abdi branch:\npip install -r glider-og1/requirements.txt\npython glider-og1/convert.py --data-dir ~/shared-public/GliderRodeo --out-dir ~/og1 --all\nThis writes one &lt;platform_serial&gt;_&lt;start&gt;_delayed.nc file per glider and checks each against the OG1 specification.",
-    "crumbs": [
-      "Workflow"
-    ]
-  },
-  {
-    "objectID": "content/workflow.html#make-the-og1-files",
-    "href": "content/workflow.html#make-the-og1-files",
-    "title": "Workflow",
-    "section": "",
-    "text": "On the Glider Rodeo JupyterHub, in a clone of the hackathon shared repository on the ehsan-abdi branch:\npip install -r glider-og1/requirements.txt\npython glider-og1/convert.py --data-dir ~/shared-public/GliderRodeo --out-dir ~/og1 --all\nThis writes one &lt;platform_serial&gt;_&lt;start&gt;_delayed.nc file per glider and checks each against the OG1 specification.",
+    "text": "TODO: document the analysis steps as the code in code/ is written.",
     "crumbs": [
       "Workflow"
     ]
@@ -123,8 +113,8 @@
     "objectID": "content/workflow.html#run-the-performance-analysis",
     "href": "content/workflow.html#run-the-performance-analysis",
     "title": "Workflow",
-    "section": "2. Run the performance analysis",
-    "text": "2. Run the performance analysis\nTODO: document the analysis steps as the code in code/ is written.",
+    "section": "",
+    "text": "TODO: document the analysis steps as the code in code/ is written.",
     "crumbs": [
       "Workflow"
     ]
