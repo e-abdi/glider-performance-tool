@@ -325,4 +325,53 @@ card(card_header("Glider 4"),
 )
 ```
 
+Each panel below is a different metric, shown as a percentage of the highest value among the currently matching gliders (so depth in meters, endurance in days, and speed in knots can sit side by side on one chart). Hover a bar to see the raw value.
+
+```{ojs}
+//| echo: false
+
+// ---- RESHAPE FOR FACETED COMPARISON ----
+// Add/remove entries here to change which metrics appear in the comparison chart.
+
+metricList = [
+  {key: "max_depth_m", label: "Max depth (m)"},
+  {key: "endurance_days", label: "Endurance (days)"},
+  {key: "speed_kt", label: "Speed (kt)"}
+]
+
+longData = filtered.flatMap(g =>
+  metricList
+    .map(m => ({glider: g.glider, metric: m.label, value: g[m.key]}))
+    .filter(d => d.value != null)
+)
+
+maxByMetric = d3.rollup(longData, v => d3.max(v, d => d.value), d => d.metric)
+
+normalizedData = longData.map(d => ({
+  ...d,
+  pct: maxByMetric.get(d.metric) > 0 ? (d.value / maxByMetric.get(d.metric)) * 100 : 0
+}))
+```
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  marginLeft: 100,
+  fx: {label: null},
+  x: {label: "% of max among matching gliders", domain: [0, 100]},
+  y: {label: null},
+  color: {legend: false},
+  marks: [
+    Plot.barX(normalizedData, {
+      x: "pct",
+      y: "glider",
+      fx: "metric",
+      fill: "metric",
+      sort: {y: "-x"},
+      title: d => `${d.glider}: ${d.value}`
+    }),
+    Plot.ruleX([0])
+  ]
+})
+```
 
