@@ -1,25 +1,29 @@
 <style>
 .card{
-    font-size: 0.7rem;
-}
+    font-size: 0.6rem;
+    padding: 0.1rem}
 .card h4 {
-    font-size:0.7rem; 
+    font-size:0.6rem; 
 }
 .card input{
-    font-size: 0.7rem;
+    font-size: 0.6rem;
 }
 .card label{
-    font-size: 0.7rem;
+    font-size: 0.6rem;
 }
 .layout-columns {
     gap: 0.25rem;
 }
-.row {
-  --bs-gutter-x: 0.15rem;
-  --bs-gutter-y: 0.15rem;
+.comparison-row{
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid;
 }
-.grid {
-  --bs-gutter-x: 0.15rem; 
-  --bs-gutter-y: 0.15rem; 
+.comparison-image{
+    height: 100px;
+    width: 90%;
+    display: block;
+    margin: 0 auto;
 }
-    
