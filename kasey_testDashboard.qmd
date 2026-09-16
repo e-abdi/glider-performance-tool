@@ -3,7 +3,7 @@ title: GLIDER SELECTION DASHBOARD
 author: ''
 page-layout: full
 editor: visual
-theme: quartz
+theme: cyborg
 css: kasey_testStyles.css
 ---
 
@@ -53,3 +53,53 @@ col_widths = c(9, 3)
 
 
 ## Glider Comparisons
+Please see below for details of your chosen gliders. 
+```{r}
+#| echo: false
+
+layout_columns(
+card(card_header(), card_body(
+  tags$div(style =  "height: 100px; margin-bottom: 0;", class = "comparison-image"),
+  tags$div(class = "comparison-label", ""), 
+  tags$div(class = "comparison-row", "Deployment Duration"),
+  tags$div(class = "comparison-row", "Depth Range"),
+  tags$div(class = "comparison-row", "Base Weight"),
+  tags$div(class = "comparison-row", "Range"),
+  tags$div(class = "comparison-row", "Speed"),
+)),
+card(card_header("Glider 1"),
+     card_body(img(src = "/content/images/glider_holdImage.jpg", style = "height: 100px;  margin-bottom: 0;", class = "comparison-image"),
+               tags$div(class = "comparison-row", "1–20 days"),
+               tags$div(class = "comparison-row", "0-1000m"),
+               tags$div(class = "comparison-row", "85kg"),
+               tags$div(class = "comparison-row", "2 km"),
+               tags$div(class = "comparison-row", "1 kt"),
+               )),
+card(card_header("Glider 2"),
+     card_body(img(src = "/content/images/glider_holdImage.jpg", style = "height: 100px;  margin-bottom: 0;", class = "comparison-image"),
+               tags$div(class = "comparison-row", "1–20 days"),
+               tags$div(class = "comparison-row", "0-1000m"),
+               tags$div(class = "comparison-row", "85kg"),
+               tags$div(class = "comparison-row", "2 km"),
+               tags$div(class = "comparison-row", "1 kt"),
+               )),
+card(card_header("Glider 3"),
+     card_body(img(src = "/content/images/glider_holdImage.jpg", style = "height: 100px;  margin-bottom: 0;", class = "comparison-image"),
+               tags$div(class = "comparison-row", "1–20 days"),
+               tags$div(class = "comparison-row", "0-1000m"),
+               tags$div(class = "comparison-row", "85kg"),
+               tags$div(class = "comparison-row", "2 km"),
+               tags$div(class = "comparison-row", "1 kt"),
+               )),
+card(card_header("Glider 4"),
+     card_body(img(src = "/content/images/glider_holdImage.jpg", style = "height: 100px;  margin-bottom: 0;", class = "comparison-image"),
+               tags$div(class = "comparison-row", "1–20 days"),
+               tags$div(class = "comparison-row", "0-1000m"),
+               tags$div(class = "comparison-row", "85kg"),
+               tags$div(class = "comparison-row", "2 km"),
+               tags$div(class = "comparison-row", "1 kt"),
+               ))
+)
+```
+
+
