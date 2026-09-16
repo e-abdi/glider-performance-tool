@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -37,10 +72,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-befe23ebd2f54d8af2c8a89d1a1611f1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4641f7fca5f5bb602fb8922ae073e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-9b72c5d16c48ec0c631a6217ac6a69ef.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -68,6 +103,8 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 <script src="site_libs/bslib-component-js-0.9.0/components.min.js"></script>
 <script src="site_libs/bslib-component-js-0.9.0/web-components.min.js" type="module"></script>
 <link href="site_libs/bslib-component-css-0.9.0/components.css" rel="stylesheet">
@@ -179,6 +216,83 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Comparing the PAM-equipped gliders of the <strong>NOAA Fisheries Glider Rodeo 2026</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="22" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 21;"><span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"gliders_cleaned.csv"</span>)<span class="op">.</span><span class="fu">csv</span>({<span class="dt">typed</span><span class="op">:</span> <span class="kw">true</span>})</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>duration_min <span class="op">=</span> <span class="pp">parseInt</span>(d3<span class="op">.</span><span class="fu">min</span>(data<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">endurance_days</span>))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>duration_max <span class="op">=</span> <span class="pp">parseInt</span>(d3<span class="op">.</span><span class="fu">max</span>(data<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">endurance_days</span>))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>depth_min <span class="op">=</span> <span class="pp">parseInt</span>(d3<span class="op">.</span><span class="fu">min</span>(data<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">max_depth_m</span>))</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>depth_max <span class="op">=</span> <span class="pp">parseInt</span>(d3<span class="op">.</span><span class="fu">max</span>(data<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">max_depth_m</span>))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>speed_min <span class="op">=</span> <span class="pp">parseInt</span>(d3<span class="op">.</span><span class="fu">min</span>(data<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">speed_kt</span>))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>speed_max <span class="op">=</span> <span class="pp">parseInt</span>(d3<span class="op">.</span><span class="fu">max</span>(data<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">speed_kt</span>))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>mass_min <span class="op">=</span> <span class="pp">parseInt</span>(d3<span class="op">.</span><span class="fu">min</span>(data<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">mass_kg</span>))</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>mass_max <span class="op">=</span>  <span class="pp">parseInt</span>(d3<span class="op">.</span><span class="fu">max</span>(data<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">mass_kg</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-9" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
 <section id="mission-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="mission-parameters">Mission Parameters</h2>
 <ol type="1">
@@ -187,183 +301,239 @@ ul.task-list li input[type="checkbox"] {
 <!-- YES/NO Options -->
 <div class="cell">
 <div class="cell-output-display">
-<bslib-layout-columns class="bslib-grid grid bslib-mb-spacing html-fill-item" col-widths-sm="9,3" data-require-bs-caller="layout_columns()" data-require-bs-version="5">
+<bslib-layout-columns class="bslib-grid grid bslib-mb-spacing html-fill-item" col-widths-sm="12" data-require-bs-caller="layout_columns()" data-require-bs-version="5">
 <div class="bslib-grid-item bslib-gap-spacing html-fill-container">
 <div>
-<bslib-layout-columns class="bslib-grid grid bslib-mb-spacing html-fill-item" data-require-bs-caller="layout_columns()" data-require-bs-version="5">
+<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
+<div class="card-header">Capabilities</div>
+<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
+<div style="display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%;">
+<div style="display: flex; align-items: center;">
+<input type="checkbox" id="rt_checkbox" value="FALSE" style="margin: 0.2rem 5px 0 0.2rem;">
+<div style="font-size: 0.7rem;">Real-Time</div>
+</div>
+<div style="display: flex; align-items: center;">
+<input type="checkbox" id="edge_checkbox" value="FALSE" style="margin: 0.2rem 5px 0 0.2rem;">
+<div style="font-size: 0.7rem;">Edge-Compute</div>
+</div>
+<div style="display: flex; align-items: center;">
+<input type="checkbox" id="bathy_checkbox" value="FALSE" style="margin: 0.2rem 5px 0 0.2rem;">
+<div style="font-size: 0.7rem;">Bathy Drive</div>
+</div>
+<div style="display: flex; align-items: center;">
+<input type="checkbox" id="ice_checkbox" value="FALSE" style="margin: 0.2rem 5px 0 0.2rem;">
+<div style="font-size: 0.7rem;">Ice</div>
+</div>
+<div style="display: flex; align-items: center;">
+<input type="checkbox" id="backseat_checkbox" value="FALSE" style="margin: 0.2rem 5px 0 0.2rem;">
+<div style="font-size: 0.7rem;">Backseat Drive</div>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
+</div>
+<bslib-layout-columns class="bslib-grid grid bslib-mb-spacing html-fill-item" col-widths-sm="6,6" data-require-bs-caller="layout_columns()" data-require-bs-version="5">
 <div class="bslib-grid-item bslib-gap-spacing html-fill-container">
 <div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
+<div class="card-header">Mission Parameters</div>
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<label for="realtime_TOGGLE" style="cursor: pointer;">
-<div class="form-group shiny-input-container">
-<div class="checkbox">
-<label>
-<input id="realtime_TOGGLE" type="checkbox" class="shiny-input-checkbox">
-<span>Real-time Capability</span>
-</label>
+<div style="display: flex; align-items: center; margin-bottom: 2px;">
+<input type="checkbox" id="duration_count" style="margin-right: 5px;">
+<div style="font-size: 0.7rem;">Deployment Duration (Days)</div>
 </div>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; ">
+<span style="font-size: 0.7rem;">1</span>
+<div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+<input type="range" id="duration_slider" min="1" max="660" value="30" oninput="document.getElementById('duration_value').textContent = this.value;" style="width: 100%;">
+<span id="duration_value" style="font-size: 0.7rem;">30</span>
 </div>
-</label>
+<span style="font-size: 0.7rem;">660</span>
+</div>
+<div style="display: flex; align-items: center; margin-bottom: 2px;">
+<input type="checkbox" id="depth_count" style="margin-right: 5px;">
+<div style="font-size: 0.7rem;">Maximum Depth (m)</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+<span style="font-size: 0.7rem;">100</span>
+<div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+<input type="range" id="depth_slider" min="1" max="1000" value="30" oninput="document.getElementById('depth_value').textContent = this.value;" style="width: 100%;">
+<span id="depth_value" style="font-size: 0.7rem;">30</span>
+</div>
+<span style="font-size: 0.7rem;">1000</span>
+</div>
+<div style="display: flex; align-items: center; margin-bottom: 2px;">
+<input type="checkbox" id="range_count" style="margin-right: 5px;">
+<div style="font-size: 0.7rem;">Range (km)</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+<span style="font-size: 0.7rem;">1</span>
+<div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+<input type="range" id="range_slider" min="1" max="100" value="30" oninput="document.getElementById('range_value').textContent = this.value;" style="width: 100%;">
+<span id="range_value" style="font-size: 0.7rem;">30</span>
+</div>
+<span style="font-size: 0.7rem;">100</span>
+</div>
+<div style="display: flex; align-items: center; margin-bottom: 2px;">
+<input type="checkbox" id="speed_count" style="margin-right: 5px;">
+<div style="font-size: 0.7rem;">Speed (kts)</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+<span style="font-size: 0.7rem;">1</span>
+<div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+<input type="range" id="speed_slider" min="1" max="20" value="5" oninput="document.getElementById('speed_value').textContent = this.value;" style="width: 100%;">
+<span id="speed_value" style="font-size: 0.7rem;">5</span>
+</div>
+<span style="font-size: 0.7rem;">20</span>
+</div>
+<div style="display: flex; align-items: center; margin-bottom: 2px;">
+<input type="checkbox" id="mass_count" style="margin-right: 5px;">
+<div style="font-size: 0.7rem;">Maximum Weight (kg)</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="font-size: 0.7rem;">1</span>
+<div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+<input type="range" id="mass_slider" min="1" max="1000" value="30" oninput="document.getElementById('mass_value').textContent = this.value;" style="width: 100%;">
+<span id="mass_value" style="font-size: 0.7rem;">30</span>
+</div>
+<span style="font-size: 0.7rem;">1000</span>
+</div>
 </div>
 <script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
 </div>
 </div>
 <div class="bslib-grid-item bslib-gap-spacing html-fill-container">
+<div>
 <div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
+<div class="card-header">Acoustic Parameters</div>
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<label for="edgecompute_toggle" style="cursor: pointer;">
-<div class="form-group shiny-input-container">
-<div class="checkbox">
-<label>
-<input id="edgecompute_toggle" type="checkbox" class="shiny-input-checkbox">
-<span>Edge-Compute Capability</span>
-</label>
+<div style="display: flex; align-items: center; margin-bottom: 2px;">
+<input type="checkbox" id="freq_count" style="margin-right: 5px;">
+<div style="font-size: 0.7rem;">Recording Frequency</div>
 </div>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+<span style="font-size: 0.7rem;">1</span>
+<div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+<input type="range" id="freq_slider" min="1" max="100" value="30" oninput="document.getElementById('freq_value').textContent = this.value;" style="width: 100%;">
+<span id="freq_value" style="font-size: 0.7rem;">30</span>
 </div>
-</label>
+<span style="font-size: 0.7rem;">100</span>
+</div>
+<div style="display: flex; align-items: center; margin-bottom: 2px;">
+<input type="checkbox" id="acoustic_depth_count" style="margin-right: 5px;">
+<div style="font-size: 0.7rem;">Depth</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+<span style="font-size: 0.7rem;">1</span>
+<div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+<input type="range" id="acoustic_depth_slider" min="1" max="1000" value="30" oninput="document.getElementById('acoustic_depth_value').textContent = this.value;" style="width: 100%;">
+<span id="acoustic_depth_value" style="font-size: 0.7rem;">30</span>
+</div>
+<span style="font-size: 0.7rem;">1000</span>
+</div>
+<div style="display: flex; align-items: center; margin-bottom: 2px;">
+<input type="checkbox" id="duty_count" style="margin-right: 5px;">
+<div style="font-size: 0.7rem;">Duty Cycle</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="font-size: 0.7rem;">1</span>
+<div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+<input type="range" id="duty_slider" min="1" max="100" value="30" oninput="document.getElementById('duty_value').textContent = this.value;" style="width: 100%;">
+<span id="duty_value" style="font-size: 0.7rem;">30</span>
+</div>
+<span style="font-size: 0.7rem;">100</span>
+</div>
 </div>
 <script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
 </div>
-</div>
-<div class="bslib-grid-item bslib-gap-spacing html-fill-container">
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<label for="bathyDrive_toggle" style="cursor: pointer;">
-<div class="form-group shiny-input-container">
-<div class="checkbox">
-<label>
-<input id="bathyDrive_toggle" type="checkbox" class="shiny-input-checkbox">
-<span>Bathymetry Loading Capability</span>
-</label>
-</div>
-</div>
-</label>
-</div>
-<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
-</div>
-</div>
-<div class="bslib-grid-item bslib-gap-spacing html-fill-container">
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<label for="ice_toggle" style="cursor: pointer;">
-<div class="form-group shiny-input-container">
-<div class="checkbox">
-<label>
-<input id="ice_toggle" type="checkbox" class="shiny-input-checkbox">
-<span>Ice Capable</span>
-</label>
-</div>
-</div>
-</label>
-</div>
-<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
-</div>
-</div>
-<div class="bslib-grid-item bslib-gap-spacing html-fill-container">
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<label for="backseatDrive_toggle" style="cursor: pointer;">
-<div class="form-group shiny-input-container">
-<div class="checkbox">
-<label>
-<input id="backseatDrive_toggle" type="checkbox" class="shiny-input-checkbox">
-<span>Backseat Driving Capability</span>
-</label>
-</div>
-</div>
-</label>
-</div>
-<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
+<button id="apply_button" class="btn btn-primary" style="display: block; width: 100%; padding: 4px 10px; margin: 10px 0 0 0;">Apply</button>
 </div>
 </div>
 </bslib-layout-columns>
-<bslib-layout-columns class="bslib-grid grid bslib-mb-spacing html-fill-item" data-require-bs-caller="layout_columns()" data-require-bs-version="5">
-<div class="bslib-grid-item bslib-gap-spacing html-fill-container">
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<h4 class="anchored">Minimum Deployment Duration (Days)</h4>
-<input type="text" id="missionDuration" value="30">
-</div>
-<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
-</div>
-</div>
-<div class="bslib-grid-item bslib-gap-spacing html-fill-container">
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<h4 class="anchored">Maximum Depth (m)</h4>
-<input type="text" id="depth" value="1000">
-</div>
-<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
-</div>
-</div>
-<div class="bslib-grid-item bslib-gap-spacing html-fill-container">
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<h4 class="anchored">Range (km)</h4>
-<input type="text" id="range" value="3">
-</div>
-<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
-</div>
-</div>
-<div class="bslib-grid-item bslib-gap-spacing html-fill-container">
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<h4 class="anchored">Speed (kts)</h4>
-<input type="text" id="spd" value="1">
-</div>
-<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
-</div>
-</div>
-<div class="bslib-grid-item bslib-gap-spacing html-fill-container">
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<h4 class="anchored">Maximum Weight (kg)</h4>
-<input type="text" id="mass" value="100">
-</div>
-<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
 </div>
 </div>
 </bslib-layout-columns>
 </div>
 </div>
-<div class="bslib-grid-item bslib-gap-spacing html-fill-container">
-<div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-header">Editable Mission Parameters</div>
-<div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<div class="form-group shiny-input-container">
-<div class="checkbox">
-<label>
-<input id="input_Freq" type="checkbox" class="shiny-input-checkbox">
-<span>Recording Frequency</span>
-</label>
+<div class="cell hidden">
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="211" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 210;"><span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"duration_slider"</span><span class="op">,</span> duration_min<span class="op">,</span> duration_max]<span class="op">,</span></span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"depth_slider"</span><span class="op">,</span> depth_min<span class="op">,</span> depth_max]<span class="op">,</span></span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"speed_slider"</span><span class="op">,</span> speed_min<span class="op">,</span> speed_max]<span class="op">,</span></span>
+<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"mass_slider"</span><span class="op">,</span> mass_min<span class="op">,</span> mass_max]</span>
+<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a>]<span class="op">.</span><span class="fu">forEach</span>(([id<span class="op">,</span> min<span class="op">,</span> max]) <span class="kw">=&gt;</span> {</span>
+<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> slider <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(id)</span>
+<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a>  slider<span class="op">.</span><span class="at">min</span> <span class="op">=</span> min</span>
+<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>  slider<span class="op">.</span><span class="at">max</span> <span class="op">=</span> max</span>
+<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a>  slider<span class="op">.</span><span class="at">parentElement</span><span class="op">.</span><span class="at">parentElement</span><span class="op">.</span><span class="at">firstElementChild</span><span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> min</span>
+<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a>  slider<span class="op">.</span><span class="at">parentElement</span><span class="op">.</span><span class="at">parentElement</span><span class="op">.</span><span class="at">lastElementChild</span><span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> max</span>
+<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="ojs-cell-2" data-nodetype="expression">
+
 </div>
-</div>
-<div class="form-group shiny-input-container">
-<div class="checkbox">
-<label>
-<input id="input_Depth" type="checkbox" class="shiny-input-checkbox">
-<span>Depth</span>
-</label>
-</div>
-</div>
-<div class="form-group shiny-input-container">
-<div class="checkbox">
-<label>
-<input id="input_DC" type="checkbox" class="shiny-input-checkbox">
-<span>Duty Cycle</span>
-</label>
-</div>
-</div>
-</div>
-<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script>
-</div>
-</div>
-</bslib-layout-columns>
 </div>
 </div>
 </section>
 <section id="your-options" class="level2">
 <h2 class="anchored" data-anchor-id="your-options">Your Options</h2>
+<!-- Expose my shiny R objects to OJS to work with Anne's chart -->
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="230" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 229;"><span id="cb3-230"><a href="#cb3-230" aria-hidden="true" tabindex="-1"></a>apply <span class="op">=</span> Generators<span class="op">.</span><span class="fu">input</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"apply_button"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="235" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 234;"><span id="cb4-235"><a href="#cb4-235" aria-hidden="true" tabindex="-1"></a>filtered <span class="op">=</span> { apply<span class="op">;</span></span>
+<span id="cb4-236"><a href="#cb4-236" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="op">!</span>data <span class="op">||</span> <span class="op">!</span><span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(data)) <span class="cf">return</span> []<span class="op">;</span></span>
+<span id="cb4-237"><a href="#cb4-237" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> data<span class="op">.</span><span class="fu">filter</span>(g <span class="kw">=&gt;</span> {</span>
+<span id="cb4-238"><a href="#cb4-238" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"duration_count"</span>)<span class="op">.</span><span class="at">checked</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">endurance_days</span> <span class="op">!=</span> <span class="kw">null</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">endurance_days</span> <span class="op">&lt;</span> <span class="bu">Number</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"duration_slider"</span>)<span class="op">.</span><span class="at">value</span>)) <span class="cf">return</span> <span class="kw">false</span></span>
+<span id="cb4-239"><a href="#cb4-239" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"depth_count"</span>)<span class="op">.</span><span class="at">checked</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">max_depth_m</span> <span class="op">!=</span> <span class="kw">null</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">max_depth_m</span> <span class="op">&lt;</span> <span class="bu">Number</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"depth_slider"</span>)<span class="op">.</span><span class="at">value</span>)) <span class="cf">return</span> <span class="kw">false</span></span>
+<span id="cb4-240"><a href="#cb4-240" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"speed_count"</span>)<span class="op">.</span><span class="at">checked</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">speed_kt</span> <span class="op">!=</span> <span class="kw">null</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">speed_kt</span> <span class="op">&lt;</span> <span class="bu">Number</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"speed_slider"</span>)<span class="op">.</span><span class="at">value</span>)) <span class="cf">return</span> <span class="kw">false</span></span>
+<span id="cb4-241"><a href="#cb4-241" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"mass_count"</span>)<span class="op">.</span><span class="at">checked</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">mass_kg</span> <span class="op">!=</span> <span class="kw">null</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">mass_kg</span> <span class="op">&gt;</span> <span class="bu">Number</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"mass_slider"</span>)<span class="op">.</span><span class="at">value</span>)) <span class="cf">return</span> <span class="kw">false</span></span>
+<span id="cb4-242"><a href="#cb4-242" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"ice_checkbox"</span>)<span class="op">.</span><span class="at">checked</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">ice_capable</span> <span class="op">!==</span> <span class="kw">true</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">ice_capable</span> <span class="op">!==</span> <span class="st">"yes"</span>) <span class="cf">return</span> <span class="kw">false</span></span>
+<span id="cb4-243"><a href="#cb4-243" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"rt_checkbox"</span>)<span class="op">.</span><span class="at">checked</span> <span class="op">&amp;&amp;</span> g<span class="op">.</span><span class="at">real_time_comms</span> <span class="op">!==</span> <span class="st">"yes"</span>) <span class="cf">return</span> <span class="kw">false</span></span>
+<span id="cb4-244"><a href="#cb4-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-245"><a href="#cb4-245" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb4-246"><a href="#cb4-246" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb4-247"><a href="#cb4-247" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-248"><a href="#cb4-248" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Add these back when the spreadsheet has the corresponding columns:</span></span>
+<span id="cb4-249"><a href="#cb4-249" aria-hidden="true" tabindex="-1"></a>  <span class="co">// if (document.getElementById("range_count").checked &amp;&amp; g.range_km != null &amp;&amp; g.range_km &lt; Number(document.getElementById("range_slider").value)) return false</span></span>
+<span id="cb4-250"><a href="#cb4-250" aria-hidden="true" tabindex="-1"></a>  <span class="co">// if (document.getElementById("edge_checkbox").checked &amp;&amp; g.edge_compute !== true &amp;&amp; g.edge_compute !== "Yes") return false</span></span>
+<span id="cb4-251"><a href="#cb4-251" aria-hidden="true" tabindex="-1"></a>  <span class="co">// if (document.getElementById("bathy_checkbox").checked &amp;&amp; g.bathy_drive !== true &amp;&amp; g.bathy_drive !== "Yes") return false</span></span>
+<span id="cb4-252"><a href="#cb4-252" aria-hidden="true" tabindex="-1"></a>  <span class="co">// if (document.getElementById("backseat_checkbox").checked &amp;&amp; g.backseat_drive !== true &amp;&amp; g.backseat_drive !== "Yes") return false</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="257" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 256;"><span id="cb5-257"><a href="#cb5-257" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(filtered<span class="op">,</span> {</span>
+<span id="cb5-258"><a href="#cb5-258" aria-hidden="true" tabindex="-1"></a>  <span class="dt">columns</span><span class="op">:</span> [</span>
+<span id="cb5-259"><a href="#cb5-259" aria-hidden="true" tabindex="-1"></a>    <span class="st">"manufacturer"</span><span class="op">,</span> <span class="st">"glider"</span><span class="op">,</span> <span class="st">"max_depth_m"</span><span class="op">,</span> <span class="st">"endurance_days"</span><span class="op">,</span></span>
+<span id="cb5-260"><a href="#cb5-260" aria-hidden="true" tabindex="-1"></a>    <span class="st">"speed_kt"</span><span class="op">,</span> <span class="st">"mass_kg"</span><span class="op">,</span> <span class="st">"real_time_comms"</span><span class="op">,</span> <span class="st">"acoustic_sensor"</span><span class="op">,</span> <span class="st">"ice_capable"</span></span>
+<span id="cb5-261"><a href="#cb5-261" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb5-262"><a href="#cb5-262" aria-hidden="true" tabindex="-1"></a>  <span class="dt">header</span><span class="op">:</span> {</span>
+<span id="cb5-263"><a href="#cb5-263" aria-hidden="true" tabindex="-1"></a>    <span class="dt">manufacturer</span><span class="op">:</span> <span class="st">"Manufacturer"</span><span class="op">,</span></span>
+<span id="cb5-264"><a href="#cb5-264" aria-hidden="true" tabindex="-1"></a>    <span class="dt">glider</span><span class="op">:</span> <span class="st">"Glider"</span><span class="op">,</span></span>
+<span id="cb5-265"><a href="#cb5-265" aria-hidden="true" tabindex="-1"></a>    <span class="dt">max_depth_m</span><span class="op">:</span> <span class="st">"Max depth (m)"</span><span class="op">,</span></span>
+<span id="cb5-266"><a href="#cb5-266" aria-hidden="true" tabindex="-1"></a>    <span class="dt">endurance_days</span><span class="op">:</span> <span class="st">"Endurance (days, est.)"</span><span class="op">,</span></span>
+<span id="cb5-267"><a href="#cb5-267" aria-hidden="true" tabindex="-1"></a>    <span class="dt">speed_kt</span><span class="op">:</span> <span class="st">"Speed (kt, est.)"</span><span class="op">,</span></span>
+<span id="cb5-268"><a href="#cb5-268" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mass_kg</span><span class="op">:</span> <span class="st">"Mass (kg)"</span><span class="op">,</span></span>
+<span id="cb5-269"><a href="#cb5-269" aria-hidden="true" tabindex="-1"></a>    <span class="dt">real_time_comms</span><span class="op">:</span> <span class="st">"Real-time comms"</span><span class="op">,</span></span>
+<span id="cb5-270"><a href="#cb5-270" aria-hidden="true" tabindex="-1"></a>    <span class="dt">acoustic_sensor</span><span class="op">:</span> <span class="st">"Acoustic sensor"</span><span class="op">,</span></span>
+<span id="cb5-271"><a href="#cb5-271" aria-hidden="true" tabindex="-1"></a>    <span class="dt">ice_capable</span><span class="op">:</span> <span class="st">"Ice capable"</span></span>
+<span id="cb5-272"><a href="#cb5-272" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-273"><a href="#cb5-273" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="expression">
+
+</div>
+</div>
+</div>
 </section>
 <section id="glider-comparisons" class="level2">
 <h2 class="anchored" data-anchor-id="glider-comparisons">Glider Comparisons</h2>
@@ -373,9 +543,8 @@ ul.task-list li input[type="checkbox"] {
 <bslib-layout-columns class="bslib-grid grid bslib-mb-spacing html-fill-item" data-require-bs-caller="layout_columns()" data-require-bs-version="5">
 <div class="bslib-grid-item bslib-gap-spacing html-fill-container">
 <div class="card bslib-card bslib-mb-spacing html-fill-item html-fill-container" data-bslib-card-init="" data-require-bs-caller="card()" data-require-bs-version="5">
-<div class="card-header"></div>
 <div class="card-body bslib-gap-spacing html-fill-item html-fill-container" style="margin-top:auto;margin-bottom:auto;flex:1 1 auto;">
-<div style="height: 100px; margin-bottom: 0;" class="comparison-image"></div>
+<div style="height: 150px; margin-bottom: 0;" class="comparison-image"></div>
 <div class="comparison-label"></div>
 <div class="comparison-row">Deployment Duration</div>
 <div class="comparison-row">Depth Range</div>
@@ -450,6 +619,17 @@ ul.task-list li input[type="checkbox"] {
 </section>
 
 </main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImRhdGEgPSBGaWxlQXR0YWNobWVudChcImdsaWRlcnNfY2xlYW5lZC5jc3ZcIikuY3N2KHt0eXBlZDogdHJ1ZX0pXG5kdXJhdGlvbl9taW4gPSBwYXJzZUludChkMy5taW4oZGF0YSwgZCA9PiBkLmVuZHVyYW5jZV9kYXlzKSlcbmR1cmF0aW9uX21heCA9IHBhcnNlSW50KGQzLm1heChkYXRhLCBkID0+IGQuZW5kdXJhbmNlX2RheXMpKVxuXG5kZXB0aF9taW4gPSBwYXJzZUludChkMy5taW4oZGF0YSwgZCA9PiBkLm1heF9kZXB0aF9tKSlcbmRlcHRoX21heCA9IHBhcnNlSW50KGQzLm1heChkYXRhLCBkID0+IGQubWF4X2RlcHRoX20pKVxuXG5zcGVlZF9taW4gPSBwYXJzZUludChkMy5taW4oZGF0YSwgZCA9PiBkLnNwZWVkX2t0KSlcbnNwZWVkX21heCA9IHBhcnNlSW50KGQzLm1heChkYXRhLCBkID0+IGQuc3BlZWRfa3QpKVxuXG5tYXNzX21pbiA9IHBhcnNlSW50KGQzLm1pbihkYXRhLCBkID0+IGQubWFzc19rZykpXG5tYXNzX21heCA9ICBwYXJzZUludChkMy5tYXgoZGF0YSwgZCA9PiBkLm1hc3Nfa2cpKVxuLy9ObyBSYW5nZSwgZnJlcXVlbmN5LCBkdXR5LWN5Y2xlIG9wdGlvbnMgaGVyZSBidXQgYWRkIHRoZW0gaW4gbGF0ZXJcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuW1xuICBbXCJkdXJhdGlvbl9zbGlkZXJcIiwgZHVyYXRpb25fbWluLCBkdXJhdGlvbl9tYXhdLFxuICBbXCJkZXB0aF9zbGlkZXJcIiwgZGVwdGhfbWluLCBkZXB0aF9tYXhdLFxuICBbXCJzcGVlZF9zbGlkZXJcIiwgc3BlZWRfbWluLCBzcGVlZF9tYXhdLFxuICBbXCJtYXNzX3NsaWRlclwiLCBtYXNzX21pbiwgbWFzc19tYXhdXG5dLmZvckVhY2goKFtpZCwgbWluLCBtYXhdKSA9PiB7XG4gIGNvbnN0IHNsaWRlciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKVxuICBzbGlkZXIubWluID0gbWluXG4gIHNsaWRlci5tYXggPSBtYXhcbiAgc2xpZGVyLnBhcmVudEVsZW1lbnQucGFyZW50RWxlbWVudC5maXJzdEVsZW1lbnRDaGlsZC50ZXh0Q29udGVudCA9IG1pblxuICBzbGlkZXIucGFyZW50RWxlbWVudC5wYXJlbnRFbGVtZW50Lmxhc3RFbGVtZW50Q2hpbGQudGV4dENvbnRlbnQgPSBtYXhcbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJhcHBseSA9IEdlbmVyYXRvcnMuaW5wdXQoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJhcHBseV9idXR0b25cIikpXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJmaWx0ZXJlZCA9IHsgYXBwbHk7XG5pZiAoIWRhdGEgfHwgIUFycmF5LmlzQXJyYXkoZGF0YSkpIHJldHVybiBbXTtcbnJldHVybiBkYXRhLmZpbHRlcihnID0+IHtcbiAgaWYgKGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZHVyYXRpb25fY291bnRcIikuY2hlY2tlZCAmJiBnLmVuZHVyYW5jZV9kYXlzICE9IG51bGwgJiYgZy5lbmR1cmFuY2VfZGF5cyA8IE51bWJlcihkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImR1cmF0aW9uX3NsaWRlclwiKS52YWx1ZSkpIHJldHVybiBmYWxzZVxuICBpZiAoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJkZXB0aF9jb3VudFwiKS5jaGVja2VkICYmIGcubWF4X2RlcHRoX20gIT0gbnVsbCAmJiBnLm1heF9kZXB0aF9tIDwgTnVtYmVyKGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZGVwdGhfc2xpZGVyXCIpLnZhbHVlKSkgcmV0dXJuIGZhbHNlXG4gIGlmIChkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcInNwZWVkX2NvdW50XCIpLmNoZWNrZWQgJiYgZy5zcGVlZF9rdCAhPSBudWxsICYmIGcuc3BlZWRfa3QgPCBOdW1iZXIoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJzcGVlZF9zbGlkZXJcIikudmFsdWUpKSByZXR1cm4gZmFsc2VcbiAgaWYgKGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwibWFzc19jb3VudFwiKS5jaGVja2VkICYmIGcubWFzc19rZyAhPSBudWxsICYmIGcubWFzc19rZyA+IE51bWJlcihkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcIm1hc3Nfc2xpZGVyXCIpLnZhbHVlKSkgcmV0dXJuIGZhbHNlXG4gIGlmIChkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImljZV9jaGVja2JveFwiKS5jaGVja2VkICYmIGcuaWNlX2NhcGFibGUgIT09IHRydWUgJiYgZy5pY2VfY2FwYWJsZSAhPT0gXCJ5ZXNcIikgcmV0dXJuIGZhbHNlXG4gIGlmIChkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcInJ0X2NoZWNrYm94XCIpLmNoZWNrZWQgJiYgZy5yZWFsX3RpbWVfY29tbXMgIT09IFwieWVzXCIpIHJldHVybiBmYWxzZVxuXG4gIHJldHVybiB0cnVlO1xufSk7XG59XG4gIC8vIEFkZCB0aGVzZSBiYWNrIHdoZW4gdGhlIHNwcmVhZHNoZWV0IGhhcyB0aGUgY29ycmVzcG9uZGluZyBjb2x1bW5zOlxuICAvLyBpZiAoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJyYW5nZV9jb3VudFwiKS5jaGVja2VkICYmIGcucmFuZ2Vfa20gIT0gbnVsbCAmJiBnLnJhbmdlX2ttIDwgTnVtYmVyKGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwicmFuZ2Vfc2xpZGVyXCIpLnZhbHVlKSkgcmV0dXJuIGZhbHNlXG4gIC8vIGlmIChkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImVkZ2VfY2hlY2tib3hcIikuY2hlY2tlZCAmJiBnLmVkZ2VfY29tcHV0ZSAhPT0gdHJ1ZSAmJiBnLmVkZ2VfY29tcHV0ZSAhPT0gXCJZZXNcIikgcmV0dXJuIGZhbHNlXG4gIC8vIGlmIChkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImJhdGh5X2NoZWNrYm94XCIpLmNoZWNrZWQgJiYgZy5iYXRoeV9kcml2ZSAhPT0gdHJ1ZSAmJiBnLmJhdGh5X2RyaXZlICE9PSBcIlllc1wiKSByZXR1cm4gZmFsc2VcbiAgLy8gaWYgKGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiYmFja3NlYXRfY2hlY2tib3hcIikuY2hlY2tlZCAmJiBnLmJhY2tzZWF0X2RyaXZlICE9PSB0cnVlICYmIGcuYmFja3NlYXRfZHJpdmUgIT09IFwiWWVzXCIpIHJldHVybiBmYWxzZVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiSW5wdXRzLnRhYmxlKGZpbHRlcmVkLCB7XG4gIGNvbHVtbnM6IFtcbiAgICBcIm1hbnVmYWN0dXJlclwiLCBcImdsaWRlclwiLCBcIm1heF9kZXB0aF9tXCIsIFwiZW5kdXJhbmNlX2RheXNcIixcbiAgICBcInNwZWVkX2t0XCIsIFwibWFzc19rZ1wiLCBcInJlYWxfdGltZV9jb21tc1wiLCBcImFjb3VzdGljX3NlbnNvclwiLCBcImljZV9jYXBhYmxlXCJcbiAgXSxcbiAgaGVhZGVyOiB7XG4gICAgbWFudWZhY3R1cmVyOiBcIk1hbnVmYWN0dXJlclwiLFxuICAgIGdsaWRlcjogXCJHbGlkZXJcIixcbiAgICBtYXhfZGVwdGhfbTogXCJNYXggZGVwdGggKG0pXCIsXG4gICAgZW5kdXJhbmNlX2RheXM6IFwiRW5kdXJhbmNlIChkYXlzLCBlc3QuKVwiLFxuICAgIHNwZWVkX2t0OiBcIlNwZWVkIChrdCwgZXN0LilcIixcbiAgICBtYXNzX2tnOiBcIk1hc3MgKGtnKVwiLFxuICAgIHJlYWxfdGltZV9jb21tczogXCJSZWFsLXRpbWUgY29tbXNcIixcbiAgICBhY291c3RpY19zZW5zb3I6IFwiQWNvdXN0aWMgc2Vuc29yXCIsXG4gICAgaWNlX2NhcGFibGU6IFwiSWNlIGNhcGFibGVcIlxuICB9XG59KVxuIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
