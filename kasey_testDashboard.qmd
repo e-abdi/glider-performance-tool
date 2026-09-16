@@ -3,7 +3,7 @@ title: GLIDER SELECTION DASHBOARD
 author: ''
 page-layout: full
 editor: visual
-theme: cyborg
+theme: cosmo
 css: kasey_testStyles.css
 ---
 
@@ -17,6 +17,23 @@ library(shiny)
 
 Comparing the PAM-equipped gliders of the **NOAA Fisheries Glider Rodeo 2026**.
 
+```{ojs}
+//| echo: false
+data = FileAttachment("gliders_cleaned.csv").csv({typed: true})
+duration_min = parseInt(d3.min(data, d => d.endurance_days))
+duration_max = parseInt(d3.max(data, d => d.endurance_days))
+
+depth_min = parseInt(d3.min(data, d => d.max_depth_m))
+depth_max = parseInt(d3.max(data, d => d.max_depth_m))
+
+speed_min = parseInt(d3.min(data, d => d.speed_kt))
+speed_max = parseInt(d3.max(data, d => d.speed_kt))
+
+mass_min = parseInt(d3.min(data, d => d.mass_kg))
+mass_max =  parseInt(d3.max(data, d => d.mass_kg))
+//No Range, frequency, duty-cycle options here but add them in later
+```
+
 ## Mission Parameters
 
 1.  Enter requirements for your mission below. Once you click "apply", you will get a list of matching glider options.
@@ -26,30 +43,236 @@ Comparing the PAM-equipped gliders of the **NOAA Fisheries Glider Rodeo 2026**.
 #| echo: false
 layout_columns(
   div(
+    card( card_header("Capabilities"), 
+          card_body( 
+            div( style = "display: flex; align-items: center; justify-content: center; gap: 30px; width: 100%;", 
+                 div(style = "display: flex; align-items: center;", tags$input(type = "checkbox", id = "rt_checkbox", value = FALSE, style = "margin: 0.2rem 5px 0 0.2rem;"), tags$div(style = "font-size: 0.7rem;", "Real-Time")), 
+                 
+                 div(style = "display: flex; align-items: center;", tags$input(type = "checkbox", id = "edge_checkbox", value = FALSE, style = "margin: 0.2rem 5px 0 0.2rem;"), tags$div(style = "font-size: 0.7rem;", "Edge-Compute")), 
+                 
+                 div(style = "display: flex; align-items: center;", tags$input(type = "checkbox", id = "bathy_checkbox", value = FALSE, style = "margin: 0.2rem 5px 0 0.2rem;"), tags$div(style = "font-size: 0.7rem;", "Bathy Drive")), 
+                 
+                 div(style = "display: flex; align-items: center;", tags$input(type = "checkbox", id = "ice_checkbox", value = FALSE, style = "margin: 0.2rem 5px 0 0.2rem;"), tags$div(style = "font-size: 0.7rem;", "Ice")), 
+                 
+                 div(style = "display: flex; align-items: center;", tags$input(type = "checkbox", id = "backseat_checkbox", value = FALSE, style = "margin: 0.2rem 5px 0 0.2rem;"), tags$div(style = "font-size: 0.7rem;", "Backseat Drive")) ) ) ),
+  
     layout_columns(
-      card(card_body( tags$label(`for` = "realtime_TOGGLE",style = "cursor: pointer;", shiny::checkboxInput(inputId = "realtime_TOGGLE",label = "Real-time Capability", value = FALSE)))),
-      card(card_body( tags$label(`for` = "edgecompute_toggle",style = "cursor: pointer;", shiny::checkboxInput(inputId = "edgecompute_toggle",label = "Edge-Compute Capability", value = FALSE)))), 
-      card(card_body( tags$label(`for` = "bathyDrive_toggle",style = "cursor: pointer;", shiny::checkboxInput( inputId = "bathyDrive_toggle",label = "Bathymetry Loading Capability", value = FALSE)))), 
-     card(card_body( tags$label(`for` = "ice_toggle",style = "cursor: pointer;", shiny::checkboxInput( inputId = "ice_toggle",label = "Ice Capable", value = FALSE)))), 
-     card(card_body(tags$label(`for` = "backseatDrive_toggle",style = "cursor: pointer;", shiny::checkboxInput( inputId = "backseatDrive_toggle",label = "Backseat Driving Capability", value = FALSE))))
-    ), 
-    layout_columns(
-     card(card_body(h4("Minimum Deployment Duration (Days)"), tags$input( type = "text", id = "missionDuration", value = "30" ))),
-     card(card_body(h4("Maximum Depth (m)"), tags$input( type = "text", id = "depth", value = "1000"))), 
-     card(card_body(h4("Range (km)"), tags$input( type = "text", id = "range", value = "3"))),
-     card(card_body(h4("Speed (kts)"), tags$input( type = "text", id = "spd", value = "1"))),
-     card(card_body(h4("Maximum Weight (kg)"),tags$input( type = "text", id = "mass", value = "100")))
-)
+      card(
+        card_header("Mission Parameters"),
+        card_body(
+          
+          div(
+            style = "display: flex; align-items: center; margin-bottom: 2px;",
+            tags$input(type = "checkbox", id = "duration_count", style = "margin-right: 5px;"),
+            tags$div(style = "font-size: 0.7rem;", "Deployment Duration (Days)")
+          ),
+          div(
+            style = "display: flex; align-items: center; gap: 10px; margin-bottom: 10px; ",
+            tags$span(style = "font-size: 0.7rem;", "1"),
+            div(
+              style = "display: flex; flex-direction: column; align-items: center; flex: 1;",
+              tags$input(type = "range", id = "duration_slider", min = "1", max = "660", value = "30", oninput = "document.getElementById('duration_value').textContent = this.value;", style = "width: 100%;"),
+              tags$span(id = "duration_value", style = "font-size: 0.7rem;", "30")
+            ),
+            tags$span(style = "font-size: 0.7rem;", "660")
+          ),
+          
+          div(
+            style = "display: flex; align-items: center; margin-bottom: 2px;",
+            tags$input(type = "checkbox", id = "depth_count", style = "margin-right: 5px;"),
+            tags$div(style = "font-size: 0.7rem;", "Maximum Depth (m)")
+          ),
+          div(
+            style = "display: flex; align-items: center; gap: 10px; margin-bottom: 10px;",
+            tags$span(style = "font-size: 0.7rem;", "100"),
+            div(
+              style = "display: flex; flex-direction: column; align-items: center; flex: 1;",
+              tags$input(type = "range", id = "depth_slider", min = "1", max = "1000", value = "30", oninput = "document.getElementById('depth_value').textContent = this.value;", style = "width: 100%;"),
+              tags$span(id = "depth_value", style = "font-size: 0.7rem;", "30")
+            ),
+            tags$span(style = "font-size: 0.7rem;", "1000")
+          ),
+          
+          div(
+            style = "display: flex; align-items: center; margin-bottom: 2px;",
+            tags$input(type = "checkbox", id = "range_count", style = "margin-right: 5px;"),
+            tags$div(style = "font-size: 0.7rem;", "Range (km)")
+          ),
+          div(
+            style = "display: flex; align-items: center; gap: 10px; margin-bottom: 10px;",
+            tags$span(style = "font-size: 0.7rem;", "1"),
+            div(
+              style = "display: flex; flex-direction: column; align-items: center; flex: 1;",
+              tags$input(type = "range", id = "range_slider", min = "1", max = "100", value = "30", oninput = "document.getElementById('range_value').textContent = this.value;", style = "width: 100%;"),
+              tags$span(id = "range_value", style = "font-size: 0.7rem;", "30")
+            ),
+            tags$span(style = "font-size: 0.7rem;", "100")
+          ),
+          
+          div(
+            style = "display: flex; align-items: center; margin-bottom: 2px;",
+            tags$input(type = "checkbox", id = "speed_count", style = "margin-right: 5px;"),
+            tags$div(style = "font-size: 0.7rem;", "Speed (kts)")
+          ),
+          div(
+            style = "display: flex; align-items: center; gap: 10px; margin-bottom: 10px;",
+            tags$span(style = "font-size: 0.7rem;", "1"),
+            div(
+              style = "display: flex; flex-direction: column; align-items: center; flex: 1;",
+              tags$input(type = "range", id = "speed_slider", min = "1", max = "20", value = "5", oninput = "document.getElementById('speed_value').textContent = this.value;", style = "width: 100%;"),
+              tags$span(id = "speed_value", style = "font-size: 0.7rem;", "5")
+            ),
+            tags$span(style = "font-size: 0.7rem;", "20")
+          ),
+          
+          div(
+            style = "display: flex; align-items: center; margin-bottom: 2px;",
+            tags$input(type = "checkbox", id = "mass_count", style = "margin-right: 5px;"),
+            tags$div(style = "font-size: 0.7rem;", "Maximum Weight (kg)")
+          ),
+          div(
+            style = "display: flex; align-items: center; gap: 10px;",
+            tags$span(style = "font-size: 0.7rem;", "1"),
+            div(
+              style = "display: flex; flex-direction: column; align-items: center; flex: 1;",
+              tags$input(type = "range", id = "mass_slider", min = "1", max = "1000", value = "30", oninput = "document.getElementById('mass_value').textContent = this.value;", style = "width: 100%;"),
+              tags$span(id = "mass_value", style = "font-size: 0.7rem;", "30")
+            ),
+            tags$span(style = "font-size: 0.7rem;", "1000")
+          )
+        )
+      ),
+      div(
+      card(
+        card_header("Acoustic Parameters"),
+        card_body(
+          
+          div(
+            style = "display: flex; align-items: center; margin-bottom: 2px;",
+            tags$input(type = "checkbox", id = "freq_count", style = "margin-right: 5px;"),
+            tags$div(style = "font-size: 0.7rem;", "Recording Frequency")
+          ),
+          div(
+            style = "display: flex; align-items: center; gap: 10px; margin-bottom: 10px;",
+            tags$span(style = "font-size: 0.7rem;", "1"),
+            div(
+              style = "display: flex; flex-direction: column; align-items: center; flex: 1;",
+              tags$input(type = "range", id = "freq_slider", min = "1", max = "100", value = "30", oninput = "document.getElementById('freq_value').textContent = this.value;", style = "width: 100%;"),
+              tags$span(id = "freq_value", style = "font-size: 0.7rem;", "30")
+            ),
+            tags$span(style = "font-size: 0.7rem;", "100")
+          ),
+          
+          div(
+            style = "display: flex; align-items: center; margin-bottom: 2px;",
+            tags$input(type = "checkbox", id = "acoustic_depth_count", style = "margin-right: 5px;"),
+            tags$div(style = "font-size: 0.7rem;", "Depth")
+          ),
+          div(
+            style = "display: flex; align-items: center; gap: 10px; margin-bottom: 10px;",
+            tags$span(style = "font-size: 0.7rem;", "1"),
+            div(
+              style = "display: flex; flex-direction: column; align-items: center; flex: 1;",
+              tags$input(type = "range", id = "acoustic_depth_slider", min = "1", max = "1000", value = "30", oninput = "document.getElementById('acoustic_depth_value').textContent = this.value;", style = "width: 100%;"),
+              tags$span(id = "acoustic_depth_value", style = "font-size: 0.7rem;", "30")
+            ),
+            tags$span(style = "font-size: 0.7rem;", "1000")
+          ),
+          
+          div(
+            style = "display: flex; align-items: center; margin-bottom: 2px;",
+            tags$input(type = "checkbox", id = "duty_count", style = "margin-right: 5px;"),
+            tags$div(style = "font-size: 0.7rem;", "Duty Cycle")
+          ),
+          div(
+            style = "display: flex; align-items: center; gap: 10px;",
+            tags$span(style = "font-size: 0.7rem;", "1"),
+            div(
+              style = "display: flex; flex-direction: column; align-items: center; flex: 1;",
+              tags$input(type = "range", id = "duty_slider", min = "1", max = "100", value = "30", oninput = "document.getElementById('duty_value').textContent = this.value;", style = "width: 100%;"),
+              tags$span(id = "duty_value", style = "font-size: 0.7rem;", "30")
+            ),
+            tags$span(style = "font-size: 0.7rem;", "100")
+          )
+        )
+      ), 
+      tags$button(id = "apply_button",class = "btn btn-primary",style =  "display: block; width: 100%; padding: 4px 10px; margin: 10px 0 0 0;","Apply")),
+      
+      col_widths = c(6, 6)
+    )
   ),
-  card(card_header("Editable Mission Parameters"), shiny::checkboxInput("input_Freq", "Recording Frequency", value = FALSE), shiny::checkboxInput("input_Depth", "Depth", value = FALSE), shiny::checkboxInput("input_DC", "Duty Cycle", value = FALSE)),
-col_widths = c(9, 3)
+  
+  col_widths = c(12)
 )
-
 ```
 
+```{ojs}
+//| echo: false
+//| output: false
+
+[
+  ["duration_slider", duration_min, duration_max],
+  ["depth_slider", depth_min, depth_max],
+  ["speed_slider", speed_min, speed_max],
+  ["mass_slider", mass_min, mass_max]
+].forEach(([id, min, max]) => {
+  const slider = document.getElementById(id)
+  slider.min = min
+  slider.max = max
+  slider.parentElement.parentElement.firstElementChild.textContent = min
+  slider.parentElement.parentElement.lastElementChild.textContent = max
+})
+```
 
 ## Your Options
+<!-- Expose my shiny R objects to OJS to work with Anne's chart -->
+```{ojs}
+//| echo: false
+apply = Generators.input(document.getElementById("apply_button"))
+```
 
+```{ojs}
+//| echo: false
+filtered = { apply;
+if (!data || !Array.isArray(data)) return [];
+return data.filter(g => {
+  if (document.getElementById("duration_count").checked && g.endurance_days != null && g.endurance_days < Number(document.getElementById("duration_slider").value)) return false
+  if (document.getElementById("depth_count").checked && g.max_depth_m != null && g.max_depth_m < Number(document.getElementById("depth_slider").value)) return false
+  if (document.getElementById("speed_count").checked && g.speed_kt != null && g.speed_kt < Number(document.getElementById("speed_slider").value)) return false
+  if (document.getElementById("mass_count").checked && g.mass_kg != null && g.mass_kg > Number(document.getElementById("mass_slider").value)) return false
+  if (document.getElementById("ice_checkbox").checked && g.ice_capable !== true && g.ice_capable !== "yes") return false
+  if (document.getElementById("rt_checkbox").checked && g.real_time_comms !== "yes") return false
+
+  return true;
+});
+}
+  // Add these back when the spreadsheet has the corresponding columns:
+  // if (document.getElementById("range_count").checked && g.range_km != null && g.range_km < Number(document.getElementById("range_slider").value)) return false
+  // if (document.getElementById("edge_checkbox").checked && g.edge_compute !== true && g.edge_compute !== "Yes") return false
+  // if (document.getElementById("bathy_checkbox").checked && g.bathy_drive !== true && g.bathy_drive !== "Yes") return false
+  // if (document.getElementById("backseat_checkbox").checked && g.backseat_drive !== true && g.backseat_drive !== "Yes") return false
+```
+
+```{ojs}
+//| echo: false
+Inputs.table(filtered, {
+  columns: [
+    "manufacturer", "glider", "max_depth_m", "endurance_days",
+    "speed_kt", "mass_kg", "real_time_comms", "acoustic_sensor", "ice_capable"
+  ],
+  header: {
+    manufacturer: "Manufacturer",
+    glider: "Glider",
+    max_depth_m: "Max depth (m)",
+    endurance_days: "Endurance (days, est.)",
+    speed_kt: "Speed (kt, est.)",
+    mass_kg: "Mass (kg)",
+    real_time_comms: "Real-time comms",
+    acoustic_sensor: "Acoustic sensor",
+    ice_capable: "Ice capable"
+  }
+})
+```
 
 
 ## Glider Comparisons
@@ -58,8 +281,8 @@ Please see below for details of your chosen gliders.
 #| echo: false
 
 layout_columns(
-card(card_header(), card_body(
-  tags$div(style =  "height: 100px; margin-bottom: 0;", class = "comparison-image"),
+card( card_body(
+  tags$div(style =  "height: 150px; margin-bottom: 0;", class = "comparison-image"),
   tags$div(class = "comparison-label", ""), 
   tags$div(class = "comparison-row", "Deployment Duration"),
   tags$div(class = "comparison-row", "Depth Range"),
