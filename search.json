@@ -1,32 +1,50 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Glider Performance Tool",
+    "objectID": "kasey_testDashboard.html",
+    "href": "kasey_testDashboard.html",
+    "title": "GLIDER SELECTION DASHBOARD",
     "section": "",
-    "text": "Comparing the PAM-equipped gliders of the NOAA Fisheries Glider Rodeo 2026 across mission modes: how each platform was piloted, how well it navigated, how long its battery and storage last, and how much noise it makes.\nSeven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:",
+    "text": "Comparing the PAM-equipped gliders of the NOAA Fisheries Glider Rodeo 2026."
+  },
+  {
+    "objectID": "kasey_testDashboard.html#mission-parameters",
+    "href": "kasey_testDashboard.html#mission-parameters",
+    "title": "GLIDER SELECTION DASHBOARD",
+    "section": "Mission Parameters",
+    "text": "Mission Parameters\n\nEnter requirements for your mission below. Once you click “apply”, you will get a list of matching glider options.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nReal-time Capability\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEdge-Compute Capability\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBathymetry Loading Capability\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIce Capable\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBackseat Driving Capability\n\n\n\n\n\n\n\n\n\n\n\n\n\nMinimum Deployment Duration (Days)\n\n\n\n\n\n\n\n\nMaximum Depth (m)\n\n\n\n\n\n\n\n\nRange (km)\n\n\n\n\n\n\n\n\nSpeed (kts)\n\n\n\n\n\n\n\n\nMaximum Weight (kg)\n\n\n\n\n\n\n\n\n\n\nEditable Mission Parameters\n\n\n\n\n\nRecording Frequency\n\n\n\n\n\n\n\nDepth\n\n\n\n\n\n\n\nDuty Cycle"
+  },
+  {
+    "objectID": "kasey_testDashboard.html#your-options",
+    "href": "kasey_testDashboard.html#your-options",
+    "title": "GLIDER SELECTION DASHBOARD",
+    "section": "Your Options",
+    "text": "Your Options"
+  },
+  {
+    "objectID": "kasey_testDashboard.html#glider-comparisons",
+    "href": "kasey_testDashboard.html#glider-comparisons",
+    "title": "GLIDER SELECTION DASHBOARD",
+    "section": "Glider Comparisons",
+    "text": "Glider Comparisons"
+  },
+  {
+    "objectID": "content/workflow.html",
+    "href": "content/workflow.html",
+    "title": "Workflow",
+    "section": "",
+    "text": "TODO: document the analysis steps as the code in code/ is written.",
     "crumbs": [
-      "Home"
+      "Workflow"
     ]
   },
   {
-    "objectID": "index.html#approach",
-    "href": "index.html#approach",
-    "title": "Glider Performance Tool",
-    "section": "Approach",
-    "text": "Approach\n\nSplit each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).\nCompute the same performance metrics for every glider.\nCompare platforms and modes.\n\nSee Project Info for goals and datasets, and Workflow for how to reproduce the analysis.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "content/results.html",
-    "href": "content/results.html",
-    "title": "Results",
+    "objectID": "content/workflow.html#run-the-performance-analysis",
+    "href": "content/workflow.html#run-the-performance-analysis",
+    "title": "Workflow",
     "section": "",
-    "text": "TODO: figures and tables comparing gliders and mission modes.",
+    "text": "TODO: document the analysis steps as the code in code/ is written.",
     "crumbs": [
-      "Results"
+      "Workflow"
     ]
   },
   {
@@ -100,23 +118,33 @@
     ]
   },
   {
-    "objectID": "content/workflow.html",
-    "href": "content/workflow.html",
-    "title": "Workflow",
+    "objectID": "content/results.html",
+    "href": "content/results.html",
+    "title": "Results",
     "section": "",
-    "text": "TODO: document the analysis steps as the code in code/ is written.",
+    "text": "TODO: figures and tables comparing gliders and mission modes.",
     "crumbs": [
-      "Workflow"
+      "Results"
     ]
   },
   {
-    "objectID": "content/workflow.html#run-the-performance-analysis",
-    "href": "content/workflow.html#run-the-performance-analysis",
-    "title": "Workflow",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Glider Performance Tool",
     "section": "",
-    "text": "TODO: document the analysis steps as the code in code/ is written.",
+    "text": "Comparing the PAM-equipped gliders of the NOAA Fisheries Glider Rodeo 2026 across mission modes: how each platform was piloted, how well it navigated, how long its battery and storage last, and how much noise it makes.\nSeven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:",
     "crumbs": [
-      "Workflow"
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#approach",
+    "href": "index.html#approach",
+    "title": "Glider Performance Tool",
+    "section": "Approach",
+    "text": "Approach\n\nSplit each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).\nCompute the same performance metrics for every glider.\nCompare platforms and modes.\n\nSee Project Info for goals and datasets, and Workflow for how to reproduce the analysis.",
+    "crumbs": [
+      "Home"
     ]
   }
 ]
