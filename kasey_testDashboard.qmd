@@ -1,0 +1,55 @@
+---
+title: GLIDER SELECTION DASHBOARD
+author: ''
+page-layout: full
+editor: visual
+theme: quartz
+css: kasey_testStyles.css
+---
+
+
+```{r}
+#| echo: false
+#| message: false
+library(bslib)
+library(shiny)
+```
+
+Comparing the PAM-equipped gliders of the **NOAA Fisheries Glider Rodeo 2026**.
+
+## Mission Parameters
+
+1.  Enter requirements for your mission below. Once you click "apply", you will get a list of matching glider options.
+
+<!-- YES/NO Options -->
+```{r}
+#| echo: false
+layout_columns(
+  div(
+    layout_columns(
+      card(card_body( tags$label(`for` = "realtime_TOGGLE",style = "cursor: pointer;", shiny::checkboxInput(inputId = "realtime_TOGGLE",label = "Real-time Capability", value = FALSE)))),
+      card(card_body( tags$label(`for` = "edgecompute_toggle",style = "cursor: pointer;", shiny::checkboxInput(inputId = "edgecompute_toggle",label = "Edge-Compute Capability", value = FALSE)))), 
+      card(card_body( tags$label(`for` = "bathyDrive_toggle",style = "cursor: pointer;", shiny::checkboxInput( inputId = "bathyDrive_toggle",label = "Bathymetry Loading Capability", value = FALSE)))), 
+     card(card_body( tags$label(`for` = "ice_toggle",style = "cursor: pointer;", shiny::checkboxInput( inputId = "ice_toggle",label = "Ice Capable", value = FALSE)))), 
+     card(card_body(tags$label(`for` = "backseatDrive_toggle",style = "cursor: pointer;", shiny::checkboxInput( inputId = "backseatDrive_toggle",label = "Backseat Driving Capability", value = FALSE))))
+    ), 
+    layout_columns(
+     card(card_body(h4("Minimum Deployment Duration (Days)"), tags$input( type = "text", id = "missionDuration", value = "30" ))),
+     card(card_body(h4("Maximum Depth (m)"), tags$input( type = "text", id = "depth", value = "1000"))), 
+     card(card_body(h4("Range (km)"), tags$input( type = "text", id = "range", value = "3"))),
+     card(card_body(h4("Speed (kts)"), tags$input( type = "text", id = "spd", value = "1"))),
+     card(card_body(h4("Maximum Weight (kg)"),tags$input( type = "text", id = "mass", value = "100")))
+)
+  ),
+  card(card_header("Editable Mission Parameters"), shiny::checkboxInput("input_Freq", "Recording Frequency", value = FALSE), shiny::checkboxInput("input_Depth", "Depth", value = FALSE), shiny::checkboxInput("input_DC", "Duty Cycle", value = FALSE)),
+col_widths = c(9, 3)
+)
+
+```
+
+
+## Your Options
+
+
+
+## Glider Comparisons

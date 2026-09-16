@@ -1,0 +1,25 @@
+<style>
+.card{
+    font-size: 0.7rem;
+}
+.card h4 {
+    font-size:0.7rem; 
+}
+.card input{
+    font-size: 0.7rem;
+}
+.card label{
+    font-size: 0.7rem;
+}
+.layout-columns {
+    gap: 0.25rem;
+}
+.row {
+  --bs-gutter-x: 0.15rem;
+  --bs-gutter-y: 0.15rem;
+}
+.grid {
+  --bs-gutter-x: 0.15rem; 
+  --bs-gutter-y: 0.15rem; 
+}
+    
