@@ -251,6 +251,61 @@ format:
   #gsd footer.credits { margin-top: 34px; border-top: 1px solid var(--line); padding-top: 14px; font-size: 12.5px; color: var(--ink-3); }
   #gsd footer.credits a { color: var(--accent); }
   #gsd .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 14px 0 0; font-size: 12.5px; color: var(--ink-2); }
+
+  #gsd .handling-row { margin-top: 14px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+  #gsd .handling-row.off { opacity: .62; }
+  #gsd .handling-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+  #gsd .handling-options { display:flex; flex-wrap:wrap; gap:8px; }
+  #gsd .handling-options label { display:flex; align-items:center; gap:6px; padding:7px 10px; border:1px solid var(--border); border-radius:999px; cursor:pointer; background:var(--surface); font-size:.92rem; }
+  #gsd .handling-options label:has(input:checked) { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; font-weight:700; }
+  #gsd .handling-note { margin-top:8px; color:var(--muted); font-size:.84rem; line-height:1.35; }
+
+
+/* Deployment / recovery styling: single source of truth */
+#gsd #sl-handling {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#gsd #sl-handling .handling-head {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#gsd #sl-handling .handling-head .lab {
+  margin: 0;
+  padding: 0;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+#gsd #sl-handling .handling-head .lab b {
+  font-size: 13.5px;
+  line-height: 1.35;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+#gsd #sl-handling .handling-options label {
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+#gsd #sl-handling .handling-options label:has(input:checked) {
+  font-weight: 400;
+}
+
+#gsd #sl-handling.off {
+  opacity: .48;
+}
+
+#gsd #sl-handling:not(.off) {
+  opacity: 1;
+}
+
 </style>
 
 <div id="gsd">
@@ -266,7 +321,7 @@ format:
       <p class="section-note">Enter requirements for your mission below. Tick a row to make it a
         requirement; leave it unticked and it is ignored. Then press Apply.</p>
 
-      <div class="panel">
+      <div class="panel mission-params">
         <h3>Capabilities</h3>
         <div class="caps">
           <label class="cap"><input type="checkbox" id="cap-rt"> Real-time comms</label>
@@ -322,6 +377,18 @@ format:
             <input type="range" id="r-mass" min="20" max="200" value="80" step="5">
             <span class="end">200</span>
           </div>
+        </div>
+
+        <div class="handling-row off" id="sl-handling">
+          <div class="deploy-recover-group handling-head">
+            <label class="lab" style="margin:0;"><input type="checkbox" data-for="handling"> <b>Deployment / recovery capability</b></label>
+          </div>
+          <div class="handling-options" role="radiogroup" aria-label="Available deployment and recovery capability">
+            <label><input type="radio" name="handling" value="1" checked> Single-person handling</label>
+            <label><input type="radio" name="handling" value="2"> Two-person handling</label>
+            <label><input type="radio" name="handling" value="3"> Crane / LARS available</label>
+          </div>
+          <div class="handling-note">Choose the highest level of handling support available. Higher capability also includes gliders with lower handling requirements.</div>
         </div>
 
         <h3 style="margin-top:20px;">Acoustic parameters</h3>
@@ -447,6 +514,7 @@ const ENDURANCE_CALC = "https://docs.google.com/spreadsheets/d/1R6D_G6jzVCg-Iip6
 const GLIDERS = [
   {
     id: "slocum-g3", glider: "Slocum G3", maker: "Teledyne Marine", photo: "slocum",
+    deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "The most widely flown glider; shallow pump plus an optional thruster for currents.",
     depth: [4, 1000], depthNote: "4–150 m shallow pump, 40–1000 m deep pump",
     endurance: [15, 540], endNote: "15–50 d alkaline · 1–4 mo rechargeable · 4–18 mo lithium",
@@ -464,6 +532,7 @@ const GLIDERS = [
   },
   {
     id: "slocum-sentinel", glider: "Slocum Sentinel", maker: "Teledyne Marine", photo: "sentinel",
+    deployRecover: 3, deployRecoverNote: "Crane required",
     affordance: "Two-year class endurance and eight payload bays, at the cost of crane handling.",
     depth: [0, 1000], endurance: [730, 730], endNote: "Vendor claim: over two years",
     speedKt: 3.5, speedNote: "0.75 kt glide, 3.5 kt sprint on dual thrusters",
@@ -478,6 +547,7 @@ const GLIDERS = [
   },
   {
     id: "seaglider-m1", glider: "Seaglider M1", maker: "APL UW / HII", photo: "seaglider",
+    deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "Isopycnal hull — half a knot on half a watt, handled by two people from a small boat.",
     depth: [50, 1000], endurance: [90, 300], endNote: "Up to 10 months, mission dependent",
     speedKt: 0.8, speedNote: "0.5 kt typical; can stem 0.8 kt of current",
@@ -493,6 +563,7 @@ const GLIDERS = [
   },
   {
     id: "seaglider-sgx", glider: "SGX", maker: "APL UW (IOP)", photo: "SGX",
+    deployRecover: null, deployRecoverNote: "Not reported",
     affordance: "About 60% more battery than SG; year-long and under-ice missions.",
     depth: [75, 1000], endurance: [365, 365], endNote: "12 months nominal",
     speedKt: 0.8, speedNote: "0.5 kt typical",
@@ -509,6 +580,7 @@ const GLIDERS = [
   },
   {
     id: "seaexplorer-1000", glider: "SeaExplorer 1000", maker: "Alseamar", photo: "seaexplorer",
+    deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "Rechargeable and wingless — back in the water in hours, little to snag.",
     depth: [0, 1000], endurance: [125, 125], endNote: "125 days / 2,700 km at max depth",
     speedKt: 1.0, speedNote: "0.5 kt nominal, 1 kt max",
@@ -526,6 +598,7 @@ const GLIDERS = [
   },
   {
     id: "seaexplorer-200", glider: "SeaExplorer 200", maker: "Alseamar", photo: "seaexplorer",
+    deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "Shallow-water specialist, with a propeller option for very shallow areas.",
     depth: [20, 200], endurance: [75, 135], endNote: "75 d single battery, 135 d double",
     speedKt: 1.0, massKg: 65, massNote: "65 kg single battery, 90 kg double",
@@ -539,6 +612,7 @@ const GLIDERS = [
   },
   {
     id: "spray", glider: "Spray", maker: "MRV / General Oceans", photo: "spray",
+    deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "Antennas in the wings: rolls at the surface instead of carrying a mast.",
     depth: [0, 1500], depthNote: "Rated 1500 m; typical operations to 1000 m",
     endurance: [90, 180], endNote: "Several months (≈815 cycles to 1000 m)",
@@ -551,6 +625,7 @@ const GLIDERS = [
   },
   {
     id: "spray2", glider: "Spray2", maker: "MRV / General Oceans", photo: "spray2",
+    deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "The commercial Spray: removable wings and tailfin, eight sensor ports.",
     depth: [0, 1000], endurance: [100, 100], endNote: "100+ days, 500+ profiles to 1000 m",
     speedKt: 0.5, massKg: 70, energy: null, battery: "Not published", batteryType: null,
@@ -562,6 +637,7 @@ const GLIDERS = [
   },
   {
     id: "oceanscout", glider: "Ocean Scout", maker: "Hefring / General Oceans", photo: "oceanscout",
+    deployRecover: 1, deployRecoverNote: "1 person job",
     affordance: "22.5 kg — one person deploys it, and several fit on a small boat.",
     depth: [6, 200], endurance: [30, 30], endNote: "About a month on the standard pack",
     speedKt: null, massKg: 22.5, energy: [1200, 1200], battery: "Lithium primary (Li-MnO₂)",batteryType: "primary",
@@ -575,6 +651,7 @@ const GLIDERS = [
   },
   {
     id: "exocetus-mod2", glider: "MOD2 Glider", maker: "Exocetus", photo: "mod2",
+    deployRecover: 3, deployRecoverNote: "Crane required",
     affordance: "Buoyancy engine about 5× the usual: crosses fresh-to-salt fronts without re-ballasting.",
     depth: [10, 200], endurance: [10, 30], endNote: "10 d alkaline, 30 d lithium",
     speedKt: 2.0, speedNote: "User selectable 0.7–2 kt", massKg: 109,
@@ -588,6 +665,7 @@ const GLIDERS = [
   },
   {
     id: "sg1-fathom", glider: "SG-1 Fathom", maker: "Helsing", photo: "SG1-Lura",
+    deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "Swarm-oriented defence platform with the Lura acoustic model running on board.",
     depth: null, depthNote: "Not published", endurance: [90, 90], endNote: "Up to three months",
     speedKt: 2.0, massKg: 60, energy: null, battery: "Not published", batteryType: null,
@@ -600,6 +678,7 @@ const GLIDERS = [
   },
   {
     id: "petrel-ii", glider: "Petrel-II", maker: "Tianjin University", photo: "petrel",
+    deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "Hybrid glider: buoyancy plus propeller, and the shallow sibling of the Petrel-X.",
     depth: [0, 1500], endurance: [30, 30], endNote: "About 30 days",
     speedKt: 3.36, speedNote: "1.6 kt gliding, 3.4 kt propelled (sea trial)",
@@ -612,6 +691,7 @@ const GLIDERS = [
   },
   {
     id: "petrel-x", glider: "Petrel-X", maker: "Tianjin University / Laoshan Laboratory", photo: "petrel",
+    deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "Rated for full ocean depth, and holder of the 10,619 m glider world record \u2014 seven times deeper than anything else here.",
     depth: [0, 11000], depthNote: "Rated 11,000 m \u00b7 8,213 m (Apr 2018) \u00b7 10,619 m world record, Challenger Deep",
     endurance: [200, 200], endNote: "200 days in a single mission (design figure)",
@@ -642,7 +722,7 @@ const CONF = { measured: ["measured", "At sea"], vendor: ["vendor", "Vendor"],
                derived: ["derived", "Derived"], paper: ["derived", "Paper"] };
 
 // ---------- requirement state ----------
-const REQS = ["duration", "depth", "speed", "mass", "freq", "duty"];
+const REQS = ["duration", "depth", "speed", "mass", "handling", "freq", "duty"];
 const CAPS = ["rt", "pam", "edge", "bathy", "ice", "backseat", "prop", "rodeo"];
 let applied = null;
 
@@ -654,6 +734,8 @@ function readForm() {
       const minRaw = Number(document.getElementById("r-depth-min").value);
       const maxRaw = Number(document.getElementById("r-depth-max").value);
       s.val.depth = [DEPTH_STOPS[minRaw], DEPTH_STOPS[maxRaw]];
+    } else if (k === "handling") {
+      s.val.handling = Number(document.querySelector('input[name="handling"]:checked').value);
     } else {
       s.val[k] = Number(document.getElementById("r-" + k).value);
     }
@@ -676,6 +758,7 @@ function matches(g, s) {
   if (s.on.depth && (!g.depth || g.depth[0] > s.val.depth[0] || g.depth[1] < s.val.depth[1])) return false;
   if (s.on.speed && (g.speedKt == null || g.speedKt < s.val.speed)) return false;
   if (s.on.mass && (g.massKg == null || g.massKg > s.val.mass)) return false;
+  if (s.on.handling && (g.deployRecover == null || g.deployRecover > s.val.handling)) return false;
   if (s.on.freq && !bestPam(g, s.val.freq)) return false;
   if (s.battery === "rechargeable" && g.batteryType !== "rechargeable" && g.batteryType !== "both") return false;
   if (s.battery === "primary" && g.batteryType !== "primary" && g.batteryType !== "both") return false;
@@ -835,6 +918,7 @@ function card(g, s) {
   const db = el("div", "more-body");
   const specs = el("div");
   specs.appendChild(specRow("Depth", g.depthNote || (g.depth ? num(g.depth[0]) + "–" + num(g.depth[1]) + " m" : "not published")));
+  specs.appendChild(specRow("Deploy / recover", g.deployRecoverNote || "Not reported"));
   specs.appendChild(specRow("Endurance", g.endNote));
   specs.appendChild(specRow("Speed", g.speedNote || (g.speedKt ? g.speedKt + " kt" : "not published")));
   specs.appendChild(specRow("Mass", g.massNote || (g.massKg ? g.massKg + " kg" : "not published")));
@@ -962,7 +1046,7 @@ function render() {
 }
 
 // ---------- wiring ----------
-REQS.filter(k => k !== "depth").forEach(k => {
+REQS.filter(k => k !== "depth" && k !== "handling").forEach(k => {
   const range = document.getElementById("r-" + k);
   const check = document.querySelector(`input[data-for="${k}"]`);
   const row = document.getElementById("sl-" + k);
@@ -977,6 +1061,26 @@ REQS.filter(k => k !== "depth").forEach(k => {
 });
 
 // Depth uses paired controls so users can specify the full operating interval.
+// Deployment/recovery uses an ordered categorical requirement.
+{
+  const check = document.querySelector('input[data-for="handling"]');
+  const row = document.getElementById("sl-handling");
+  const options = document.querySelectorAll('input[name="handling"]');
+
+  const syncHandling = () => {
+    row.classList.toggle("off", !check.checked);
+    document.getElementById("dirty").hidden = false;
+  };
+
+  check.addEventListener("change", syncHandling);
+  options.forEach(option => {
+    option.addEventListener("change", () => {
+      if (option.checked && !check.checked) check.checked = true;
+      syncHandling();
+    });
+  });
+}
+
 {
   const minRange = document.getElementById("r-depth-min");
   const maxRange = document.getElementById("r-depth-max");
@@ -1043,3 +1147,39 @@ applied = readForm();
 render();
 </script>
 ```
+
+
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const handlingRow = document.getElementById('sl-handling');
+  const handlingEnable = document.querySelector('input[type="checkbox"][data-for="handling"]');
+  const handlingOptions = document.querySelectorAll('input[type="radio"][name="handling"]');
+
+  function updateHandlingVisualState() {
+    if (!handlingRow || !handlingEnable) return;
+    handlingRow.classList.toggle('handling-enabled', handlingEnable.checked);
+    handlingRow.classList.toggle('off', !handlingEnable.checked);
+  }
+
+  handlingOptions.forEach(function (option) {
+    option.addEventListener('change', function () {
+      if (this.checked && handlingEnable) {
+        handlingEnable.checked = true;
+        handlingEnable.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      updateHandlingVisualState();
+    });
+  });
+
+  if (handlingEnable) {
+    handlingEnable.addEventListener('change', updateHandlingVisualState);
+  }
+
+  updateHandlingVisualState();
+});
+</script>
+
