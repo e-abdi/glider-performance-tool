@@ -7,11 +7,14 @@ after code/extract_endurance_model.py.
 
 Usage: python3 code/build_endurance_page.py
 """
+import csv
+import html
 import json
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 MODEL = REPO / "content" / "data" / "endurance-model.json"
+SENSORS = REPO / "content" / "data" / "extra-sensors.csv"
 EVAL = REPO / "code" / "endurance_eval.js"
 OUT = REPO / "content" / "slocum-endurance.qmd"
 
@@ -61,26 +64,13 @@ GROUPS = [
         ("P!F42", "FLBBCD-SLK", "frac", {}),
         ("P!F43", "Biospherical QSP-2150", "frac", {}),
     ]),
-    ("Thruster and extra sensors", [
-        ("P!K43", "Thruster use (at 7 W)", "num", {"unit": "%", "step": 5, "min": 0, "max": 100}),
-        ("P!F50", "UVP6", "frac", {"ah": 1.6}),
-        ("P!F51", "EK80", "frac", {"ah": 11.2}),
-        # The workbook calls this row "Hydrophone" and charges it a generic 1.6 Ah/day.
-        # Renamed on request; the figure is still the workbook's generic one.
-        ("P!F52", "JASCO OceanObserver", "frac", {"ah": 1.6}),
-        ("P!F53", "eDNA", "frac", {"ah": 6.4}),
-    ]),
+    # The thruster and external sensors are NOT listed here: they come from
+    # content/data/extra-sensors.csv so they can be changed without touching the workbook.
 ]
 
 # Where the page should open, for cells whose workbook value is not the configuration this
 # group actually flies. Everything not listed here starts on the workbook's own saved value.
-PAGE_DEFAULTS = {
-    "P!F52": 1,    # JASCO OceanObserver on
-    "P!F51": 0,    # EK80 off
-    "P!F50": 0,    # UVP6 off
-    "P!F53": 0,    # eDNA off
-    "P!K43": 0,    # no thruster
-}
+PAGE_DEFAULTS = {}
 
 GEOMETRY = [
     ("P!K6", "Trajectory angle", "°", 1),
@@ -154,6 +144,9 @@ CSS = """
     outline: 2px solid var(--accent); outline-offset: 2px;
   }
   #set .ah { font-size: 11px; color: var(--ink-3); font-family: var(--mono); }
+  #set .srcmark { color: var(--accent); font-weight: 700; margin-left: 2px; }
+  #set .fromcsv { margin: 10px 0 0; font-size: 11.5px; color: var(--ink-3); border-top: 1px solid var(--line); padding-top: 8px; }
+  #set .fromcsv code { font-family: var(--mono); font-size: 11px; }
 
   /* ---- geometry ---- */
   #set .geo { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 2px 20px; }
@@ -194,13 +187,62 @@ def control_html(key, label, kind, opt):
     return f'        <div class="f">{lab}<div class="ctl">{ctl}</div></div>'
 
 
+def read_sensors():
+    """Load content/data/extra-sensors.csv — the list anyone can edit to add a payload."""
+    rows = []
+    with SENSORS.open(encoding="utf8", newline="") as fh:
+        for i, r in enumerate(csv.DictReader(fh)):
+            name = (r.get("name") or "").strip()
+            if not name:
+                continue
+            kind = (r.get("kind") or "fraction").strip().lower()
+            if kind not in ("fraction", "percent"):
+                raise SystemExit(f"{SENSORS}: row {i + 2} has kind={kind!r}, "
+                                 "expected 'fraction' or 'percent'")
+            try:
+                ah = float(r["ah_per_day"])
+                default = float(r.get("default") or 0)
+            except (KeyError, ValueError) as e:
+                raise SystemExit(f"{SENSORS}: row {i + 2} ({name}): {e}")
+            rows.append({
+                "id": "s%d" % i, "name": name, "ah": ah, "kind": kind,
+                "default": default,
+                "source": (r.get("source") or "").strip(),
+                "note": (r.get("note") or "").strip(),
+            })
+    if not rows:
+        raise SystemExit(f"{SENSORS}: no sensors found")
+    return rows
+
+
+def sensor_html(s):
+    cid = "i_" + s["id"]
+    tip = f' title="{html.escape(s["note"], quote=True)}"' if s["note"] else ""
+    ah = f'<span class="ah">{s["ah"]:g} Ah/d</span>'
+    if s["kind"] == "percent":
+        ctl = (f'{ah}<input type="number" id="{cid}" data-sensor="{s["id"]}" '
+               f'min="0" max="100" step="5" style="width:70px"><span class="unit">%</span>')
+    else:
+        ctl = (f'{ah}<input type="number" id="{cid}" data-sensor="{s["id"]}" '
+               f'min="0" max="1" step="0.1" style="width:70px">')
+    mark = '<span class="srcmark" aria-hidden="true">*</span>' if s["note"] else ""
+    return (f'        <div class="f"><label for="{cid}"{tip}>{html.escape(s["name"])}{mark}</label>'
+            f'<div class="ctl">{ctl}</div></div>')
+
+
 def main():
     model = json.loads(MODEL.read_text(encoding="utf8"))
+    sensors = read_sensors()
 
     panels = []
     for title, fields in GROUPS:
         rows = "\n".join(control_html(*f) for f in fields)
         panels.append(f'      <section class="panel">\n        <h3>{title}</h3>\n{rows}\n      </section>')
+    panels.append(
+        '      <section class="panel">\n        <h3>Thruster and extra sensors</h3>\n'
+        + "\n".join(sensor_html(s) for s in sensors)
+        + '\n        <p class="fromcsv">From <code>content/data/extra-sensors.csv</code>'
+          ' — add a row to add a sensor.</p>\n      </section>')
     panels_html = "\n".join(panels)
 
     geo_html = "\n".join(
@@ -212,6 +254,7 @@ def main():
         "alerts": ["P!F5", "P!E30", "P!H18", "P!H24"],
         "labels": {"P!F12": "P!E12"},
         "defaults": PAGE_DEFAULTS,
+        "sensors": sensors,
     }
 
     body = f"""<div id="set">
@@ -253,14 +296,26 @@ def main():
     <p>Endurance is battery capacity by chemistry and bay
     (550 / 800 Ah primary, 215 / 300 Ah rechargeable) divided by total Ah per day, where the
     glider-and-standard-sensor load comes from the workbook's component power model and the
-    thruster, UVP6, EK80, hydrophone and eDNA loads are added on top. Distance assumes 20 km/day.</p>
+    external payload is added on top. Distance assumes 20 km/day.</p>
+    <p>The external payload is read from <code>content/data/extra-sensors.csv</code> rather than
+    from the workbook, so a sensor can be added, removed or re-costed by editing one line in the
+    repository. The workbook hardcoded the same four inside a single formula; the replacement is
+    checked against it on every build. Figures marked <span class="srcmark">*</span> carry a note
+    &mdash; hover the name to read it.</p>
     <p>The workbook also reports a bare-glider endurance from the same power model. It is not
     shown here: it excludes the external sensors, so on these defaults it reads about five times
     longer and answers a different question.</p>
   </footer>
 </div>"""
 
-    qmd = f"""---
+    qmd = f"""<!--
+  GENERATED FILE - do not edit by hand.
+  Built by code/build_endurance_page.py from content/data/endurance-model.json and
+  content/data/extra-sensors.csv. To add or re-cost a sensor, edit that CSV; to change
+  the page itself, edit the builder. Editing this file directly will be overwritten on
+  the next build, which runs in CI on every push.
+-->
+---
 title: "Slocum Endurance Calculation"
 page-layout: full
 toc: false
@@ -325,18 +380,39 @@ UI = r"""
         out[k] = isNaN(n) ? 0 : n;
       }
     });
+    // The workbook's own extra-sensor terms are zeroed: that payload now comes from
+    // extra-sensors.csv instead, and is added back below. Leaving them in would
+    // double-count the four the workbook happens to know about.
+    ["P!K43", "P!F50", "P!F51", "P!F52", "P!F53"].forEach((k) => { out[k] = 0; });
     return out;
+  }
+
+  // Ah/day drawn by everything in extra-sensors.csv, at the settings on screen.
+  function sensorLoad() {
+    let total = 0;
+    SPEC.sensors.forEach((s) => {
+      const el = document.getElementById("i_" + s.id);
+      const n = parseFloat(el.value);
+      const v = isNaN(n) ? 0 : n;
+      total += s.ah * (s.kind === "percent" ? v / 100 : v);
+    });
+    return total;
   }
 
   function render() {
     const inputs = readInputs();
     let r;
     try {
+      // Two passes. First the workbook's component power model gives K19 (glider and
+      // standard sensors). Then K20 is overridden with K19 plus the CSV payload, so the
+      // workbook still supplies the capacity table and the rounding in K30/K31 -- only
+      // the one line that used to hardcode four sensors is ours.
       model.reset(inputs);
-      r = {
-        days: model.get("P!K30"), km: model.get("P!K31"),
-        k19: model.get("P!K19"), k20: model.get("P!K20")
-      };
+      const k19 = model.get("P!K19");
+      const k20 = k19 + sensorLoad();
+      const withLoad = Object.assign({}, inputs, { "P!K20": k20 });
+      model.reset(withLoad);
+      r = { days: model.get("P!K30"), km: model.get("P!K31"), k19: k19, k20: k20 };
     } catch (e) {
       document.getElementById("alerts").innerHTML =
         '<div class="alert">' + e.message + "</div>";
@@ -400,8 +476,15 @@ UI = r"""
     el.addEventListener("input", render);
     el.addEventListener("change", render);
   });
+  const sensorEls = SPEC.sensors.map((s) => document.getElementById("i_" + s.id));
+  sensorEls.forEach((el, i) => {
+    el.value = SPEC.sensors[i].default;
+    el.addEventListener("input", render);
+    el.addEventListener("change", render);
+  });
   document.getElementById("reset").addEventListener("click", () => {
     controls.forEach((el) => setControl(el, defaults[el.dataset.cell]));
+    sensorEls.forEach((el, i) => { el.value = SPEC.sensors[i].default; });
     render();
   });
 
