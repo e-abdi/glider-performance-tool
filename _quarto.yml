@@ -51,6 +51,8 @@ website:
         text: Endurance calculation
       - href: content/endurance_plots.qmd
         text: Endurance Results
+      - href: content/study-design.qmd
+        text: Study Design Tool
 
 format:
   html:
