@@ -52,7 +52,7 @@
     "href": "content/project-info.html",
     "title": "Project Info",
     "section": "",
-    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)",
+    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)\nHéloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center (heloise.frouin-mouy@miami.edu)\nKasey Costello, Scripps Institution of Oceanography, Univeresity of California San Diego (kcastello@ucsd.edu)\nAnne Simonis, Estuary and Ocean Science Center, San Francisco State University (asimonis@sfsu.edu)",
     "crumbs": [
       "Project Info"
     ]
@@ -62,7 +62,7 @@
     "href": "content/project-info.html#team-members",
     "title": "Project Info",
     "section": "",
-    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)",
+    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)\nHéloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center (heloise.frouin-mouy@miami.edu)\nKasey Costello, Scripps Institution of Oceanography, Univeresity of California San Diego (kcastello@ucsd.edu)\nAnne Simonis, Estuary and Ocean Science Center, San Francisco State University (asimonis@sfsu.edu)",
     "crumbs": [
       "Project Info"
     ]
@@ -72,7 +72,7 @@
     "href": "content/project-info.html#background",
     "title": "Project Info",
     "section": "Background",
-    "text": "Background\nThe Glider Rodeo field-tested PAM-glider platforms under the same conditions to give data-driven guidance on what each system can do in different operational environments and for different research questions. Each glider was flown through a sequence of mission modes:\n\n\n\nPhase\nMode\nStart (UTC)\nStop (UTC)\n\n\n\n\n1\nshakedown\n2026-01-28 22:00\n2026-01-30 06:00\n\n\n2\nfast\n2026-01-30 06:00\n2026-02-01 18:00\n\n\n3\nslow\n2026-02-01 18:00\n2026-02-04 18:00\n\n\n4\nintermediate\n2026-02-04 18:00\n2026-02-06 18:00\n\n\n5\ndrift (20 min at 800 m)\n2026-02-06 18:00\n2026-02-08 18:00\n\n\n6\nmini-rodeo: slow\n2026-02-08 18:00\n2026-02-09 06:00\n\n\n6\nmini-rodeo: intermediate\n2026-02-09 06:00\n2026-02-09 18:00\n\n\n6\nmini-rodeo: fast\n2026-02-09 18:00\n2026-02-10 06:00\n\n\n7\nrecovery\n2026-02-10 06:00\n\n\n\n\nSource: Glider Rodeo fieldwork plan.",
+    "text": "Background\nThe Glider Rodeo field-tested PAM-glider platforms under the same conditions to give data-driven guidance on what each system can do in different operational environments and for different research questions. Each glider was flown through a sequence of mission modes:\n\n\n\n\n\n\n\n\n\nPhase\nMode\nStart (UTC)\nStop (UTC)\n\n\n\n\n1\nshakedown\n2026-01-28 22:00\n2026-01-30 06:00\n\n\n2\nfast\n2026-01-30 06:00\n2026-02-01 18:00\n\n\n3\nslow\n2026-02-01 18:00\n2026-02-04 18:00\n\n\n4\nintermediate\n2026-02-04 18:00\n2026-02-06 18:00\n\n\n5\ndrift (20 min at 800 m)\n2026-02-06 18:00\n2026-02-08 18:00\n\n\n6\nmini-rodeo: slow\n2026-02-08 18:00\n2026-02-09 06:00\n\n\n6\nmini-rodeo: intermediate\n2026-02-09 06:00\n2026-02-09 18:00\n\n\n6\nmini-rodeo: fast\n2026-02-09 18:00\n2026-02-10 06:00\n\n\n7\nrecovery\n2026-02-10 06:00\n\n\n\n\nSource: Glider Rodeo fieldwork plan.",
     "crumbs": [
       "Project Info"
     ]
