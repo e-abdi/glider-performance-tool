@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.34">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Slocum Endurance Calculation – Glider Performance Tool</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../content/glider-selection.html" rel="prev">
+<link href="../content/images/GliderRodeo.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-befe23ebd2f54d8af2c8a89d1a1611f1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-3ee92113472145690d4c50fc0ba69faf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-f91edf9f849ad1453714358b37eefe80.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-3ee92113472145690d4c50fc0ba69faf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/slocum-endurance.html">Endurance calculation</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../content/images/GliderRodeo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main tools-wide">
+    <a href="https://nmfs-pam-glider.github.io/GliderRodeo/" title="NOAA Fisheries PAM-Glider Rodeo" class="quarto-navigation-tool px-1" aria-label="NOAA Fisheries PAM-Glider Rodeo"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/e-abdi/glider-performance-tool" title="Source code" class="quarto-navigation-tool px-1" aria-label="Source code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/project-info.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Project Info</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workflow</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Results</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/glider-selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glider Selection Dashboard</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/slocum-endurance.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Endurance calculation</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page-right" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Slocum Endurance Calculation</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-right">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+  GENERATED FILE - do not edit by hand.
+  Built by code/build_endurance_page.py from content/data/endurance-model.json and
+  content/data/extra-sensors.csv. To add or re-cost a sensor, edit that CSV; to change
+  the page itself, edit the builder. Editing this file directly will be overwritten on
+  the next build, which runs in CI on every push.
+-->
+<style>
+  #set {
+    --surface: #FFFFFF; --surface-2: #F1F6F7; --line: #DAE3E5; --line-strong: #BCCBCE;
+    --ink: #1F2C31; --ink-2: #536268; --ink-3: #78888E;
+    --accent: #2780E3; --accent-ink: #1B62B0; --accent-soft: #E3EEFB;
+    --good: #1A6B4E; --warn: #A33227; --warn-soft: #F8E4E1;
+    --sans: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    max-width: 1150px; color: var(--ink); font-family: var(--sans); line-height: 1.55;
+  }
+  body.quarto-dark #set, :root[data-bs-theme="dark"] #set {
+    --surface: #212121; --surface-2: #2A2A2A; --line: #3A3A3A; --line-strong: #4E4E4E;
+    --ink: #F2F2F2; --ink-2: #BFC6C8; --ink-3: #939A9D;
+    --accent: #75AADB; --accent-ink: #9CC6EC; --accent-soft: #23323F;
+    --good: #6DC49B; --warn: #E08278; --warn-soft: #3A211E;
+  }
+  #set * { box-sizing: border-box; }
+  #set .lede { color: var(--ink-2); max-width: 74ch; }
+
+  /* ---- results ---- */
+  #set .results {
+    position: sticky; top: 0; z-index: 5; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px;
+    margin: 18px 0 26px; box-shadow: 0 6px 18px rgba(31,44,49,.07);
+  }
+  #set .headline { display: flex; flex-wrap: wrap; gap: 26px 44px; align-items: baseline; }
+  #set .big { display: flex; flex-direction: column; gap: 2px; }
+  #set .big .v { font-size: 40px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  #set .big .v small { font-size: 17px; font-weight: 400; color: var(--ink-3); margin-left: 5px; }
+  #set .big .k { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+  #set .load { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-left: auto; }
+  #set .load div { font-size: 12.5px; color: var(--ink-2); }
+  #set .load b { font-family: var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+  #set .alerts { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  #set .alert {
+    font-size: 13px; color: var(--warn); background: var(--warn-soft);
+    border-radius: 6px; padding: 7px 11px;
+  }
+
+  /* ---- inputs ---- */
+  #set .panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 16px; }
+  #set .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  #set .panel h3 {
+    font-size: 12px; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3);
+    margin: 0 0 10px; font-weight: 700;
+  }
+  #set .f { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 5px 0; }
+  #set .f + .f { border-top: 1px solid var(--line); }
+  #set .f label { font-size: 13.5px; color: var(--ink-2); }
+  #set .f .ctl { display: flex; align-items: center; gap: 6px; }
+  #set input[type="number"], #set select {
+    font: inherit; font-size: 13.5px; font-family: var(--mono); text-align: right;
+    width: 92px; padding: 4px 7px; border: 1px solid var(--line-strong);
+    border-radius: 6px; background: var(--surface); color: var(--ink);
+  }
+  #set select { width: 140px; text-align: left; font-family: var(--sans); }
+  #set input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--accent); margin: 0; }
+  #set .unit { font-size: 12px; color: var(--ink-3); min-width: 30px; }
+  #set input:focus-visible, #set select:focus-visible, #set button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  #set .ah { font-size: 11px; color: var(--ink-3); font-family: var(--mono); }
+  #set .srcmark { color: var(--accent); font-weight: 700; margin-left: 2px; }
+  #set .fromcsv { margin: 10px 0 0; font-size: 11.5px; color: var(--ink-3); border-top: 1px solid var(--line); padding-top: 8px; }
+  #set .fromcsv code { font-family: var(--mono); font-size: 11px; }
+
+  /* ---- geometry ---- */
+  #set .geo { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 2px 20px; }
+  #set .geo div { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+  #set .geo span:first-child { color: var(--ink-2); }
+  #set .geo span:last-child { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  #set .bar { display: flex; gap: 10px; align-items: center; margin: 18px 0 6px; }
+  #set button {
+    font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; border-radius: 7px;
+    padding: 7px 15px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--accent-ink);
+  }
+  #set .check { font-size: 12.5px; color: var(--ink-3); margin-left: auto; font-family: var(--mono); }
+  #set .check.ok { color: var(--good); }
+  #set footer.src { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 12px; font-size: 12.5px; color: var(--ink-3); }
+  #set h2.sec { font-size: 18px; margin: 28px 0 10px; font-weight: 700; }
+</style>
+
+<div id="set">
+
+  <p class="lede">Predicts how long a Slocum will last on a given mission, from Teledyne Webb
+  Research's <b>Slocum Endurance Tool</b> (revision C, 2012‑10‑19). The workbook's
+  formulas are evaluated here as-is rather than reimplemented, so the numbers are Excel's:
+  all 998 cells the model computes are checked against the workbook's own
+  stored results.</p>
+
+  <div class="results">
+    <div class="headline">
+      <div class="big"><span class="v" id="o_days">–</span><span class="k">Endurance (days)</span></div>
+      <div class="big"><span class="v" id="o_km">–</span><span class="k">Approximate distance (km)</span></div>
+      <div class="load">
+        <div>Glider + standard sensors <b id="o_k19">–</b> Ah/day</div>
+        <div>Total with thruster + extras <b id="o_k20">–</b> Ah/day</div>
+      </div>
+    </div>
+    <div class="alerts" id="alerts"></div>
+  </div>
+
+  <h2 class="sec anchored">Mission and configuration</h2>
+  <div class="panels">
+      <section class="panel">
+        <h3 class="anchored">Mission</h3>
+        <div class="f"><label for="i_P_F6">Maximum profile depth</label><div class="ctl"><input type="number" id="i_P_F6" data-cell="P!F6" data-kind="num" min="1" step="10"><span class="unit">m</span></div></div>
+        <div class="f"><label for="i_P_F7">Minimum profile depth</label><div class="ctl"><input type="number" id="i_P_F7" data-cell="P!F7" data-kind="num" min="0" step="1"><span class="unit">m</span></div></div>
+        <div class="f"><label for="i_P_F8">Horizontal velocity</label><div class="ctl"><input type="number" id="i_P_F8" data-cell="P!F8" data-kind="num" min="0.01" step="0.01"><span class="unit">m/s</span></div></div>
+        <div class="f"><label for="i_P_F9">Vertical velocity</label><div class="ctl"><input type="number" id="i_P_F9" data-cell="P!F9" data-kind="num" min="0.01" step="0.01"><span class="unit">m/s</span></div></div>
+        <div class="f"><label for="i_P_F11">Surface on</label><div class="ctl"><select id="i_P_F11" data-cell="P!F11" data-kind="sel"><option value="N">Profile count</option><option value="T">Elapsed time</option><option value="D">Distance</option></select></div></div>
+        <div class="f"><label for="i_P_F12" data-label-for="P!E12">…</label><div class="ctl"><input type="number" id="i_P_F12" data-cell="P!F12" data-kind="num" min="0" step="1"></div></div>
+        <div class="f"><label for="i_P_F13">Surface time</label><div class="ctl"><input type="number" id="i_P_F13" data-cell="P!F13" data-kind="num" min="0" step="1"><span class="unit">min</span></div></div>
+        <div class="f"><label for="i_P_F14">Average operating temperature</label><div class="ctl"><input type="number" id="i_P_F14" data-cell="P!F14" data-kind="num" step="1"><span class="unit">°C</span></div></div>
+      </section>
+      <section class="panel">
+        <h3 class="anchored">Glider configuration</h3>
+        <div class="f"><label for="i_P_F17">Buoyancy pump</label><div class="ctl"><select id="i_P_F17" data-cell="P!F17" data-kind="sel" data-numeric="1"><option value="1000">1000 m pump</option><option value="200">200 m pump</option></select></div></div>
+        <div class="f"><label for="i_P_E22">Glider type</label><div class="ctl"><select id="i_P_E22" data-cell="P!E22" data-kind="sel"><option value="Coastal">Coastal</option><option value="Open Ocean">Open Ocean</option></select></div></div>
+        <div class="f"><label for="i_P_F19">Altimeter</label><div class="ctl"><input type="checkbox" id="i_P_F19" data-cell="P!F19" data-kind="bool"></div></div>
+        <div class="f"><label for="i_P_F18">Pinger</label><div class="ctl"><input type="checkbox" id="i_P_F18" data-cell="P!F18" data-kind="bool"></div></div>
+        <div class="f"><label for="i_P_F20">FreeWave</label><div class="ctl"><input type="checkbox" id="i_P_F20" data-cell="P!F20" data-kind="bool"></div></div>
+        <div class="f"><label for="i_P_F21">PTT / Argos</label><div class="ctl"><input type="checkbox" id="i_P_F21" data-cell="P!F21" data-kind="bool"></div></div>
+      </section>
+      <section class="panel">
+        <h3 class="anchored">Battery</h3>
+        <div class="f"><label for="i_P_F26">Chemistry</label><div class="ctl"><select id="i_P_F26" data-cell="P!F26" data-kind="sel"><option value="Ld">Lithium</option><option value="a">Alkaline</option></select></div></div>
+        <div class="f"><label for="i_P_E28">Type</label><div class="ctl"><select id="i_P_E28" data-cell="P!E28" data-kind="sel"><option value="P">Primary</option><option value="R">Rechargeable</option></select></div></div>
+        <div class="f"><label for="i_P_E29">Extended energy bay</label><div class="ctl"><input type="checkbox" id="i_P_E29" data-cell="P!E29" data-kind="bool"></div></div>
+      </section>
+      <section class="panel">
+        <h3 class="anchored">Standard science payload</h3>
+        <div class="f"><label for="i_P_F36">CTD</label><div class="ctl"><input type="number" id="i_P_F36" data-cell="P!F36" data-kind="num" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <div class="f"><label for="i_P_F37">Motherboard</label><div class="ctl"><input type="number" id="i_P_F37" data-cell="P!F37" data-kind="num" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <div class="f"><label for="i_P_F39">Persistor</label><div class="ctl"><input type="number" id="i_P_F39" data-cell="P!F39" data-kind="num" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <div class="f"><label for="i_P_F40">Aanderaa optode</label><div class="ctl"><input type="number" id="i_P_F40" data-cell="P!F40" data-kind="num" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <div class="f"><label for="i_P_F41">Explorer 600 kHz DVL</label><div class="ctl"><input type="number" id="i_P_F41" data-cell="P!F41" data-kind="num" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <div class="f"><label for="i_P_F42">FLBBCD-SLK</label><div class="ctl"><input type="number" id="i_P_F42" data-cell="P!F42" data-kind="num" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <div class="f"><label for="i_P_F43">Biospherical QSP-2150</label><div class="ctl"><input type="number" id="i_P_F43" data-cell="P!F43" data-kind="num" min="0" max="1" step="0.1" style="width:70px"></div></div>
+      </section>
+      <section class="panel">
+        <h3 class="anchored">Thruster and extra sensors</h3>
+        <div class="f"><label for="i_s0" title="11.2 Ah/day at 100% duty (7 W)">Thruster<span class="srcmark" aria-hidden="true">*</span></label><div class="ctl"><span class="ah">11.2 Ah/d</span><input type="number" id="i_s0" data-sensor="s0" min="0" max="100" step="5" style="width:70px"><span class="unit">%</span></div></div>
+        <div class="f"><label for="i_s1">UVP6</label><div class="ctl"><span class="ah">1.6 Ah/d</span><input type="number" id="i_s1" data-sensor="s1" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <div class="f"><label for="i_s2">EK80</label><div class="ctl"><span class="ah">11.2 Ah/d</span><input type="number" id="i_s2" data-sensor="s2" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <div class="f"><label for="i_s3" title="Workbook's generic hydrophone figure. Rodeo 2026 measured capex987 at 5.1 W against ~2.2 W for the rest">JASCO OceanObserver<span class="srcmark" aria-hidden="true">*</span></label><div class="ctl"><span class="ah">1.6 Ah/d</span><input type="number" id="i_s3" data-sensor="s3" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <div class="f"><label for="i_s4">eDNA</label><div class="ctl"><span class="ah">6.4 Ah/d</span><input type="number" id="i_s4" data-sensor="s4" min="0" max="1" step="0.1" style="width:70px"></div></div>
+        <p class="fromcsv">From <code>content/data/extra-sensors.csv</code> — add a row to add a sensor.</p>
+      </section>
+  </div>
+
+  <h2 class="sec anchored">Mission geometry</h2>
+  <div class="geo">
+        <div><span>Trajectory angle</span><span id="g_P_K6">–</span></div>
+        <div><span>Profile duration</span><span id="g_P_K7">–</span></div>
+        <div><span>Profile distance</span><span id="g_P_K8">–</span></div>
+        <div><span>Profiles between surfacing</span><span id="g_P_K9">–</span></div>
+        <div><span>Time between surfacing</span><span id="g_P_K10">–</span></div>
+        <div><span>Distance between surfacing</span><span id="g_P_K11">–</span></div>
+        <div><span>Battery capacity (derated)</span><span id="g_P_K18">–</span></div>
+  </div>
+
+  <div class="bar">
+    <button id="reset">Reset to defaults</button>
+    <span class="check" id="check">–</span>
+  </div>
+
+  <footer class="src">
+    <p>Endurance is battery capacity by chemistry and bay
+    (550 / 800 Ah primary, 215 / 300 Ah rechargeable) divided by total Ah per day, where the
+    glider-and-standard-sensor load comes from the workbook's component power model and the
+    external payload is added on top. Distance assumes 20 km/day.</p>
+    <p>The external payload is read from <code>content/data/extra-sensors.csv</code> rather than
+    from the workbook, so a sensor can be added, removed or re-costed by editing one line in the
+    repository. The workbook hardcoded the same four inside a single formula; the replacement is
+    checked against it on every build. Figures marked <span class="srcmark">*</span> carry a note
+    — hover the name to read it.</p>
+    <p>The workbook also reports a bare-glider endurance from the same power model. It is not
+    shown here: it excludes the external sensors, so on these defaults it reads about five times
+    longer and answers a different question.</p>
+  </footer>
+</div>
+
+<script>
+/* Tiny Excel-formula interpreter for the Slocum endurance model.
+ *
+ * The model ships as the workbook's own formula strings (see extract_endurance_model.py),
+ * so this evaluates them rather than re-implementing the physics. It covers exactly the
+ * subset those formulas use — operators + - * / ^ and = <> < > <= >=, ranges, and the
+ * functions IF SUM AND OR MAX MIN ROUND ROUNDUP CEILING SQRT LEFT ATAN PI ABS — and
+ * deliberately nothing else: an unknown name throws instead of quietly returning 0.
+ *
+ * Excel semantics worth naming, because getting them wrong is silent:
+ *   - text comparison is case-insensitive, so "Ld" = "ld" is TRUE
+ *   - an empty cell reads as 0 in arithmetic
+ *   - SUM skips text rather than failing on it
+ *
+ * Works in Node and in the browser.
+ */
+(function (root) {
+  "use strict";
+
+  // ---------------------------------------------------------------- lexer
+  const NUM = /^\d+(\.\d+)?([eE][-+]?\d+)?/;
+  const REF = /^[A-Za-z_][A-Za-z0-9_]*!\$?[A-Z]{1,2}\$?\d+(:\$?[A-Z]{1,2}\$?\d+)?/;
+  const NAME = /^[A-Za-z][A-Za-z0-9_.]*/;
+
+  function tokenize(src) {
+    const out = [];
+    let i = 0;
+    while (i < src.length) {
+      const c = src[i];
+      if (c === " " || c === "\t" || c === "\n" || c === "\r") { i++; continue; }
+      if (c === '"') {
+        let j = i + 1, s = "";
+        while (j < src.length) {
+          if (src[j] === '"' && src[j + 1] === '"') { s += '"'; j += 2; continue; }
+          if (src[j] === '"') break;
+          s += src[j++];
+        }
+        out.push({ t: "str", v: s });
+        i = j + 1;
+        continue;
+      }
+      let m = src.slice(i).match(REF);
+      if (m) { out.push({ t: "ref", v: m[0].replace(/\$/g, "") }); i += m[0].length; continue; }
+      m = src.slice(i).match(NUM);
+      if (m) { out.push({ t: "num", v: parseFloat(m[0]) }); i += m[0].length; continue; }
+      m = src.slice(i).match(NAME);
+      if (m) { out.push({ t: "name", v: m[0].toUpperCase() }); i += m[0].length; continue; }
+      const two = src.slice(i, i + 2);
+      if (two === "<=" || two === ">=" || two === "<>") { out.push({ t: "op", v: two }); i += 2; continue; }
+      if ("+-*/^=<>(),&".includes(c)) { out.push({ t: "op", v: c }); i++; continue; }
+      throw new Error("unexpected character " + JSON.stringify(c) + " in: " + src);
+    }
+    return out;
+  }
+
+  // ---------------------------------------------------------------- parser
+  // Precedence, loosest first: comparison < concat < +- < */ < ^ < unary < atom
+  function parse(tokens) {
+    let p = 0;
+    const peek = () => tokens[p];
+    const eat = (v) => {
+      const t = tokens[p];
+      if (!t || (v !== undefined && t.v !== v)) throw new Error("expected " + v + ", got " + JSON.stringify(t));
+      p++;
+      return t;
+    };
+
+    function comparison() {
+      let left = concat();
+      while (peek() && peek().t === "op" && ["=", "<>", "<", ">", "<=", ">="].includes(peek().v)) {
+        const op = eat().v;
+        left = { n: "bin", op, l: left, r: concat() };
+      }
+      return left;
+    }
+    function concat() {
+      let left = additive();
+      while (peek() && peek().t === "op" && peek().v === "&") {
+        eat();
+        left = { n: "bin", op: "&", l: left, r: additive() };
+      }
+      return left;
+    }
+    function additive() {
+      let left = multiplicative();
+      while (peek() && peek().t === "op" && (peek().v === "+" || peek().v === "-")) {
+        const op = eat().v;
+        left = { n: "bin", op, l: left, r: multiplicative() };
+      }
+      return left;
+    }
+    function multiplicative() {
+      let left = power();
+      while (peek() && peek().t === "op" && (peek().v === "*" || peek().v === "/")) {
+        const op = eat().v;
+        left = { n: "bin", op, l: left, r: power() };
+      }
+      return left;
+    }
+    function power() {
+      const left = unary();
+      if (peek() && peek().t === "op" && peek().v === "^") {
+        eat();
+        return { n: "bin", op: "^", l: left, r: power() };
+      }
+      return left;
+    }
+    function unary() {
+      if (peek() && peek().t === "op" && (peek().v === "-" || peek().v === "+")) {
+        const op = eat().v;
+        return { n: "un", op, e: unary() };
+      }
+      return atom();
+    }
+    function atom() {
+      const t = peek();
+      if (!t) throw new Error("unexpected end of formula");
+      if (t.t === "num") { eat(); return { n: "num", v: t.v }; }
+      if (t.t === "str") { eat(); return { n: "str", v: t.v }; }
+      if (t.t === "ref") { eat(); return { n: "ref", v: t.v }; }
+      if (t.t === "name") {
+        eat();
+        if (t.v === "TRUE") return { n: "num", v: true };
+        if (t.v === "FALSE") return { n: "num", v: false };
+        eat("(");
+        const args = [];
+        // Excel allows omitted arguments, including a trailing one: SUM(A1,B1,)
+        const arg = () => (peek() && (peek().v === "," || peek().v === ")")
+          ? { n: "empty" } : comparison());
+        if (peek() && peek().v !== ")") {
+          args.push(arg());
+          while (peek() && peek().v === ",") { eat(","); args.push(arg()); }
+        }
+        eat(")");
+        return { n: "call", f: t.v, args };
+      }
+      if (t.t === "op" && t.v === "(") { eat("("); const e = comparison(); eat(")"); return e; }
+      throw new Error("unexpected token " + JSON.stringify(t));
+    }
+
+    const ast = comparison();
+    if (p !== tokens.length) throw new Error("trailing tokens in formula");
+    return ast;
+  }
+
+  // ---------------------------------------------------------------- helpers
+  const num = (v) => {
+    if (v === null || v === undefined || v === "") return 0;
+    if (typeof v === "boolean") return v ? 1 : 0;
+    if (typeof v === "number") return v;
+    const n = parseFloat(v);
+    if (isNaN(n)) throw new Error("not a number: " + JSON.stringify(v));
+    return n;
+  };
+  const isText = (v) => typeof v === "string";
+  // Excel compares text without regard to case.
+  const cmp = (a, b) => {
+    if (isText(a) || isText(b)) {
+      const x = isText(a) ? a.toUpperCase() : a, y = isText(b) ? b.toUpperCase() : b;
+      if (isText(x) && isText(y)) return x < y ? -1 : x > y ? 1 : 0;
+      return isText(x) ? 1 : -1;               // Excel sorts any text above any number
+    }
+    const x = num(a), y = num(b);
+    return x < y ? -1 : x > y ? 1 : 0;
+  };
+
+  function colNum(c) { let n = 0; for (const ch of c) n = n * 26 + (ch.charCodeAt(0) - 64); return n; }
+  function colName(n) { let s = ""; while (n) { const r = (n - 1) % 26; s = String.fromCharCode(65 + r) + s; n = (n - r - 1) / 26; } return s; }
+
+  function expandRange(ref) {
+    const [sheet, span] = ref.split("!");
+    const [a, b] = span.split(":");
+    if (!b) return [ref];
+    const ma = a.match(/([A-Z]+)(\d+)/), mb = b.match(/([A-Z]+)(\d+)/);
+    const c1 = colNum(ma[1]), c2 = colNum(mb[1]), r1 = +ma[2], r2 = +mb[2];
+    const out = [];
+    for (let c = Math.min(c1, c2); c <= Math.max(c1, c2); c++)
+      for (let r = Math.min(r1, r2); r <= Math.max(r1, r2); r++)
+        out.push(`${sheet}!${colName(c)}${r}`);
+    return out;
+  }
+
+  // ---------------------------------------------------------------- engine
+  function Model(cells) {
+    this.cells = cells;
+    this.ast = Object.create(null);
+    this.reset();
+  }
+
+  Model.prototype.reset = function (overrides) {
+    this.overrides = overrides || Object.create(null);
+    this.memo = Object.create(null);
+    this.visiting = Object.create(null);
+  };
+
+  Model.prototype.get = function (key) {
+    if (key in this.overrides) return this.overrides[key];
+    if (key in this.memo) return this.memo[key];
+    if (this.visiting[key]) throw new Error("circular reference at " + key);
+
+    let raw = this.cells[key];
+    if (raw === undefined) return 0;                 // reference to a cell outside the model
+    if (typeof raw !== "string") return (this.memo[key] = raw);
+    // The extractor keeps the leading "=" on formulas, so anything else is literal text.
+    // Never guess: a formula this interpreter cannot parse must throw, not silently
+    // become the string it was written as.
+    if (raw[0] !== "=") return (this.memo[key] = raw);
+
+    let ast = this.ast[key];
+    if (!ast) {
+      try {
+        ast = this.ast[key] = parse(tokenize(raw.slice(1)));
+      } catch (e) {
+        throw new Error(key + ": " + e.message);
+      }
+    }
+    this.visiting[key] = true;
+    let val;
+    try {
+      val = this.evaluate(ast);
+    } finally {
+      delete this.visiting[key];
+    }
+    return (this.memo[key] = val);
+  };
+
+  Model.prototype.evaluate = function (node) {
+    switch (node.n) {
+      case "num": case "str": return node.v;
+      case "empty": return 0;                        // an omitted argument
+      case "ref": {
+        if (node.v.includes(":")) return expandRange(node.v).map((k) => this.get(k));
+        return this.get(node.v);
+      }
+      case "un": {
+        const v = num(this.evaluate(node.e));
+        return node.op === "-" ? -v : v;
+      }
+      case "bin": {
+        const l = this.evaluate(node.l), r = this.evaluate(node.r);
+        switch (node.op) {
+          case "+": return num(l) + num(r);
+          case "-": return num(l) - num(r);
+          case "*": return num(l) * num(r);
+          case "/": {
+            const d = num(r);
+            if (d === 0) throw new Error("#DIV/0!");
+            return num(l) / d;
+          }
+          case "^": return Math.pow(num(l), num(r));
+          case "&": return String(l) + String(r);
+          case "=": return cmp(l, r) === 0;
+          case "<>": return cmp(l, r) !== 0;
+          case "<": return cmp(l, r) < 0;
+          case ">": return cmp(l, r) > 0;
+          case "<=": return cmp(l, r) <= 0;
+          case ">=": return cmp(l, r) >= 0;
+        }
+        throw new Error("unknown operator " + node.op);
+      }
+      case "call": {
+        const self = this;
+        const flat = () => {
+          const out = [];
+          node.args.forEach((a) => {
+            const v = self.evaluate(a);
+            Array.isArray(v) ? out.push.apply(out, v) : out.push(v);
+          });
+          return out;
+        };
+        switch (node.f) {
+          // IF must not evaluate the branch it does not take: several branches in this
+          // workbook divide by a cell that is zero in the other configuration.
+          case "IF": {
+            const test = this.evaluate(node.args[0]);
+            const truthy = typeof test === "boolean" ? test : num(test) !== 0;
+            if (truthy) return this.evaluate(node.args[1]);
+            return node.args.length > 2 ? this.evaluate(node.args[2]) : false;
+          }
+          case "AND": return flat().every((v) => (typeof v === "boolean" ? v : num(v) !== 0));
+          case "OR": return flat().some((v) => (typeof v === "boolean" ? v : num(v) !== 0));
+          case "NOT": return !(num(this.evaluate(node.args[0])) !== 0);
+          case "SUM": return flat().reduce((a, v) => a + (isText(v) ? 0 : num(v)), 0);
+          case "MAX": return Math.max.apply(null, flat().filter((v) => !isText(v)).map(num));
+          case "MIN": return Math.min.apply(null, flat().filter((v) => !isText(v)).map(num));
+          case "ABS": return Math.abs(num(this.evaluate(node.args[0])));
+          case "SQRT": return Math.sqrt(num(this.evaluate(node.args[0])));
+          case "PI": return Math.PI;
+          case "ATAN": return Math.atan(num(this.evaluate(node.args[0])));
+          case "ROUND": {
+            const x = num(this.evaluate(node.args[0]));
+            const d = node.args.length > 1 ? num(this.evaluate(node.args[1])) : 0;
+            const f = Math.pow(10, d);
+            // Excel rounds half away from zero; JS Math.round rounds half up.
+            return Math.sign(x) * Math.round(Math.abs(x) * f) / f;
+          }
+          case "ROUNDUP": {
+            const x = num(this.evaluate(node.args[0]));
+            const f = Math.pow(10, node.args.length > 1 ? num(this.evaluate(node.args[1])) : 0);
+            return Math.sign(x) * Math.ceil(Math.abs(x) * f) / f;
+          }
+          case "CEILING": {
+            const x = num(this.evaluate(node.args[0]));
+            const s = num(this.evaluate(node.args[1]));
+            if (s === 0) return 0;
+            return Math.ceil(x / s) * s;
+          }
+          case "LEFT": {
+            const s = String(this.evaluate(node.args[0]));
+            const n = node.args.length > 1 ? num(this.evaluate(node.args[1])) : 1;
+            return s.slice(0, n);
+          }
+        }
+        throw new Error("unsupported function " + node.f + "()");
+      }
+    }
+    throw new Error("bad node " + node.n);
+  };
+
+  /** Evaluate `keys` with `inputs` ({cellKey: value}) applied. */
+  Model.prototype.compute = function (inputs, keys) {
+    this.reset(inputs);
+    const out = {};
+    keys.forEach((k) => { out[k] = this.get(k); });
+    return out;
+  };
+
+  const api = { Model, tokenize, parse };
+  if (typeof module === "object" && module.exports) module.exports = api;
+  else root.EnduranceEval = api;
+})(typeof globalThis !== "undefined" ? globalThis : this);
+</script>
+
+<script>
+const MODEL = {"cached":{"M!AC1":0.001707,"M!AC2":-0.0765,"M!AC3":1.239,"M!AC4":-8.692,"M!AC5":23.42,"M!D10":10.8,"M!D18":2.5,"M!D19":10.8,"M!D20":10.8,"M!D21":10.8,"M!D23":2.5,"M!D25":10.8,"M!D28":10.8,"M!D29":0,"M!D30":5,"M!D33":10.8,"M!D34":10.8,"M!D35":10.8,"M!D36":5,"M!D37":10.8,"M!D38":10.8,"M!D39":10.8,"M!D40":10.8,"M!D42":10.8,"M!D43":10.8,"M!D46":10.8,"M!D48":6.25,"M!D49":0.0099,"M!D50":10.8,"M!D51":5,"M!D54":10.8,"M!D55":10.8,"M!D56":10.8,"M!D57":8,"M!D58":0.05744,"M!D60":0.16752,"M!D61":0.1422244123769336,"M!D63":5,"M!D64":5,"M!D65":10,"M!D66":10.8,"M!D67":10.8,"M!D68":5,"M!D69":10.8,"M!D70":5,"M!D71":5,"M!D72":0.0169697,"M!D73":5.39e-05,"M!D74":0.0002156,"M!D75":0.0002156,"M!D76":0.006528900000000001,"M!D77":0.00504,"M!D78":10.8,"M!D79":3.3,"M!D80":5,"M!D81":5,"M!D83":10.8,"M!D84":2.5,"M!D85":10.8,"M!D86":10.8,"M!D88":5,"M!D90":10.8,"M!D91":6.75,"M!D92":13,"M!D93":4.4,"M!D94":10.8,"M!D95":10.8,"M!D97":0,"M!D98":0,"M!D99":0,"M!E122":1,"M!E123":0.2,"M!E18":0.00025,"M!E19":2.872,"M!E20":0.11,"M!E21":0.6,"M!E23":0.00025,"M!E24":0.177780515471167,"M!E25":0.034,"M!E28":0.0029473049319296463,"M!E29":2.872,"M!E30":5e-05,"M!E33":0.0046,"M!E34":0.0181,"M!E35":0.0154,"M!E36":0.02,"M!E37":0.185,"M!E38":0.049,"M!E39":0.0417,"M!E40":0,"M!E42":0.016859477124183005,"M!E43":0.00015,"M!E46":0,"M!E48":0.5,"M!E49":0.099,"M!E50":0.3,"M!E51":0,"M!E54":0.00015,"M!E55":0.06623931623931623,"M!E56":0.010683760683760682,"M!E57":0.00016,"M!E58":2.872,"M!E60":0.20939999999999998,"M!E61":0.177780515471167,"M!E63":5e-05,"M!E64":0.00016,"M!E65":0.0035,"M!E66":0.0026,"M!E67":0.00015340909090909093,"M!E68":0.00045,"M!E69":0.00075,"M!E70":0.0002,"M!E71":1.2e-07,"M!E72":0.15427,"M!E73":0.00077,"M!E74":0.00077,"M!E75":0.00077,"M!E76":0.09327,"M!E77":0.018,"M!E78":0.0348,"M!E79":0.0469,"M!E80":0.0035,"M!E81":0.093,"M!E83":0.20939999999999998,"M!E84":0.00025,"M!E85":0.154,"M!E86":1e-07,"M!E88":0.015,"M!E90":0.099,"M!E91":0.5,"M!E92":0,"M!E93":0.06662618181818182,"M!E94":0.018,"M!E95":0.175,"M!E97":0,"M!E98":0,"M!E99":0,"M!F112":0.18,"M!F113":0.09,"M!F114":0.4,"M!F115":0.126,"M!F116":0.8366600265340756,"M!F122":1,"M!F123":0.2,"M!F18":0.000625,"M!F19":31.0176,"M!F20":1.1880000000000002,"M!F21":6.48,"M!F23":0.000625,"M!F24":2.1796482560090205,"M!F25":0.3672,"M!F26":70,"M!F28":0.031830893264840183,"M!F29":0,"M!F30":0.00025,"M!F33":0.04968,"M!F34":0.19548000000000004,"M!F35":0.16632000000000002,"M!F36":0.1,"M!F37":1.998,"M!F38":0.5292,"M!F39":0.45036000000000004,"M!F40":0,"M!F42":0.09104117647058824,"M!F43":0.00162,"M!F44":0.14234722190290552,"M!F48":3.125,"M!F49":0.0009801,"M!F50":3.24,"M!F51":0,"M!F52":0.00049454,"M!F54":0.00162,"M!F55":0.7153846153846153,"M!F56":0.11538461538461538,"M!F57":0.00128,"M!F58":0.16496767999999998,"M!F60":0.035078688,"M!F61":0.025284729344955077,"M!F63":0.00025,"M!F64":0.0008,"M!F65":0.035,"M!F66":0.02808,"M!F67":0.0016568181818181823,"M!F68":0.00225,"M!F69":0.008100000000000001,"M!F70":0.001,"M!F71":6e-07,"M!F72":0.002617915619,"M!F73":4.1503e-08,"M!F74":1.66012e-07,"M!F75":1.66012e-07,"M!F76":0.0006089505030000001,"M!F77":9.072e-05,"M!F78":0.07516800000000001,"M!F79":0.15477,"M!F80":0.0175,"M!F81":0.46499999999999997,"M!F83":2.26152,"M!F84":0.000625,"M!F85":1.6632,"M!F86":1.08e-06,"M!F88":0.075,"M!F90":1.0692000000000002,"M!F91":3.375,"M!F92":0,"M!F93":0.29315520000000006,"M!F94":0.1944,"M!F95":1.89,"M!F97":0,"M!F98":0,"M!F99":0,"M!G122":1,"M!G123":0.4,"M!I21":1e-09,"M!I24":1e-09,"M!I26":2.8e-06,"M!I3":78,"M!I4":0,"M!I44":1.2e-05,"M!I5":30264000,"M!I50":1e-07,"M!I6":0,"M!I65":2.2e-05,"M!I66":2.2e-05,"M!I7":0,"M!I79":0.00563,"M!I8":0,"M!I83":1e-09,"M!I88":0,"M!I9":0,"M!I93":0,"M!J18":0,"M!J19":0,"M!J21":1.5000000000000002e-08,"M!J23":0,"M!J24":1.5000000000000002e-08,"M!J25":0,"M!J26":3.64e-05,"M!J43":0,"M!J44":0.00018,"M!J48":0,"M!J49":0,"M!J50":1.08e-06,"M!J54":0,"M!J65":0.00021999999999999998,"M!J66":0.0002376,"M!J79":0.07318999999999999,"M!J80":0,"M!J81":0,"M!J83":1.5000000000000002e-08,"M!J84":0,"M!J85":0,"M!J88":0,"M!J90":0,"M!J91":0,"M!J93":0,"M!J94":0,"M!J95":0,"M!K18":481.63534528028106,"M!K19":166.49534528028104,"M!K20":315.14,"M!K21":0.25,"M!K23":66.53333333333333,"M!K24":66.53333333333333,"M!K25":1824.1666666666667,"M!K26":0.016,"M!K28":4422.222222222223,"M!K29":166.49534528028104,"M!K30":0.065,"M!K33":4422.222222222223,"M!K34":0,"M!K35":4422.222222222223,"M!K36":4422.222222222223,"M!K37":0,"M!K38":4422.222222222223,"M!K39":0,"M!K40":2211.1111111111113,"M!K42":4422.222222222223,"M!K43":26533.333333333336,"M!K44":4422.222222222223,"M!K48":0,"M!K49":0,"M!K50":0,"M!K51":0,"M!K52":4422.222222222223,"M!K54":4422.222222222223,"M!K55":0,"M!K56":0.15,"M!K57":4422.222222222223,"M!K58":166.49534528028104,"M!K60":1,"M!K61":7.5,"M!K63":0.065,"M!K64":4422.222222222223,"M!K65":0.07,"M!K66":0.07,"M!K67":0.2,"M!K68":4422.222222222223,"M!K69":1,"M!K70":4422.222222222223,"M!K71":4422.222222222223,"M!K72":0,"M!K73":0.4,"M!K74":2211.1111111111113,"M!K75":0,"M!K76":0,"M!K77":0,"M!K78":0,"M!K79":4422.222222222223,"M!K80":0.07,"M!K81":0,"M!K83":1,"M!K84":1,"M!K85":0,"M!K86":4422.222222222223,"M!K88":0.15,"M!K90":0,"M!K91":0,"M!K92":0,"M!K93":0,"M!K94":0,"M!K95":0,"M!K97":2211.1111111111113,"M!K98":2211.1111111111113,"M!K99":2211.1111111111113,"M!L18":4422.222222222223,"M!L19":4422.222222222223,"M!L20":4422.222222222223,"M!L21":4422.222222222223,"M!L23":4422.222222222223,"M!L24":4422.222222222223,"M!L25":4422.222222222223,"M!L26":8,"M!L28":4422.222222222223,"M!L29":4422.222222222223,"M!L30":4,"M!L33":4422.222222222223,"M!L34":4422.222222222223,"M!L35":4422.222222222223,"M!L36":4422.222222222223,"M!L37":4422.222222222223,"M!L38":4422.222222222223,"M!L39":4422.222222222223,"M!L40":4422.222222222223,"M!L42":4422.222222222223,"M!L43":26533.333333333336,"M!L44":4422.222222222223,"M!L48":4422.222222222223,"M!L49":4422.222222222223,"M!L50":4422.222222222223,"M!L51":4422.222222222223,"M!L52":4422.222222222223,"M!L54":4422.222222222223,"M!L55":26533.333333333336,"M!L56":4,"M!L57":4422.222222222223,"M!L58":4422.222222222223,"M!L60":30,"M!L61":4422.222222222223,"M!L63":4,"M!L64":4422.222222222223,"M!L65":4,"M!L66":4,"M!L67":4,"M!L68":4422.222222222223,"M!L69":30,"M!L70":4422.222222222223,"M!L71":4422.222222222223,"M!L72":4422.222222222223,"M!L73":15,"M!L74":4422.222222222223,"M!L75":4422.222222222223,"M!L76":4422.222222222223,"M!L77":4422.222222222223,"M!L78":4422.222222222223,"M!L79":4422.222222222223,"M!L80":4,"M!L81":4422.222222222223,"M!L83":100,"M!L84":100,"M!L85":4422.222222222223,"M!L86":4422.222222222223,"M!L88":4,"M!L90":4422.222222222223,"M!L91":4422.222222222223,"M!L92":26533.333333333336,"M!L93":4422.222222222223,"M!L94":4422.222222222223,"M!L95":4422.222222222223,"M!L97":4422.222222222223,"M!L98":4422.222222222223,"M!L99":4422.222222222223,"M!M1":1,"M!M18":0,"M!M19":0,"M!M20":0,"M!M21":0.25,"M!M23":0,"M!M24":0,"M!M25":0,"M!M26":0.0064,"M!M28":900,"M!M29":0,"M!M3":200,"M!M30":0.065,"M!M33":0,"M!M34":0,"M!M35":0,"M!M36":0,"M!M37":0,"M!M38":0,"M!M39":0,"M!M40":0,"M!M42":900,"M!M43":900,"M!M44":0,"M!M48":0.15,"M!M49":90,"M!M50":0,"M!M51":0,"M!M52":900,"M!M54":900,"M!M55":240,"M!M56":0.15,"M!M57":900,"M!M58":0,"M!M6":6,"M!M60":0,"M!M61":0,"M!M63":0.065,"M!M64":900,"M!M65":0,"M!M66":0,"M!M67":0.2,"M!M68":900,"M!M69":0,"M!M7":15,"M!M70":900,"M!M71":900,"M!M72":3.93,"M!M73":0,"M!M74":0,"M!M75":771,"M!M76":240,"M!M77":900,"M!M78":771,"M!M79":900,"M!M8":8,"M!M80":0,"M!M81":240,"M!M83":0,"M!M84":0,"M!M85":3.93,"M!M86":900,"M!M88":0.15,"M!M9":1000,"M!M90":129,"M!M91":0.15,"M!M92":771,"M!M93":660,"M!M94":660,"M!M95":20,"M!M97":0,"M!M98":0,"M!M99":0,"M!N18":600,"M!N19":900,"M!N20":900,"M!N21":900,"M!N23":900,"M!N24":900,"M!N25":900,"M!N26":8,"M!N28":900,"M!N29":900,"M!N30":4,"M!N33":900,"M!N34":900,"M!N35":900,"M!N36":900,"M!N37":900,"M!N38":900,"M!N39":900,"M!N40":900,"M!N42":900,"M!N43":900,"M!N44":900,"M!N48":900,"M!N49":900,"M!N50":900,"M!N51":900,"M!N52":900,"M!N54":900,"M!N55":900,"M!N56":4,"M!N57":900,"M!N58":900,"M!N60":900,"M!N61":900,"M!N63":4,"M!N64":900,"M!N65":900,"M!N66":900,"M!N67":2,"M!N68":900,"M!N69":900,"M!N70":900,"M!N71":900,"M!N72":90,"M!N73":15,"M!N74":900,"M!N75":900,"M!N76":900,"M!N77":900,"M!N78":900,"M!N79":900,"M!N80":900,"M!N81":900,"M!N83":900,"M!N84":900,"M!N85":90,"M!N86":900,"M!N88":4,"M!N90":900,"M!N91":900,"M!N92":900,"M!N93":900,"M!N94":900,"M!N95":900,"M!N97":900,"M!N98":900,"M!N99":900,"M!O18":2889.8120716816866,"M!O19":998.9720716816862,"M!O20":1890.84,"M!O21":1.75,"M!O23":399.2,"M!O24":399.2,"M!O25":10945,"M!O26":53.78666666666667,"M!O28":27433.333333333336,"M!O29":998.9720716816862,"M!O30":445.79166666666674,"M!O33":26533.333333333336,"M!O34":0,"M!O35":26533.333333333336,"M!O36":26533.333333333336,"M!O37":0,"M!O38":26533.333333333336,"M!O39":0,"M!O40":13266.666666666668,"M!O42":27433.333333333336,"M!O43":27433.333333333336,"M!O44":26533.333333333336,"M!O48":0.15,"M!O49":90,"M!O50":0,"M!O51":0,"M!O52":27433.333333333336,"M!O54":27433.333333333336,"M!O55":240,"M!O56":1028.75,"M!O57":27433.333333333336,"M!O58":998.9720716816862,"M!O60":884.4444444444446,"M!O61":45,"M!O63":445.79166666666674,"M!O64":27433.333333333336,"M!O65":464.3333333333334,"M!O66":464.3333333333334,"M!O67":1416.666666666667,"M!O68":27433.333333333336,"M!O69":884.4444444444446,"M!O70":27433.333333333336,"M!O71":27433.333333333336,"M!O72":39.300000000000004,"M!O73":707.5555555555557,"M!O74":13266.666666666668,"M!O75":771,"M!O76":240,"M!O77":900,"M!O78":771,"M!O79":27433.333333333336,"M!O80":464.3333333333334,"M!O81":240,"M!O83":265.33333333333337,"M!O84":265.33333333333337,"M!O85":39.300000000000004,"M!O86":27433.333333333336,"M!O88":1028.75,"M!O90":129,"M!O91":0.15,"M!O92":771,"M!O93":660,"M!O94":660,"M!O95":20,"M!O97":13266.666666666668,"M!O98":13266.666666666668,"M!O99":13266.666666666668,"M!P18":24543.52126165165,"M!P19":26434.36126165165,"M!P20":25542.493333333336,"M!P21":27431.583333333336,"M!P23":27034.133333333335,"M!P24":27034.133333333335,"M!P25":16488.333333333336,"M!P26":27379.54666666667,"M!P28":0,"M!P29":26434.36126165165,"M!P30":26987.541666666668,"M!P33":900,"M!P34":27433.333333333336,"M!P35":900,"M!P36":900,"M!P37":27433.333333333336,"M!P38":900,"M!P39":27433.333333333336,"M!P40":14166.666666666668,"M!P42":0,"M!P43":0,"M!P44":900,"M!P48":27433.183333333334,"M!P49":27343.333333333336,"M!P50":27433.333333333336,"M!P51":27433.333333333336,"M!P52":0,"M!P54":0,"M!P55":27193.333333333336,"M!P56":26404.583333333336,"M!P57":0,"M!P58":26434.36126165165,"M!P60":26548.88888888889,"M!P61":27388.333333333336,"M!P63":26987.541666666668,"M!P64":0,"M!P65":26969.000000000004,"M!P66":26969.000000000004,"M!P67":26016.666666666668,"M!P68":0,"M!P69":26548.88888888889,"M!P70":0,"M!P71":0,"M!P72":27394.033333333336,"M!P73":26725.77777777778,"M!P74":14166.666666666668,"M!P75":26662.333333333336,"M!P76":27193.333333333336,"M!P77":26533.333333333336,"M!P78":26662.333333333336,"M!P79":0,"M!P80":26969.000000000004,"M!P81":27193.333333333336,"M!P83":27168.000000000004,"M!P84":27168.000000000004,"M!P85":27394.033333333336,"M!P86":0,"M!P88":26404.583333333336,"M!P90":27304.333333333336,"M!P91":27433.183333333334,"M!P92":26662.333333333336,"M!P93":26773.333333333336,"M!P94":26773.333333333336,"M!P95":27413.333333333336,"M!P97":14166.666666666668,"M!P98":14166.666666666668,"M!P99":14166.666666666668,"M!Q4":73.70370370370371,"M!Q6":26768508,"M!R18":1.8061325448010541,"M!R19":30985.71613059387,"M!R20":2246.3179200000004,"M!R21":11.34,"M!R23":0.2495,"M!R24":870.1155837988009,"M!R25":4019.0040000000004,"M!R26":3765.0666666666666,"M!R28":873.2275052321157,"M!R29":0,"M!R30":0.11144791666666669,"M!R33":1318.1760000000002,"M!R34":0,"M!R35":4413.024000000001,"M!R36":2653.333333333334,"M!R37":0,"M!R38":14041.44,"M!R39":0,"M!R40":0,"M!R42":2497.5629411764708,"M!R43":44.442,"M!R44":3776.94628782376,"M!R48":0.46875,"M!R49":0.088209,"M!R50":0,"M!R51":0,"M!R52":13.566880666666668,"M!R54":44.442,"M!R55":171.69230769230768,"M!R56":118.70192307692307,"M!R57":35.11466666666667,"M!R58":164.79810505012145,"M!R60":31.025150720000003,"M!R61":1.1378128205229785,"M!R63":0.11144791666666669,"M!R64":21.94666666666667,"M!R65":16.251666666666672,"M!R66":13.038480000000003,"M!R67":2.3471590909090922,"M!R68":61.725,"M!R69":7.164000000000002,"M!R70":27.433333333333337,"M!R71":0.016460000000000002,"M!R72":0.1028840838267,"M!R73":2.9365678222222223e-05,"M!R74":0.002202425866666667,"M!R75":0.000127995252,"M!R76":0.14614812072000002,"M!R77":0.081648,"M!R78":57.95452800000001,"M!R79":4245.857,"M!R80":8.125833333333336,"M!R81":111.6,"M!R83":600.0566400000001,"M!R84":0.16583333333333336,"M!R85":65.36376000000001,"M!R86":0.029628000000000005,"M!R88":77.15625,"M!R90":137.92680000000001,"M!R91":0.50625,"M!R92":0,"M!R93":193.48243200000005,"M!R94":128.304,"M!R95":37.8,"M!R97":0,"M!R98":0,"M!R99":0,"M!S18":0,"M!S19":0,"M!S20":0,"M!S21":0.0004114737500000001,"M!S23":0,"M!S24":0.00040551200000000007,"M!S25":0,"M!S26":0.9966154986666667,"M!S28":0,"M!S29":0,"M!S30":0,"M!S33":0,"M!S34":0,"M!S35":0,"M!S36":0,"M!S37":0,"M!S38":0,"M!S39":0,"M!S40":0,"M!S42":0,"M!S43":0,"M!S44":0.162,"M!S48":0,"M!S49":0,"M!S50":0.029628000000000005,"M!S51":0,"M!S52":0,"M!S54":0,"M!S55":0,"M!S56":0,"M!S57":0,"M!S58":0,"M!S60":0,"M!S61":0,"M!S63":0,"M!S64":0,"M!S65":5.93318,"M!S66":6.4078344000000005,"M!S67":0,"M!S68":0,"M!S69":0,"M!S70":0,"M!S71":0,"M!S72":0,"M!S73":0,"M!S74":0,"M!S75":0,"M!S76":0,"M!S77":0,"M!S78":0,"M!S79":0,"M!S80":0,"M!S81":0,"M!S83":0.0004075200000000001,"M!S84":0,"M!S85":0,"M!S86":0,"M!S88":0,"M!S90":0,"M!S91":0,"M!S92":0,"M!S93":0,"M!S94":0,"M!S95":0,"M!S97":0,"M!S98":0,"M!S99":0,"M!T15":2.5964804946543505,"M!T16":1.4219157607681165,"M!T17":1.2118534846152764,"M!T18":6.583715230137499e-05,"M!T19":1.1294914749912708,"M!T20":0.08188279173754556,"M!T21":0.00041338073415856616,"M!T22":0.031726567046566255,"M!T23":9.094775212636694e-06,"M!T24":0.03171747227135362,"M!T25":0.14650075334143378,"M!T26":0,"M!T27":0.031830893264840183,"M!T28":0.031830893264840183,"M!T29":0,"M!T30":4.0625000000000005e-06,"M!T31":0.9433591699514057,"M!T32":0.10445686512758202,"M!T33":0.024025078979343865,"M!T34":0,"M!T35":0.08043178614823816,"M!T36":0.09671931956257596,"M!T37":0,"M!T38":0.5118386391251518,"M!T39":0,"M!T40":0,"M!T41":0.09266117647058823,"M!T42":0.09104117647058824,"M!T43":0.0016199999999999997,"M!T44":0.13768316966550762,"M!T45":0.23120556393482844,"M!T47":0.18399460132778106,"M!T48":1.70868772782503e-05,"M!T49":3.215394896719319e-06,"M!T50":1.08e-06,"M!T51":0,"M!T52":0.00049454,"M!T53":0.012205451911393585,"M!T54":0.0016199999999999997,"M!T55":0.006258528834470509,"M!T56":0.004326923076923076,"M!T57":0.00128,"M!T58":0.006007221326249869,"M!T59":0,"M!T60":0.001130928944835966,"M!T61":4.147555846377807e-05,"M!T62":0,"M!T63":4.0625000000000005e-06,"M!T64":0.0008,"M!T65":0.0008086821385176186,"M!T66":0.0007088571470230864,"M!T67":8.555865458963884e-05,"M!T68":0.00225,"M!T69":0.0002611421628189551,"M!T70":0.001,"M!T71":6e-07,"M!T72":3.7503311236950175e-06,"M!T73":1.0704378452814905e-09,"M!T74":8.02828383961118e-08,"M!T75":4.665683547995139e-09,"M!T76":5.327392006804375e-06,"M!T77":2.9762332928311054e-06,"M!T78":0.0021125587363304984,"M!T79":0.15477,"M!T80":0.00029620291616038884,"M!T81":0.004068043742405832,"M!T82":0.021879327370109357,"M!T83":0.021873282412636696,"M!T84":6.044957472660996e-06,"M!T85":0,"M!T86":1.08e-06,"M!T87":0,"M!T88":0.0028125,"M!T89":0.005046162211421628,"M!T90":0.005027708383961118,"M!T91":1.8453827460510322e-05,"M!T92":0,"M!T93":0.007052822551640341,"M!T94":0.0046769380315917364,"M!T95":0.0013778857837181042,"M!T96":0,"M!T97":0,"M!T98":0,"M!T99":0,"M!Z18":1,"M!Z19":1,"M!Z20":1,"M!Z21":1,"M!Z23":1,"M!Z24":1,"M!Z25":1,"M!Z26":0,"M!Z28":1,"M!Z29":1,"M!Z3":39.72,"M!Z30":1,"M!Z33":0.5,"M!Z34":0,"M!Z35":0.5,"M!Z36":1,"M!Z37":0,"M!Z38":1,"M!Z39":0,"M!Z40":0,"M!Z42":1,"M!Z43":1,"M!Z44":1,"M!Z48":1,"M!Z49":1,"M!Z5":166.49534528028104,"M!Z50":1,"M!Z51":1,"M!Z52":1,"M!Z54":1,"M!Z55":1,"M!Z56":1,"M!Z57":1,"M!Z58":1,"M!Z59":1,"M!Z60":1,"M!Z61":1,"M!Z62":1,"M!Z63":1,"M!Z64":1,"M!Z65":1,"M!Z66":1,"M!Z67":1,"M!Z68":1,"M!Z69":1,"M!Z70":1,"M!Z71":1,"M!Z72":1,"M!Z73":1,"M!Z74":1,"M!Z75":1,"M!Z76":1,"M!Z77":1,"M!Z78":1,"M!Z79":1,"M!Z8":0.8845,"M!Z80":1,"M!Z81":1,"M!Z83":1,"M!Z84":1,"M!Z85":0,"M!Z86":1,"M!Z87":1,"M!Z88":1,"M!Z9":1,"M!Z90":1,"M!Z91":1,"M!Z92":1,"M!Z93":1,"M!Z94":1,"M!Z95":1,"M!Z96":1,"M!Z97":1,"M!Z98":1,"M!Z99":1,"P!E29":0,"P!F12":6,"P!F13":15,"P!F14":8,"P!F17":1000,"P!F18":0,"P!F19":1,"P!F20":1,"P!F21":0,"P!F27":78,"P!F36":1,"P!F37":0.5,"P!F39":0.5,"P!F40":1,"P!F41":0,"P!F42":1,"P!F43":0,"P!F50":1,"P!F51":1,"P!F52":1,"P!F53":0,"P!F6":200,"P!F7":1,"P!F8":0.23,"P!F9":0.09,"P!K10":442.59259259259267,"P!K11":6.107777777777779,"P!K18":689.91,"P!K19":5.769956654787444,"P!K20":25.769956654787443,"P!K30":21,"P!K31":420,"P!K43":50,"P!K6":21.370622269343183,"P!K7":73.70370370370371,"P!K8":1017.1111111111112,"P!K9":6},"cells":{"M!AC1":0.001707,"M!AC2":-0.0765,"M!AC3":1.239,"M!AC4":-8.692,"M!AC5":23.42,"M!D10":"=IF(M!T2=\"a\",12,IF(LEFT(M!T2, 1)=\"l\",10.8,14.4))","M!D18":2.5,"M!D19":"=M!D10","M!D20":"=M!D10","M!D21":"=M!D10","M!D23":2.5,"M!D25":"=M!D10","M!D28":"=M!D10","M!D29":"=IF(M!I4=0,0,IF(M!T2=\"a\",100/M!I4*M!E29,1.35/M!I4*M!E29))","M!D30":5,"M!D33":"=M!D10","M!D34":"=M!D10","M!D35":"=M!D10","M!D36":5,"M!D37":"=M!D10","M!D38":"=M!D10","M!D39":"=M!D10","M!D40":"=M!D10","M!D42":"=M!D10","M!D43":"=M!D10","M!D46":"=M!D10","M!D48":"=13-6.75","M!D49":"=M!E49*0.1","M!D50":"=M!D10","M!D51":5,"M!D54":"=M!D10","M!D55":"=M!D10","M!D56":"=M!D10","M!D57":8,"M!D58":"=M!E58*0.02","M!D60":"=M!E60*0.8","M!D61":"=M!E61*0.8","M!D63":5,"M!D64":5,"M!D65":10,"M!D66":"=M!D10","M!D67":"=M!D10","M!D68":5,"M!D69":"=M!D10","M!D70":5,"M!D71":5,"M!D72":"=M!E72*0.11","M!D73":"=M!E73*0.07","M!D74":"=M!E74*0.28","M!D75":"=M!E75*0.28","M!D76":"=M!E76*0.07","M!D77":"=M!E77*0.28","M!D78":"=M!D10","M!D79":3.3,"M!D80":5,"M!D81":5,"M!D83":"=M!D10","M!D84":2.5,"M!D85":"=M!D10","M!D86":"=M!D10","M!D88":5,"M!D90":"=M!D10","M!D91":6.75,"M!D92":13,"M!D93":4.4,"M!D94":"=M!D10","M!D95":"=M!D10","M!D97":"=P!H50","M!D98":"=P!H51","M!D99":"=P!H52","M!E122":1,"M!E123":0.2,"M!E18":0.00025,"M!E19":"=IF(M!M9=1000,1.672+0.006*M!M3,(3970*M!M3/M!M9+39.5)/1000)","M!E20":"=IF(M!M9=1000,0.11,0.198)","M!E21":0.6,"M!E23":0.00025,"M!E24":0.177780515471167,"M!E25":0.034,"M!E28":"=M!Q6/365/2/24/3600/M!D28*0.075","M!E29":"=M!E19","M!E30":"=M!D30/100000","M!E33":0.0046,"M!E34":0.0181,"M!E35":0.0154,"M!E36":0.02,"M!E37":0.185,"M!E38":0.049,"M!E39":0.0417,"M!E40":0,"M!E42":"=M!E79*3.3/M!D42/0.85","M!E43":0.00015,"M!E46":"=M!I8/365/2/24/3600/M!D46/2*0.2*M!Z8","M!E48":0.5,"M!E49":"=M!E90","M!E50":0.3,"M!E51":0,"M!E54":0.00015,"M!E55":"=M!E81*5/M!D55/0.65","M!E56":"=(M!E88+(M!E37*M!Z37))*5/M!D56/0.65","M!E57":"=M!E64","M!E58":"=M!E19","M!E60":"=M!E83","M!E61":"=M!E24","M!E63":"=M!D63/100000","M!E64":"=0.00016","M!E65":0.0035,"M!E66":0.0026,"M!E67":"=M!D67/70400","M!E68":"=0.0018/4","M!E69":"=M!E84+M!E18+M!E23","M!E70":0.0002,"M!E71":1.2e-07,"M!E72":"=M!E85+0.00027","M!E73":"=M!E87+0.00077","M!E74":"=M!E46+0.00077","M!E75":"=M!E92+0.00077","M!E76":"=M!E81+0.00027","M!E77":"=M!E94","M!E78":0.0348,"M!E79":0.0469,"M!E80":0.0035,"M!E81":0.093,"M!E83":"=(-0.0032*M!M8+0.235)","M!E84":0.00025,"M!E85":0.154,"M!E86":1e-07,"M!E87":0,"M!E88":0.015,"M!E90":0.099,"M!E91":0.5,"M!E92":0,"M!E93":"=M!E78*M!D78*0.78/M!D93","M!E94":0.018,"M!E95":0.175,"M!E97":"=P!I50","M!E98":"=P!I51","M!E99":"=P!I52","M!F112":0.18,"M!F113":"=MIN(P!F9,M!F112)","M!F114":0.4,"M!F115":"=M!F113+(M!F112-M!F113)*M!F114","M!F116":"=SQRT(M!F115/M!F112)","M!F122":1,"M!F123":0.2,"M!F18":"=M!D18*M!E18","M!F19":"=M!D19*M!E19","M!F20":"=M!D20*M!E20","M!F21":"=M!D21*M!E21","M!F23":"=M!D23*M!E23","M!F24":2.1796482560090205,"M!F25":"=M!D25*M!E25","M!F26":70,"M!F28":"=M!E28*M!D28","M!F29":"=M!E29*M!D29","M!F30":"=M!E30*M!D30","M!F33":"=M!D33*M!E33","M!F34":"=M!D34*M!E34","M!F35":"=M!D35*M!E35","M!F36":"=M!D36*M!E36","M!F37":"=M!D37*M!E37","M!F38":"=M!D38*M!E38","M!F39":"=M!D39*M!E39","M!F40":"=M!D40*M!E40","M!F42":"=M!D42*M!E42*0.5","M!F43":"=M!E43*M!D43","M!F44":0.14234722190290552,"M!F48":"=M!D48*M!E48","M!F49":"=M!D49*M!E49","M!F50":"=M!E50*M!D50","M!F51":"=M!D51*M!E51","M!F52":"=0.00313*0.158","M!F54":"=M!E54*M!D54","M!F55":"=M!E55*M!D55","M!F56":"=M!E56*M!D56","M!F57":"=M!D57*M!E57","M!F58":"=M!D58*M!E58","M!F60":"=M!E60*M!D60","M!F61":"=M!D61*M!E61","M!F63":"=M!E63*M!D63","M!F64":"=M!D64*M!E64","M!F65":"=M!D65*M!E65","M!F66":"=M!D66*M!E66","M!F67":"=M!D67*M!E67","M!F68":"=M!E68*M!D68","M!F69":"=M!D69*M!E69","M!F70":"=M!E70*M!D70","M!F71":"=M!E71*M!D71","M!F72":"=M!D72*M!E72","M!F73":"=M!E73*M!D73","M!F74":"=M!E74*M!D74","M!F75":"=M!D75*M!E75","M!F76":"=M!E76*M!D76","M!F77":"=M!E77*M!D77","M!F78":"=M!D78*M!E78*0.2","M!F79":"=M!E79*M!D79","M!F80":"=M!D80*M!E80","M!F81":"=M!D81*M!E81","M!F83":"=M!D83*M!E83","M!F84":"=M!D84*M!E84","M!F85":"=M!D85*M!E85","M!F86":"=M!E86*M!D86","M!F88":"=M!E88*M!D88","M!F90":"=M!D90*M!E90","M!F91":"=M!D91*M!E91","M!F92":"=M!D92*M!E92","M!F93":"=M!D93*M!E93","M!F94":"=M!D94*M!E94","M!F95":"=M!D95*M!E95","M!F97":"=M!D97*M!E97","M!F98":"=M!D98*M!E98","M!F99":"=M!D99*M!E99","M!G122":1,"M!G123":0.4,"M!I21":1e-09,"M!I24":1e-09,"M!I26":2.8e-06,"M!I3":"=IF(M!T2=\"Ld\",P!F27,0)","M!I4":"=IF(M!T2=\"Ld\",0,P!F27)","M!I44":1.2e-05,"M!I5":"=30000*M!I4+M!I3*388000","M!I50":1e-07,"M!I6":0,"M!I65":2.2e-05,"M!I66":2.2e-05,"M!I7":"=P!F29","M!I79":0.00563,"M!I8":"=M!I7*30000+M!I6*60000","M!I83":1e-09,"M!I88":0,"M!I9":"=P!F28","M!I93":0,"M!J18":0,"M!J19":0,"M!J20":0,"M!J21":"=M!I21*15","M!J23":0,"M!J24":"=M!I24*15","M!J25":0,"M!J26":"=M!I26*13","M!J28":0,"M!J29":0,"M!J30":0,"M!J33":0,"M!J34":0,"M!J35":0,"M!J36":0,"M!J37":0,"M!J38":0,"M!J39":0,"M!J40":0,"M!J42":0,"M!J43":0,"M!J44":"=M!I44*15","M!J48":0,"M!J49":0,"M!J50":"=M!D50*M!I50","M!J51":0,"M!J52":0,"M!J54":0,"M!J55":0,"M!J56":0,"M!J57":0,"M!J58":0,"M!J60":0,"M!J61":0,"M!J63":0,"M!J64":0,"M!J65":"=M!I65*M!D65","M!J66":"=M!I66*M!D66","M!J67":0,"M!J68":0,"M!J69":0,"M!J70":0,"M!J71":0,"M!J72":0,"M!J73":0,"M!J74":0,"M!J75":0,"M!J76":0,"M!J77":0,"M!J78":0,"M!J79":"=M!I79*13","M!J80":0,"M!J81":0,"M!J83":"=M!I83*15","M!J84":0,"M!J85":0,"M!J86":0,"M!J88":"=M!I88*M!D88","M!J90":0,"M!J91":0,"M!J92":0,"M!J93":"=M!I93*13","M!J94":0,"M!J95":0,"M!J97":0,"M!J98":0,"M!J99":0,"M!K18":"=M!K19+M!K20","M!K19":"=IF(M!M9=200,M!Z3,M!Z5)","M!K20":"=IF(M!M9=100,8,IF(M!M9=200,17,IF(M!M1<50,320-4.86*M!M1,0)))","M!K21":0.25,"M!K23":"=M!K24","M!K24":"=40+M!L24*0.006","M!K25":"=M!L25*0.5*3.3/4","M!K26":0.016,"M!K28":"=M!L28","M!K29":"=M!K19","M!K30":0.065,"M!K33":"=MAX(M!K34,M!K36:K38)","M!K34":"=M!L34*P!F38","M!K35":"=MAX(M!K33,M!K34)","M!K36":"=M!L36*P!F40","M!K37":"=M!L37*P!F41","M!K38":"=M!L38*P!F42","M!K39":"=M!L39*P!F43","M!K40":"=M!L40/(2-P!F35)","M!K42":"=M!L42","M!K43":"=M!L43","M!K44":"=M!L44*P!F36","M!K48":0,"M!K49":0,"M!K50":0,"M!K51":0,"M!K52":"=M!L52","M!K54":"=M!L54","M!K55":0,"M!K56":"=M!K88","M!K57":"=M!L57","M!K58":"=M!K19","M!K60":1,"M!K61":7.5,"M!K63":0.065,"M!K64":"=M!L64","M!K65":0.07,"M!K66":0.07,"M!K67":0.2,"M!K68":"=M!L68","M!K69":1,"M!K70":"=M!L70","M!K71":"=M!L71","M!K72":0,"M!K73":0.4,"M!K74":"=M!L74/2","M!K75":0,"M!K76":0,"M!K77":0,"M!K78":0,"M!K79":"=M!L79","M!K80":0.07,"M!K81":0,"M!K83":1,"M!K84":"=M!K83","M!K85":0,"M!K86":"=M!L86","M!K88":0.15,"M!K90":0,"M!K91":0,"M!K92":0,"M!K93":0,"M!K94":0,"M!K95":0,"M!K97":"=M!L97/(2-P!F35)","M!K98":"=M!L98/(2-P!F35)","M!K99":"=M!L99/(2-P!F35)","M!L18":"=M!L19","M!L19":"=M!Q4*60","M!L20":"=M!Q4*60","M!L21":"=M!Q4*60","M!L23":"=M!Q4*60","M!L24":"=M!Q4*60","M!L25":"=M!Q4*60","M!L26":8,"M!L28":"=M!Q4*60","M!L29":"=M!Q4*60","M!L30":4,"M!L33":"=M!Q4*60","M!L34":"=M!Q4*60","M!L35":"=M!Q4*60","M!L36":"=M!Q4*60","M!L37":"=M!Q4*60","M!L38":"=M!Q4*60","M!L39":"=M!Q4*60","M!L40":"=M!Q4*60","M!L42":"=M!Q4*60","M!L43":"=M!Q4*M!M6*60","M!L44":"=M!Q4*60","M!L48":"=M!Q4*60","M!L49":"=M!Q4*60","M!L50":"=M!Q4*60","M!L51":"=M!Q4*60","M!L52":"=M!Q4*60","M!L54":"=M!Q4*60","M!L55":"=M!Q4*M!M6*60","M!L56":"=M!L88","M!L57":"=M!Q4*60","M!L58":"=M!L19","M!L60":30,"M!L61":"=M!Q4*60","M!L63":4,"M!L64":"=M!Q4*60","M!L65":4,"M!L66":4,"M!L67":4,"M!L68":"=M!Q4*60","M!L69":30,"M!L70":"=M!Q4*60","M!L71":"=M!Q4*60","M!L72":"=M!Q4*60","M!L73":15,"M!L74":"=M!Q4*60","M!L75":"=M!Q4*60","M!L76":"=M!Q4*60","M!L77":"=M!Q4*60","M!L78":"=M!Q4*60","M!L79":"=M!Q4*60","M!L80":4,"M!L81":"=M!Q4*60","M!L83":100,"M!L84":"=M!L83","M!L85":"=M!Q4*60","M!L86":"=M!Q4*60","M!L88":4,"M!L90":"=M!Q4*60","M!L91":"=M!Q4*60","M!L92":"=M!Q4*M!M6*60","M!L93":"=M!Q4*60","M!L94":"=M!Q4*60","M!L95":"=M!Q4*60","M!L97":"=M!Q4*60","M!L98":"=M!Q4*60","M!L99":"=M!Q4*60","M!M1":"=P!F7","M!M18":0,"M!M19":0,"M!M20":0,"M!M21":0.25,"M!M23":0,"M!M24":0,"M!M25":0,"M!M26":"=0.016*360/60/M!M7","M!M28":"=M!N28","M!M29":"=M!M19","M!M3":"=P!F6","M!M30":0.065,"M!M33":0,"M!M34":0,"M!M35":0,"M!M36":0,"M!M37":0,"M!M38":0,"M!M39":0,"M!M40":0,"M!M42":"=M!N42","M!M43":"=M!N43","M!M44":0,"M!M48":0.15,"M!M49":90,"M!M50":0,"M!M51":0,"M!M52":"=M!N52","M!M54":"=M!N54","M!M55":240,"M!M56":"=M!M88","M!M57":"=M!N57","M!M58":"=M!M19","M!M6":"=P!F12","M!M60":0,"M!M61":0,"M!M63":0.065,"M!M64":"=M!N64","M!M65":0,"M!M66":0,"M!M67":0.2,"M!M68":"=M!N68","M!M69":0,"M!M7":"=P!F13","M!M70":"=M!N70","M!M71":"=M!N71","M!M72":3.93,"M!M73":0,"M!M74":0,"M!M75":"=M!M92","M!M76":240,"M!M77":"=M!M7*60","M!M78":"=M!M92","M!M79":"=M!N79","M!M8":"=P!F14","M!M80":0,"M!M81":240,"M!M83":0,"M!M84":0,"M!M85":3.93,"M!M86":"=M!N86","M!M88":"=M!K88","M!M9":"=P!F17","M!M90":129,"M!M91":0.15,"M!M92":"=M!N92-M!M90","M!M93":"=M!M7*60-240","M!M94":"=M!M7*60-240","M!M95":20,"M!M97":0,"M!M98":0,"M!M99":0,"M!N18":600,"M!N19":"=M!M7*60","M!N20":"=M!M7*60","M!N21":"=M!M7*60","M!N23":"=M!M7*60","M!N24":"=M!M7*60","M!N25":"=M!M7*60","M!N26":8,"M!N28":"=M!M7*60","M!N29":"=M!M7*60","M!N30":4,"M!N33":"=M!M7*60","M!N34":"=M!M7*60","M!N35":"=M!M7*60","M!N36":"=M!M7*60","M!N37":"=M!M7*60","M!N38":"=M!M7*60","M!N39":"=M!M7*60","M!N40":"=M!M7*60","M!N42":"=M!M7*60","M!N43":"=M!M7*60","M!N44":"=M!M7*60","M!N48":"=M!M7*60","M!N49":"=M!M7*60","M!N50":"=M!M7*60","M!N51":"=M!M7*60","M!N52":"=M!M7*60","M!N54":"=M!M7*60","M!N55":"=M!M7*60","M!N56":"=M!N88","M!N57":"=M!M7*60","M!N58":"=M!N19","M!N60":"=M!M7*60","M!N61":"=M!M7*60","M!N63":4,"M!N64":"=M!M7*60","M!N65":"=M!M7*60","M!N66":"=M!M7*60","M!N67":2,"M!N68":"=M!M7*60","M!N69":"=M!M7*60","M!N70":"=M!M7*60","M!N71":"=M!M7*60","M!N72":90,"M!N73":15,"M!N74":"=M!M7*60","M!N75":"=M!M7*60","M!N76":"=M!M7*60","M!N77":"=M!M7*60","M!N78":"=M!M7*60","M!N79":"=M!M7*60","M!N80":"=M!M7*60","M!N81":"=M!M7*60","M!N83":"=M!M7*60","M!N84":"=M!M7*60","M!N85":90,"M!N86":"=M!M7*60","M!N88":"=M!L88","M!N90":"=M!M7*60","M!N91":"=M!M7*60","M!N92":"=M!M7*60","M!N93":"=M!M7*60","M!N94":"=M!M7*60","M!N95":"=M!M7*60","M!N97":"=M!M7*60","M!N98":"=M!M7*60","M!N99":"=M!M7*60","M!O18":"=(M!Q4*60*M!M6)/M!L18*M!K18+M!M7*60/M!N18*M!M18","M!O19":"=(M!Q4*60*M!M6)/M!L19*M!K19+M!M7*60/M!N19*M!M19","M!O20":"=(M!Q4*60*M!M6)/M!L20*M!K20+M!M7*60/M!N20*M!M20","M!O21":"=(M!Q4*60*M!M6)/M!L21*M!K21+M!M7*60/M!N21*M!M21","M!O23":"=(M!Q4*60*M!M6)/M!L23*M!K23+M!M7*60/M!N23*M!M23","M!O24":"=(M!Q4*60*M!M6)/M!L24*M!K24+M!M7*60/M!N24*M!M24","M!O25":"=(M!Q4*60*M!M6)/M!L25*M!K25+M!M7*60/M!N25*M!M25","M!O26":"=(M!Q4*60*M!M6)/M!L26*M!K26+M!M7*60/M!N26*M!M26","M!O28":"=(M!Q4*60*M!M6)/M!L28*M!K28+M!M7*60/M!N28*M!M28","M!O29":"=(M!Q4*60*M!M6)/M!L29*M!K29+M!M7*60/M!N29*M!M29","M!O30":"=(M!Q4*60*M!M6)/M!L30*M!K30+M!M7*60/M!N30*M!M30","M!O33":"=(M!Q4*60*M!M6)/M!L33*M!K33+M!M7*60/M!N33*M!M33","M!O34":"=(M!Q4*60*M!M6)/M!L34*M!K34+M!M7*60/M!N34*M!M34","M!O35":"=(M!Q4*60*M!M6)/M!L35*M!K35+M!M7*60/M!N35*M!M35","M!O36":"=(M!Q4*60*M!M6)/M!L36*M!K36+M!M7*60/M!N36*M!M36","M!O37":"=(M!Q4*60*M!M6)/M!L37*M!K37+M!M7*60/M!N37*M!M37","M!O38":"=(M!Q4*60*M!M6)/M!L38*M!K38+M!M7*60/M!N38*M!M38","M!O39":"=(M!Q4*60*M!M6)/M!L39*M!K39+M!M7*60/M!N39*M!M39","M!O40":"=(M!Q4*60*M!M6)/M!L40*M!K40+M!M7*60/M!N40*M!M40","M!O42":"=(M!Q4*60*M!M6)/M!L42*M!K42+M!M7*60/M!N42*M!M42","M!O43":"=(M!Q4*60*M!M6)/M!L43*M!K43+M!M7*60/M!N43*M!M43","M!O44":"=(M!Q4*60*M!M6)/M!L44*M!K44+M!M7*60/M!N44*M!M44","M!O48":"=(M!Q4*60*M!M6)/M!L48*M!K48+M!M7*60/M!N48*M!M48","M!O49":"=(M!Q4*60*M!M6)/M!L49*M!K49+M!M7*60/M!N49*M!M49","M!O50":"=(M!Q4*60*M!M6)/M!L50*M!K50+M!M7*60/M!N50*M!M50","M!O51":"=(M!Q4*60*M!M6)/M!L51*M!K51+M!M7*60/M!N51*M!M51","M!O52":"=(M!Q4*60*M!M6)/M!L52*M!K52+M!M7*60/M!N52*M!M52","M!O54":"=(M!Q4*60*M!M6)/M!L54*M!K54+M!M7*60/M!N54*M!M54","M!O55":"=(M!Q4*60*M!M6)/M!L55*M!K55+M!M7*60/M!N55*M!M55","M!O56":"=(M!Q4*60*M!M6)/M!L56*M!K56+M!M7*60/M!N56*M!M56","M!O57":"=(M!Q4*60*M!M6)/M!L57*M!K57+M!M7*60/M!N57*M!M57","M!O58":"=(M!Q4*60*M!M6)/M!L58*M!K58+M!M7*60/M!N58*M!M58","M!O60":"=(M!Q4*60*M!M6)/M!L60*M!K60+M!M7*60/M!N60*M!M60","M!O61":"=(M!Q4*60*M!M6)/M!L61*M!K61+M!M7*60/M!N61*M!M61","M!O63":"=(M!Q4*60*M!M6)/M!L63*M!K63+M!M7*60/M!N63*M!M63","M!O64":"=(M!Q4*60*M!M6)/M!L64*M!K64+M!M7*60/M!N64*M!M64","M!O65":"=(M!Q4*60*M!M6)/M!L65*M!K65+M!M7*60/M!N65*M!M65","M!O66":"=(M!Q4*60*M!M6)/M!L66*M!K66+M!M7*60/M!N66*M!M66","M!O67":"=(M!Q4*60*M!M6)/M!L67*M!K67+M!M7*60/M!N67*M!M67","M!O68":"=(M!Q4*60*M!M6)/M!L68*M!K68+M!M7*60/M!N68*M!M68","M!O69":"=(M!Q4*60*M!M6)/M!L69*M!K69+M!M7*60/M!N69*M!M69","M!O70":"=(M!Q4*60*M!M6)/M!L70*M!K70+M!M7*60/M!N70*M!M70","M!O71":"=(M!Q4*60*M!M6)/M!L71*M!K71+M!M7*60/M!N71*M!M71","M!O72":"=(M!Q4*60*M!M6)/M!L72*M!K72+M!M7*60/M!N72*M!M72","M!O73":"=(M!Q4*60*M!M6)/M!L73*M!K73+M!M7*60/M!N73*M!M73","M!O74":"=(M!Q4*60*M!M6)/M!L74*M!K74+M!M7*60/M!N74*M!M74","M!O75":"=(M!Q4*60*M!M6)/M!L75*M!K75+M!M7*60/M!N75*M!M75","M!O76":"=(M!Q4*60*M!M6)/M!L76*M!K76+M!M7*60/M!N76*M!M76","M!O77":"=(M!Q4*60*M!M6)/M!L77*M!K77+M!M7*60/M!N77*M!M77","M!O78":"=(M!Q4*60*M!M6)/M!L78*M!K78+M!M7*60/M!N78*M!M78","M!O79":"=(M!Q4*60*M!M6)/M!L79*M!K79+M!M7*60/M!N79*M!M79","M!O80":"=(M!Q4*60*M!M6)/M!L80*M!K80+M!M7*60/M!N80*M!M80","M!O81":"=(M!Q4*60*M!M6)/M!L81*M!K81+M!M7*60/M!N81*M!M81","M!O83":"=(M!Q4*60*M!M6)/M!L83*M!K83+M!M7*60/M!N83*M!M83","M!O84":"=(M!Q4*60*M!M6)/M!L84*M!K84+M!M7*60/M!N84*M!M84","M!O85":"=(M!Q4*60*M!M6)/M!L85*M!K85+M!M7*60/M!N85*M!M85","M!O86":"=(M!Q4*60*M!M6)/M!L86*M!K86+M!M7*60/M!N86*M!M86","M!O88":"=(M!Q4*60*M!M6)/M!L88*M!K88+M!M7*60/M!N88*M!M88","M!O90":"=(M!Q4*60*M!M6)/M!L90*M!K90+M!M7*60/M!N90*M!M90","M!O91":"=(M!Q4*60*M!M6)/M!L91*M!K91+M!M7*60/M!N91*M!M91","M!O92":"=(M!Q4*60*M!M6)/M!L92*M!K92+M!M7*60/M!N92*M!M92","M!O93":"=(M!Q4*60*M!M6)/M!L93*M!K93+M!M7*60/M!N93*M!M93","M!O94":"=(M!Q4*60*M!M6)/M!L94*M!K94+M!M7*60/M!N94*M!M94","M!O95":"=(M!Q4*60*M!M6)/M!L95*M!K95+M!M7*60/M!N95*M!M95","M!O97":"=(M!Q4*60*M!M6)/M!L97*M!K97+M!M7*60/M!N97*M!M97","M!O98":"=(M!Q4*60*M!M6)/M!L98*M!K98+M!M7*60/M!N98*M!M98","M!O99":"=(M!Q4*60*M!M6)/M!L99*M!K99+M!M7*60/M!N99*M!M99","M!P18":"=(M!Q4*M!M6+M!M7)*60-M!O18","M!P19":"=(M!Q4*M!M6+M!M7)*60-M!O19","M!P20":"=(M!Q4*M!M6+M!M7)*60-M!O20","M!P21":"=(M!Q4*M!M6+M!M7)*60-M!O21","M!P23":"=(M!Q4*M!M6+M!M7)*60-M!O23","M!P24":"=(M!Q4*M!M6+M!M7)*60-M!O24","M!P25":"=(M!Q4*M!M6+M!M7)*60-M!O25","M!P26":"=(M!Q4*M!M6+M!M7)*60-M!O26","M!P28":"=(M!Q4*M!M6+M!M7)*60-M!O28","M!P29":"=(M!Q4*M!M6+M!M7)*60-M!O29","M!P30":"=(M!Q4*M!M6+M!M7)*60-M!O30","M!P33":"=(M!Q4*M!M6+M!M7)*60-M!O33","M!P34":"=(M!Q4*M!M6+M!M7)*60-M!O34","M!P35":"=(M!Q4*M!M6+M!M7)*60-M!O35","M!P36":"=(M!Q4*M!M6+M!M7)*60-M!O36","M!P37":"=(M!Q4*M!M6+M!M7)*60-M!O37","M!P38":"=(M!Q4*M!M6+M!M7)*60-M!O38","M!P39":"=(M!Q4*M!M6+M!M7)*60-M!O39","M!P40":"=(M!Q4*M!M6+M!M7)*60-M!O40","M!P42":"=(M!Q4*M!M6+M!M7)*60-M!O42","M!P43":"=(M!Q4*M!M6+M!M7)*60-M!O43","M!P44":"=(M!Q4*M!M6+M!M7)*60-M!O44","M!P48":"=(M!Q4*M!M6+M!M7)*60-M!O48","M!P49":"=(M!Q4*M!M6+M!M7)*60-M!O49","M!P50":"=(M!Q4*M!M6+M!M7)*60-M!O50","M!P51":"=(M!Q4*M!M6+M!M7)*60-M!O51","M!P52":"=(M!Q4*M!M6+M!M7)*60-M!O52","M!P54":"=(M!Q4*M!M6+M!M7)*60-M!O54","M!P55":"=(M!Q4*M!M6+M!M7)*60-M!O55","M!P56":"=(M!Q4*M!M6+M!M7)*60-M!O56","M!P57":"=(M!Q4*M!M6+M!M7)*60-M!O57","M!P58":"=(M!Q4*M!M6+M!M7)*60-M!O58","M!P60":"=(M!Q4*M!M6+M!M7)*60-M!O60","M!P61":"=(M!Q4*M!M6+M!M7)*60-M!O61","M!P63":"=(M!Q4*M!M6+M!M7)*60-M!O63","M!P64":"=(M!Q4*M!M6+M!M7)*60-M!O64","M!P65":"=(M!Q4*M!M6+M!M7)*60-M!O65","M!P66":"=(M!Q4*M!M6+M!M7)*60-M!O66","M!P67":"=(M!Q4*M!M6+M!M7)*60-M!O67","M!P68":"=(M!Q4*M!M6+M!M7)*60-M!O68","M!P69":"=(M!Q4*M!M6+M!M7)*60-M!O69","M!P70":"=(M!Q4*M!M6+M!M7)*60-M!O70","M!P71":"=(M!Q4*M!M6+M!M7)*60-M!O71","M!P72":"=(M!Q4*M!M6+M!M7)*60-M!O72","M!P73":"=(M!Q4*M!M6+M!M7)*60-M!O73","M!P74":"=(M!Q4*M!M6+M!M7)*60-M!O74","M!P75":"=(M!Q4*M!M6+M!M7)*60-M!O75","M!P76":"=(M!Q4*M!M6+M!M7)*60-M!O76","M!P77":"=(M!Q4*M!M6+M!M7)*60-M!O77","M!P78":"=(M!Q4*M!M6+M!M7)*60-M!O78","M!P79":"=(M!Q4*M!M6+M!M7)*60-M!O79","M!P80":"=(M!Q4*M!M6+M!M7)*60-M!O80","M!P81":"=(M!Q4*M!M6+M!M7)*60-M!O81","M!P83":"=(M!Q4*M!M6+M!M7)*60-M!O83","M!P84":"=(M!Q4*M!M6+M!M7)*60-M!O84","M!P85":"=(M!Q4*M!M6+M!M7)*60-M!O85","M!P86":"=(M!Q4*M!M6+M!M7)*60-M!O86","M!P88":"=(M!Q4*M!M6+M!M7)*60-M!O88","M!P90":"=(M!Q4*M!M6+M!M7)*60-M!O90","M!P91":"=(M!Q4*M!M6+M!M7)*60-M!O91","M!P92":"=(M!Q4*M!M6+M!M7)*60-M!O92","M!P93":"=(M!Q4*M!M6+M!M7)*60-M!O93","M!P94":"=(M!Q4*M!M6+M!M7)*60-M!O94","M!P95":"=(M!Q4*M!M6+M!M7)*60-M!O95","M!P97":"=(M!Q4*M!M6+M!M7)*60-M!O97","M!P98":"=(M!Q4*M!M6+M!M7)*60-M!O98","M!P99":"=(M!Q4*M!M6+M!M7)*60-M!O99","M!Q4":"=P!K7","M!Q6":"=M!I5*M!Z8*IF(M!Z9>1,1,M!Z9)","M!R18":"=M!F18*M!O18","M!R19":"=M!F19*M!O19","M!R20":"=M!F20*M!O20","M!R21":"=M!F21*M!O21","M!R23":"=M!F23*M!O23","M!R24":"=M!F24*M!O24","M!R25":"=M!F25*M!O25","M!R26":"=M!F26*M!O26","M!R28":"=M!F28*M!O28","M!R29":"=M!F29*M!O29","M!R30":"=M!F30*M!O30","M!R33":"=M!F33*M!O33","M!R34":"=M!F34*M!O34","M!R35":"=M!F35*M!O35","M!R36":"=M!F36*M!O36","M!R37":"=M!F37*M!O37","M!R38":"=M!F38*M!O38","M!R39":"=M!F39*M!O39","M!R40":"=M!F40*M!O40","M!R42":"=M!F42*M!O42","M!R43":"=M!F43*M!O43","M!R44":"=M!F44*M!O44","M!R48":"=M!F48*M!O48","M!R49":"=M!F49*M!O49","M!R50":"=M!F50*M!O50","M!R51":"=M!F51*M!O51","M!R52":"=M!F52*M!O52","M!R54":"=M!F54*M!O54","M!R55":"=M!F55*M!O55","M!R56":"=M!F56*M!O56","M!R57":"=M!F57*M!O57","M!R58":"=M!F58*M!O58","M!R59":0,"M!R60":"=M!F60*M!O60","M!R61":"=M!F61*M!O61","M!R62":0,"M!R63":"=M!F63*M!O63","M!R64":"=M!F64*M!O64","M!R65":"=M!F65*M!O65","M!R66":"=M!F66*M!O66","M!R67":"=M!F67*M!O67","M!R68":"=M!F68*M!O68","M!R69":"=M!F69*M!O69","M!R70":"=M!F70*M!O70","M!R71":"=M!F71*M!O71","M!R72":"=M!F72*M!O72","M!R73":"=M!F73*M!O73","M!R74":"=M!F74*M!O74","M!R75":"=M!F75*M!O75","M!R76":"=M!F76*M!O76","M!R77":"=M!F77*M!O77","M!R78":"=M!F78*M!O78","M!R79":"=M!F79*M!O79","M!R80":"=M!F80*M!O80","M!R81":"=M!F81*M!O81","M!R83":"=M!F83*M!O83","M!R84":"=M!F84*M!O84","M!R85":"=M!F85*M!O85","M!R86":"=M!F86*M!O86","M!R87":0,"M!R88":"=M!F88*M!O88","M!R90":"=M!F90*M!O90","M!R91":"=M!F91*M!O91","M!R92":"=M!F92*M!O92","M!R93":"=M!F93*M!O93","M!R94":"=M!F94*M!O94","M!R95":"=M!F95*M!O95","M!R96":0,"M!R97":"=M!F97*M!O97","M!R98":"=M!F98*M!O98","M!R99":"=M!F99*M!O99","M!S18":"=M!J18*M!P18","M!S19":"=M!J19*M!P19","M!S20":"=M!J20*M!P20","M!S21":"=M!J21*M!P21","M!S23":"=M!J23*M!P23","M!S24":"=M!J24*M!P24","M!S25":"=M!J25*M!P25","M!S26":"=M!J26*M!P26","M!S28":"=M!J28*M!P28","M!S29":"=M!J29*M!P29","M!S30":"=M!J30*M!P30","M!S33":"=M!J33*M!P33","M!S34":"=M!J34*M!P34","M!S35":"=M!J35*M!P35","M!S36":"=M!J36*M!P36","M!S37":"=M!J37*M!P37","M!S38":"=M!J38*M!P38","M!S39":"=M!J39*M!P39","M!S40":"=M!J40*M!P40","M!S42":"=M!J42*M!P42","M!S43":"=M!J43*M!P43","M!S44":"=M!J44*M!P44","M!S48":"=M!J48*M!P48","M!S49":"=M!J49*M!P49","M!S50":"=M!J50*M!P50","M!S51":"=M!J51*M!P51","M!S52":"=M!J52*M!P52","M!S54":"=M!J54*M!P54","M!S55":"=M!J55*M!P55","M!S56":"=M!J56*M!P56","M!S57":"=M!J57*M!P57","M!S58":"=M!J58*M!P58","M!S59":0,"M!S60":"=M!J60*M!P60","M!S61":"=M!J61*M!P61","M!S62":0,"M!S63":"=M!J63*M!P63","M!S64":"=M!J64*M!P64","M!S65":"=M!J65*M!P65","M!S66":"=M!J66*M!P66","M!S67":"=M!J67*M!P67","M!S68":"=M!J68*M!P68","M!S69":"=M!J69*M!P69","M!S70":"=M!J70*M!P70","M!S71":"=M!J71*M!P71","M!S72":"=M!J72*M!P72","M!S73":"=M!J73*M!P73","M!S74":"=M!J74*M!P74","M!S75":"=M!J75*M!P75","M!S76":"=M!J76*M!P76","M!S77":"=M!J77*M!P77","M!S78":"=M!J78*M!P78","M!S79":"=M!J79*M!P79","M!S80":"=M!J80*M!P80","M!S81":"=M!J81*M!P81","M!S83":"=M!J83*M!P83","M!S84":"=M!J84*M!P84","M!S85":"=M!J85*M!P85","M!S86":"=M!J86*M!P86","M!S87":0,"M!S88":"=M!J88*M!P88","M!S90":"=M!J90*M!P90","M!S91":"=M!J91*M!P91","M!S92":"=M!J92*M!P92","M!S93":"=M!J93*M!P93","M!S94":"=M!J94*M!P94","M!S95":"=M!J95*M!P95","M!S96":0,"M!S97":"=M!J97*M!P97","M!S98":"=M!J98*M!P98","M!S99":"=M!J99*M!P99","M!T15":"=SUM(M!T16,M!T31,M!T45)","M!T16":"=SUM(M!T17,M!T22,M!T25,M!T26,M!T27,M!T30,)","M!T17":"=SUM(M!T18:T21)","M!T18":"=((M!S18+M!R18)/(M!Q4*M!M6+M!M7)/60)*M!Z18","M!T19":"=((M!S19+M!R19)/(M!Q4*M!M6+M!M7)/60)*M!Z19","M!T2":"=P!F26","M!T20":"=((M!S20+M!R20)/(M!Q4*M!M6+M!M7)/60)*M!Z20","M!T21":"=((M!S21+M!R21)/(M!Q4*M!M6+M!M7)/60)*M!Z21","M!T22":"=SUM(M!T23:T24)","M!T23":"=((M!S23+M!R23)/(M!Q4*M!M6+M!M7)/60)*M!Z23","M!T24":"=((M!S24+M!R24)/(M!Q4*M!M6+M!M7)/60)*M!Z24","M!T25":"=((M!S25+M!R25)/(M!Q4*M!M6+M!M7)/60)*M!Z25","M!T26":"=((M!S26+M!R26)/(M!Q4*M!M6+M!M7)/60)*M!Z26","M!T27":"=SUM(M!T28:T29)","M!T28":"=((M!S28+M!R28)/(M!Q4*M!M6+M!M7)/60)*M!Z28","M!T29":"=((M!S29+M!R29)/(M!Q4*M!M6+M!M7)/60)*M!Z29","M!T30":"=((M!S30+M!R30)/(M!Q4*M!M6+M!M7)/60)*M!Z30","M!T31":"=SUM(M!T32,M!T36:T41,M!T44)","M!T32":"=SUM(M!T33:T35)","M!T33":"=((M!S33+M!R33)/(M!Q4*M!M6+M!M7)/60)*M!Z33","M!T34":"=((M!S34+M!R34)/(M!Q4*M!M6+M!M7)/60)*M!Z34","M!T35":"=((M!S35+M!R35)/(M!Q4*M!M6+M!M7)/60)*M!Z35","M!T36":"=((M!S36+M!R36)/(M!Q4*M!M6+M!M7)/60)*M!Z36","M!T37":"=((M!S37+M!R37)/(M!Q4*M!M6+M!M7)/60)*M!Z37","M!T38":"=((M!S38+M!R38)/(M!Q4*M!M6+M!M7)/60)*M!Z38","M!T39":"=((M!S39+M!R39)/(M!Q4*M!M6+M!M7)/60)*M!Z39","M!T40":"=((M!S40+M!R40)/(M!Q4*M!M6+M!M7)/60)*M!Z40","M!T41":"=SUM(M!T42:T43)","M!T42":"=((M!S42+M!R42)/(M!Q4*M!M6+M!M7)/60)*M!Z42","M!T43":"=((M!S43+M!R43)/(M!Q4*M!M6+M!M7)/60)*M!Z43","M!T44":"=((M!S44+M!R44)/(M!Q4*M!M6+M!M7)/60)*M!Z44","M!T45":"=SUM(M!T47,M!T80:T82,M!T85:T89,M!T93:T99)","M!T47":"=SUM(M!T48:T53,M!T57:T79)","M!T48":"=((M!S48+M!R48)/(M!Q4*M!M6+M!M7)/60)*M!Z48","M!T49":"=((M!S49+M!R49)/(M!Q4*M!M6+M!M7)/60)*M!Z49","M!T50":"=((M!S50+M!R50)/(M!Q4*M!M6+M!M7)/60)*M!Z50","M!T51":"=((M!S51+M!R51)/(M!Q4*M!M6+M!M7)/60)*M!Z51","M!T52":"=((M!S52+M!R52)/(M!Q4*M!M6+M!M7)/60)*M!Z52","M!T53":"=SUM(M!T54:T56)","M!T54":"=((M!S54+M!R54)/(M!Q4*M!M6+M!M7)/60)*M!Z54","M!T55":"=((M!S55+M!R55)/(M!Q4*M!M6+M!M7)/60)*M!Z55","M!T56":"=((M!S56+M!R56)/(M!Q4*M!M6+M!M7)/60)*M!Z56","M!T57":"=((M!S57+M!R57)/(M!Q4*M!M6+M!M7)/60)*M!Z57","M!T58":"=((M!S58+M!R58)/(M!Q4*M!M6+M!M7)/60)*M!Z58","M!T59":"=((M!S59+M!R59)/(M!Q4*M!M6+M!M7)/60)*M!Z59","M!T60":"=((M!S60+M!R60)/(M!Q4*M!M6+M!M7)/60)*M!Z60","M!T61":"=((M!S61+M!R61)/(M!Q4*M!M6+M!M7)/60)*M!Z61","M!T62":"=((M!S62+M!R62)/(M!Q4*M!M6+M!M7)/60)*M!Z62","M!T63":"=((M!S63+M!R63)/(M!Q4*M!M6+M!M7)/60)*M!Z63","M!T64":"=((M!S64+M!R64)/(M!Q4*M!M6+M!M7)/60)*M!Z64","M!T65":"=((M!S65+M!R65)/(M!Q4*M!M6+M!M7)/60)*M!Z65","M!T66":"=((M!S66+M!R66)/(M!Q4*M!M6+M!M7)/60)*M!Z66","M!T67":"=((M!S67+M!R67)/(M!Q4*M!M6+M!M7)/60)*M!Z67","M!T68":"=((M!S68+M!R68)/(M!Q4*M!M6+M!M7)/60)*M!Z68","M!T69":"=((M!S69+M!R69)/(M!Q4*M!M6+M!M7)/60)*M!Z69","M!T70":"=((M!S70+M!R70)/(M!Q4*M!M6+M!M7)/60)*M!Z70","M!T71":"=((M!S71+M!R71)/(M!Q4*M!M6+M!M7)/60)*M!Z71","M!T72":"=((M!S72+M!R72)/(M!Q4*M!M6+M!M7)/60)*M!Z72","M!T73":"=((M!S73+M!R73)/(M!Q4*M!M6+M!M7)/60)*M!Z73","M!T74":"=((M!S74+M!R74)/(M!Q4*M!M6+M!M7)/60)*M!Z74","M!T75":"=((M!S75+M!R75)/(M!Q4*M!M6+M!M7)/60)*M!Z75","M!T76":"=((M!S76+M!R76)/(M!Q4*M!M6+M!M7)/60)*M!Z76","M!T77":"=((M!S77+M!R77)/(M!Q4*M!M6+M!M7)/60)*M!Z77","M!T78":"=((M!S78+M!R78)/(M!Q4*M!M6+M!M7)/60)*M!Z78","M!T79":"=((M!S79+M!R79)/(M!Q4*M!M6+M!M7)/60)*M!Z79","M!T80":"=((M!S80+M!R80)/(M!Q4*M!M6+M!M7)/60)*M!Z80","M!T81":"=((M!S81+M!R81)/(M!Q4*M!M6+M!M7)/60)*M!Z81","M!T82":"=SUM(M!T83:T84)","M!T83":"=((M!S83+M!R83)/(M!Q4*M!M6+M!M7)/60)*M!Z83","M!T84":"=((M!S84+M!R84)/(M!Q4*M!M6+M!M7)/60)*M!Z84","M!T85":"=((M!S85+M!R85)/(M!Q4*M!M6+M!M7)/60)*M!Z85","M!T86":"=((M!S86+M!R86)/(M!Q4*M!M6+M!M7)/60)*M!Z86","M!T87":"=((M!S87+M!R87)/(M!Q4*M!M6+M!M7)/60)*M!Z87","M!T88":"=((M!S88+M!R88)/(M!Q4*M!M6+M!M7)/60)*M!Z88","M!T89":"=SUM(M!T90:T92)","M!T90":"=((M!S90+M!R90)/(M!Q4*M!M6+M!M7)/60)*M!Z90","M!T91":"=((M!S91+M!R91)/(M!Q4*M!M6+M!M7)/60)*M!Z91","M!T92":"=((M!S92+M!R92)/(M!Q4*M!M6+M!M7)/60)*M!Z92","M!T93":"=((M!S93+M!R93)/(M!Q4*M!M6+M!M7)/60)*M!Z93","M!T94":"=((M!S94+M!R94)/(M!Q4*M!M6+M!M7)/60)*M!Z94","M!T95":"=((M!S95+M!R95)/(M!Q4*M!M6+M!M7)/60)*M!Z95","M!T96":"=((M!S96+M!R96)/(M!Q4*M!M6+M!M7)/60)*M!Z96","M!T97":"=((M!S97+M!R97)/(M!Q4*M!M6+M!M7)/60)*M!Z97","M!T98":"=((M!S98+M!R98)/(M!Q4*M!M6+M!M7)/60)*M!Z98","M!T99":"=((M!S99+M!R99)/(M!Q4*M!M6+M!M7)/60)*M!Z99","M!Z18":1,"M!Z19":1,"M!Z20":1,"M!Z21":1,"M!Z23":1,"M!Z24":1,"M!Z25":"=IF(P!E22=\"Coastal\",M!G122,M!G123)*P!F19","M!Z26":"=P!F18","M!Z28":1,"M!Z29":1,"M!Z3":"=IF(M!M3<34,17,0.00074*M!M3^2-0.0364*M!M3+17.4)","M!Z30":1,"M!Z33":"=P!F37","M!Z34":"=P!F38","M!Z35":"=P!F39","M!Z36":"=P!F40","M!Z37":"=P!F41","M!Z38":"=P!F42","M!Z39":"=P!F43","M!Z40":"=P!F44","M!Z42":1,"M!Z43":1,"M!Z44":"=P!F36","M!Z48":1,"M!Z49":1,"M!Z5":"=IF(M!M3<600, 199, 0.00013*M!M3^2-0.12*M!M3+225)*M!F116","M!Z50":1,"M!Z51":1,"M!Z52":1,"M!Z54":1,"M!Z55":1,"M!Z56":1,"M!Z57":1,"M!Z58":1,"M!Z59":1,"M!Z60":1,"M!Z61":1,"M!Z62":1,"M!Z63":1,"M!Z64":1,"M!Z65":1,"M!Z66":1,"M!Z67":1,"M!Z68":1,"M!Z69":1,"M!Z70":1,"M!Z71":1,"M!Z72":1,"M!Z73":1,"M!Z74":1,"M!Z75":1,"M!Z76":1,"M!Z77":1,"M!Z78":1,"M!Z79":"=IF(P!E22=\"Coastal\",M!E122,M!E123)","M!Z8":"=IF(M!T2=\"a\",IF(M!M8<20,0.7+M!M8*0.015,1),M!M8*0.1925/20+0.8075)","M!Z80":1,"M!Z81":1,"M!Z83":1,"M!Z84":1,"M!Z85":"=P!F21","M!Z86":1,"M!Z87":1,"M!Z88":"=IF(P!E22=\"Coastal\",M!F122,M!F123)","M!Z9":"=IF(M!T2=\"a\",M!AC1*M!I9^4+M!AC2*M!I9^3+M!AC3*M!I9^2+M!AC4*M!I9+M!AC5,IF(M!T2=\"l\",IF(M!I9<=12.1,1,0.83),IF(M!I9<=13,1,0.83)))","M!Z90":1,"M!Z91":1,"M!Z92":1,"M!Z93":1,"M!Z94":1,"M!Z95":"=P!F20","M!Z96":1,"M!Z97":"=P!F50","M!Z98":"=P!F51","M!Z99":"=P!F52","P!E12":"=IF(P!F11=\"n\",\"Number of Profiles before surface:\",IF(P!F11=\"t\",\"Time before surface (Minutes):\",IF(P!F11=\"d\",\"Distance before surface (Meters):\",\"ERROR!  Enter T, N, or D for Profile Type.\")))","P!E22":"Coastal","P!E27":"=IF(P!F26=\"t\",\"Number of Li Packs:\",IF(P!F26=\"a\",\"Number of C-Cells\",IF(P!F26=\"lc\",\"Number of C-Cells:\",IF(P!F26=\"ld\",\"Number of DD-Cells:\",\"ERROR\"))))","P!E28":"P","P!E29":0,"P!E30":"=IF(AND(P!E29>0, P!F51>0), \"Error: EK80 integration can't support Extended Energy bay\", \"\")","P!F11":"N","P!F12":6,"P!F13":15,"P!F14":8,"P!F17":1000,"P!F18":0,"P!F19":1,"P!F20":1,"P!F21":0,"P!F26":"Ld","P!F27":"=IF(P!E22=\"Coastal\",78,114)","P!F28":0,"P!F29":0,"P!F35":0,"P!F36":1,"P!F37":0.5,"P!F38":0,"P!F39":0.5,"P!F40":1,"P!F41":0,"P!F42":1,"P!F43":0,"P!F44":0,"P!F5":"=IF(P!F6>P!F17,\"Error! Profile Too Deep!\",\"\")","P!F50":1,"P!F51":1,"P!F52":1,"P!F53":0,"P!F6":200,"P!F7":1,"P!F8":0.23,"P!F9":0.09,"P!H18":"=IF(P!F18=0,\"\",IF(P!F18=1,\"\",\"ERROR!  Please enter 0 or 1.\"))","P!H24":"=IF(P!F26<>\"lc\",IF(P!F26<>\"ld\",IF(P!F26<>\"a\",IF(P!F26<>\"t\",\"ERROR!  Enter Battery Type.\",\"\"),\"\"),\"\"),\"\")","P!H50":0,"P!H51":0,"P!H52":0,"P!I50":0,"P!I51":0,"P!I52":0,"P!K10":"=IF(P!F11=\"n\",P!F12*P!K7+2*P!F7/P!F9/60,IF(P!F11=\"t\",P!F12,P!F12/P!F8/60))","P!K11":"=P!K10*P!F8/1000*60","P!K18":"=P!F27*10*M!Z8","P!K19":"=M!T15*(24/10.8)","P!K20":"=(P!K43/100*11.2)+(P!F50*1.6)+(P!F51*11.2)+(P!F52*1.6)+(P!F53*6.4)+P!K19","P!K30":"=ROUND(IF(AND(P!E28=\"P\",P!E29=0),550,IF(AND(P!E28=\"P\",P!E29=1),800,IF(AND(P!E28=\"R\",P!E29=0),215,IF(AND(P!E28=\"R\",P!E29=1),300,0))))/P!K20,0)","P!K31":"=20*P!K30","P!K43":50,"P!K6":"=ATAN(P!F9/P!F8)*180/PI()","P!K7":"=(P!F6-P!F7)/P!F9*2/60","P!K8":"=P!F8*P!K7*60","P!K9":"=IF(P!F11=\"n\",P!F12,IF(P!F11=\"t\",P!F12/P!K7,P!F12/P!K8))"},"note":"Extracted from the Teledyne Webb Research Slocum Endurance Tool. Formulas are Excel's, evaluated in the browser.","sheets":{"Glider Model":"M","Glider Parameters":"P"},"source":"Slocum Endurance Tool.xlsx"};
+const SPEC = {"geometry":[["P!K6","\u00b0",1],["P!K7","min",1],["P!K8","m",0],["P!K9","",1],["P!K10","min",1],["P!K11","km",2],["P!K18","Ah",0]],"alerts":["P!F5","P!E30","P!H18","P!H24"],"labels":{"P!F12":"P!E12"},"defaults":{},"sensors":[{"id":"s0","name":"Thruster","ah":11.2,"kind":"percent","default":0.0,"source":"Slocum Endurance Tool K20","note":"11.2 Ah/day at 100% duty (7 W)"},{"id":"s1","name":"UVP6","ah":1.6,"kind":"fraction","default":0.0,"source":"Slocum Endurance Tool K20","note":""},{"id":"s2","name":"EK80","ah":11.2,"kind":"fraction","default":0.0,"source":"Slocum Endurance Tool K20","note":""},{"id":"s3","name":"JASCO OceanObserver","ah":1.6,"kind":"fraction","default":1.0,"source":"Slocum Endurance Tool K20","note":"Workbook's generic hydrophone figure. Rodeo 2026 measured capex987 at 5.1 W against ~2.2 W for the rest"},{"id":"s4","name":"eDNA","ah":6.4,"kind":"fraction","default":0.0,"source":"Slocum Endurance Tool K20","note":""}]};
+
+(function () {
+  "use strict";
+  const model = new EnduranceEval.Model(MODEL.cells);
+  const controls = Array.from(document.querySelectorAll("#set [data-cell]"));
+  const fmt = (v, d) => (typeof v === "number" && isFinite(v))
+    ? v.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d })
+    : "–";
+
+  // Each control starts on the workbook's own saved value, except where SPEC.defaults
+  // overrides it with the payload this group actually flies.
+  const defaults = {};
+  controls.forEach((el) => {
+    const k = el.dataset.cell;
+    defaults[k] = k in SPEC.defaults ? SPEC.defaults[k] : MODEL.cells[k];
+  });
+
+  function setControl(el, value) {
+    if (el.dataset.kind === "bool") el.checked = Number(value) !== 0;
+    else if (el.dataset.kind === "sel") el.value = String(value);
+    else el.value = value;
+  }
+
+  function readInputs() {
+    const out = {};
+    controls.forEach((el) => {
+      const k = el.dataset.cell;
+      if (el.dataset.kind === "bool") out[k] = el.checked ? 1 : 0;
+      else if (el.dataset.kind === "sel") out[k] = el.dataset.numeric ? Number(el.value) : el.value;
+      else {
+        const n = parseFloat(el.value);
+        out[k] = isNaN(n) ? 0 : n;
+      }
+    });
+    // The workbook's own extra-sensor terms are zeroed: that payload now comes from
+    // extra-sensors.csv instead, and is added back below. Leaving them in would
+    // double-count the four the workbook happens to know about.
+    ["P!K43", "P!F50", "P!F51", "P!F52", "P!F53"].forEach((k) => { out[k] = 0; });
+    return out;
+  }
+
+  // Ah/day drawn by everything in extra-sensors.csv, at the settings on screen.
+  function sensorLoad() {
+    let total = 0;
+    SPEC.sensors.forEach((s) => {
+      const el = document.getElementById("i_" + s.id);
+      const n = parseFloat(el.value);
+      const v = isNaN(n) ? 0 : n;
+      total += s.ah * (s.kind === "percent" ? v / 100 : v);
+    });
+    return total;
+  }
+
+  function render() {
+    const inputs = readInputs();
+    let r;
+    try {
+      // Two passes. First the workbook's component power model gives K19 (glider and
+      // standard sensors). Then K20 is overridden with K19 plus the CSV payload, so the
+      // workbook still supplies the capacity table and the rounding in K30/K31 -- only
+      // the one line that used to hardcode four sensors is ours.
+      model.reset(inputs);
+      const k19 = model.get("P!K19");
+      const k20 = k19 + sensorLoad();
+      const withLoad = Object.assign({}, inputs, { "P!K20": k20 });
+      model.reset(withLoad);
+      r = { days: model.get("P!K30"), km: model.get("P!K31"), k19: k19, k20: k20 };
+    } catch (e) {
+      document.getElementById("alerts").innerHTML =
+        '<div class="alert">' + e.message + "</div>";
+      ["o_days", "o_km", "o_k19", "o_k20"].forEach((id) => {
+        document.getElementById(id).textContent = "–";
+      });
+      return;
+    }
+
+    document.getElementById("o_days").innerHTML = fmt(r.days, 0) + " <small>days</small>";
+    document.getElementById("o_km").innerHTML = fmt(r.km, 0) + " <small>km</small>";
+    document.getElementById("o_k19").textContent = fmt(r.k19, 2);
+    document.getElementById("o_k20").textContent = fmt(r.k20, 2);
+
+    SPEC.geometry.forEach(([key, unit, dp]) => {
+      const el = document.getElementById("g_" + key.replace("!", "_"));
+      let v;
+      try { v = model.get(key); } catch (e) { v = null; }
+      el.textContent = fmt(v, dp) + (unit ? " " + unit : "");
+    });
+
+    // Labels the workbook itself computes, so the wording tracks the mode.
+    Object.entries(SPEC.labels).forEach(([cell, from]) => {
+      const el = document.querySelector('[data-label-for="' + from + '"]');
+      if (!el) return;
+      let t;
+      try { t = model.get(from); } catch (e) { t = ""; }
+      el.textContent = String(t || "").replace(/:$/, "");
+    });
+
+    const alerts = SPEC.alerts.map((k) => {
+      try { const v = model.get(k); return typeof v === "string" ? v.trim() : ""; }
+      catch (e) { return ""; }
+    }).filter(Boolean);
+    document.getElementById("alerts").innerHTML =
+      alerts.map((a) => '<div class="alert">' + a + "</div>").join("");
+  }
+
+  // Confirm on load that the interpreter still reproduces the workbook, and say so.
+  function selfCheck() {
+    model.reset();
+    let ok = 0, total = 0, bad = 0;
+    for (const key in MODEL.cached) {
+      total++;
+      let got;
+      try { got = model.get(key); } catch (e) { bad++; continue; }
+      const want = MODEL.cached[key];
+      const g = typeof got === "boolean" ? (got ? 1 : 0) : got;
+      if (typeof g === "number" && Math.abs(g - want) / Math.max(1, Math.abs(want)) <= 1e-9) ok++;
+      else bad++;
+    }
+    const el = document.getElementById("check");
+    el.textContent = bad === 0
+      ? "✓ matches the workbook on all " + total + " computed cells"
+      : bad + " of " + total + " cells differ from the workbook";
+    el.classList.toggle("ok", bad === 0);
+  }
+
+  controls.forEach((el) => {
+    setControl(el, defaults[el.dataset.cell]);
+    el.addEventListener("input", render);
+    el.addEventListener("change", render);
+  });
+  const sensorEls = SPEC.sensors.map((s) => document.getElementById("i_" + s.id));
+  sensorEls.forEach((el, i) => {
+    el.value = SPEC.sensors[i].default;
+    el.addEventListener("input", render);
+    el.addEventListener("change", render);
+  });
+  document.getElementById("reset").addEventListener("click", () => {
+    controls.forEach((el) => setControl(el, defaults[el.dataset.cell]));
+    sensorEls.forEach((el, i) => { el.value = SPEC.sensors[i].default; });
+    render();
+  });
+
+  selfCheck();
+  render();
+})();
+
+</script>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/e-abdi\.github\.io\/glider-performance-tool\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation column-page-right">
+  <div class="nav-page nav-page-previous">
+      <a href="../content/glider-selection.html" class="pagination-link" aria-label="Glider Selection Dashboard">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Glider Selection Dashboard</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© CC-1.0</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/content/slocum-endurance.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/content/slocum-endurance.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
