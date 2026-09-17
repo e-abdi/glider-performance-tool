@@ -68,6 +68,16 @@
     ]
   },
   {
+    "objectID": "content/endurance_plots.html",
+    "href": "content/endurance_plots.html",
+    "title": "Glider Performance",
+    "section": "",
+    "text": "Comparing the PAM-equipped gliders of the\n          NOAA Fisheries Glider Rodeo 2026.\n          Same underlying page styling as the main page, just adding some plots and such here. Code copied from main page.\n      \n    \n      \n\n    \n  \n      Performance filters\n  \n      \n  \n        \n          Glider\n          \n            All gliders\n          \n        \n  \n        \n          Mode\n          \n            All modes\n          \n        \n  \n        \n          Heatmap metric\n          \n            Energy efficiency (Wh/km)\n            Power (W)\n            Energy per dive (Wh)\n            Distance per dive (km)\n            Dive duration (hr)\n            Vertical speed (m/s)\n          \n        \n  \n        \n          View\n          \n            Gliders\n            Modes\n          \n        \n  \n      \n  \n      \n        Apply\n        Reset\n        \n          Filters changed — click Apply\n        \n      \n  \n    \n  \n    \n  \n    \n  \n      \n        Loading performance data…\n      \n  \n    \n    \n    \n  \n    \n  \n      \n        Energy efficiency\n        \n        \n          Lower Wh/km indicates less energy used per kilometer traveled.\n        \n      \n  \n      \n        Power vs. vertical speed\n        \n        \n          Each point represents an observed glider/mode combination.\n        \n      \n  \n    \n  \n  \n    \n  \n    \n  \n      \n        Mode comparison\n        \n      \n  \n      \n  \n    \n  \n  \n    \n  \n    \n  \n      \n        Dive duration vs. maximum depth\n        \n        \n          Dive duration and maximum depth for the selected data.\n        \n      \n  \n      \n        Distance vs. energy per dive\n        \n        \n          Each point represents an observed glider/mode combination.\n        \n      \n  \n    \n  \n  \n    \n  \n    \n  \n      \n        Performance data",
+    "crumbs": [
+      "Endurance Results"
+    ]
+  },
+  {
     "objectID": "content/project-info.html",
     "href": "content/project-info.html",
     "title": "Project Info",
