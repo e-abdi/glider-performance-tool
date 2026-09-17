@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Glider Selection Dashboard – Glider Performance Tool</title>
+<title>Glider Performance – Glider Performance Tool</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,8 +29,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../endurance_plots.qmd" rel="next">
-<link href="../content/results.html" rel="prev">
 <link href="../content/images/GliderRodeo.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -249,7 +247,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/glider-selection.html">Glider Selection Dashboard</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Glider Performance</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -305,7 +303,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../content/glider-selection.html" class="sidebar-item-text sidebar-link active">
+  <a href="../content/glider-selection.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Glider Selection Dashboard</span></a>
   </div>
 </li>
@@ -327,7 +325,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Glider Selection Dashboard</h1>
+<h1 class="title">Glider Performance</h1>
 </div>
 
 
@@ -441,6 +439,12 @@ ul.task-list li input[type="checkbox"] {
   #gsd .btn.ghost { background: transparent; color: var(--accent-ink); }
   #gsd .btn:focus-visible, #gsd .toggle button:focus-visible, #gsd .cap:focus-within, #gsd summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   #gsd .dirty { font-size: 13px; color: var(--derived); }
+  
+  #gsd .control-grid {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 14px;}
+  #gsd .control {display: flex;flex-direction: column;gap: 6px;}
+  #gsd .control > span {font-size: 11px;text-transform: uppercase;letter-spacing: .06em;color: var(--ink-3);font-weight: 700;}
+  #gsd .control select {width: 100%;font: inherit;font-size: 13px;color: var(--ink);background: var(--surface);border: 1px solid var(--line-strong);border-radius: 7px;padding: 8px 10px;}
+  #gsd .control select:focus {outline: 2px solid var(--accent);outline-offset: 2px;}
 
   /* ---------- results ---------- */
   #gsd .results-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
@@ -542,6 +546,16 @@ ul.task-list li input[type="checkbox"] {
   #gsd .bar .val { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); }
   #gsd .bar.nodata .val { color: var(--ink-3); }
   #gsd .chart .foot { font-size: 11.5px; color: var(--ink-3); margin-top: 8px; }
+  
+  /* ---------- Performance Plots ---------- */
+  #gsd .chart-heading {display: flex;justify-content: space-between;align-items: baseline;gap: 12px;margin-bottom: 10px;}
+  #gsd .chart-heading h4 {margin: 0;}
+  #gsd .chart-heading span {font-size: 12px;color: var(--ink-3);}
+  #gsd .heatmap {overflow-x: auto;}
+  #gsd .heatmap-grid {display: grid;gap: 3px;min-width: 650px;}
+  #gsd .heat-cell {min-height: 48px;display: flex;align-items: center;justify-content: center;border-radius: 4px;font-family: var(--mono);font-size: 11px;}
+  #gsd .heat-label {display: flex;align-items: center;font-size: 11px;color: var(--ink-2);padding: 4px 8px;}
+  #gsd .heat-header {justify-content: center;text-align: center;font-weight: 700;color: var(--ink-3);text-transform: uppercase;letter-spacing: .04em;}
 
   #gsd .empty { background: var(--surface-2); border: 1px dashed var(--line-strong); border-radius: 10px; padding: 20px; color: var(--ink-2); }
 
@@ -555,6 +569,9 @@ ul.task-list li input[type="checkbox"] {
   #gsd footer.credits { margin-top: 34px; border-top: 1px solid var(--line); padding-top: 14px; font-size: 12.5px; color: var(--ink-3); }
   #gsd footer.credits a { color: var(--accent); }
   #gsd .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 14px 0 0; font-size: 12.5px; color: var(--ink-2); }
+  
+  @media (max-width: 850px) {#gsd .control-grid {grid-template-columns: repeat(2, minmax(0, 1fr));}}
+  @media (max-width: 560px) {#gsd .control-grid {grid-template-columns: 1fr;}}
 </style>
 
 <div id="gsd">
@@ -562,750 +579,261 @@ ul.task-list li input[type="checkbox"] {
       <header class="page-head">
         <p>Comparing the PAM-equipped gliders of the
           <a href="https://nmfs-pam-glider.github.io/GliderRodeo/">NOAA Fisheries Glider Rodeo 2026</a>.
-          Same structure Kasey built — capabilities, mission sliders, apply, then your options — with
-          photos, sourcing and the rodeo measurements added.</p>
+          Same underlying page styling as the main page, just adding some plots and such here. Code copied from main page.</p>
       </header>
+    
+      <!-- ---------- controls ---------- -->
 
-      <h2 class="section anchored">Mission Parameters</h2>
-      <p class="section-note">Enter requirements for your mission below. Tick a row to make it a
-        requirement; leave it unticked and it is ignored. Then press Apply.</p>
-
-      <div class="panel">
-        <h3 class="anchored">Capabilities</h3>
-        <div class="caps">
-          <label class="cap"><input type="checkbox" id="cap-rt"> Real-time comms</label>
-          <label class="cap"><input type="checkbox" id="cap-pam"> Acoustic payload</label>
-          <label class="cap"><input type="checkbox" id="cap-edge"> Edge compute</label>
-          <label class="cap"><input type="checkbox" id="cap-bathy"> Bathy drive</label>
-          <label class="cap"><input type="checkbox" id="cap-ice"> Ice capable</label>
-          <label class="cap"><input type="checkbox" id="cap-backseat"> Backseat drive</label>
-          <label class="cap"><input type="checkbox" id="cap-prop"> Thruster / propeller</label>
-          <label class="cap"><input type="checkbox" id="cap-rodeo"> Flew the Rodeo</label>
-        </div>
-
-        <h3 style="margin-top:20px;" class="anchored">Mission parameters</h3>
-        <div class="slider-grid">
-          <div class="sl off" id="sl-duration">
-            <label class="lab"><input type="checkbox" data-for="duration"> <b>Deployment duration</b>
-              <span class="val"><span id="v-duration">30</span> days</span></label>
-            <span class="end">1</span>
-            <input type="range" id="r-duration" min="1" max="730" value="30" step="1">
-            <span class="end">730</span>
-          </div>
-          <div class="sl off" id="sl-depth">
-            <label class="lab"><input type="checkbox" data-for="depth"> <b>Maximum depth</b>
-              <span class="val"><span id="v-depth">300</span> m</span></label>
-            <span class="end">50</span>
-            <input type="range" id="r-depth" min="0" max="18" value="4" step="1">
-            <span class="end">11,000</span>
-          </div>
-          <div class="sl off" id="sl-speed">
-            <label class="lab"><input type="checkbox" data-for="speed"> <b>Speed needed</b>
-              <span class="val"><span id="v-speed">1.0</span> kt</span></label>
-            <span class="end">0.2</span>
-            <input type="range" id="r-speed" min="0.2" max="3.5" value="1" step="0.1">
-            <span class="end">3.5</span>
-          </div>
-          <div class="sl off" id="sl-mass">
-            <label class="lab"><input type="checkbox" data-for="mass"> <b>Maximum weight</b>
-              <span class="val"><span id="v-mass">80</span> kg</span></label>
-            <span class="end">20</span>
-            <input type="range" id="r-mass" min="20" max="200" value="80" step="5">
-            <span class="end">200</span>
+    <section class="panel performance-controls">
+  
+      <h3 class="anchored">Performance filters</h3>
+  
+      <div class="control-grid">
+  
+        <label class="control">
+          <span>Glider</span>
+          <select id="glider-select">
+            <option value="all">All gliders</option>
+          </select>
+        </label>
+  
+        <label class="control">
+          <span>Mode</span>
+          <select id="mode-select">
+            <option value="all">All modes</option>
+          </select>
+        </label>
+  
+        <label class="control">
+          <span>Heatmap metric</span>
+          <select id="metric-select">
+            <option value="wh_km">Energy efficiency (Wh/km)</option>
+            <option value="watts">Power (W)</option>
+            <option value="wh_dive">Energy per dive (Wh)</option>
+            <option value="distance">Distance per dive (km)</option>
+            <option value="dive_duration">Dive duration (hr)</option>
+            <option value="vertical_speed">Vertical speed (m/s)</option>
+          </select>
+        </label>
+  
+        <div class="control">
+          <span>View</span>
+          <div class="toggle">
+            <button id="view-gliders" aria-pressed="true">Gliders</button>
+            <button id="view-modes" aria-pressed="false">Modes</button>
           </div>
         </div>
-
-        <h3 style="margin-top:20px;" class="anchored">Acoustic parameters</h3>
-        <div class="slider-grid">
-          <div class="sl off" id="sl-freq">
-            <label class="lab"><input type="checkbox" data-for="freq"> <b>Highest frequency of interest</b>
-              <span class="val"><span id="v-freq">50</span> kHz</span></label>
-            <span class="end">1</span>
-            <input type="range" id="r-freq" min="1" max="200" value="50" step="1">
-            <span class="end">200</span>
-          </div>
-          <div class="sl off" id="sl-duty">
-            <label class="lab"><input type="checkbox" data-for="duty"> <b>Recording duty cycle</b>
-              <span class="val"><span id="v-duty">25</span> %</span></label>
-            <span class="end">1</span>
-            <input type="range" id="r-duty" min="1" max="100" value="25" step="1">
-            <span class="end">100</span>
-          </div>
-        </div>
-
-        <div class="panel-actions">
-          <button class="btn" id="apply">Apply</button>
-          <button class="btn ghost" id="reset">Reset</button>
-          <span class="dirty" id="dirty" hidden="">Settings changed — press Apply</span>
-        </div>
+  
       </div>
-
-      <h2 class="section anchored">Your Options</h2>
-      <div class="results-bar">
-        <span class="count" id="count"></span>
-        <div class="toggle" role="group" aria-label="View">
-          <button id="view-cards" aria-pressed="true">Cards</button>
-          <button id="view-table" aria-pressed="false">Table</button>
-        </div>
+  
+      <div class="panel-actions">
+        <button class="btn primary" id="apply-performance">Apply</button>
+        <button class="btn ghost" id="reset-performance">Reset</button>
+        <span class="dirty" id="performance-status" hidden="">
+          Filters changed — click Apply
+        </span>
       </div>
-      <div id="cards" class="cards"></div>
-      <div id="tableview" hidden="" class="table-wrap">
-        
-<table class="caption-top" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th">Manufacturer</th>
-<th data-quarto-table-cell-role="th">Glider</th>
-<th data-quarto-table-cell-role="th">Max depth (m)</th>
-<th data-quarto-table-cell-role="th">Endurance (days)</th>
-<th data-quarto-table-cell-role="th">Speed (kt)</th>
-<th data-quarto-table-cell-role="th">Mass (kg)</th>
-<th data-quarto-table-cell-role="th">Capacity (Wh)</th>
-<th data-quarto-table-cell-role="th">Propeller</th>
-<th data-quarto-table-cell-role="th">Real-time</th>
-<th data-quarto-table-cell-role="th">Acoustic</th>
-<th data-quarto-table-cell-role="th">Ice</th>
-<th data-quarto-table-cell-role="th">Evidence</th>
-</tr>
-</thead>
-<tbody id="tbody">
-</tbody>
-</table>
-
-      </div>
-      <div id="empty" class="empty" hidden="">No glider meets every requirement. Untick the one that is
-        least important — depth and duration are usually what rules platforms out.</div>
-
-      <div class="legend">
-        <span class="badge measured"><span class="dot"></span>Measured at Rodeo</span>
-      </div>
-
-      <h2 class="section anchored">Glider Comparisons</h2>
-      <p class="section-note">Only the gliders that matched, on one scale each. Green bars are measured
-        at the Rodeo; blue are vendor figures.</p>
-      <div class="charts" id="charts"></div>
-
-      <details class="schema">
-        <summary>How the data behind this is organised</summary>
-        <p style="font-size:13.5px; color:var(--ink-2); margin-top:10px;">
-          The cards, table and charts all read one row per glider, extending the columns already in
-          <code>gliders_cleaned.csv</code>. Four companion files join on the same <code>id</code>:
-          <code>payloads.csv</code> (PAM and sensors), <code>integrations.csv</code> (which payload runs
-          on which glider, with evidence), <code>rodeo.csv</code> (straight from
-          <code>build_summary.py</code>) and <code>links.csv</code> (so the reference sites appear in the
-          same place on every card).</p>
-        <div class="cols">
-          <div class="f"><b>value__source</b><p>Where the number came from. No source, no publish.</p></div>
-          <div class="f"><b>value__confidence</b><p>vendor / measured / derived — what paints the badge.</p></div>
-          <div class="f"><b>value__checked</b><p>Date someone last verified it against the source.</p></div>
-          <div class="f"><b>conflicts</b><p>Two sources disagree: show both, never silently pick.</p></div>
-        </div>
-      </details>
-
-      <footer class="credits">
-        <p>Glider photographs from the
-          <a href="https://open-source-glider.readthedocs.io/en/latest/Commercial%20Gliders.html">open-source glider wiki</a>,
-          which credits the manufacturers. Specifications from vendor documentation and manuals;
-          at-sea figures from the Glider Rodeo 2026 summary (<code>build_summary.py</code>). All rodeo
-          data are preliminary.</p>
-        <p>Where to look next:
-          <a href="https://e-abdi.github.io/Glider-Operation-Best-Practices/">Glider Operation Best Practices</a> ·
-          <a href="https://open-source-glider.readthedocs.io/en/latest/">Open-source glider wiki</a> ·
-          <a href="https://github.com/e-abdi/custom-glider-sensor-integration">Custom sensor integration</a></p>
-      </footer>
+  
+    </section>
+  
+    <!-- ---------- summary ---------- -->
+  
+    <div class="results-bar performance-summary">
+  
+      <span class="count" id="performance-count">
+        Loading performance data…
+      </span>
+  
     </div>
-</main></div>
+    
+    <!-- ---------- main charts ---------- -->
+  
+    <section class="charts performance-charts">
+  
+      <div class="chart">
+        <h4 class="anchored">Energy efficiency</h4>
+        <div id="chart-whkm"></div>
+        <p class="foot">
+          Lower Wh/km indicates less energy used per kilometer traveled.
+        </p>
+      </div>
+  
+      <div class="chart">
+        <h4 class="anchored">Power vs. vertical speed</h4>
+        <div id="chart-power-speed"></div>
+        <p class="foot">
+          Each point represents an observed glider/mode combination.
+        </p>
+      </div>
+  
+    </section>
+  
+  
+    <!-- ---------- heatmap ---------- -->
+  
+    <section class="chart performance-heatmap">
+  
+      <div class="chart-heading">
+        <h4 class="anchored">Mode comparison</h4>
+        <span id="heatmap-label"></span>
+      </div>
+  
+      <div id="chart-heatmap"></div>
+  
+    </section>
+  
+  
+    <!-- ---------- operational plots ---------- -->
+  
+    <section class="charts performance-charts">
+  
+      <div class="chart">
+        <h4 class="anchored">Dive duration vs. maximum depth</h4>
+        <div id="chart-duration-depth"></div>
+        <p class="foot">
+          Dive duration and maximum depth for the selected data.
+        </p>
+      </div>
+  
+      <div class="chart">
+        <h4 class="anchored">Distance vs. energy per dive</h4>
+        <div id="chart-distance-energy"></div>
+        <p class="foot">
+          Each point represents an observed glider/mode combination.
+        </p>
+      </div>
+  
+    </section>
+  
+  
+    <!-- ---------- detail table ---------- -->
+  
+    <section class="chart performance-table">
+  
+      <div class="chart-heading">
+        <h4 class="anchored">Performance data</h4>
+      </div>
+  
+      <div class="table-wrap">
+        <table>
+          <thead id="performance-thead"></thead>
+          <tbody id="performance-tbody"></tbody>
+        </table>
+      </div>
+  
+    </section>
 
+</div>
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <script>
-const PHOTOS = {
-  "slocum": "images/gliders/slocum.jpg",
-  "sentinel": "images/gliders/sentinel.jpg",
-  "seaglider": "images/gliders/seaglider.jpg",
-  "SGX": "images/gliders/SGX.jpg",
-  "seaexplorer": "images/gliders/seaexplorer.jpg",
-  "spray": "images/gliders/spray.jpg",
-  "spray2": "images/gliders/spray2.jpg",
-  "oceanscout": "images/gliders/oceanscout.jpg",
-  "petrel": "images/gliders/petrel.jpg",
-  "mod2": "images/gliders/mod2.jpg",
-  "SG1-Lura": "images/gliders/SG1-Lura.jpg"
-};
+let PERFORMANCE_DATA=[];let APPLIED_DATA=[];let COLUMNS={};
 
-const PAM = {
-  dmon2: { name: "DMON2", maxKhz: 80, bits: 16, storageGb: 64, watts: 0.15 },
-  wispr3: { name: "WISPR3", maxKhz: 150, bits: 16, storageGb: 4000, watts: null },
-  observer: { name: "JASCO OceanObserver", maxKhz: 256, bits: 24, storageGb: 12000, watts: 2.5 },
-  amar: { name: "AMAR G4", maxKhz: 256, bits: 24, storageGb: 20000, watts: 0.56 },
-  auris: { name: "AURIS", maxKhz: 96, bits: 24, storageGb: null, watts: null },
-  osPam: { name: "OceanScout-PAM", maxKhz: 125, bits: 24, storageGb: 2000, watts: null },
-  sgPam: { name: "Seaglider PAM (WISPR v1)", maxKhz: 62.5, bits: 24, storageGb: 512, watts: null },
-  pmar: { name: "PMAR-XL", maxKhz: 90, bits: 16, storageGb: 512, watts: null },
-  porpoise: { name: "Porpoise", maxKhz: 192, bits: 24, storageGb: 1000, watts: null },
-  lura: { name: "Lura (onboard AI)", maxKhz: null, bits: null, storageGb: null, watts: null }
-};
+function clean(value){if(value===null||value===undefined)return "";return String(value).trim();}
+function number(value){if(value===null||value===undefined||value==="")return null;const n=Number(String(value).replace(/,/g,"").trim());return Number.isFinite(n)?n:null;}
+function normalizeHeader(value){return clean(value).toLowerCase().replace(/[^a-z0-9]/g,"");}
+function cssVar(name){return getComputedStyle(document.body).getPropertyValue(name).trim();}
+function findColumn(rows,possibleNames){if(!rows.length)return null;const headers=Object.keys(rows[0]);const normalized=headers.map(h=>({raw:h,norm:normalizeHeader(h)}));for(const name of possibleNames){const target=normalizeHeader(name);const match=normalized.find(h=>h.norm===target);if(match)return match.raw;}return null;}
+function getColumns(rows){return{glider:findColumn(rows,["glider"]),mode:findColumn(rows,["mode"]),wh_km:findColumn(rows,["W h per km"]),watts:findColumn(rows,["Watts"]),vertical_speed:findColumn(rows,["median |vert speed| m/s"]),dive_duration:findColumn(rows,["median dive h"]),max_depth:findColumn(rows,["median max depth m","deepest in mode m"]),distance:findColumn(rows,["km/dive"]),wh_dive:findColumn(rows,["W h/dive"]),pump_moves:findColumn(rows,["pump moves per hour"]),pump_volume:findColumn(rows,["cc pumped per hour"])};}
 
-const BP = "https://e-abdi.github.io/Glider-Operation-Best-Practices/";
-const WIKI = "https://open-source-glider.readthedocs.io/en/latest/Commercial%20Gliders.html";
-const INTEG = "https://github.com/e-abdi/custom-glider-sensor-integration";
-const ENDURANCE_CALC = "https://docs.google.com/spreadsheets/d/1R6D_G6jzVCg-Iip6PC8pdTiSopxTKkCl/edit?gid=1026882386#gid=1026882386";
+const PLOT_COLORS={};
+function refreshPlotColors(){PLOT_COLORS.ink=cssVar("--ink")||"#1F2C31";PLOT_COLORS.ink2=cssVar("--ink-2")||"#536268";PLOT_COLORS.ink3=cssVar("--ink-3")||"#78888E";PLOT_COLORS.line=cssVar("--line")||"#DAE3E5";PLOT_COLORS.lineStrong=cssVar("--line-strong")||"#BCCBCE";PLOT_COLORS.accent=cssVar("--accent")||"#2780E3";}
 
-const GLIDERS = [
-  {
-    id: "slocum-g3", glider: "Slocum G3", maker: "Teledyne Marine", photo: "slocum",
-    affordance: "The most widely flown glider; shallow pump plus an optional thruster for currents.",
-    depth: [4, 1000], depthNote: "4–150 m shallow pump, 40–1000 m deep pump",
-    endurance: [15, 540], endNote: "15–50 d alkaline · 1–4 mo rechargeable · 4–18 mo lithium",
-    speedKt: 2.0, speedNote: "0.68 kt glide, 2 kt with thruster",
-    massKg: 70, massNote: "55–70 kg by configuration",
-    energy: [2520, 12500], battery: "Alkaline / rechargeable / lithium",
-    propeller: "Optional hybrid thruster, >1000 cc extra drive (up to 2 kt)",
-    realTime: true, acoustic: true, ice: true, edge: true, bathy: true, backseat: true,
-    pam: ["dmon2", "wispr3", "observer", "amar"],
-    rodeo: { names: "risso · stenella · capex987", watts: 2.2, whDive: 7.2, whKm: 2.1,
-      note: "capex987 with the JASCO Observer drew about 2.4× its neighbours (20 Wh/dive)." },
-    notes: ["Range 350–13,000 km depending on battery.", "Payload bay takes 3–4 kg."],
-    website: "https://www.teledynemarine.com/en-us/products/Pages/slocum-glider.aspx",
-    bp: "deployment/slocum/"
-  },
-  {
-    id: "slocum-sentinel", glider: "Slocum Sentinel", maker: "Teledyne Marine", photo: "sentinel",
-    affordance: "Two-year class endurance and eight payload bays, at the cost of crane handling.",
-    depth: [0, 1000], endurance: [730, 730], endNote: "Vendor claim: over two years",
-    speedKt: 3.5, speedNote: "0.75 kt glide, 3.5 kt sprint on dual thrusters",
-    massKg: 171, energy: [23000, 23000], battery: "Lithium primary",
-    propeller: "Dual aft thrusters, sprint to 3.5 kt",
-    realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
-    pam: ["observer", "amar"],
-    rodeo: null,
-    notes: ["4 L buoyancy engine, the largest on the market.",
-      "Needs a crane or LARS — not two-person portable."],
-    website: "https://www.teledynemarine.com/slocum-sentinel-glider", bp: "deployment/slocum/"
-  },
-  {
-    id: "seaglider-m1", glider: "Seaglider M1", maker: "APL UW / HII", photo: "seaglider",
-    affordance: "Isopycnal hull — half a knot on half a watt, handled by two people from a small boat.",
-    depth: [50, 1000], endurance: [90, 300], endNote: "Up to 10 months, mission dependent",
-    speedKt: 0.8, speedNote: "0.5 kt typical; can stem 0.8 kt of current",
-    massKg: 52, energy: [4722, 4722], battery: "Lithium primary (24 V + 10 V packs)",
-    propeller: null,
-    realTime: true, acoustic: true, ice: true, edge: false, bathy: true, backseat: false,
-    pam: ["sgPam", "pmar", "wispr3", "amar", "dmon2"],
-    rodeo: { names: "sg607", watts: 2.0, whDive: 9.6, whKm: 2.4,
-      note: "Lowest mean draw of the fleet, at the slowest speed. Energy read once per dive from the fuel gauge." },
-    notes: ["Capacity 4,722 Wh is Kongsberg's '17 MJ' figure.",
-      "Ice capable: IOP reports over-winter under-ice Arctic missions, the longest 22 months."],
-    website: "https://iop.apl.washington.edu/seaglider.php", bp: "piloting/seaglider/"
-  },
-  {
-    id: "seaglider-sgx", glider: "SGX", maker: "APL UW (IOP)", photo: "SGX",
-    affordance: "About 60% more battery than SG; year-long and under-ice missions.",
-    depth: [75, 1000], endurance: [365, 365], endNote: "12 months nominal",
-    speedKt: 0.8, speedNote: "0.5 kt typical",
-    massKg: 72.7, energy: [8625, 8625], energyConf: "derived", battery: "Three 15 V lithium primary packs",
-    propeller: null,
-    realTime: true, acoustic: true, ice: true, edge: false, bathy: true, backseat: false,
-    pam: ["wispr3", "pmar"],
-    rodeo: { names: "sg274", watts: 2.2, whDive: 10.2, whKm: 3.0,
-      note: "Logged as 'University of Washington Seaglider' in the rodeo specs — confirm M1 vs SGX before quoting." },
-    notes: ["8,625 Wh is derived (575 Ah × 15 V), not a vendor figure.",
-      "RAFOS acoustic navigation, plus on-board automatic compass calibration.",
-      "Ice capable, like the M1."],
-    website: "https://iop.apl.washington.edu/iopsg/", bp: "piloting/seaglider/"
-  },
-  {
-    id: "seaexplorer-1000", glider: "SeaExplorer 1000", maker: "Alseamar", photo: "seaexplorer",
-    affordance: "Rechargeable and wingless — back in the water in hours, little to snag.",
-    depth: [0, 1000], endurance: [125, 125], endNote: "125 days / 2,700 km at max depth",
-    speedKt: 1.0, speedNote: "0.5 kt nominal, 1 kt max",
-    massKg: 59, energy: [6700, 6700], battery: "Rechargeable Li-ion",
-    propeller: "Optional wing-mounted propellers",
-    realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
-    pam: ["auris", "porpoise", "observer"],
-    rodeo: { names: "SEA117", watts: null, whDive: null, whKm: null,
-      note: "Reports battery voltage only, with no charge counter, so energy use could not be computed from the rodeo export." },
-    notes: ["Carries the ALSEAMAR AURIS 4-hydrophone payload — this is the acoustic system SEA117 flew at the Rodeo.",
-      "6.7 kWh comes from Alseamar's 2022 brochure via Cauchy et al. 2023 — not on the current web page.",
-      "Backseat driver and wing-mounted propeller options available."],
-    website: "https://www.alseamar-alcen.com/ocean-science-sector/seaexplorer-gliders/seaexplorer-1000/",
-    bp: "mission-planning/"
-  },
-  {
-    id: "seaexplorer-200", glider: "SeaExplorer 200", maker: "Alseamar", photo: "seaexplorer",
-    affordance: "Shallow-water specialist, with a propeller option for very shallow areas.",
-    depth: [20, 200], endurance: [75, 135], endNote: "75 d single battery, 135 d double",
-    speedKt: 1.0, massKg: 65, massNote: "65 kg single battery, 90 kg double",
-    energy: null, battery: "Rechargeable Li-ion",
-    propeller: "Propeller option for very shallow water",
-    realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
-    pam: ["auris", "porpoise"], rodeo: null,
-    notes: ["Ballast volume 1,600 cc; wingspan 650 mm.", "No battery capacity published."],
-    website: "https://www.alseamar-alcen.com/ocean-science-sector/seaexplorer-gliders/seaexplorer-200/",
-    bp: "mission-planning/"
-  },
-  {
-    id: "spray", glider: "Spray", maker: "MRV / General Oceans", photo: "spray",
-    affordance: "Antennas in the wings: rolls at the surface instead of carrying a mast.",
-    depth: [0, 1500], depthNote: "Rated 1500 m; typical operations to 1000 m",
-    endurance: [90, 180], endNote: "Several months (≈815 cycles to 1000 m)",
-    speedKt: 0.68, massKg: 51.8, energy: [3611, 3611], battery: "Lithium primary (52 DD cells)",
-    propeller: null,
-    realTime: true, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
-    pam: [], rodeo: null,
-    notes: ["Range 3,500–4,700 km depending on glide angle.", "Superseded commercially by Spray2."],
-    website: "https://spraydata.ucsd.edu/about/spray-glider", bp: "mission-planning/"
-  },
-  {
-    id: "spray2", glider: "Spray2", maker: "MRV / General Oceans", photo: "spray2",
-    affordance: "The commercial Spray: removable wings and tailfin, eight sensor ports.",
-    depth: [0, 1000], endurance: [100, 100], endNote: "100+ days, 500+ profiles to 1000 m",
-    speedKt: 0.5, massKg: 70, energy: null, battery: "Not published",
-    propeller: null,
-    realTime: true, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
-    pam: [], rodeo: null,
-    notes: ["No published battery capacity or range.", "No documented PAM integration found."],
-    website: "https://www.mrvsys.com/products/spray2", bp: "mission-planning/"
-  },
-  {
-    id: "oceanscout", glider: "Ocean Scout", maker: "Hefring / General Oceans", photo: "oceanscout",
-    affordance: "22.5 kg — one person deploys it, and several fit on a small boat.",
-    depth: [6, 200], endurance: [30, 30], endNote: "About a month on the standard pack",
-    speedKt: null, massKg: 22.5, energy: [1200, 1200], battery: "Lithium primary (Li-MnO₂)",
-    propeller: null,
-    realTime: true, acoustic: true, ice: false, edge: true, bathy: false, backseat: false,
-    pam: ["osPam"],
-    rodeo: { names: "belladonna", watts: null, whDive: null, whKm: null,
-      note: "No engineering export exists for this platform, so power use could not be computed." },
-    notes: ["Capacity confirmed as 1.2 kWh.", "No published speed."],
-    website: "https://www.hefring.com/oceanscout", bp: "mission-planning/"
-  },
-  {
-    id: "exocetus-mod2", glider: "MOD2 Glider", maker: "Exocetus", photo: "mod2",
-    affordance: "Buoyancy engine about 5× the usual: crosses fresh-to-salt fronts without re-ballasting.",
-    depth: [10, 200], endurance: [10, 30], endNote: "10 d alkaline, 30 d lithium",
-    speedKt: 2.0, speedNote: "User selectable 0.7–2 kt", massKg: 109,
-    energy: [3850, 11000], battery: "Alkaline / lithium / rechargeable",
-    propeller: null,
-    realTime: true, acoustic: true, ice: false, edge: true, bathy: false, backseat: true,
-    pam: [], rodeo: null,
-    notes: ["Salinity range 10–37 ppt with no re-ballasting.", "Datasheet dates from 2020.",
-      "No documented PAM integration."],
-    website: "https://www.exocetus.co/products", bp: "ballasting/"
-  },
-  {
-    id: "sg1-fathom", glider: "SG-1 Fathom", maker: "Helsing", photo: "SG1-Lura",
-    affordance: "Swarm-oriented defence platform with the Lura acoustic model running on board.",
-    depth: null, depthNote: "Not published", endurance: [90, 90], endNote: "Up to three months",
-    speedKt: 2.0, massKg: 60, energy: null, battery: "Not published",
-    propeller: null,
-    realTime: false, acoustic: true, ice: false, edge: true, bathy: false, backseat: false,
-    pam: ["lura"], rodeo: null,
-    notes: ["Depth, navigation, comms and battery are all unpublished.",
-      "Production at Plymouth (UK) from Nov 2025; civilian availability unclear."],
-    website: "https://helsing.ai/lura", bp: null
-  },
-  {
-    id: "petrel-ii", glider: "Petrel-II", maker: "Tianjin University", photo: "petrel",
-    affordance: "Hybrid glider: buoyancy plus propeller, and the shallow sibling of the Petrel-X.",
-    depth: [0, 1500], endurance: [30, 30], endNote: "About 30 days",
-    speedKt: 3.36, speedNote: "1.6 kt gliding, 3.4 kt propelled (sea trial)",
-    massKg: 69, energy: null, battery: "Not published",
-    propeller: "Hybrid: propeller as well as buoyancy (3.4 kt propelled)",
-    realTime: false, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
-    pam: [], rodeo: null,
-    notes: ["No international sales channel found."],
-    website: "https://en.tju.edu.cn/info/1011/4092.htm", bp: null
-  },
-  {
-    id: "petrel-x", glider: "Petrel-X", maker: "Tianjin University / Laoshan Laboratory", photo: "petrel",
-    affordance: "Rated for full ocean depth, and holder of the 10,619 m glider world record \u2014 seven times deeper than anything else here.",
-    depth: [0, 11000], depthNote: "Rated 11,000 m \u00b7 8,213 m (Apr 2018) \u00b7 10,619 m world record, Challenger Deep",
-    endurance: [200, 200], endNote: "200 days in a single mission (design figure)",
-    speedKt: null, speedNote: "Not published",
-    massKg: null, massNote: "Not published",
-    energy: null, battery: "Not published",
-    propeller: null, conf: "paper",
-    realTime: false, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
-    pam: [], rodeo: null,
-    notes: ["Range 5,000 km, or 80 dives to 11,000 m, in one mission.",
-      "Three consecutive profiles below 10,000 m in the Challenger Deep, holding station to 2.018 km on average.",
-      "Multi-material \u2018bionic gradient\u2019 pressure housing; a dual-eccentric attitude mechanism widens the pitch range from \u00b145\u00b0 to \u00b190\u00b0.",
-      "Every figure here comes from the Ocean Engineering papers, not a datasheet \u2014 no international sales channel was found."],
-    website: null, paper: "https://doi.org/10.1016/j.oceaneng.2023.114655", bp: null
-  }
-];
+const plotConfig={responsive:true,displayModeBar:false};
+function plotLayout(xTitle,yTitle){return{height:320,margin:{l:65,r:20,t:10,b:55},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},xaxis:{title:xTitle,gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},yaxis:{title:yTitle,gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},hovermode:"closest"};}
+function clearChart(id){const el=document.getElementById(id);if(el)el.innerHTML="";}
+function showChartMessage(id,message){const el=document.getElementById(id);if(el)el.innerHTML=`<div class="empty">${message}</div>`;}
+function validXY(rows,xCol,yCol){return rows.map(r=>({x:number(r[xCol]),y:number(r[yCol]),glider:clean(r[COLUMNS.glider]),mode:clean(r[COLUMNS.mode])})).filter(d=>d.x!==null&&d.y!==null);}
 
-const DEPTH_SCALE = 1500, END_SCALE = 760;
-// Depth spans 50 m to full ocean depth, so the slider steps through stops rather
-// than sliding linearly — otherwise the shelf range is one pixel wide.
-const DEPTH_STOPS = [50, 100, 150, 200, 300, 400, 500, 600, 800, 1000,
-                     1200, 1500, 2000, 3000, 4000, 6000, 8000, 10000, 11000];
-const el = (t, c, txt) => { const n = document.createElement(t); if (c) n.className = c; if (txt != null) n.textContent = txt; return n; };
-const num = n => n.toLocaleString("en-US");
-// kind -> [badge class, label]. "paper" borrows the derived colour: both mean
-// "someone worked this out", as opposed to a vendor stating it.
-const CONF = { measured: ["measured", "At sea"], vendor: ["vendor", "Vendor"],
-               derived: ["derived", "Derived"], paper: ["derived", "Paper"] };
-
-// ---------- requirement state ----------
-const REQS = ["duration", "depth", "speed", "mass", "freq", "duty"];
-const CAPS = ["rt", "pam", "edge", "bathy", "ice", "backseat", "prop", "rodeo"];
-let applied = null;
-
-function readForm() {
-  const s = { on: {}, val: {}, caps: {} };
-  REQS.forEach(k => {
-    s.on[k] = document.querySelector(`input[data-for="${k}"]`).checked;
-    const raw = Number(document.getElementById("r-" + k).value);
-    s.val[k] = k === "depth" ? DEPTH_STOPS[raw] : raw;
-  });
-  CAPS.forEach(k => { s.caps[k] = document.getElementById("cap-" + k).checked; });
-  return s;
+async function loadPerformanceData(){
+const status=document.getElementById("performance-count");status.textContent="Loading performance data…";
+try{
+const response=await fetch("data/glider_performance_summary.csv");if(!response.ok)throw new Error(`Could not load CSV (${response.status} ${response.statusText})`);
+const csvText=await response.text();const lines=csvText.trim().split(/\r?\n/);const headers=lines[0].split(",").map(h=>h.trim());
+PERFORMANCE_DATA=lines.slice(1).map(line=>{const values=line.split(",");const row={};headers.forEach((header,i)=>row[header]=values[i]!==undefined?values[i].trim():"");return row;}).filter(row=>Object.values(row).some(value=>clean(value)!==""));
+if(!PERFORMANCE_DATA.length)throw new Error("The CSV loaded, but contains no data rows.");
+COLUMNS=getColumns(PERFORMANCE_DATA);console.log("Rows loaded:",PERFORMANCE_DATA.length);console.log("Detected columns:",COLUMNS);populateFilters();APPLIED_DATA=PERFORMANCE_DATA.slice();refreshPlotColors();renderDashboard();
+}catch(error){console.error("PERFORMANCE DASHBOARD ERROR:",error);status.innerHTML=`<span style="color:var(--flag);">Unable to load performance data: ${error.message}</span>`;}
 }
 
-function matches(g, s) {
-  if (s.caps.rt && !g.realTime) return false;
-  if (s.caps.pam && !g.pam.length) return false;
-  if (s.caps.edge && !g.edge) return false;
-  if (s.caps.bathy && !g.bathy) return false;
-  if (s.caps.ice && !g.ice) return false;
-  if (s.caps.backseat && !g.backseat) return false;
-  if (s.caps.prop && !g.propeller) return false;
-  if (s.caps.rodeo && !g.rodeo) return false;
-  if (s.on.duration && g.endurance[1] < s.val.duration) return false;
-  if (s.on.depth && (!g.depth || g.depth[1] < s.val.depth)) return false;
-  if (s.on.speed && (g.speedKt == null || g.speedKt < s.val.speed)) return false;
-  if (s.on.mass && (g.massKg == null || g.massKg > s.val.mass)) return false;
-  if (s.on.freq && !bestPam(g, s.val.freq)) return false;
-  return true;
+function populateFilters(){
+const gliderSelect=document.getElementById("glider-select");const modeSelect=document.getElementById("mode-select");const gliders=[...new Set(PERFORMANCE_DATA.map(r=>clean(r[COLUMNS.glider])).filter(Boolean))].sort();const modes=[...new Set(PERFORMANCE_DATA.map(r=>clean(r[COLUMNS.mode])).filter(Boolean))].sort();
+gliders.forEach(g=>{const option=document.createElement("option");option.value=g;option.textContent=g;gliderSelect.appendChild(option);});
+modes.forEach(m=>{const option=document.createElement("option");option.value=m;option.textContent=m;modeSelect.appendChild(option);});
 }
 
-// ---------- acoustic fit ----------
-function bestPam(g, freqKhz) {
-  const able = g.pam.map(k => PAM[k]).filter(p => p && p.maxKhz != null && p.maxKhz >= freqKhz);
-  if (!able.length) return null;
-  return able.sort((a, b) => (b.storageGb || 0) - (a.storageGb || 0))[0];
+function getFilteredData(){
+const glider=document.getElementById("glider-select").value;const mode=document.getElementById("mode-select").value;return APPLIED_DATA.filter(r=>(glider==="all"||clean(r[COLUMNS.glider])===glider)&&(mode==="all"||clean(r[COLUMNS.mode])===mode));
 }
 
-function storageGb(freqKhz, bits, dutyPct, days) {
-  const sr = 2 * freqKhz * 1000;                       // Nyquist
-  const bytesPerSec = sr * (bits / 8) * (dutyPct / 100);
-  return (bytesPerSec * 86400 * days) / 1e9;
+function renderWhKm(rows){
+clearChart("chart-whkm");const data=rows.map(r=>({name:`${clean(r[COLUMNS.glider])} — ${clean(r[COLUMNS.mode])}`,value:number(r[COLUMNS.wh_km])})).filter(d=>d.value!==null).sort((a,b)=>a.value-b.value);
+if(!data.length){showChartMessage("chart-whkm","No energy-efficiency data available.");return;}
+Plotly.newPlot("chart-whkm",[{
+type:"bar",orientation:"h",x:data.map(d=>d.value),y:data.map(d=>d.name),text:data.map(d=>d.value.toFixed(2)),textposition:"outside",marker:{color:PLOT_COLORS.accent}
+}],{height:Math.max(320,data.length*28),margin:{l:150,r:55,t:10,b:50},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},xaxis:{title:"Wh/km",gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},yaxis:{automargin:true}},plotConfig);
 }
 
-function fitLines(g, s) {
-  const out = [];
-  const days = s.on.duration ? s.val.duration : 30;
-  const freq = s.on.freq ? s.val.freq : null;
-  const duty = s.on.duty ? s.val.duty : 25;
-
-  if (freq != null) {
-    const p = bestPam(g, freq);
-    if (!p) {
-      out.push({ k: "warn", ic: "✕", html: `No listed payload covers <b>${freq} kHz</b> on this platform` });
-    } else if (p.storageGb) {
-      const need = storageGb(freq, p.bits, duty, days);
-      const ok = need <= p.storageGb;
-      const fmtGb = v => v >= 1000 ? (v / 1000).toFixed(1) + " TB" : Math.round(v) + " GB";
-      out.push({
-        k: ok ? "ok" : "warn", ic: ok ? "✓" : "✕",
-        html: `<b>${p.name}</b> · ${freq} kHz at ${duty}% for ${days} d → ${fmtGb(need)} of ${fmtGb(p.storageGb)}`
-      });
-    } else {
-      out.push({ k: "unknown", ic: "?", html: `<b>${p.name}</b> covers ${freq} kHz; storage not published` });
-    }
-  }
-
-  if (g.rodeo && g.rodeo.watts) {
-    const needWh = g.rodeo.watts * 24 * days;
-    const cap = g.energy ? g.energy[1] : null;
-    if (cap) {
-      const ok = needWh <= cap;
-      out.push({
-        k: ok ? "ok" : "warn", ic: ok ? "✓" : "✕",
-        html: `Energy: <b>${(needWh / 1000).toFixed(1)} kWh</b> for ${days} d at ${g.rodeo.watts} W measured, of ${(cap / 1000).toFixed(1)} kWh`
-      });
-    } else {
-      out.push({ k: "unknown", ic: "?", html: `Measured draw <b>${g.rodeo.watts} W</b>, but no published capacity to compare` });
-    }
-  } else if (g.rodeo) {
-    out.push({ k: "unknown", ic: "?", html: `Flew the Rodeo, but energy use could not be measured` });
-  }
-  return out;
+function renderPowerSpeed(rows){
+clearChart("chart-power-speed");const data=validXY(rows,COLUMNS.vertical_speed,COLUMNS.watts);if(!data.length){showChartMessage("chart-power-speed","No power/vertical-speed data available.");return;}
+Plotly.newPlot("chart-power-speed",[{
+type:"scatter",mode:"markers",x:data.map(d=>d.x),y:data.map(d=>d.y),text:data.map(d=>`${d.glider} — ${d.mode}`),hovertemplate:"%{text}<br>Vertical speed: %{x:.3f} m/s<br>Power: %{y:.2f} W<extra></extra>",marker:{size:10,color:PLOT_COLORS.accent}
+}],plotLayout("Median |vertical speed| (m/s)","Power (W)"),plotConfig);
 }
 
-// ---------- rendering ----------
-function meter(label, frac, text, missing) {
-  const row = el("div", "meter");
-  row.appendChild(el("span", "k", label));
-  const t = el("div", "track" + (missing ? " none" : ""));
-  if (!missing) {
-    const f = el("span");
-    if (frac > 1) { f.className = "over"; t.title = "Beyond the full scale of this bar — see the value."; }
-    f.style.width = Math.min(100, frac * 100).toFixed(1) + "%";
-    t.appendChild(f);
-  }
-  row.appendChild(t);
-  row.appendChild(el("span", "v" + (missing ? " dim" : ""), text));
-  return row;
+function renderDurationDepth(rows){
+clearChart("chart-duration-depth");const data=validXY(rows,COLUMNS.dive_duration,COLUMNS.max_depth);if(!data.length){showChartMessage("chart-duration-depth","No dive-duration/depth data available.");return;}
+Plotly.newPlot("chart-duration-depth",[{
+type:"scatter",mode:"markers",x:data.map(d=>d.x),y:data.map(d=>d.y),text:data.map(d=>`${d.glider} — ${d.mode}`),hovertemplate:"%{text}<br>Dive duration: %{x:.2f} hr<br>Maximum depth: %{y:.0f} m<extra></extra>",marker:{size:10,color:PLOT_COLORS.accent}
+}],plotLayout("Median dive duration (hr)","Median maximum depth (m)"),plotConfig);
 }
 
-function specRow(k, v) {
-  const r = el("div", "spec");
-  r.appendChild(el("span", "sk", k));
-  r.appendChild(el("span", "sv", v));
-  return r;
+function renderDistanceEnergy(rows){
+clearChart("chart-distance-energy");const data=validXY(rows,COLUMNS.distance,COLUMNS.wh_dive);if(!data.length){showChartMessage("chart-distance-energy","No distance/energy data available.");return;}
+Plotly.newPlot("chart-distance-energy",[{
+type:"scatter",mode:"markers",x:data.map(d=>d.x),y:data.map(d=>d.y),text:data.map(d=>`${d.glider} — ${d.mode}`),hovertemplate:"%{text}<br>Distance: %{x:.2f} km/dive<br>Energy: %{y:.2f} Wh/dive<extra></extra>",marker:{size:10,color:PLOT_COLORS.accent}
+}],plotLayout("Distance per dive (km)","Energy per dive (Wh)"),plotConfig);
 }
 
-function card(g, s) {
-  const c = el("article", "gcard");
-
-  const ph = el("div", "photo");
-  if (PHOTOS[g.photo]) {
-    const img = el("img");
-    img.src = PHOTOS[g.photo];
-    img.alt = g.glider + " glider";
-    img.loading = "lazy";
-    ph.appendChild(img);
-  }
-  if (g.rodeo) {
-    const rib = el("span", "ribbon", "Rodeo 2026 · " + g.rodeo.names.split("·")[0].trim());
-    ph.appendChild(rib);
-  }
-  c.appendChild(ph);
-
-  const b = el("div", "gbody");
-  const nm = el("div", "gname");
-  const nmL = el("div");
-  nmL.appendChild(el("h3", null, g.glider));
-  nmL.appendChild(el("div", "maker", g.maker));
-  nm.appendChild(nmL);
-  const kind = g.rodeo ? "measured" : g.conf || (g.energyConf === "derived" ? "derived" : "vendor");
-  const conf = el("span", "badge " + CONF[kind][0]);
-  conf.appendChild(el("span", "dot"));
-  conf.appendChild(document.createTextNode(CONF[kind][1]));
-  nm.appendChild(conf);
-  b.appendChild(nm);
-
-  b.appendChild(el("p", "affordance", g.affordance));
-
-  const m = el("div");
-  m.appendChild(g.depth
-    ? meter("Depth", g.depth[1] / DEPTH_SCALE, num(g.depth[1]) + " m")
-    : meter("Depth", 0, "not published", true));
-  m.appendChild(meter("Endurance", g.endurance[1] / END_SCALE,
-    g.endurance[0] === g.endurance[1] ? num(g.endurance[1]) + " d" : num(g.endurance[0]) + "–" + num(g.endurance[1]) + " d"));
-  m.appendChild(g.energy
-    ? meter("Energy", g.energy[1] / 23000, (g.energy[1] / 1000).toFixed(1) + " kWh")
-    : meter("Energy", 0, "not published", true));
-  b.appendChild(m);
-
-  const chips = el("div", "chips");
-  chips.appendChild(el("span", "chip", g.massKg ? g.massKg + " kg" : "mass n/p"));
-  chips.appendChild(el("span", "chip", g.speedKt ? g.speedKt + " kt" : "speed n/p"));
-  if (g.propeller) chips.appendChild(el("span", "chip", "thruster / propeller"));
-  chips.appendChild(el("span", "chip", g.pam.length ? g.pam.length + " PAM option" + (g.pam.length > 1 ? "s" : "") : "no PAM documented"));
-  if (g.conflicts) {
-    const f = el("span", "badge flag");
-    f.appendChild(el("span", "dot"));
-    f.appendChild(document.createTextNode("check " + g.conflicts.length));
-    chips.appendChild(f);
-  }
-  b.appendChild(chips);
-
-  const lines = fitLines(g, s);
-  if (lines.length) {
-    const fit = el("div", "fit");
-    lines.forEach(l => {
-      const row = el("div", "fit-row " + l.k);
-      row.appendChild(el("span", "ic", l.ic));
-      const span = el("span");
-      span.innerHTML = l.html;
-      row.appendChild(span);
-      fit.appendChild(row);
-    });
-    b.appendChild(fit);
-  }
-
-  // details
-  const d = el("details", "more");
-  d.appendChild(el("summary", null, "Details & sources"));
-  const db = el("div", "more-body");
-  const specs = el("div");
-  specs.appendChild(specRow("Depth", g.depthNote || (g.depth ? num(g.depth[0]) + "–" + num(g.depth[1]) + " m" : "not published")));
-  specs.appendChild(specRow("Endurance", g.endNote));
-  specs.appendChild(specRow("Speed", g.speedNote || (g.speedKt ? g.speedKt + " kt" : "not published")));
-  specs.appendChild(specRow("Mass", g.massNote || (g.massKg ? g.massKg + " kg" : "not published")));
-  specs.appendChild(specRow("Capacity", g.energy ? (g.energy[0] === g.energy[1] ? num(g.energy[1]) + " Wh" : num(g.energy[0]) + "–" + num(g.energy[1]) + " Wh") : "not published"));
-  specs.appendChild(specRow("Battery", g.battery));
-  specs.appendChild(specRow("Thruster / propeller", g.propeller || "none — buoyancy only"));
-  specs.appendChild(specRow("Ice capable", g.ice ? "yes" : "not stated"));
-  specs.appendChild(specRow("PAM options", g.pam.length ? g.pam.map(k => PAM[k].name).join(", ") : "none documented"));
-  db.appendChild(specs);
-
-  if (g.rodeo) {
-    const r = el("div");
-    r.appendChild(el("h4", null, ""));
-    const p = el("p", "affordance");
-    p.innerHTML = "<b>Rodeo 2026 (" + g.rodeo.names + "):</b> " + g.rodeo.note +
-      (g.rodeo.whDive ? " Measured " + g.rodeo.whDive + " Wh/dive, " + g.rodeo.watts + " W, " + g.rodeo.whKm + " Wh/km." : "");
-    r.appendChild(p);
-    db.appendChild(r);
-  }
-
-  if (g.conflicts) {
-    const cf = el("div");
-    const h = el("span", "badge flag");
-    h.appendChild(el("span", "dot"));
-    h.appendChild(document.createTextNode("Conflicts to check"));
-    cf.appendChild(h);
-    const ul = el("ul", "note-list");
-    g.conflicts.forEach(x => ul.appendChild(el("li", null, x)));
-    ul.style.marginTop = "6px";
-    cf.appendChild(ul);
-    db.appendChild(cf);
-  }
-
-  if (g.notes && g.notes.length) {
-    const ul = el("ul", "note-list");
-    g.notes.forEach(x => ul.appendChild(el("li", null, x)));
-    db.appendChild(ul);
-  }
-
-  const links = el("div", "linkrow");
-  const add = (href, label) => { const a = el("a", null, label); a.href = href; a.target = "_blank"; a.rel = "noopener"; links.appendChild(a); };
-  if (g.website) add(g.website, "Manufacturer");
-  if (g.paper) add(g.paper, "Paper");
-  if (g.bp) add(BP + g.bp, "Best practices");
-  add(WIKI, "Wiki");
-  add(INTEG, "Sensor integration");
-  if (g.glider.includes("Slocum")) add(ENDURANCE_CALC, "Endurance calculator");
-  db.appendChild(links);
-
-  d.appendChild(db);
-  b.appendChild(d);
-
-  c.appendChild(b);
-  return c;
+function renderHeatmap(rows){
+clearChart("chart-heatmap");const metric=document.getElementById("metric-select").value;const gliders=[...new Set(rows.map(r=>clean(r[COLUMNS.glider])).filter(Boolean))].sort();const modes=[...new Set(rows.map(r=>clean(r[COLUMNS.mode])).filter(Boolean))].sort();
+if(!gliders.length||!modes.length){showChartMessage("chart-heatmap","No data available for the selected filters.");return;}
+const matrix=gliders.map(g=>modes.map(m=>{const values=rows.filter(r=>clean(r[COLUMNS.glider])===g&&clean(r[COLUMNS.mode])===m).map(r=>number(r[COLUMNS[metric]])).filter(v=>v!==null);return values.length?values.reduce((a,b)=>a+b,0)/values.length:null;}));
+const labels={wh_km:"Wh/km",watts:"Power (W)",wh_dive:"Wh/dive",distance:"km/dive",dive_duration:"Dive duration (hr)",vertical_speed:"Vertical speed (m/s)"};
+document.getElementById("heatmap-label").textContent=labels[metric]||metric;
+Plotly.newPlot("chart-heatmap",[{
+type:"heatmap",z:matrix,x:modes,y:gliders,colorscale:"Blues",hovertemplate:"Glider: %{y}<br>Mode: %{x}<br>Value: %{z:.2f}<extra></extra>",colorbar:{title:labels[metric]||metric}
+}],{height:Math.max(320,gliders.length*42+100),margin:{l:90,r:30,t:10,b:80},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},xaxis:{title:"Mode",gridcolor:PLOT_COLORS.line},yaxis:{title:"Glider",gridcolor:PLOT_COLORS.line}},plotConfig);
 }
 
-function tableRow(g) {
-  const tr = el("tr");
-  const cells = [
-    [g.maker, false],
-    [g.glider, false],
-    [g.depth ? num(g.depth[1]) : "—", true],
-    [g.endurance[0] === g.endurance[1] ? num(g.endurance[1]) : num(g.endurance[0]) + "–" + num(g.endurance[1]), true],
-    [g.speedKt != null ? g.speedKt.toFixed(1) : "—", true],
-    [g.massKg != null ? num(g.massKg) : "—", true],
-    [g.energy ? (g.energy[0] === g.energy[1] ? num(g.energy[1]) : num(g.energy[0]) + "–" + num(g.energy[1])) : "—", true],
-    [g.propeller ? "yes" : "no", false],
-    [g.realTime ? "yes" : "no", false],
-    [g.pam.length ? "yes" : "no", false],
-    [g.ice ? "yes" : "no", false],
-    [g.rodeo ? "Rodeo" : "vendor", false]
-  ];
-  cells.forEach(([v, isNum], i) => {
-    const td = el("td", isNum ? "num" : null);
-    if (v === "—") { const s = el("span", "muted", "—"); td.appendChild(s); }
-    else td.textContent = v;
-    if (i === 11 && g.rodeo) td.style.color = "var(--measured)";
-    tr.appendChild(td);
-  });
-  return tr;
+function renderTable(rows){
+const thead=document.getElementById("performance-thead");const tbody=document.getElementById("performance-tbody");thead.innerHTML="";tbody.innerHTML="";
+const columns=[COLUMNS.glider,COLUMNS.mode,COLUMNS.wh_km,COLUMNS.watts,COLUMNS.vertical_speed,COLUMNS.dive_duration,COLUMNS.max_depth,COLUMNS.distance,COLUMNS.wh_dive].filter(Boolean);
+const headerRow=document.createElement("tr");columns.forEach(c=>{const th=document.createElement("th");th.textContent=c;headerRow.appendChild(th);});thead.appendChild(headerRow);
+rows.forEach(r=>{const tr=document.createElement("tr");columns.forEach(c=>{const td=document.createElement("td");td.textContent=clean(r[c]);tr.appendChild(td);});tbody.appendChild(tr);});
 }
 
-function charts(list) {
-  const host = document.getElementById("charts");
-  host.textContent = "";
-  const specs = [
-    { title: "Max depth", unit: "m", get: g => g.depth ? g.depth[1] : null, fmt: v => num(v) + " m" },
-    { title: "Endurance", unit: "days", get: g => g.endurance[1], fmt: v => num(v) + " d" },
-    { title: "Energy capacity", unit: "kWh", get: g => g.energy ? g.energy[1] : null, fmt: v => (v / 1000).toFixed(1) + " kWh" }
-  ];
-  specs.forEach(sp => {
-    const box = el("div", "chart");
-    box.appendChild(el("h4", null, sp.title));
-    const vals = list.map(sp.get).filter(v => v != null);
-    const max = vals.length ? Math.max(...vals) : 1;
-    [...list].sort((a, b) => (sp.get(b) ?? -1) - (sp.get(a) ?? -1)).forEach(g => {
-      const v = sp.get(g);
-      const row = el("div", "bar" + (v == null ? " nodata" : ""));
-      row.appendChild(el("span", "n", g.glider));
-      const bar = el("div", "b" + (g.rodeo ? " measured" : ""));
-      if (v != null) { const f = el("span"); f.style.width = ((v / max) * 100).toFixed(1) + "%"; bar.appendChild(f); }
-      row.appendChild(bar);
-      row.appendChild(el("span", "val", v == null ? "no data" : sp.fmt(v)));
-      box.appendChild(row);
-    });
-    box.appendChild(el("p", "foot", "Bars share one scale, longest = " + sp.fmt(max) + "."));
-    host.appendChild(box);
-  });
-}
+function renderSummary(rows){document.getElementById("performance-count").textContent=`${rows.length} glider/mode combinations`;}
 
-function render() {
-  const s = applied;
-  const list = GLIDERS.filter(g => matches(g, s));
-  const cards = document.getElementById("cards");
-  const tbody = document.getElementById("tbody");
-  cards.textContent = "";
-  tbody.textContent = "";
-  list.forEach(g => { cards.appendChild(card(g, s)); tbody.appendChild(tableRow(g)); });
-  document.getElementById("empty").hidden = list.length > 0;
-  const any = REQS.some(k => s.on[k]) || CAPS.some(k => s.caps[k]);
-  document.getElementById("count").innerHTML = any
-    ? `<b>${list.length}</b> of ${GLIDERS.length} gliders meet your requirements`
-    : `<b>${GLIDERS.length}</b> gliders — set requirements above to narrow the list`;
-  charts(list);
-}
+function renderDashboard(){const rows=getFilteredData();renderSummary(rows);renderWhKm(rows);renderPowerSpeed(rows);renderHeatmap(rows);renderDurationDepth(rows);renderDistanceEnergy(rows);renderTable(rows);}
 
-// ---------- wiring ----------
-REQS.forEach(k => {
-  const range = document.getElementById("r-" + k);
-  const check = document.querySelector(`input[data-for="${k}"]`);
-  const row = document.getElementById("sl-" + k);
-  const out = document.getElementById("v-" + k);
-  const sync = () => {
-    out.textContent = k === "speed" ? Number(range.value).toFixed(1)
-      : k === "depth" ? num(DEPTH_STOPS[range.value]) : range.value;
-    row.classList.toggle("off", !check.checked);
-    document.getElementById("dirty").hidden = false;
-  };
-  range.addEventListener("input", () => { if (!check.checked) check.checked = true; sync(); });
-  check.addEventListener("change", sync);
-});
-CAPS.forEach(k => document.getElementById("cap-" + k)
-  .addEventListener("change", () => { document.getElementById("dirty").hidden = false; }));
+function applyPerformanceFilters(){APPLIED_DATA=PERFORMANCE_DATA.slice();renderDashboard();document.getElementById("performance-status").hidden=true;}
+function resetPerformanceFilters(){document.getElementById("glider-select").value="all";document.getElementById("mode-select").value="all";document.getElementById("metric-select").value="wh_km";document.getElementById("view-gliders").click();APPLIED_DATA=PERFORMANCE_DATA.slice();renderDashboard();document.getElementById("performance-status").hidden=true;}
+function markPerformanceDirty(){document.getElementById("performance-status").hidden=false;}
 
-document.getElementById("apply").addEventListener("click", () => {
-  applied = readForm();
-  document.getElementById("dirty").hidden = true;
-  render();
-});
-document.getElementById("reset").addEventListener("click", () => {
-  REQS.forEach(k => { document.querySelector(`input[data-for="${k}"]`).checked = false; document.getElementById("sl-" + k).classList.add("off"); });
-  CAPS.forEach(k => { document.getElementById("cap-" + k).checked = false; });
-  applied = readForm();
-  document.getElementById("dirty").hidden = true;
-  render();
-});
-
-const vc = document.getElementById("view-cards"), vt = document.getElementById("view-table");
-vc.addEventListener("click", () => {
-  vc.setAttribute("aria-pressed", "true"); vt.setAttribute("aria-pressed", "false");
-  document.getElementById("cards").hidden = false; document.getElementById("tableview").hidden = true;
-});
-vt.addEventListener("click", () => {
-  vt.setAttribute("aria-pressed", "true"); vc.setAttribute("aria-pressed", "false");
-  document.getElementById("cards").hidden = true; document.getElementById("tableview").hidden = false;
-});
-
-applied = readForm();
-render();
+document.getElementById("apply-performance").addEventListener("click",applyPerformanceFilters);
+document.getElementById("reset-performance").addEventListener("click",resetPerformanceFilters);
+document.getElementById("glider-select").addEventListener("change",markPerformanceDirty);
+document.getElementById("mode-select").addEventListener("change",markPerformanceDirty);
+document.getElementById("metric-select").addEventListener("change",markPerformanceDirty);
+document.getElementById("view-gliders").addEventListener("click",()=>{document.getElementById("view-gliders").setAttribute("aria-pressed","true");document.getElementById("view-modes").setAttribute("aria-pressed","false");});
+document.getElementById("view-modes").addEventListener("click",()=>{document.getElementById("view-gliders").setAttribute("aria-pressed","false");document.getElementById("view-modes").setAttribute("aria-pressed","true");});
+loadPerformanceData();
 </script>
 
 
 
- <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -1718,19 +1246,7 @@ render();
     }
   });
   </script>
-<nav class="page-navigation column-page-right">
-  <div class="nav-page nav-page-previous">
-      <a href="../content/results.html" class="pagination-link" aria-label="Results">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Results</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../endurance_plots.qmd" class="pagination-link" aria-label="Glider Performance">
-        <span class="nav-page-text">Glider Performance</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
- <!-- /content -->
+</div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
@@ -1738,7 +1254,7 @@ render();
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/content/glider-selection.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/content/glider-selection.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/content/endurance_plots.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/content/endurance_plots.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
