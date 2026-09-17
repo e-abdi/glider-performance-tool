@@ -1,0 +1,514 @@
+---
+title: Glider Performance
+page-layout: full
+toc: false
+resources:
+  - data/glider_performance_summary.csv
+format:
+  html:
+    include-in-header:
+      text: |
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.19.1
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+```{=html}
+<style>
+  :root {
+    --page: #FFFFFF;
+    --sidebar: #D9E3E4;
+    --surface: #FFFFFF;
+    --surface-2: #F1F6F7;
+    --line: #DAE3E5;
+    --line-strong: #BCCBCE;
+    --ink: #1F2C31;
+    --ink-2: #536268;
+    --ink-3: #78888E;
+    --accent: #2780E3;
+    --accent-ink: #1B62B0;
+    --accent-soft: #E3EEFB;
+    --measured: #1A6B4E;
+    --measured-soft: #DCEDE4;
+    --vendor: #56666D;
+    --vendor-soft: #E9EEEF;
+    --derived: #86570A;
+    --derived-soft: #F6E9CF;
+    --flag: #A33227;
+    --flag-soft: #F8E4E1;
+    --track: #E2E9EA;
+    --shadow: 0 1px 2px rgba(31, 44, 49, .05), 0 6px 18px rgba(31, 44, 49, .07);
+    --sans: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+  body.quarto-dark, :root[data-bs-theme="dark"] {
+      --page: #181818;
+      --sidebar: #303030;
+      --surface: #212121;
+      --surface-2: #2A2A2A;
+      --line: #3A3A3A;
+      --line-strong: #4E4E4E;
+      --ink: #F2F2F2;
+      --ink-2: #BFC6C8;
+      --ink-3: #939A9D;
+      --accent: #75AADB;
+      --accent-ink: #9CC6EC;
+      --accent-soft: #23323F;
+      --measured: #6DC49B;
+      --measured-soft: #1B2F27;
+      --vendor: #A6B1B5;
+      --vendor-soft: #2C2C2C;
+      --derived: #DCA847;
+      --derived-soft: #342A12;
+      --flag: #E08278;
+      --flag-soft: #3A211E;
+      --track: #333;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 8px 22px rgba(0, 0, 0, .4);
+  }
+
+  #gsd * { box-sizing: border-box; }
+  #gsd {
+    max-width: 1100px; color: var(--ink); font-family: var(--sans);
+    font-size: 15px; line-height: 1.55;
+  }
+  #gsd h1, #gsd h2, #gsd h3, #gsd h4 { margin: 0; font-weight: 700; text-wrap: balance; }
+  #gsd a { color: var(--accent); }
+
+  #gsd .page-head { border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 22px; }
+  #gsd .page-head p { margin: 8px 0 0; color: var(--ink-2); max-width: 72ch; }
+
+  #gsd h2.section { font-size: 19px; margin: 30px 0 4px; }
+  #gsd h2.section:first-of-type { margin-top: 8px; }
+  #gsd .section-note { margin: 0 0 14px; color: var(--ink-2); font-size: 14px; }
+
+  /* ---------- panel: mission parameters ---------- */
+  #gsd .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; box-shadow: var(--shadow); }
+  #gsd .panel h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin-bottom: 10px; }
+  #gsd .caps { display: flex; flex-wrap: wrap; gap: 8px; }
+  #gsd .cap {
+    display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+    border: 1px solid var(--line-strong); border-radius: 999px; padding: 6px 13px 6px 10px;
+    font-size: 13.5px; color: var(--ink-2); background: var(--surface); user-select: none;
+  }
+  #gsd .cap input { accent-color: var(--accent); margin: 0; }
+  #gsd .cap:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+  #gsd .cap:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  #gsd .slider-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 14px 26px; margin-top: 6px; }
+  #gsd .sl { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 10px; align-items: center; }
+  #gsd .sl .lab { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-2); }
+  #gsd .sl .lab input { accent-color: var(--accent); }
+  #gsd .sl .lab b { color: var(--ink); font-weight: 700; }
+  #gsd .sl .lab .val { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  #gsd .sl .end { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  #gsd .sl input[type="range"] { width: 100%; accent-color: var(--accent); }
+  #gsd .sl.off { opacity: .48; }
+  #gsd .panel-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+  #gsd .btn {
+    font: inherit; font-weight: 700; cursor: pointer; border-radius: 7px; padding: 8px 18px;
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+  }
+  #gsd .btn.ghost { background: transparent; color: var(--accent-ink); }
+  #gsd .btn:focus-visible, #gsd .toggle button:focus-visible, #gsd .cap:focus-within, #gsd summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #gsd .dirty { font-size: 13px; color: var(--derived); }
+  
+  #gsd .control-grid {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 14px;}
+  #gsd .control {display: flex;flex-direction: column;gap: 6px;}
+  #gsd .control > span {font-size: 11px;text-transform: uppercase;letter-spacing: .06em;color: var(--ink-3);font-weight: 700;}
+  #gsd .control select {width: 100%;font: inherit;font-size: 13px;color: var(--ink);background: var(--surface);border: 1px solid var(--line-strong);border-radius: 7px;padding: 8px 10px;}
+  #gsd .control select:focus {outline: 2px solid var(--accent);outline-offset: 2px;}
+
+  /* ---------- results ---------- */
+  #gsd .results-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+  #gsd .results-bar .count { font-size: 14px; color: var(--ink-2); }
+  #gsd .results-bar .count b { color: var(--ink); }
+  #gsd .toggle { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 7px; overflow: hidden; margin-left: auto; }
+  #gsd .toggle button {
+    font: inherit; font-size: 13px; cursor: pointer; border: 0; background: var(--surface);
+    color: var(--ink-2); padding: 6px 14px;
+  }
+  #gsd .toggle button[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 700; }
+
+  #gsd .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+  #gsd .gcard { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+  #gsd .gcard:hover { box-shadow: var(--shadow); }
+  #gsd .photo { aspect-ratio: 16 / 9; background: var(--surface-2); position: relative; }
+  #gsd .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #gsd .photo .ribbon {
+    position: absolute; left: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+    background: var(--measured); color: #fff; border-radius: 4px; padding: 3px 8px;
+  }
+  #gsd .gbody { padding: 14px; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+  #gsd .gname { display: flex; gap: 10px; justify-content: space-between; align-items: baseline; }
+  #gsd .gname h3 { font-size: 17px; }
+  #gsd .gname .maker { font-size: 12px; color: var(--ink-3); }
+  #gsd .affordance { margin: 0; font-size: 13px; color: var(--ink-2); }
+
+  #gsd .meter { display: grid; grid-template-columns: 74px 1fr auto; gap: 9px; align-items: center; }
+  #gsd .meter .k { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
+  #gsd .track { height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+  #gsd .track.none { background: repeating-linear-gradient(90deg, var(--track) 0 5px, transparent 5px 10px); }
+  #gsd .track span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  #gsd .track span.over { background-image: repeating-linear-gradient(115deg,
+    rgba(255, 255, 255, .5) 0 3px, transparent 3px 8px); }
+  #gsd .meter .v { font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+  #gsd .meter .v.dim { color: var(--ink-3); }
+
+  #gsd .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  #gsd .chip { font-family: var(--mono); font-size: 11px; background: var(--surface-2); color: var(--ink-2); border-radius: 5px; padding: 3px 7px; }
+  #gsd .fit { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  #gsd .fit-row { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; color: var(--ink-2); }
+  #gsd .fit-row .ic { flex: 0 0 auto; font-weight: 700; font-family: var(--mono); }
+  #gsd .fit-row.ok .ic { color: var(--measured); }
+  #gsd .fit-row.warn .ic { color: var(--flag); }
+  #gsd .fit-row.unknown .ic { color: var(--ink-3); }
+  #gsd .fit-row b { color: var(--ink); font-weight: 700; }
+
+  #gsd .badge {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700;
+    letter-spacing: .04em; text-transform: uppercase; border-radius: 4px; padding: 3px 7px;
+  }
+  #gsd .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  #gsd .badge.measured { color: var(--measured); background: var(--measured-soft); }
+  #gsd .badge.vendor { color: var(--vendor); background: var(--vendor-soft); }
+  #gsd .badge.derived { color: var(--derived); background: var(--derived-soft); }
+  #gsd .badge.flag { color: var(--flag); background: var(--flag-soft); }
+
+  #gsd details.more { border-top: 1px solid var(--line); margin-top: auto; }
+  #gsd details.more summary {
+    cursor: pointer; list-style: none; padding: 9px 0 0; font-size: 12.5px; font-weight: 700;
+    color: var(--accent-ink);
+  }
+  #gsd details.more summary::-webkit-details-marker { display: none; }
+  #gsd details.more summary::after { content: " ▸"; }
+  #gsd details.more[open] summary::after { content: " ▾"; }
+  #gsd .more-body { padding-top: 8px; display: flex; flex-direction: column; gap: 12px; }
+  #gsd .spec { display: grid; grid-template-columns: 1fr auto; gap: 3px 10px; font-size: 12.5px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+  #gsd .spec:last-of-type { border-bottom: 0; }
+  #gsd .spec .sk { color: var(--ink-2); }
+  #gsd .spec .sv { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+  #gsd .note-list { margin: 0; padding-left: 16px; font-size: 12.5px; color: var(--ink-2); }
+  #gsd .note-list li { margin-bottom: 3px; }
+  #gsd .linkrow { display: flex; flex-wrap: wrap; gap: 6px; }
+  #gsd .linkrow a {
+    font-size: 12px; text-decoration: none; color: var(--accent-ink);
+    border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 10px; background: var(--surface);
+  }
+  #gsd .linkrow a:hover { background: var(--accent-soft); border-color: var(--accent); }
+
+  /* ---------- table view ---------- */
+  #gsd .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+  #gsd table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  #gsd th, #gsd td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  #gsd th { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); background: var(--surface-2); position: sticky; top: 0; }
+  #gsd td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  #gsd tbody tr:last-child td { border-bottom: 0; }
+  #gsd td .muted { color: var(--ink-3); }
+
+  /* ---------- comparison charts ---------- */
+  #gsd .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+  #gsd .chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  #gsd .chart h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); margin-bottom: 10px; }
+  #gsd .bar { display: grid; grid-template-columns: 96px 1fr auto; gap: 8px; align-items: center; margin-bottom: 7px; font-size: 12px; }
+  #gsd .bar .n { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #gsd .bar .b { height: 10px; background: var(--track); border-radius: 3px; overflow: hidden; }
+  #gsd .bar .b span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  #gsd .bar .b.measured span { background: var(--measured); }
+  #gsd .bar .val { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); }
+  #gsd .bar.nodata .val { color: var(--ink-3); }
+  #gsd .chart .foot { font-size: 11.5px; color: var(--ink-3); margin-top: 8px; }
+  
+  /* ---------- Performance Plots ---------- */
+  #gsd .chart-heading {display: flex;justify-content: space-between;align-items: baseline;gap: 12px;margin-bottom: 10px;}
+  #gsd .chart-heading h4 {margin: 0;}
+  #gsd .chart-heading span {font-size: 12px;color: var(--ink-3);}
+  #gsd .heatmap {overflow-x: auto;}
+  #gsd .heatmap-grid {display: grid;gap: 3px;min-width: 650px;}
+  #gsd .heat-cell {min-height: 48px;display: flex;align-items: center;justify-content: center;border-radius: 4px;font-family: var(--mono);font-size: 11px;}
+  #gsd .heat-label {display: flex;align-items: center;font-size: 11px;color: var(--ink-2);padding: 4px 8px;}
+  #gsd .heat-header {justify-content: center;text-align: center;font-weight: 700;color: var(--ink-3);text-transform: uppercase;letter-spacing: .04em;}
+
+  #gsd .empty { background: var(--surface-2); border: 1px dashed var(--line-strong); border-radius: 10px; padding: 20px; color: var(--ink-2); }
+
+  #gsd details.schema { margin-top: 30px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 14px 16px; }
+  #gsd details.schema > summary { cursor: pointer; font-weight: 700; font-size: 14px; }
+  #gsd details.schema .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 12px; }
+  #gsd details.schema .f { border-left: 3px solid var(--accent); padding-left: 10px; }
+  #gsd details.schema .f b { font-family: var(--mono); font-size: 12.5px; }
+  #gsd details.schema .f p { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-2); }
+
+  #gsd footer.credits { margin-top: 34px; border-top: 1px solid var(--line); padding-top: 14px; font-size: 12.5px; color: var(--ink-3); }
+  #gsd footer.credits a { color: var(--accent); }
+  #gsd .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 14px 0 0; font-size: 12.5px; color: var(--ink-2); }
+  
+  @media (max-width: 850px) {#gsd .control-grid {grid-template-columns: repeat(2, minmax(0, 1fr));}}
+  @media (max-width: 560px) {#gsd .control-grid {grid-template-columns: 1fr;}}
+</style>
+
+<div id="gsd">
+
+      <header class="page-head">
+        <p>Comparing the PAM-equipped gliders of the
+          <a href="https://nmfs-pam-glider.github.io/GliderRodeo/">NOAA Fisheries Glider Rodeo 2026</a>.
+          Same underlying page styling as the main page, just adding some plots and such here. Code copied from main page.</p>
+      </header>
+    
+      <!-- ---------- controls ---------- -->
+
+    <section class="panel performance-controls">
+  
+      <h3>Performance filters</h3>
+  
+      <div class="control-grid">
+  
+        <label class="control">
+          <span>Glider</span>
+          <select id="glider-select">
+            <option value="all">All gliders</option>
+          </select>
+        </label>
+  
+        <label class="control">
+          <span>Mode</span>
+          <select id="mode-select">
+            <option value="all">All modes</option>
+          </select>
+        </label>
+  
+        <label class="control">
+          <span>Heatmap metric</span>
+          <select id="metric-select">
+            <option value="wh_km">Energy efficiency (Wh/km)</option>
+            <option value="watts">Power (W)</option>
+            <option value="wh_dive">Energy per dive (Wh)</option>
+            <option value="distance">Distance per dive (km)</option>
+            <option value="dive_duration">Dive duration (hr)</option>
+            <option value="vertical_speed">Vertical speed (m/s)</option>
+          </select>
+        </label>
+  
+        <div class="control">
+          <span>View</span>
+          <div class="toggle">
+            <button id="view-gliders" aria-pressed="true">Gliders</button>
+            <button id="view-modes" aria-pressed="false">Modes</button>
+          </div>
+        </div>
+  
+      </div>
+  
+      <div class="panel-actions">
+        <button class="btn primary" id="apply-performance">Apply</button>
+        <button class="btn ghost" id="reset-performance">Reset</button>
+        <span class="dirty" id="performance-status" hidden>
+          Filters changed — click Apply
+        </span>
+      </div>
+  
+    </section>
+  
+    <!-- ---------- summary ---------- -->
+  
+    <div class="results-bar performance-summary">
+  
+      <span class="count" id="performance-count">
+        Loading performance data…
+      </span>
+  
+    </div>
+    
+    <!-- ---------- main charts ---------- -->
+  
+    <section class="charts performance-charts">
+  
+      <div class="chart">
+        <h4>Energy efficiency</h4>
+        <div id="chart-whkm"></div>
+        <p class="foot">
+          Lower Wh/km indicates less energy used per kilometer traveled.
+        </p>
+      </div>
+  
+      <div class="chart">
+        <h4>Power vs. vertical speed</h4>
+        <div id="chart-power-speed"></div>
+        <p class="foot">
+          Each point represents an observed glider/mode combination.
+        </p>
+      </div>
+  
+    </section>
+  
+  
+    <!-- ---------- heatmap ---------- -->
+  
+    <section class="chart performance-heatmap">
+  
+      <div class="chart-heading">
+        <h4>Mode comparison</h4>
+        <span id="heatmap-label"></span>
+      </div>
+  
+      <div id="chart-heatmap"></div>
+  
+    </section>
+  
+  
+    <!-- ---------- operational plots ---------- -->
+  
+    <section class="charts performance-charts">
+  
+      <div class="chart">
+        <h4>Dive duration vs. maximum depth</h4>
+        <div id="chart-duration-depth"></div>
+        <p class="foot">
+          Dive duration and maximum depth for the selected data.
+        </p>
+      </div>
+  
+      <div class="chart">
+        <h4>Distance vs. energy per dive</h4>
+        <div id="chart-distance-energy"></div>
+        <p class="foot">
+          Each point represents an observed glider/mode combination.
+        </p>
+      </div>
+  
+    </section>
+  
+  
+    <!-- ---------- detail table ---------- -->
+  
+    <section class="chart performance-table">
+  
+      <div class="chart-heading">
+        <h4>Performance data</h4>
+      </div>
+  
+      <div class="table-wrap">
+        <table>
+          <thead id="performance-thead"></thead>
+          <tbody id="performance-tbody"></tbody>
+        </table>
+      </div>
+  
+    </section>
+
+</div>
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script>
+let PERFORMANCE_DATA=[];let APPLIED_DATA=[];let COLUMNS={};
+
+function clean(value){if(value===null||value===undefined)return "";return String(value).trim();}
+function number(value){if(value===null||value===undefined||value==="")return null;const n=Number(String(value).replace(/,/g,"").trim());return Number.isFinite(n)?n:null;}
+function normalizeHeader(value){return clean(value).toLowerCase().replace(/[^a-z0-9]/g,"");}
+function cssVar(name){return getComputedStyle(document.body).getPropertyValue(name).trim();}
+function findColumn(rows,possibleNames){if(!rows.length)return null;const headers=Object.keys(rows[0]);const normalized=headers.map(h=>({raw:h,norm:normalizeHeader(h)}));for(const name of possibleNames){const target=normalizeHeader(name);const match=normalized.find(h=>h.norm===target);if(match)return match.raw;}return null;}
+function getColumns(rows){return{glider:findColumn(rows,["glider"]),mode:findColumn(rows,["mode"]),wh_km:findColumn(rows,["W h per km"]),watts:findColumn(rows,["Watts"]),vertical_speed:findColumn(rows,["median |vert speed| m/s"]),dive_duration:findColumn(rows,["median dive h"]),max_depth:findColumn(rows,["median max depth m","deepest in mode m"]),distance:findColumn(rows,["km/dive"]),wh_dive:findColumn(rows,["W h/dive"]),pump_moves:findColumn(rows,["pump moves per hour"]),pump_volume:findColumn(rows,["cc pumped per hour"])};}
+
+const PLOT_COLORS={};
+function refreshPlotColors(){PLOT_COLORS.ink=cssVar("--ink")||"#1F2C31";PLOT_COLORS.ink2=cssVar("--ink-2")||"#536268";PLOT_COLORS.ink3=cssVar("--ink-3")||"#78888E";PLOT_COLORS.line=cssVar("--line")||"#DAE3E5";PLOT_COLORS.lineStrong=cssVar("--line-strong")||"#BCCBCE";PLOT_COLORS.accent=cssVar("--accent")||"#2780E3";}
+
+const plotConfig={responsive:true,displayModeBar:false};
+function plotLayout(xTitle,yTitle){return{height:320,margin:{l:65,r:20,t:10,b:55},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},xaxis:{title:xTitle,gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},yaxis:{title:yTitle,gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},hovermode:"closest"};}
+function clearChart(id){const el=document.getElementById(id);if(el)el.innerHTML="";}
+function showChartMessage(id,message){const el=document.getElementById(id);if(el)el.innerHTML=`<div class="empty">${message}</div>`;}
+function validXY(rows,xCol,yCol){return rows.map(r=>({x:number(r[xCol]),y:number(r[yCol]),glider:clean(r[COLUMNS.glider]),mode:clean(r[COLUMNS.mode])})).filter(d=>d.x!==null&&d.y!==null);}
+
+async function loadPerformanceData(){
+const status=document.getElementById("performance-count");status.textContent="Loading performance data…";
+try{
+const response=await fetch("data/glider_performance_summary.csv");if(!response.ok)throw new Error(`Could not load CSV (${response.status} ${response.statusText})`);
+const csvText=await response.text();const lines=csvText.trim().split(/\r?\n/);const headers=lines[0].split(",").map(h=>h.trim());
+PERFORMANCE_DATA=lines.slice(1).map(line=>{const values=line.split(",");const row={};headers.forEach((header,i)=>row[header]=values[i]!==undefined?values[i].trim():"");return row;}).filter(row=>Object.values(row).some(value=>clean(value)!==""));
+if(!PERFORMANCE_DATA.length)throw new Error("The CSV loaded, but contains no data rows.");
+COLUMNS=getColumns(PERFORMANCE_DATA);console.log("Rows loaded:",PERFORMANCE_DATA.length);console.log("Detected columns:",COLUMNS);populateFilters();APPLIED_DATA=PERFORMANCE_DATA.slice();refreshPlotColors();renderDashboard();
+}catch(error){console.error("PERFORMANCE DASHBOARD ERROR:",error);status.innerHTML=`<span style="color:var(--flag);">Unable to load performance data: ${error.message}</span>`;}
+}
+
+function populateFilters(){
+const gliderSelect=document.getElementById("glider-select");const modeSelect=document.getElementById("mode-select");const gliders=[...new Set(PERFORMANCE_DATA.map(r=>clean(r[COLUMNS.glider])).filter(Boolean))].sort();const modes=[...new Set(PERFORMANCE_DATA.map(r=>clean(r[COLUMNS.mode])).filter(Boolean))].sort();
+gliders.forEach(g=>{const option=document.createElement("option");option.value=g;option.textContent=g;gliderSelect.appendChild(option);});
+modes.forEach(m=>{const option=document.createElement("option");option.value=m;option.textContent=m;modeSelect.appendChild(option);});
+}
+
+function getFilteredData(){
+const glider=document.getElementById("glider-select").value;const mode=document.getElementById("mode-select").value;return APPLIED_DATA.filter(r=>(glider==="all"||clean(r[COLUMNS.glider])===glider)&&(mode==="all"||clean(r[COLUMNS.mode])===mode));
+}
+
+function renderWhKm(rows){
+clearChart("chart-whkm");const data=rows.map(r=>({name:`${clean(r[COLUMNS.glider])} — ${clean(r[COLUMNS.mode])}`,value:number(r[COLUMNS.wh_km])})).filter(d=>d.value!==null).sort((a,b)=>a.value-b.value);
+if(!data.length){showChartMessage("chart-whkm","No energy-efficiency data available.");return;}
+Plotly.newPlot("chart-whkm",[{
+type:"bar",orientation:"h",x:data.map(d=>d.value),y:data.map(d=>d.name),text:data.map(d=>d.value.toFixed(2)),textposition:"outside",marker:{color:PLOT_COLORS.accent}
+}],{height:Math.max(320,data.length*28),margin:{l:150,r:55,t:10,b:50},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},xaxis:{title:"Wh/km",gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},yaxis:{automargin:true}},plotConfig);
+}
+
+function renderPowerSpeed(rows){
+clearChart("chart-power-speed");const data=validXY(rows,COLUMNS.vertical_speed,COLUMNS.watts);if(!data.length){showChartMessage("chart-power-speed","No power/vertical-speed data available.");return;}
+Plotly.newPlot("chart-power-speed",[{
+type:"scatter",mode:"markers",x:data.map(d=>d.x),y:data.map(d=>d.y),text:data.map(d=>`${d.glider} — ${d.mode}`),hovertemplate:"%{text}<br>Vertical speed: %{x:.3f} m/s<br>Power: %{y:.2f} W<extra></extra>",marker:{size:10,color:PLOT_COLORS.accent}
+}],plotLayout("Median |vertical speed| (m/s)","Power (W)"),plotConfig);
+}
+
+function renderDurationDepth(rows){
+clearChart("chart-duration-depth");const data=validXY(rows,COLUMNS.dive_duration,COLUMNS.max_depth);if(!data.length){showChartMessage("chart-duration-depth","No dive-duration/depth data available.");return;}
+Plotly.newPlot("chart-duration-depth",[{
+type:"scatter",mode:"markers",x:data.map(d=>d.x),y:data.map(d=>d.y),text:data.map(d=>`${d.glider} — ${d.mode}`),hovertemplate:"%{text}<br>Dive duration: %{x:.2f} hr<br>Maximum depth: %{y:.0f} m<extra></extra>",marker:{size:10,color:PLOT_COLORS.accent}
+}],plotLayout("Median dive duration (hr)","Median maximum depth (m)"),plotConfig);
+}
+
+function renderDistanceEnergy(rows){
+clearChart("chart-distance-energy");const data=validXY(rows,COLUMNS.distance,COLUMNS.wh_dive);if(!data.length){showChartMessage("chart-distance-energy","No distance/energy data available.");return;}
+Plotly.newPlot("chart-distance-energy",[{
+type:"scatter",mode:"markers",x:data.map(d=>d.x),y:data.map(d=>d.y),text:data.map(d=>`${d.glider} — ${d.mode}`),hovertemplate:"%{text}<br>Distance: %{x:.2f} km/dive<br>Energy: %{y:.2f} Wh/dive<extra></extra>",marker:{size:10,color:PLOT_COLORS.accent}
+}],plotLayout("Distance per dive (km)","Energy per dive (Wh)"),plotConfig);
+}
+
+function renderHeatmap(rows){
+clearChart("chart-heatmap");const metric=document.getElementById("metric-select").value;const gliders=[...new Set(rows.map(r=>clean(r[COLUMNS.glider])).filter(Boolean))].sort();const modes=[...new Set(rows.map(r=>clean(r[COLUMNS.mode])).filter(Boolean))].sort();
+if(!gliders.length||!modes.length){showChartMessage("chart-heatmap","No data available for the selected filters.");return;}
+const matrix=gliders.map(g=>modes.map(m=>{const values=rows.filter(r=>clean(r[COLUMNS.glider])===g&&clean(r[COLUMNS.mode])===m).map(r=>number(r[COLUMNS[metric]])).filter(v=>v!==null);return values.length?values.reduce((a,b)=>a+b,0)/values.length:null;}));
+const labels={wh_km:"Wh/km",watts:"Power (W)",wh_dive:"Wh/dive",distance:"km/dive",dive_duration:"Dive duration (hr)",vertical_speed:"Vertical speed (m/s)"};
+document.getElementById("heatmap-label").textContent=labels[metric]||metric;
+Plotly.newPlot("chart-heatmap",[{
+type:"heatmap",z:matrix,x:modes,y:gliders,colorscale:"Blues",hovertemplate:"Glider: %{y}<br>Mode: %{x}<br>Value: %{z:.2f}<extra></extra>",colorbar:{title:labels[metric]||metric}
+}],{height:Math.max(320,gliders.length*42+100),margin:{l:90,r:30,t:10,b:80},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},xaxis:{title:"Mode",gridcolor:PLOT_COLORS.line},yaxis:{title:"Glider",gridcolor:PLOT_COLORS.line}},plotConfig);
+}
+
+function renderTable(rows){
+const thead=document.getElementById("performance-thead");const tbody=document.getElementById("performance-tbody");thead.innerHTML="";tbody.innerHTML="";
+const columns=[COLUMNS.glider,COLUMNS.mode,COLUMNS.wh_km,COLUMNS.watts,COLUMNS.vertical_speed,COLUMNS.dive_duration,COLUMNS.max_depth,COLUMNS.distance,COLUMNS.wh_dive].filter(Boolean);
+const headerRow=document.createElement("tr");columns.forEach(c=>{const th=document.createElement("th");th.textContent=c;headerRow.appendChild(th);});thead.appendChild(headerRow);
+rows.forEach(r=>{const tr=document.createElement("tr");columns.forEach(c=>{const td=document.createElement("td");td.textContent=clean(r[c]);tr.appendChild(td);});tbody.appendChild(tr);});
+}
+
+function renderSummary(rows){document.getElementById("performance-count").textContent=`${rows.length} glider/mode combinations`;}
+
+function renderDashboard(){const rows=getFilteredData();renderSummary(rows);renderWhKm(rows);renderPowerSpeed(rows);renderHeatmap(rows);renderDurationDepth(rows);renderDistanceEnergy(rows);renderTable(rows);}
+
+function applyPerformanceFilters(){APPLIED_DATA=PERFORMANCE_DATA.slice();renderDashboard();document.getElementById("performance-status").hidden=true;}
+function resetPerformanceFilters(){document.getElementById("glider-select").value="all";document.getElementById("mode-select").value="all";document.getElementById("metric-select").value="wh_km";document.getElementById("view-gliders").click();APPLIED_DATA=PERFORMANCE_DATA.slice();renderDashboard();document.getElementById("performance-status").hidden=true;}
+function markPerformanceDirty(){document.getElementById("performance-status").hidden=false;}
+
+document.getElementById("apply-performance").addEventListener("click",applyPerformanceFilters);
+document.getElementById("reset-performance").addEventListener("click",resetPerformanceFilters);
+document.getElementById("glider-select").addEventListener("change",markPerformanceDirty);
+document.getElementById("mode-select").addEventListener("change",markPerformanceDirty);
+document.getElementById("metric-select").addEventListener("change",markPerformanceDirty);
+document.getElementById("view-gliders").addEventListener("click",()=>{document.getElementById("view-gliders").setAttribute("aria-pressed","true");document.getElementById("view-modes").setAttribute("aria-pressed","false");});
+document.getElementById("view-modes").addEventListener("click",()=>{document.getElementById("view-gliders").setAttribute("aria-pressed","false");document.getElementById("view-modes").setAttribute("aria-pressed","true");});
+loadPerformanceData();
+</script>
+```

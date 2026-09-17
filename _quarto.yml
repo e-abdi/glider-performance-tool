@@ -47,6 +47,10 @@ website:
         text: Results
       - href: content/glider-selection.qmd
         text: Glider Selection Dashboard
+      - href: content/slocum-endurance.qmd
+        text: Endurance calculation
+      - href: content/glider-selection.qmd
+        text: Endurance Results
 
 format:
   html:
