@@ -41,7 +41,9 @@ GROUPS = [
     ]),
     ("Battery", [
         ("P!F26", "Chemistry", "sel", {"options": [
-            ["Ld", "Lithium DD"], ["Lc", "Lithium C"], ["a", "Alkaline"], ["t", "Tadiran"]]}),
+            # The workbook also models Lithium C ("Lc") and Tadiran ("t"); both are left
+            # off the menu as packs this group does not fly. The model still supports them.
+            ["Ld", "Lithium"], ["a", "Alkaline"]]}),
         ("P!E28", "Type", "sel", {"options": [["P", "Primary"], ["R", "Rechargeable"]]}),
         ("P!E29", "Extended energy bay", "bool", {}),
         # The workbook's "Remaining energy (%)" input is deliberately absent: it only scales
@@ -63,10 +65,22 @@ GROUPS = [
         ("P!K43", "Thruster use (at 7 W)", "num", {"unit": "%", "step": 5, "min": 0, "max": 100}),
         ("P!F50", "UVP6", "frac", {"ah": 1.6}),
         ("P!F51", "EK80", "frac", {"ah": 11.2}),
-        ("P!F52", "Hydrophone", "frac", {"ah": 1.6}),
+        # The workbook calls this row "Hydrophone" and charges it a generic 1.6 Ah/day.
+        # Renamed on request; the figure is still the workbook's generic one.
+        ("P!F52", "JASCO OceanObserver", "frac", {"ah": 1.6}),
         ("P!F53", "eDNA", "frac", {"ah": 6.4}),
     ]),
 ]
+
+# Where the page should open, for cells whose workbook value is not the configuration this
+# group actually flies. Everything not listed here starts on the workbook's own saved value.
+PAGE_DEFAULTS = {
+    "P!F52": 1,    # JASCO OceanObserver on
+    "P!F51": 0,    # EK80 off
+    "P!F50": 0,    # UVP6 off
+    "P!F53": 0,    # eDNA off
+    "P!K43": 0,    # no thruster
+}
 
 GEOMETRY = [
     ("P!K6", "Trajectory angle", "°", 1),
@@ -197,6 +211,7 @@ def main():
         "geometry": [[k, u, d] for k, _l, u, d in GEOMETRY],
         "alerts": ["P!F5", "P!E30", "P!H18", "P!H24"],
         "labels": {"P!F12": "P!E12"},
+        "defaults": PAGE_DEFAULTS,
     }
 
     body = f"""<div id="set">
@@ -230,7 +245,7 @@ def main():
   </div>
 
   <div class="bar">
-    <button id="reset">Reset to workbook defaults</button>
+    <button id="reset">Reset to defaults</button>
     <span class="check" id="check">–</span>
   </div>
 
@@ -285,10 +300,13 @@ UI = r"""
     ? v.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d })
     : "–";
 
-  // The workbook's saved values are the starting point, so the page opens showing
-  // exactly what the spreadsheet shows.
+  // Each control starts on the workbook's own saved value, except where SPEC.defaults
+  // overrides it with the payload this group actually flies.
   const defaults = {};
-  controls.forEach((el) => { defaults[el.dataset.cell] = MODEL.cells[el.dataset.cell]; });
+  controls.forEach((el) => {
+    const k = el.dataset.cell;
+    defaults[k] = k in SPEC.defaults ? SPEC.defaults[k] : MODEL.cells[k];
+  });
 
   function setControl(el, value) {
     if (el.dataset.kind === "bool") el.checked = Number(value) !== 0;
