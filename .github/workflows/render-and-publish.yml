@@ -38,17 +38,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          
+      - name: Install Python packages used by the pages
+        run: python -m pip install -r requirements.txt
 
       - name: Rebuild the endurance page
         run: python3 code/build_endurance_page.py
 
       - name: Check the sensor list still matches the workbook
         run: node code/check_extra_sensors.js && node code/check_endurance_model.js
-
-      # When pages start running Python code, add here:
-      #   - uses: actions/setup-python@v5
-      #     with: {python-version: "3.12"}
-      #   - run: pip install -r requirements.txt
 
       - name: Publish to GitHub Pages (and render)
         uses: quarto-dev/quarto-actions/publish@v2

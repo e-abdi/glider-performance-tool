@@ -8,3 +8,5 @@ xarray
 netcdf4
 matplotlib
 jupyterlab
+jupyter
+pyyaml
