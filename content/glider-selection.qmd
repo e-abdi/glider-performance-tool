@@ -401,6 +401,7 @@ const PAM = {
 const BP = "https://e-abdi.github.io/Glider-Operation-Best-Practices/";
 const WIKI = "https://open-source-glider.readthedocs.io/en/latest/Commercial%20Gliders.html";
 const INTEG = "https://github.com/e-abdi/custom-glider-sensor-integration";
+const ENDURANCE_CALC = "https://docs.google.com/spreadsheets/d/1R6D_G6jzVCg-Iip6PC8pdTiSopxTKkCl/edit?gid=1026882386#gid=1026882386";
 
 const GLIDERS = [
   {
@@ -831,6 +832,7 @@ function card(g, s) {
   if (g.bp) add(BP + g.bp, "Best practices");
   add(WIKI, "Wiki");
   add(INTEG, "Sensor integration");
+  if (g.glider.includes("Slocum")) add(ENDURANCE_CALC, "Endurance calculator");
   db.appendChild(links);
 
   d.appendChild(db);
