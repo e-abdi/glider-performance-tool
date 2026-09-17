@@ -82,6 +82,7 @@ jupyter:
   }
   #gsd h1, #gsd h2, #gsd h3, #gsd h4 { margin: 0; font-weight: 700; text-wrap: balance; }
   #gsd a { color: var(--accent); }
+  #gsd .control select[multiple] {min-height:110px;}
 
   #gsd .page-head { border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 22px; }
   #gsd .page-head p { margin: 8px 0 0; color: var(--ink-2); max-width: 72ch; }
@@ -273,14 +274,14 @@ jupyter:
   
         <label class="control">
           <span>Glider</span>
-          <select id="glider-select">
+          <select id="glider-select" multiple>
             <option value="all">All gliders</option>
           </select>
         </label>
   
         <label class="control">
           <span>Mode</span>
-          <select id="mode-select">
+          <select id="mode-select" multiple>
             <option value="all">All modes</option>
           </select>
         </label>
@@ -306,7 +307,10 @@ jupyter:
         </div>
   
       </div>
-  
+      <header class="page-head">
+        <p>Press "ctrl" to select multiple glider options. </p>
+      </header> 
+      
       <div class="panel-actions">
         <button class="btn primary" id="apply-performance">Apply</button>
         <button class="btn ghost" id="reset-performance">Reset</button>
@@ -315,6 +319,7 @@ jupyter:
         </span>
       </div>
   
+      
     </section>
   
     <!-- ---------- summary ---------- -->
@@ -327,18 +332,10 @@ jupyter:
   
     </div>
     
-    <!-- ---------- main charts ---------- -->
-  
+    <!-- ---------- X-Y plots ---------- -->
+
     <section class="charts performance-charts">
-  
-      <div class="chart">
-        <h4>Energy efficiency</h4>
-        <div id="chart-whkm"></div>
-        <p class="foot">
-          Lower Wh/km indicates less energy used per kilometer traveled.
-        </p>
-      </div>
-  
+    
       <div class="chart">
         <h4>Power vs. vertical speed</h4>
         <div id="chart-power-speed"></div>
@@ -346,28 +343,7 @@ jupyter:
           Each point represents an observed glider/mode combination.
         </p>
       </div>
-  
-    </section>
-  
-  
-    <!-- ---------- heatmap ---------- -->
-  
-    <section class="chart performance-heatmap">
-  
-      <div class="chart-heading">
-        <h4>Mode comparison</h4>
-        <span id="heatmap-label"></span>
-      </div>
-  
-      <div id="chart-heatmap"></div>
-  
-    </section>
-  
-  
-    <!-- ---------- operational plots ---------- -->
-  
-    <section class="charts performance-charts">
-  
+    
       <div class="chart">
         <h4>Dive duration vs. maximum depth</h4>
         <div id="chart-duration-depth"></div>
@@ -375,7 +351,11 @@ jupyter:
           Dive duration and maximum depth for the selected data.
         </p>
       </div>
-  
+    
+    </section>
+    
+    <section class="charts performance-charts">
+    
       <div class="chart">
         <h4>Distance vs. energy per dive</h4>
         <div id="chart-distance-energy"></div>
@@ -383,10 +363,50 @@ jupyter:
           Each point represents an observed glider/mode combination.
         </p>
       </div>
-  
+    
+      <div class="chart">
+        <h4>Pump moves per hour vs. # of pumped dives</h4>
+        <div id="chart-pump-power"></div>
+        <p class="foot">Pump activity and the number of dives with counted pump activity.</p>
+      </div>
+    
     </section>
-  
-  
+    
+    <!-- ---------- bar plots ---------- -->
+    
+    <section class="charts performance-charts">
+    
+      <div class="chart">
+        <h4>Energy efficiency</h4>
+        <div id="chart-whkm"></div>
+        <p class="foot">
+          Lower Wh/km indicates less energy used per kilometer traveled.
+        </p>
+      </div>
+    
+      <div class="chart">
+        <h4>Power</h4>
+        <div id="chart-watts"></div>
+        <p class="foot">
+          Observed power for each glider/mode combination.
+        </p>
+      </div>
+    
+    </section>
+    
+    <!-- ---------- heatmap ---------- -->
+    
+    <section class="chart performance-heatmap">
+    
+      <div class="chart-heading">
+        <h4>Mode comparison</h4>
+        <span id="heatmap-label"></span>
+      </div>
+    
+      <div id="chart-heatmap"></div>
+    
+    </section>
+    
     <!-- ---------- detail table ---------- -->
   
     <section class="chart performance-table">
@@ -410,105 +430,493 @@ jupyter:
 <script>
 let PERFORMANCE_DATA=[];let APPLIED_DATA=[];let COLUMNS={};
 
-function clean(value){if(value===null||value===undefined)return "";return String(value).trim();}
-function number(value){if(value===null||value===undefined||value==="")return null;const n=Number(String(value).replace(/,/g,"").trim());return Number.isFinite(n)?n:null;}
-function normalizeHeader(value){return clean(value).toLowerCase().replace(/[^a-z0-9]/g,"");}
-function cssVar(name){return getComputedStyle(document.body).getPropertyValue(name).trim();}
-function findColumn(rows,possibleNames){if(!rows.length)return null;const headers=Object.keys(rows[0]);const normalized=headers.map(h=>({raw:h,norm:normalizeHeader(h)}));for(const name of possibleNames){const target=normalizeHeader(name);const match=normalized.find(h=>h.norm===target);if(match)return match.raw;}return null;}
-function getColumns(rows){return{glider:findColumn(rows,["glider"]),mode:findColumn(rows,["mode"]),wh_km:findColumn(rows,["W h per km"]),watts:findColumn(rows,["Watts"]),vertical_speed:findColumn(rows,["median |vert speed| m/s"]),dive_duration:findColumn(rows,["median dive h"]),max_depth:findColumn(rows,["median max depth m","deepest in mode m"]),distance:findColumn(rows,["km/dive"]),wh_dive:findColumn(rows,["W h/dive"]),pump_moves:findColumn(rows,["pump moves per hour"]),pump_volume:findColumn(rows,["cc pumped per hour"])};}
+function clean(value){
+  if(value===null||value===undefined)
+    return "";
+  return String(value).trim();
+}
+
+function number(value){
+  if(value===null||value===undefined||value==="")return null;
+  const n=Number(String(value).replace(/,/g,"").trim());
+  return Number.isFinite(n)?n:null;
+}
+
+function normalizeHeader(value){
+  return clean(value).toLowerCase().replace(/[^a-z0-9]/g,"");
+}
+
+function cssVar(name){
+  return getComputedStyle(document.body).getPropertyValue(name).trim();
+}
+
+function findColumn(rows,possibleNames){
+  if(!rows.length)return null;
+  const headers=Object.keys(rows[0]);
+  const normalized=headers.map(h=>({raw:h,norm:normalizeHeader(h)}));
+  for(const name of possibleNames){
+    const target=normalizeHeader(name);
+    const match=normalized.find(h=>h.norm===target);
+    if(match)return match.raw;
+  }
+  return null;
+}
+
+function getColumns(rows){
+  return{
+    glider:findColumn(rows,["glider"]),
+    mode:findColumn(rows,["mode"]),
+    wh_km:findColumn(rows,["W h per km"]),
+    watts:findColumn(rows,["Watts"]),
+    vertical_speed:findColumn(rows,["median |vert speed| m/s"]),
+    dive_duration:findColumn(rows,["median dive h"]),
+    max_depth:findColumn(rows,["median max depth m","deepest in mode m"]),
+    distance:findColumn(rows,["km/dive"]),
+    wh_dive:findColumn(rows,["W h/dive"]),
+    pump_moves:findColumn(rows,["pump moves per hour"]),
+    pump_dives_counted:findColumn(rows,["pump dives counted"]),
+    pump_volume:findColumn(rows,["cc pumped per hour"])
+  };
+}
 
 const PLOT_COLORS={};
-function refreshPlotColors(){PLOT_COLORS.ink=cssVar("--ink")||"#1F2C31";PLOT_COLORS.ink2=cssVar("--ink-2")||"#536268";PLOT_COLORS.ink3=cssVar("--ink-3")||"#78888E";PLOT_COLORS.line=cssVar("--line")||"#DAE3E5";PLOT_COLORS.lineStrong=cssVar("--line-strong")||"#BCCBCE";PLOT_COLORS.accent=cssVar("--accent")||"#2780E3";}
+let GLIDER_COLOR_MAP={};
+
+function gliderColor(name){
+  let hash=0;
+  for(let i=0;i<name.length;i++)
+    hash=(hash*31+name.charCodeAt(i))>>>0;
+  const hue=hash%360;
+  return `hsl(${hue},65%,45%)`;
+}
+
+function buildGliderColors(){
+  const gliders=[...new Set(PERFORMANCE_DATA.map(r=>clean(r[COLUMNS.glider])).filter(Boolean))];
+  GLIDER_COLOR_MAP={};
+  gliders.forEach(g=>GLIDER_COLOR_MAP[g]=gliderColor(g));
+}
+
+function refreshPlotColors(){
+  PLOT_COLORS.ink=cssVar("--ink")||"#1F2C31";
+  PLOT_COLORS.ink2=cssVar("--ink-2")||"#536268";
+  PLOT_COLORS.ink3=cssVar("--ink-3")||"#78888E";
+  PLOT_COLORS.line=cssVar("--line")||"#DAE3E5";
+  PLOT_COLORS.lineStrong=cssVar("--line-strong")||"#BCCBCE";
+  PLOT_COLORS.accent=cssVar("--accent")||"#2780E3";
+}
 
 const plotConfig={responsive:true,displayModeBar:false};
-function plotLayout(xTitle,yTitle){return{height:320,margin:{l:65,r:20,t:10,b:55},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},xaxis:{title:xTitle,gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},yaxis:{title:yTitle,gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},hovermode:"closest"};}
-function clearChart(id){const el=document.getElementById(id);if(el)el.innerHTML="";}
-function showChartMessage(id,message){const el=document.getElementById(id);if(el)el.innerHTML=`<div class="empty">${message}</div>`;}
-function validXY(rows,xCol,yCol){return rows.map(r=>({x:number(r[xCol]),y:number(r[yCol]),glider:clean(r[COLUMNS.glider]),mode:clean(r[COLUMNS.mode])})).filter(d=>d.x!==null&&d.y!==null);}
+
+function plotLayout(xTitle,yTitle){
+  return{
+    height:320,
+    margin:{l:65,r:20,t:10,b:55},
+    paper_bgcolor:"rgba(0,0,0,0)",
+    plot_bgcolor:"rgba(0,0,0,0)",
+    font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},
+    xaxis:{title:xTitle,gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},
+    yaxis:{title:yTitle,gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},
+    hovermode:"closest"
+  };
+}
+
+function clearChart(id){
+  const el=document.getElementById(id);
+  if(el)el.innerHTML="";
+}
+
+function showChartMessage(id,message){
+  const el=document.getElementById(id);
+  if(el)el.innerHTML=`<div class="empty">${message}</div>`;
+}
+
+function validXY(rows,xCol,yCol){
+  return rows.map(r=>({
+    x:number(r[xCol]),
+    y:number(r[yCol]),
+    glider:clean(r[COLUMNS.glider]),
+    mode:clean(r[COLUMNS.mode])
+  })).filter(d=>d.x!==null&&d.y!==null);
+}
 
 async function loadPerformanceData(){
-const status=document.getElementById("performance-count");status.textContent="Loading performance data…";
-try{
-const response=await fetch("data/glider_performance_summary.csv");if(!response.ok)throw new Error(`Could not load CSV (${response.status} ${response.statusText})`);
-const csvText=await response.text();const lines=csvText.trim().split(/\r?\n/);const headers=lines[0].split(",").map(h=>h.trim());
-PERFORMANCE_DATA=lines.slice(1).map(line=>{const values=line.split(",");const row={};headers.forEach((header,i)=>row[header]=values[i]!==undefined?values[i].trim():"");return row;}).filter(row=>Object.values(row).some(value=>clean(value)!==""));
-if(!PERFORMANCE_DATA.length)throw new Error("The CSV loaded, but contains no data rows.");
-COLUMNS=getColumns(PERFORMANCE_DATA);console.log("Rows loaded:",PERFORMANCE_DATA.length);console.log("Detected columns:",COLUMNS);populateFilters();APPLIED_DATA=PERFORMANCE_DATA.slice();refreshPlotColors();renderDashboard();
-}catch(error){console.error("PERFORMANCE DASHBOARD ERROR:",error);status.innerHTML=`<span style="color:var(--flag);">Unable to load performance data: ${error.message}</span>`;}
+  const status=document.getElementById("performance-count");
+  status.textContent="Loading performance data…";
+
+  try{
+    const response=await fetch("data/glider_performance_summary.csv");
+    if(!response.ok)throw new Error(`Could not load CSV (${response.status} ${response.statusText})`);
+
+    const csvText=await response.text();
+    const lines=csvText.trim().split(/\r?\n/);
+    const headers=lines[0].split(",").map(h=>h.trim());
+
+    PERFORMANCE_DATA=lines.slice(1).map(line=>{
+      const values=line.split(",");
+      const row={};
+      headers.forEach((header,i)=>row[header]=values[i]!==undefined?values[i].trim():"");
+      return row;
+    }).filter(row=>Object.values(row).some(value=>clean(value)!==""));
+
+    if(!PERFORMANCE_DATA.length)throw new Error("The CSV loaded, but contains no data rows.");
+
+    COLUMNS=getColumns(PERFORMANCE_DATA);
+    console.log("Rows loaded:",PERFORMANCE_DATA.length);
+    console.log("Detected columns:",COLUMNS);
+    buildGliderColors();
+    populateFilters();
+    APPLIED_DATA=PERFORMANCE_DATA.slice();
+    refreshPlotColors();
+    renderDashboard();
+  }catch(error){
+    console.error("PERFORMANCE DASHBOARD ERROR:",error);
+    status.innerHTML=`<span style="color:var(--flag);">Unable to load performance data: ${error.message}</span>`;
+  }
 }
 
 function populateFilters(){
-const gliderSelect=document.getElementById("glider-select");const modeSelect=document.getElementById("mode-select");const gliders=[...new Set(PERFORMANCE_DATA.map(r=>clean(r[COLUMNS.glider])).filter(Boolean))].sort();const modes=[...new Set(PERFORMANCE_DATA.map(r=>clean(r[COLUMNS.mode])).filter(Boolean))].sort();
-gliders.forEach(g=>{const option=document.createElement("option");option.value=g;option.textContent=g;gliderSelect.appendChild(option);});
-modes.forEach(m=>{const option=document.createElement("option");option.value=m;option.textContent=m;modeSelect.appendChild(option);});
+  const gliderSelect=document.getElementById("glider-select");
+  const modeSelect=document.getElementById("mode-select");
+  const gliders=[...new Set(PERFORMANCE_DATA.map(r=>clean(r[COLUMNS.glider])).filter(Boolean))].sort();
+  const modes=[...new Set(PERFORMANCE_DATA.map(r=>clean(r[COLUMNS.mode])).filter(Boolean))].sort();
+
+  gliders.forEach(g=>{
+    const option=document.createElement("option");
+    option.value=g;
+    option.textContent=g;
+    gliderSelect.appendChild(option);
+  });
+
+  modes.forEach(m=>{
+    const option=document.createElement("option");
+    option.value=m;
+    option.textContent=m;
+    modeSelect.appendChild(option);
+  });
+
+  gliderSelect.options[0].selected=true;
+  modeSelect.options[0].selected=true;
 }
 
 function getFilteredData(){
-const glider=document.getElementById("glider-select").value;const mode=document.getElementById("mode-select").value;return APPLIED_DATA.filter(r=>(glider==="all"||clean(r[COLUMNS.glider])===glider)&&(mode==="all"||clean(r[COLUMNS.mode])===mode));
+  const gliderSelect=document.getElementById("glider-select");
+  const modeSelect=document.getElementById("mode-select");
+
+  const selectedGliders=[...gliderSelect.selectedOptions].map(option=>option.value);
+  const selectedModes=[...modeSelect.selectedOptions].map(option=>option.value);
+
+  const allGliders=selectedGliders.includes("all")||selectedGliders.length===0;
+  const allModes=selectedModes.includes("all")||selectedModes.length===0;
+
+  return APPLIED_DATA.filter(r=>
+    (allGliders||selectedGliders.includes(clean(r[COLUMNS.glider])))&&
+    (allModes||selectedModes.includes(clean(r[COLUMNS.mode])))
+  );
 }
 
 function renderWhKm(rows){
-clearChart("chart-whkm");const data=rows.map(r=>({name:`${clean(r[COLUMNS.glider])} — ${clean(r[COLUMNS.mode])}`,value:number(r[COLUMNS.wh_km])})).filter(d=>d.value!==null).sort((a,b)=>a.value-b.value);
-if(!data.length){showChartMessage("chart-whkm","No energy-efficiency data available.");return;}
-Plotly.newPlot("chart-whkm",[{
-type:"bar",orientation:"h",x:data.map(d=>d.value),y:data.map(d=>d.name),text:data.map(d=>d.value.toFixed(2)),textposition:"outside",marker:{color:PLOT_COLORS.accent}
-}],{height:Math.max(320,data.length*28),margin:{l:150,r:55,t:10,b:50},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},xaxis:{title:"Wh/km",gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},yaxis:{automargin:true}},plotConfig);
+  clearChart("chart-whkm");
+
+  const data=rows.map(r=>({
+    name:`${clean(r[COLUMNS.glider])} — ${clean(r[COLUMNS.mode])}`,
+    glider:clean(r[COLUMNS.glider]),
+    value:number(r[COLUMNS.wh_km])
+  })).filter(d=>d.value!==null).sort((a,b)=>a.value-b.value);
+
+  if(!data.length){
+    showChartMessage("chart-whkm","No energy-efficiency data available.");
+    return;
+  }
+
+  Plotly.newPlot("chart-whkm",[{
+    type:"bar",
+    orientation:"h",
+    x:data.map(d=>d.value),
+    y:data.map(d=>d.name),
+    text:data.map(d=>d.value.toFixed(2)),
+    textposition:"outside",
+    marker:{color:data.map(d=>GLIDER_COLOR_MAP[d.glider])}
+  }],{
+    height:Math.max(320,data.length*28),
+    margin:{l:150,r:55,t:10,b:50},
+    paper_bgcolor:"rgba(0,0,0,0)",
+    plot_bgcolor:"rgba(0,0,0,0)",
+    font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},
+    xaxis:{title:"Wh/km",gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},
+    yaxis:{automargin:true}
+  },plotConfig);
 }
 
 function renderPowerSpeed(rows){
-clearChart("chart-power-speed");const data=validXY(rows,COLUMNS.vertical_speed,COLUMNS.watts);if(!data.length){showChartMessage("chart-power-speed","No power/vertical-speed data available.");return;}
-Plotly.newPlot("chart-power-speed",[{
-type:"scatter",mode:"markers",x:data.map(d=>d.x),y:data.map(d=>d.y),text:data.map(d=>`${d.glider} — ${d.mode}`),hovertemplate:"%{text}<br>Vertical speed: %{x:.3f} m/s<br>Power: %{y:.2f} W<extra></extra>",marker:{size:10,color:PLOT_COLORS.accent}
-}],plotLayout("Median |vertical speed| (m/s)","Power (W)"),plotConfig);
+  clearChart("chart-power-speed");
+
+  const data=validXY(rows,COLUMNS.vertical_speed,COLUMNS.watts);
+
+  if(!data.length){
+    showChartMessage("chart-power-speed","No power/vertical-speed data available.");
+    return;
+  }
+
+  Plotly.newPlot("chart-power-speed",[{
+    type:"scatter",
+    mode:"markers",
+    x:data.map(d=>d.x),
+    y:data.map(d=>d.y),
+    text:data.map(d=>`${d.glider} — ${d.mode}`),
+    hovertemplate:"%{text}<br>Vertical speed: %{x:.3f} m/s<br>Power: %{y:.2f} W<extra></extra>",
+    marker:{size:10,color:data.map(d=>GLIDER_COLOR_MAP[d.glider])}
+  }],plotLayout("Median |vertical speed| (m/s)","Power (W)"),plotConfig);
 }
 
 function renderDurationDepth(rows){
-clearChart("chart-duration-depth");const data=validXY(rows,COLUMNS.dive_duration,COLUMNS.max_depth);if(!data.length){showChartMessage("chart-duration-depth","No dive-duration/depth data available.");return;}
-Plotly.newPlot("chart-duration-depth",[{
-type:"scatter",mode:"markers",x:data.map(d=>d.x),y:data.map(d=>d.y),text:data.map(d=>`${d.glider} — ${d.mode}`),hovertemplate:"%{text}<br>Dive duration: %{x:.2f} hr<br>Maximum depth: %{y:.0f} m<extra></extra>",marker:{size:10,color:PLOT_COLORS.accent}
-}],plotLayout("Median dive duration (hr)","Median maximum depth (m)"),plotConfig);
+  clearChart("chart-duration-depth");
+
+  const data=validXY(rows,COLUMNS.dive_duration,COLUMNS.max_depth);
+
+  if(!data.length){
+    showChartMessage("chart-duration-depth","No dive-duration/depth data available.");
+    return;
+  }
+
+  Plotly.newPlot("chart-duration-depth",[{
+    type:"scatter",
+    mode:"markers",
+    x:data.map(d=>d.x),
+    y:data.map(d=>d.y),
+    text:data.map(d=>`${d.glider} — ${d.mode}`),
+    hovertemplate:"%{text}<br>Dive duration: %{x:.2f} hr<br>Maximum depth: %{y:.0f} m<extra></extra>",
+    marker:{size:10,color:data.map(d=>GLIDER_COLOR_MAP[d.glider])}
+  }],plotLayout("Median dive duration (hr)","Median maximum depth (m)"),plotConfig);
 }
 
 function renderDistanceEnergy(rows){
-clearChart("chart-distance-energy");const data=validXY(rows,COLUMNS.distance,COLUMNS.wh_dive);if(!data.length){showChartMessage("chart-distance-energy","No distance/energy data available.");return;}
-Plotly.newPlot("chart-distance-energy",[{
-type:"scatter",mode:"markers",x:data.map(d=>d.x),y:data.map(d=>d.y),text:data.map(d=>`${d.glider} — ${d.mode}`),hovertemplate:"%{text}<br>Distance: %{x:.2f} km/dive<br>Energy: %{y:.2f} Wh/dive<extra></extra>",marker:{size:10,color:PLOT_COLORS.accent}
-}],plotLayout("Distance per dive (km)","Energy per dive (Wh)"),plotConfig);
+  clearChart("chart-distance-energy");
+
+  const data=validXY(rows,COLUMNS.distance,COLUMNS.wh_dive);
+
+  if(!data.length){
+    showChartMessage("chart-distance-energy","No distance/energy data available.");
+    return;
+  }
+
+  Plotly.newPlot("chart-distance-energy",[{
+    type:"scatter",
+    mode:"markers",
+    x:data.map(d=>d.x),
+    y:data.map(d=>d.y),
+    text:data.map(d=>`${d.glider} — ${d.mode}`),
+    hovertemplate:"%{text}<br>Distance: %{x:.2f} km/dive<br>Energy: %{y:.2f} Wh/dive<extra></extra>",
+    marker:{size:10,color:data.map(d=>GLIDER_COLOR_MAP[d.glider])}
+  }],plotLayout("Distance per dive (km)","Energy per dive (Wh)"),plotConfig);
+}
+
+function renderPumpPower(rows){
+  clearChart("chart-pump-power");
+
+  const data=validXY(rows,COLUMNS.pump_moves,COLUMNS.pump_dives_counted);
+
+  if(!data.length){
+    showChartMessage("chart-pump-power","No pump-activity data available.");
+    return;
+  }
+
+  Plotly.newPlot("chart-pump-power",[{
+    type:"scatter",
+    mode:"markers",
+    x:data.map(d=>d.x),
+    y:data.map(d=>d.y),
+    text:data.map(d=>`${d.glider} — ${d.mode}`),
+    hovertemplate:"%{text}<br>Pump moves: %{x:.0f} / hr<br>Pumped dives counted: %{y:.0f}<extra></extra>",
+    marker:{size:10,color:data.map(d=>GLIDER_COLOR_MAP[d.glider])}
+  }],plotLayout("Pump moves per hour","Pumped dives counted"),plotConfig);
+}
+
+function renderWatts(rows){
+  clearChart("chart-watts");
+
+  const data=rows.map(r=>({
+    name:`${clean(r[COLUMNS.glider])} — ${clean(r[COLUMNS.mode])}`,
+    glider:clean(r[COLUMNS.glider]),
+    value:number(r[COLUMNS.watts])
+  })).filter(d=>d.value!==null).sort((a,b)=>a.value-b.value);
+
+  if(!data.length){
+    showChartMessage("chart-watts","No power data available.");
+    return;
+  }
+
+  Plotly.newPlot("chart-watts",[{
+    type:"bar",
+    orientation:"h",
+    x:data.map(d=>d.value),
+    y:data.map(d=>d.name),
+    text:data.map(d=>d.value.toFixed(2)),
+    textposition:"outside",
+    marker:{color:data.map(d=>GLIDER_COLOR_MAP[d.glider])}
+  }],{
+    height:Math.max(320,data.length*28),
+    margin:{l:150,r:55,t:10,b:50},
+    paper_bgcolor:"rgba(0,0,0,0)",
+    plot_bgcolor:"rgba(0,0,0,0)",
+    font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},
+    xaxis:{title:"Power (W)",gridcolor:PLOT_COLORS.line,zerolinecolor:PLOT_COLORS.lineStrong},
+    yaxis:{automargin:true}
+  },plotConfig);
 }
 
 function renderHeatmap(rows){
-clearChart("chart-heatmap");const metric=document.getElementById("metric-select").value;const gliders=[...new Set(rows.map(r=>clean(r[COLUMNS.glider])).filter(Boolean))].sort();const modes=[...new Set(rows.map(r=>clean(r[COLUMNS.mode])).filter(Boolean))].sort();
-if(!gliders.length||!modes.length){showChartMessage("chart-heatmap","No data available for the selected filters.");return;}
-const matrix=gliders.map(g=>modes.map(m=>{const values=rows.filter(r=>clean(r[COLUMNS.glider])===g&&clean(r[COLUMNS.mode])===m).map(r=>number(r[COLUMNS[metric]])).filter(v=>v!==null);return values.length?values.reduce((a,b)=>a+b,0)/values.length:null;}));
-const labels={wh_km:"Wh/km",watts:"Power (W)",wh_dive:"Wh/dive",distance:"km/dive",dive_duration:"Dive duration (hr)",vertical_speed:"Vertical speed (m/s)"};
-document.getElementById("heatmap-label").textContent=labels[metric]||metric;
-Plotly.newPlot("chart-heatmap",[{
-type:"heatmap",z:matrix,x:modes,y:gliders,colorscale:"Blues",hovertemplate:"Glider: %{y}<br>Mode: %{x}<br>Value: %{z:.2f}<extra></extra>",colorbar:{title:labels[metric]||metric}
-}],{height:Math.max(320,gliders.length*42+100),margin:{l:90,r:30,t:10,b:80},paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},xaxis:{title:"Mode",gridcolor:PLOT_COLORS.line},yaxis:{title:"Glider",gridcolor:PLOT_COLORS.line}},plotConfig);
+  clearChart("chart-heatmap");
+
+  const metric=document.getElementById("metric-select").value;
+  const gliders=[...new Set(rows.map(r=>clean(r[COLUMNS.glider])).filter(Boolean))].sort();
+  const modes=[...new Set(rows.map(r=>clean(r[COLUMNS.mode])).filter(Boolean))].sort();
+
+  if(!gliders.length||!modes.length){
+    showChartMessage("chart-heatmap","No data available for the selected filters.");
+    return;
+  }
+
+  const matrix=gliders.map(g=>modes.map(m=>{
+    const values=rows.filter(r=>
+      clean(r[COLUMNS.glider])===g&&
+      clean(r[COLUMNS.mode])===m
+    ).map(r=>number(r[COLUMNS[metric]])).filter(v=>v!==null);
+
+    return values.length?values.reduce((a,b)=>a+b,0)/values.length:null;
+  }));
+
+  const labels={
+    wh_km:"Wh/km",
+    watts:"Power (W)",
+    wh_dive:"Wh/dive",
+    distance:"km/dive",
+    dive_duration:"Dive duration (hr)",
+    vertical_speed:"Vertical speed (m/s)"
+  };
+
+  document.getElementById("heatmap-label").textContent=labels[metric]||metric;
+
+  Plotly.newPlot("chart-heatmap",[{
+    type:"heatmap",
+    z:matrix,
+    x:modes,
+    y:gliders,
+    colorscale:"Blues",
+    hovertemplate:"Glider: %{y}<br>Mode: %{x}<br>Value: %{z:.2f}<extra></extra>",
+    colorbar:{title:labels[metric]||metric}
+  }],{
+    height:Math.max(320,gliders.length*42+100),
+    margin:{l:90,r:30,t:10,b:80},
+    paper_bgcolor:"rgba(0,0,0,0)",
+    plot_bgcolor:"rgba(0,0,0,0)",
+    font:{family:"Atkinson Hyperlegible, Arial, sans-serif",color:PLOT_COLORS.ink},
+    xaxis:{title:"Mode",gridcolor:PLOT_COLORS.line},
+    yaxis:{title:"Glider",gridcolor:PLOT_COLORS.line}
+  },plotConfig);
 }
 
 function renderTable(rows){
-const thead=document.getElementById("performance-thead");const tbody=document.getElementById("performance-tbody");thead.innerHTML="";tbody.innerHTML="";
-const columns=[COLUMNS.glider,COLUMNS.mode,COLUMNS.wh_km,COLUMNS.watts,COLUMNS.vertical_speed,COLUMNS.dive_duration,COLUMNS.max_depth,COLUMNS.distance,COLUMNS.wh_dive].filter(Boolean);
-const headerRow=document.createElement("tr");columns.forEach(c=>{const th=document.createElement("th");th.textContent=c;headerRow.appendChild(th);});thead.appendChild(headerRow);
-rows.forEach(r=>{const tr=document.createElement("tr");columns.forEach(c=>{const td=document.createElement("td");td.textContent=clean(r[c]);tr.appendChild(td);});tbody.appendChild(tr);});
+  const thead=document.getElementById("performance-thead");
+  const tbody=document.getElementById("performance-tbody");
+
+  thead.innerHTML="";
+  tbody.innerHTML="";
+
+  const columns=[
+    COLUMNS.glider,
+    COLUMNS.mode,
+    COLUMNS.wh_km,
+    COLUMNS.watts,
+    COLUMNS.vertical_speed,
+    COLUMNS.dive_duration,
+    COLUMNS.max_depth,
+    COLUMNS.distance,
+    COLUMNS.wh_dive
+  ].filter(Boolean);
+
+  const headerRow=document.createElement("tr");
+
+  columns.forEach(c=>{
+    const th=document.createElement("th");
+    th.textContent=c;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+
+  rows.forEach(r=>{
+    const tr=document.createElement("tr");
+
+    columns.forEach(c=>{
+      const td=document.createElement("td");
+      td.textContent=clean(r[c]);
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
 }
 
-function renderSummary(rows){document.getElementById("performance-count").textContent=`${rows.length} glider/mode combinations`;}
+function renderSummary(rows){
+  document.getElementById("performance-count").textContent=`${rows.length} glider/mode combinations`;
+}
 
-function renderDashboard(){const rows=getFilteredData();renderSummary(rows);renderWhKm(rows);renderPowerSpeed(rows);renderHeatmap(rows);renderDurationDepth(rows);renderDistanceEnergy(rows);renderTable(rows);}
+function renderDashboard(){
+  const rows=getFilteredData();
+  renderSummary(rows);
+  renderPowerSpeed(rows);
+  renderDurationDepth(rows);
+  renderDistanceEnergy(rows);
+  renderPumpPower(rows);
+  renderWhKm(rows);
+  renderWatts(rows);
+  renderHeatmap(rows);
+  renderTable(rows);
+}
 
-function applyPerformanceFilters(){APPLIED_DATA=PERFORMANCE_DATA.slice();renderDashboard();document.getElementById("performance-status").hidden=true;}
-function resetPerformanceFilters(){document.getElementById("glider-select").value="all";document.getElementById("mode-select").value="all";document.getElementById("metric-select").value="wh_km";document.getElementById("view-gliders").click();APPLIED_DATA=PERFORMANCE_DATA.slice();renderDashboard();document.getElementById("performance-status").hidden=true;}
-function markPerformanceDirty(){document.getElementById("performance-status").hidden=false;}
+function applyPerformanceFilters(){
+  APPLIED_DATA=PERFORMANCE_DATA.slice();
+  renderDashboard();
+  document.getElementById("performance-status").hidden=true;
+}
+
+function resetPerformanceFilters(){
+  const gliderSelect=document.getElementById("glider-select");
+  const modeSelect=document.getElementById("mode-select");
+
+  [...gliderSelect.options].forEach(option=>option.selected=false);
+  [...modeSelect.options].forEach(option=>option.selected=false);
+
+  gliderSelect.options[0].selected=true;
+  modeSelect.options[0].selected=true;
+
+  document.getElementById("metric-select").value="wh_km";
+  document.getElementById("view-gliders").click();
+  APPLIED_DATA=PERFORMANCE_DATA.slice();
+  renderDashboard();
+  document.getElementById("performance-status").hidden=true;
+}
+
+function markPerformanceDirty(){
+  document.getElementById("performance-status").hidden=false;
+}
 
 document.getElementById("apply-performance").addEventListener("click",applyPerformanceFilters);
 document.getElementById("reset-performance").addEventListener("click",resetPerformanceFilters);
 document.getElementById("glider-select").addEventListener("change",markPerformanceDirty);
 document.getElementById("mode-select").addEventListener("change",markPerformanceDirty);
 document.getElementById("metric-select").addEventListener("change",markPerformanceDirty);
-document.getElementById("view-gliders").addEventListener("click",()=>{document.getElementById("view-gliders").setAttribute("aria-pressed","true");document.getElementById("view-modes").setAttribute("aria-pressed","false");});
-document.getElementById("view-modes").addEventListener("click",()=>{document.getElementById("view-gliders").setAttribute("aria-pressed","false");document.getElementById("view-modes").setAttribute("aria-pressed","true");});
+
+document.getElementById("view-gliders").addEventListener("click",()=>{
+  document.getElementById("view-gliders").setAttribute("aria-pressed","true");
+  document.getElementById("view-modes").setAttribute("aria-pressed","false");
+});
+
+document.getElementById("view-modes").addEventListener("click",()=>{
+  document.getElementById("view-gliders").setAttribute("aria-pressed","false");
+  document.getElementById("view-modes").setAttribute("aria-pressed","true");
+});
+
 loadPerformanceData();
 </script>
 ```
