@@ -100,34 +100,6 @@ format:
   #gsd .sl .lab .val { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; }
   #gsd .sl .end { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
   #gsd .sl input[type="range"] { width: 100%; accent-color: var(--accent); }
-  #gsd .depth-range-wrap { grid-column: 1 / -1; display: grid; grid-template-columns: 30px 1fr 46px; gap: 8px; align-items: center; margin-top: 2px; }
-  #gsd .depth-range { position: relative; height: 26px; min-width: 0; }
-  #gsd .depth-range-track {
-    position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
-    height: 6px; border-radius: 999px; background: var(--line-strong); overflow: hidden;
-  }
-  #gsd .depth-range-fill {
-    position: absolute; top: 0; bottom: 0; border-radius: inherit;
-    background: var(--accent); left: 0%; right: 100%;
-  }
-  #gsd .depth-range input[type="range"] {
-    position: absolute; inset: 0; width: 100%; margin: 0;
-    background: transparent; pointer-events: none; appearance: none; -webkit-appearance: none;
-  }
-  #gsd .depth-range input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: transparent; border: 0; }
-  #gsd .depth-range input[type="range"]::-moz-range-track { height: 6px; background: transparent; border: 0; }
-  #gsd .depth-range input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none; width: 18px; height: 18px; margin-top: -6px;
-    border-radius: 50%; border: 2px solid var(--surface); background: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent); pointer-events: auto; cursor: grab;
-  }
-  #gsd .depth-range input[type="range"]::-moz-range-thumb {
-    width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--surface);
-    background: var(--accent); box-shadow: 0 0 0 1px var(--accent); pointer-events: auto; cursor: grab;
-  }
-  #gsd .depth-range input[type="range"]:focus-visible { outline: none; }
-  #gsd .depth-range input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--accent); }
-  #gsd .depth-range input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--accent); }
   #gsd .sl.off { opacity: .48; }
   #gsd .panel-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
   #gsd .btn {
@@ -296,17 +268,11 @@ format:
             <span class="end">730</span>
           </div>
           <div class="sl off" id="sl-depth">
-            <label class="lab"><input type="checkbox" data-for="depth"> <b>Depth range</b>
-              <span class="val"><span id="v-depth">50–300</span> m</span></label>
-            <div class="depth-range-wrap">
-              <span class="end">50</span>
-              <div class="depth-range" aria-label="Required depth range">
-                <div class="depth-range-track"><div class="depth-range-fill" id="depth-range-fill"></div></div>
-                <input type="range" id="r-depth-min" min="0" max="18" value="0" step="1" aria-label="Minimum depth">
-                <input type="range" id="r-depth-max" min="0" max="18" value="4" step="1" aria-label="Maximum depth">
-              </div>
-              <span class="end">11,000</span>
-            </div>
+            <label class="lab"><input type="checkbox" data-for="depth"> <b>Maximum depth</b>
+              <span class="val"><span id="v-depth">300</span> m</span></label>
+            <span class="end">50</span>
+            <input type="range" id="r-depth" min="0" max="18" value="4" step="1">
+            <span class="end">11,000</span>
           </div>
           <div class="sl off" id="sl-speed">
             <label class="lab"><input type="checkbox" data-for="speed"> <b>Speed needed</b>
@@ -650,13 +616,8 @@ function readForm() {
   const s = { on: {}, val: {}, caps: {} };
   REQS.forEach(k => {
     s.on[k] = document.querySelector(`input[data-for="${k}"]`).checked;
-    if (k === "depth") {
-      const minRaw = Number(document.getElementById("r-depth-min").value);
-      const maxRaw = Number(document.getElementById("r-depth-max").value);
-      s.val.depth = [DEPTH_STOPS[minRaw], DEPTH_STOPS[maxRaw]];
-    } else {
-      s.val[k] = Number(document.getElementById("r-" + k).value);
-    }
+    const raw = Number(document.getElementById("r-" + k).value);
+    s.val[k] = k === "depth" ? DEPTH_STOPS[raw] : raw;
   });
   CAPS.forEach(k => { s.caps[k] = document.getElementById("cap-" + k).checked; });
   s.battery = document.querySelector('input[name="battery"]:checked').value;
@@ -673,7 +634,7 @@ function matches(g, s) {
   if (s.caps.prop && !g.propeller) return false;
   if (s.caps.rodeo && !g.rodeo) return false;
   if (s.on.duration && g.endurance[1] < s.val.duration) return false;
-  if (s.on.depth && (!g.depth || g.depth[0] > s.val.depth[0] || g.depth[1] < s.val.depth[1])) return false;
+  if (s.on.depth && (!g.depth || g.depth[1] < s.val.depth)) return false;
   if (s.on.speed && (g.speedKt == null || g.speedKt < s.val.speed)) return false;
   if (s.on.mass && (g.massKg == null || g.massKg > s.val.mass)) return false;
   if (s.on.freq && !bestPam(g, s.val.freq)) return false;
@@ -962,54 +923,20 @@ function render() {
 }
 
 // ---------- wiring ----------
-REQS.filter(k => k !== "depth").forEach(k => {
+REQS.forEach(k => {
   const range = document.getElementById("r-" + k);
   const check = document.querySelector(`input[data-for="${k}"]`);
   const row = document.getElementById("sl-" + k);
   const out = document.getElementById("v-" + k);
   const sync = () => {
-    out.textContent = k === "speed" ? Number(range.value).toFixed(1) : range.value;
+    out.textContent = k === "speed" ? Number(range.value).toFixed(1)
+      : k === "depth" ? num(DEPTH_STOPS[range.value]) : range.value;
     row.classList.toggle("off", !check.checked);
     document.getElementById("dirty").hidden = false;
   };
   range.addEventListener("input", () => { if (!check.checked) check.checked = true; sync(); });
   check.addEventListener("change", sync);
 });
-
-// Depth uses paired controls so users can specify the full operating interval.
-{
-  const minRange = document.getElementById("r-depth-min");
-  const maxRange = document.getElementById("r-depth-max");
-  const check = document.querySelector('input[data-for="depth"]');
-  const row = document.getElementById("sl-depth");
-  const out = document.getElementById("v-depth");
-  const fill = document.getElementById("depth-range-fill");
-
-  const syncDepth = changed => {
-    let minIdx = Number(minRange.value);
-    let maxIdx = Number(maxRange.value);
-    if (minIdx > maxIdx) {
-      if (changed === "min") maxRange.value = minRange.value;
-      else minRange.value = maxRange.value;
-      minIdx = Number(minRange.value);
-      maxIdx = Number(maxRange.value);
-    }
-    out.textContent = `${num(DEPTH_STOPS[minIdx])}–${num(DEPTH_STOPS[maxIdx])}`;
-    const maxStopIdx = DEPTH_STOPS.length - 1;
-    fill.style.left = `${(minIdx / maxStopIdx) * 100}%`;
-    fill.style.right = `${100 - (maxIdx / maxStopIdx) * 100}%`;
-    minRange.style.zIndex = minIdx >= maxIdx - 1 ? "4" : "3";
-    maxRange.style.zIndex = "3";
-    row.classList.toggle("off", !check.checked);
-    document.getElementById("dirty").hidden = false;
-  };
-
-  minRange.addEventListener("input", () => { if (!check.checked) check.checked = true; syncDepth("min"); });
-  maxRange.addEventListener("input", () => { if (!check.checked) check.checked = true; syncDepth("max"); });
-  check.addEventListener("change", () => syncDepth(null));
-  syncDepth(null);
-}
-
 CAPS.forEach(k => document.getElementById("cap-" + k)
   .addEventListener("change", () => { document.getElementById("dirty").hidden = false; }));
 document.querySelectorAll('input[name="battery"]').forEach(r =>
