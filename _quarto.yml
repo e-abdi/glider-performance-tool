@@ -3,6 +3,10 @@ project:
   output-dir: docs
   render:
     - "*.qmd"
+  # The dashboard names its photos from JavaScript, so Quarto cannot discover them
+  # by scanning the rendered HTML — copy the folder across explicitly.
+  resources:
+    - content/images/**
 
 website:
   page-navigation: true
@@ -41,6 +45,8 @@ website:
         text: Workflow
       - href: content/results.qmd
         text: Results
+      - href: content/glider-selection.qmd
+        text: Glider Selection Dashboard
 
 format:
   html:
