@@ -49,6 +49,8 @@ website:
         text: Glider Selection Dashboard
       - href: content/slocum-endurance.qmd
         text: Endurance calculation
+      - href: content/endurance_plots.qmd
+        text: Endurance Results
 
 format:
   html:
