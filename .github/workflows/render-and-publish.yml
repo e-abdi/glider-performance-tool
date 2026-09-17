@@ -18,6 +18,19 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      # kasey_testDashboard.qmd has {r} chunks, so the whole site fails to render
+      # without R. use-public-rspm pulls Linux binaries from Posit Package Manager;
+      # building bslib and shiny from source takes minutes instead of seconds.
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      # knitr is what Quarto's R engine runs the chunks with; bslib and shiny are
+      # what kasey_testDashboard.qmd calls. A fresh runner has none of them.
+      - name: Install R packages used by the pages
+        run: Rscript -e 'install.packages(c("knitr", "rmarkdown", "bslib", "shiny"))'
+
       # When pages start running Python code, add here:
       #   - uses: actions/setup-python@v5
       #     with: {python-version: "3.12"}
