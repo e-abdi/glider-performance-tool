@@ -31,6 +31,20 @@ jobs:
       - name: Install R packages used by the pages
         run: Rscript -e 'install.packages(c("knitr", "rmarkdown", "bslib", "shiny"))'
 
+      # Rebuild the endurance page from content/data/extra-sensors.csv, so adding a
+      # sensor is a one-line edit on GitHub with nothing to run locally. This reads only
+      # files that are in the repo - the workbook itself is not needed here.
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild the endurance page
+        run: python3 code/build_endurance_page.py
+
+      - name: Check the sensor list still matches the workbook
+        run: node code/check_extra_sensors.js && node code/check_endurance_model.js
+
       # When pages start running Python code, add here:
       #   - uses: actions/setup-python@v5
       #     with: {python-version: "3.12"}

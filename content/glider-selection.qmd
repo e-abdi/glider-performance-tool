@@ -250,6 +250,13 @@ format:
           <label class="cap"><input type="checkbox" id="cap-prop"> Thruster / propeller</label>
           <label class="cap"><input type="checkbox" id="cap-rodeo"> Flew the Rodeo</label>
         </div>
+        
+        <h3 style="margin-top:20px;">Battery type</h3>
+        <div class="caps" role="radiogroup" aria-label="Battery type">
+          <label class="cap"><input type="radio" name="battery" id="batt-any" value="any" checked> Any</label>
+          <label class="cap"><input type="radio" name="battery" id="batt-rechargeable" value="rechargeable"> Rechargeable</label>
+          <label class="cap"><input type="radio" name="battery" id="batt-primary" value="primary"> Primary   (single-use)</label>
+        </div>
 
         <h3 style="margin-top:20px;">Mission parameters</h3>
         <div class="slider-grid">
@@ -411,7 +418,7 @@ const GLIDERS = [
     endurance: [15, 540], endNote: "15–50 d alkaline · 1–4 mo rechargeable · 4–18 mo lithium",
     speedKt: 2.0, speedNote: "0.68 kt glide, 2 kt with thruster",
     massKg: 70, massNote: "55–70 kg by configuration",
-    energy: [2520, 12500], battery: "Alkaline / rechargeable / lithium",
+    energy: [2520, 12500], battery: "Alkaline / rechargeable / lithium", batteryType: "both",
     propeller: "Optional hybrid thruster, >1000 cc extra drive (up to 2 kt)",
     realTime: true, acoustic: true, ice: true, edge: true, bathy: true, backseat: true,
     pam: ["dmon2", "wispr3", "observer", "amar"],
@@ -426,7 +433,7 @@ const GLIDERS = [
     affordance: "Two-year class endurance and eight payload bays, at the cost of crane handling.",
     depth: [0, 1000], endurance: [730, 730], endNote: "Vendor claim: over two years",
     speedKt: 3.5, speedNote: "0.75 kt glide, 3.5 kt sprint on dual thrusters",
-    massKg: 171, energy: [23000, 23000], battery: "Lithium primary",
+    massKg: 171, energy: [23000, 23000], battery: "Lithium primary", batteryType: "primary",
     propeller: "Dual aft thrusters, sprint to 3.5 kt",
     realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
     pam: ["observer", "amar"],
@@ -440,7 +447,7 @@ const GLIDERS = [
     affordance: "Isopycnal hull — half a knot on half a watt, handled by two people from a small boat.",
     depth: [50, 1000], endurance: [90, 300], endNote: "Up to 10 months, mission dependent",
     speedKt: 0.8, speedNote: "0.5 kt typical; can stem 0.8 kt of current",
-    massKg: 52, energy: [4722, 4722], battery: "Lithium primary (24 V + 10 V packs)",
+    massKg: 52, energy: [4722, 4722], battery: "Lithium primary (24 V + 10 V packs)", batteryType: "primary",
     propeller: null,
     realTime: true, acoustic: true, ice: true, edge: false, bathy: true, backseat: false,
     pam: ["sgPam", "pmar", "wispr3", "amar", "dmon2"],
@@ -455,7 +462,7 @@ const GLIDERS = [
     affordance: "About 60% more battery than SG; year-long and under-ice missions.",
     depth: [75, 1000], endurance: [365, 365], endNote: "12 months nominal",
     speedKt: 0.8, speedNote: "0.5 kt typical",
-    massKg: 72.7, energy: [8625, 8625], energyConf: "derived", battery: "Three 15 V lithium primary packs",
+    massKg: 72.7, energy: [8625, 8625], energyConf: "derived", battery: "Three 15 V lithium primary packs",   batteryType: "primary",
     propeller: null,
     realTime: true, acoustic: true, ice: true, edge: false, bathy: true, backseat: false,
     pam: ["wispr3", "pmar"],
@@ -471,7 +478,7 @@ const GLIDERS = [
     affordance: "Rechargeable and wingless — back in the water in hours, little to snag.",
     depth: [0, 1000], endurance: [125, 125], endNote: "125 days / 2,700 km at max depth",
     speedKt: 1.0, speedNote: "0.5 kt nominal, 1 kt max",
-    massKg: 59, energy: [6700, 6700], battery: "Rechargeable Li-ion",
+    massKg: 59, energy: [6700, 6700], battery: "Rechargeable Li-ion", batteryType: "rechargeable",
     propeller: "Optional wing-mounted propellers",
     realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
     pam: ["auris", "porpoise", "observer"],
@@ -488,7 +495,7 @@ const GLIDERS = [
     affordance: "Shallow-water specialist, with a propeller option for very shallow areas.",
     depth: [20, 200], endurance: [75, 135], endNote: "75 d single battery, 135 d double",
     speedKt: 1.0, massKg: 65, massNote: "65 kg single battery, 90 kg double",
-    energy: null, battery: "Rechargeable Li-ion",
+    energy: null, battery: "Rechargeable Li-ion", batteryType: "rechargeable",
     propeller: "Propeller option for very shallow water",
     realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
     pam: ["auris", "porpoise"], rodeo: null,
@@ -501,7 +508,7 @@ const GLIDERS = [
     affordance: "Antennas in the wings: rolls at the surface instead of carrying a mast.",
     depth: [0, 1500], depthNote: "Rated 1500 m; typical operations to 1000 m",
     endurance: [90, 180], endNote: "Several months (≈815 cycles to 1000 m)",
-    speedKt: 0.68, massKg: 51.8, energy: [3611, 3611], battery: "Lithium primary (52 DD cells)",
+    speedKt: 0.68, massKg: 51.8, energy: [3611, 3611], battery: "Lithium primary (52 DD cells)", batteryType: "primary",
     propeller: null,
     realTime: true, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
     pam: [], rodeo: null,
@@ -512,7 +519,7 @@ const GLIDERS = [
     id: "spray2", glider: "Spray2", maker: "MRV / General Oceans", photo: "spray2",
     affordance: "The commercial Spray: removable wings and tailfin, eight sensor ports.",
     depth: [0, 1000], endurance: [100, 100], endNote: "100+ days, 500+ profiles to 1000 m",
-    speedKt: 0.5, massKg: 70, energy: null, battery: "Not published",
+    speedKt: 0.5, massKg: 70, energy: null, battery: "Not published", batteryType: null,
     propeller: null,
     realTime: true, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
     pam: [], rodeo: null,
@@ -523,7 +530,7 @@ const GLIDERS = [
     id: "oceanscout", glider: "Ocean Scout", maker: "Hefring / General Oceans", photo: "oceanscout",
     affordance: "22.5 kg — one person deploys it, and several fit on a small boat.",
     depth: [6, 200], endurance: [30, 30], endNote: "About a month on the standard pack",
-    speedKt: null, massKg: 22.5, energy: [1200, 1200], battery: "Lithium primary (Li-MnO₂)",
+    speedKt: null, massKg: 22.5, energy: [1200, 1200], battery: "Lithium primary (Li-MnO₂)",batteryType: "primary",
     propeller: null,
     realTime: true, acoustic: true, ice: false, edge: true, bathy: false, backseat: false,
     pam: ["osPam"],
@@ -537,7 +544,7 @@ const GLIDERS = [
     affordance: "Buoyancy engine about 5× the usual: crosses fresh-to-salt fronts without re-ballasting.",
     depth: [10, 200], endurance: [10, 30], endNote: "10 d alkaline, 30 d lithium",
     speedKt: 2.0, speedNote: "User selectable 0.7–2 kt", massKg: 109,
-    energy: [3850, 11000], battery: "Alkaline / lithium / rechargeable",
+    energy: [3850, 11000], battery: "Alkaline / lithium / rechargeable", batteryType: "both",
     propeller: null,
     realTime: true, acoustic: true, ice: false, edge: true, bathy: false, backseat: true,
     pam: [], rodeo: null,
@@ -549,7 +556,7 @@ const GLIDERS = [
     id: "sg1-fathom", glider: "SG-1 Fathom", maker: "Helsing", photo: "SG1-Lura",
     affordance: "Swarm-oriented defence platform with the Lura acoustic model running on board.",
     depth: null, depthNote: "Not published", endurance: [90, 90], endNote: "Up to three months",
-    speedKt: 2.0, massKg: 60, energy: null, battery: "Not published",
+    speedKt: 2.0, massKg: 60, energy: null, battery: "Not published", batteryType: null,
     propeller: null,
     realTime: false, acoustic: true, ice: false, edge: true, bathy: false, backseat: false,
     pam: ["lura"], rodeo: null,
@@ -562,7 +569,7 @@ const GLIDERS = [
     affordance: "Hybrid glider: buoyancy plus propeller, and the shallow sibling of the Petrel-X.",
     depth: [0, 1500], endurance: [30, 30], endNote: "About 30 days",
     speedKt: 3.36, speedNote: "1.6 kt gliding, 3.4 kt propelled (sea trial)",
-    massKg: 69, energy: null, battery: "Not published",
+    massKg: 69, energy: null, battery: "Not published",batteryType: null,
     propeller: "Hybrid: propeller as well as buoyancy (3.4 kt propelled)",
     realTime: false, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
     pam: [], rodeo: null,
@@ -576,7 +583,7 @@ const GLIDERS = [
     endurance: [200, 200], endNote: "200 days in a single mission (design figure)",
     speedKt: null, speedNote: "Not published",
     massKg: null, massNote: "Not published",
-    energy: null, battery: "Not published",
+    energy: null, battery: "Not published",batteryType: null,
     propeller: null, conf: "paper",
     realTime: false, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
     pam: [], rodeo: null,
@@ -613,6 +620,7 @@ function readForm() {
     s.val[k] = k === "depth" ? DEPTH_STOPS[raw] : raw;
   });
   CAPS.forEach(k => { s.caps[k] = document.getElementById("cap-" + k).checked; });
+  s.battery = document.querySelector('input[name="battery"]:checked').value;
   return s;
 }
 
@@ -630,6 +638,8 @@ function matches(g, s) {
   if (s.on.speed && (g.speedKt == null || g.speedKt < s.val.speed)) return false;
   if (s.on.mass && (g.massKg == null || g.massKg > s.val.mass)) return false;
   if (s.on.freq && !bestPam(g, s.val.freq)) return false;
+  if (s.battery === "rechargeable" && g.batteryType !== "rechargeable" && g.batteryType !== "both") return false;
+  if (s.battery === "primary" && g.batteryType !== "primary" && g.batteryType !== "both") return false;
   return true;
 }
 
@@ -929,7 +939,9 @@ REQS.forEach(k => {
 });
 CAPS.forEach(k => document.getElementById("cap-" + k)
   .addEventListener("change", () => { document.getElementById("dirty").hidden = false; }));
-
+document.querySelectorAll('input[name="battery"]').forEach(r =>
+  r.addEventListener("change", () => { document.getElementById("dirty").hidden = false; }));
+  
 document.getElementById("apply").addEventListener("click", () => {
   applied = readForm();
   document.getElementById("dirty").hidden = true;
@@ -938,6 +950,7 @@ document.getElementById("apply").addEventListener("click", () => {
 document.getElementById("reset").addEventListener("click", () => {
   REQS.forEach(k => { document.querySelector(`input[data-for="${k}"]`).checked = false; document.getElementById("sl-" + k).classList.add("off"); });
   CAPS.forEach(k => { document.getElementById("cap-" + k).checked = false; });
+  document.getElementById("batt-any").checked = true;
   applied = readForm();
   document.getElementById("dirty").hidden = true;
   render();
