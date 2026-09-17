@@ -141,7 +141,17 @@ format:
   #study-design .assumptions ul { margin-bottom: 0; }
 
   .leaflet-container { font-family: var(--sans); }
+  #study-map .leaflet-top, #study-map .leaflet-bottom { z-index: 1000; pointer-events: none; }
+  #study-map .leaflet-control { pointer-events: auto; }
   .leaflet-draw-toolbar a { background-color: #fff; }
+  .leaflet-draw { display: block !important; visibility: visible !important; }
+  .leaflet-draw-toolbar { display: block !important; visibility: visible !important; }
+  .leaflet-draw-toolbar a {
+    display: block !important;
+    visibility: visible !important;
+    width: 30px !important;
+    height: 30px !important;
+  }
 
   @media (max-width: 980px) {
     #study-design .layout { grid-template-columns: 1fr; }
@@ -152,6 +162,45 @@ format:
   @media (max-width: 560px) {
     #study-design .metrics, #study-design .two { grid-template-columns: 1fr; }
   }
+
+.dev-subtitle {
+  margin: 0.25rem 0 1.25rem 0;
+  padding: 0.7rem 0.9rem;
+  border-left: 5px solid #D97706;
+  background: rgba(217, 119, 6, 0.10);
+  border-radius: 6px;
+  font-size: 1.05rem;
+}
+
+.approx-badge {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.08rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(217, 119, 6, 0.14);
+  color: #A35400;
+  font-weight: 800;
+  font-size: 0.78rem;
+  vertical-align: middle;
+}
+
+.land-note {
+  margin-top: 0.45rem;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: var(--bs-secondary-color, #5f6b72);
+}
+
+.land-mask-status {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.leaflet-pane.leaflet-land-pane {
+  pointer-events: none;
+}
+
 </style>
 
 <div id="study-design">
@@ -208,6 +257,9 @@ format:
       </div>
 
       <div class="actions">
+        <button class="btn" id="draw-area">Draw study area</button>
+        <button class="btn" id="finish-area" disabled>Finish polygon</button>
+        <button class="btn" id="clear-area">Clear area</button>
         <button class="btn" id="generate" disabled>Generate survey</button>
         <button class="btn ghost" id="clear-tracks" disabled>Clear tracks</button>
         <button class="btn ghost" id="example-area">Load example</button>
@@ -216,13 +268,43 @@ format:
 
     <section class="panel map-panel">
       <div id="study-map" aria-label="Interactive map for drawing the study area"></div>
-      <div class="map-help"><b>Map controls:</b> use the polygon tool at upper left to draw a study area. The edit and delete tools become available after a polygon exists.</div>
+      <div class="map-help"><b>Map controls:</b> click <b>Draw study area</b>, then click successive points on the map to add vertices. When you have at least three vertices, click <b>Finish polygon</b>. Use <b>Clear area</b> to start over. Then click <b>Generate survey</b>. While drawing, the rest of the map should remain fully clickable.</div>
+      <div class="map-help"><b>Map layers:</b> <span style="color:#0057B8;font-weight:800;">blue lines</span> = survey track; <span style="color:#F28E2B;font-weight:800;">orange dots</span> = estimated surfacing locations.</div>
+      <div class="map-help"><b>Land mask:</b> shaded land is shown for visual guidance only. Survey tracks are not yet routed around land, so route distance and mission duration should be treated as approximate.</div>
+      <div id="land-mask-status" class="land-mask-status">Loading land mask…</div>
     </section>
   </div>
 
   <section class="summary">
     <h2>Survey estimate</h2>
     <p class="note">Values below are geometric and first-order estimates. Currents, dive behavior, bathymetry, payload power, navigation, launch/recovery, and operational safety margins are not yet included.</p>
+    <div class="dive-card" id="dive-preview">
+      <div class="dive-visual">
+        <h3>Idealized dive cycle</h3>
+        <svg id="dive-svg" viewBox="0 0 620 180" role="img" aria-label="Idealized glider sawtooth dive cycle">
+          <line class="dive-surface" x1="52" y1="32" x2="590" y2="32"></line>
+          <line class="dive-grid" x1="52" y1="150" x2="590" y2="150"></line>
+          <polyline id="dive-path" class="dive-path" points="80,32 320,150 560,32"></polyline>
+          <circle cx="80" cy="32" r="5" fill="#86570A"></circle>
+          <circle cx="560" cy="32" r="5" fill="#86570A"></circle>
+          <text class="dive-label" x="6" y="36">Surface</text>
+          <text id="dive-depth-label" class="dive-label" x="6" y="154">500 m</text>
+          <text id="dive-distance-label" class="dive-label" x="320" y="174" text-anchor="middle">2.05 km per cycle</text>
+          <text id="dive-angle-label" class="dive-label" x="174" y="78">26&deg;</text>
+        </svg>
+      </div>
+      <div class="dive-stats">
+        <h3>Dive-cycle estimate</h3>
+        <div class="dive-kpis">
+          <div class="dive-kpi"><div class="k">Cycle distance</div><div class="v" id="m-cycle-distance">--</div></div>
+          <div class="dive-kpi"><div class="k">Half-cycle</div><div class="v" id="m-half-cycle">--</div></div>
+          <div class="dive-kpi"><div class="k">Approx. cycles</div><div class="v" id="m-cycles">--</div></div>
+          <div class="dive-kpi"><div class="k">Profiles / 100 km</div><div class="v" id="m-profile-density">--</div></div>
+          <div class="dive-kpi"><div class="k">Surfacing markers</div><div class="v" id="m-surface-markers">--</div></div>
+        </div>
+        <p class="note" style="margin-top:9px;">Orange dots on the map show estimated surfacing locations along the generated route. Depth and glide-angle changes update this preview immediately.</p>
+      </div>
+    </div>
     <div id="summary-empty" class="empty">Draw a study polygon and press <b>Generate survey</b> to create an estimate.</div>
     <div id="summary-results" hidden>
       <div class="metrics">
@@ -231,30 +313,6 @@ format:
         <div class="metric"><div class="k">Track length</div><div class="v" id="m-distance">--</div><div class="sub">survey route</div></div>
         <div class="metric"><div class="k">Nominal duration</div><div class="v" id="m-duration">--</div><div class="sub">distance / aggregate speed</div></div>
         <div class="metric"><div class="k">Target depth</div><div class="v" id="m-depth">--</div><div class="sub">user requirement</div></div>
-      </div>
-      <div class="dive-card">
-        <div class="dive-visual">
-          <h3>Idealized dive cycle</h3>
-          <svg id="dive-svg" viewBox="0 0 620 180" role="img" aria-label="Idealized glider sawtooth dive cycle">
-            <line class="dive-surface" x1="52" y1="32" x2="590" y2="32"></line>
-            <line class="dive-grid" x1="52" y1="150" x2="590" y2="150"></line>
-            <polyline id="dive-path" class="dive-path" points="80,32 320,150 560,32"></polyline>
-            <text class="dive-label" x="6" y="36">Surface</text>
-            <text id="dive-depth-label" class="dive-label" x="6" y="154">500 m</text>
-            <text id="dive-distance-label" class="dive-label" x="320" y="174" text-anchor="middle">2.05 km per cycle</text>
-            <text id="dive-angle-label" class="dive-label" x="174" y="78">26&deg;</text>
-          </svg>
-        </div>
-        <div class="dive-stats">
-          <h3>Dive-cycle estimate</h3>
-          <div class="dive-kpis">
-            <div class="dive-kpi"><div class="k">Cycle distance</div><div class="v" id="m-cycle-distance">--</div></div>
-            <div class="dive-kpi"><div class="k">Half-cycle</div><div class="v" id="m-half-cycle">--</div></div>
-            <div class="dive-kpi"><div class="k">Approx. cycles</div><div class="v" id="m-cycles">--</div></div>
-            <div class="dive-kpi"><div class="k">Profiles / 100 km</div><div class="v" id="m-profile-density">--</div></div>
-          </div>
-          <p class="note" style="margin-top:9px;">Dots on the map show estimated surfacing locations along the generated route. This assumes a symmetric sawtooth and constant glide angle.</p>
-        </div>
       </div>
       <div class="status">
         <div class="status-row warn"><span class="ic">~</span><span><b>Duration is derived.</b> It assumes constant horizontal speed and an even division of route distance among gliders.</span></div>
@@ -276,6 +334,11 @@ format:
   </section>
 </div>
 
+
+<div class="land-note">
+  <strong>Distance note:</strong> route distance and mission duration are first-order estimates. The current planner does not yet remove over-land transect segments or calculate water-only transit paths around coastlines, islands, or other barriers.
+</div>
+
 <script>
 (function () {
   const els = {
@@ -290,6 +353,9 @@ format:
     depth: document.getElementById('depth'),
     gliders: document.getElementById('gliders'),
     pattern: document.getElementById('pattern'),
+    drawArea: document.getElementById('draw-area'),
+    finishArea: document.getElementById('finish-area'),
+    clearArea: document.getElementById('clear-area'),
     generate: document.getElementById('generate'),
     clearTracks: document.getElementById('clear-tracks'),
     exampleArea: document.getElementById('example-area')
@@ -317,6 +383,12 @@ format:
   const drawnItems = new L.FeatureGroup().addTo(map);
   const trackLayer = new L.FeatureGroup().addTo(map);
 
+  // Keep estimated surfacing locations in their own pane above survey lines.
+  map.createPane('surfacePane');
+  map.getPane('surfacePane').style.zIndex = 650;
+  map.getPane('surfacePane').style.pointerEvents = 'none';
+  const surfaceLayer = new L.FeatureGroup().addTo(map);
+
   const drawControl = new L.Control.Draw({
     position: 'topleft',
     draw: {
@@ -333,7 +405,93 @@ format:
     },
     edit: { featureGroup: drawnItems, remove: true }
   });
-  map.addControl(drawControl);
+  // Leaflet.draw toolbar is not used for polygon creation; custom click-to-add controls are more reliable in Quarto.
+  // map.addControl(drawControl);
+
+  // Prominent alternative to the small Leaflet.draw toolbar icon.
+  // This also makes polygon drawing usable if Quarto/theme CSS makes the toolbar icon hard to notice.
+  let manualDrawing = false;
+  let manualVertices = [];
+  let manualGuide = null;
+  let manualVertexLayer = L.layerGroup().addTo(map);
+
+  function resetManualGuide() {
+    if (manualGuide) {
+      map.removeLayer(manualGuide);
+      manualGuide = null;
+    }
+    manualVertexLayer.clearLayers();
+  }
+
+  function updateManualGuide() {
+    if (manualGuide) map.removeLayer(manualGuide);
+    if (manualVertices.length >= 2) {
+      manualGuide = L.polyline(manualVertices, {
+        color: '#0057B8',
+        weight: 3,
+        opacity: 1,
+        dashArray: '6,6'
+      }).addTo(map);
+    }
+    manualVertexLayer.clearLayers();
+    manualVertices.forEach((latlng, i) => {
+      L.circleMarker(latlng, {
+        radius: 5,
+        color: '#0057B8',
+        weight: 2,
+        fillColor: '#ffffff',
+        fillOpacity: 1
+      }).bindTooltip(`Vertex ${i + 1}`, {permanent: false}).addTo(manualVertexLayer);
+    });
+    els.finishArea.disabled = manualVertices.length < 3;
+  }
+
+  els.drawArea.addEventListener('click', function () {
+    manualDrawing = true;
+    manualVertices = [];
+    resetManualGuide();
+    els.finishArea.disabled = true;
+    els.drawArea.textContent = 'Click map to add vertices';
+    map.getContainer().style.cursor = 'crosshair';
+  });
+
+  els.finishArea.addEventListener('click', function () {
+    if (manualVertices.length < 3) return;
+    drawnItems.clearLayers();
+    const poly = L.polygon(manualVertices, {
+      color: '#0057B8',
+      weight: 3,
+      opacity: 1,
+      fillOpacity: 0.12
+    }).addTo(drawnItems);
+    manualDrawing = false;
+    resetManualGuide();
+    els.drawArea.textContent = 'Draw study area';
+    els.finishArea.disabled = true;
+    map.getContainer().style.cursor = '';
+    els.generate.disabled = false;
+    if (typeof clearSurvey === 'function') clearSurvey();
+    map.fitBounds(poly.getBounds(), {padding: [20,20]});
+    setTimeout(() => map.invalidateSize({pan:false}), 50);
+  });
+
+  els.clearArea.addEventListener('click', function () {
+    manualDrawing = false;
+    manualVertices = [];
+    resetManualGuide();
+    drawnItems.clearLayers();
+    if (typeof clearSurvey === 'function') clearSurvey();
+    els.drawArea.textContent = 'Draw study area';
+    els.finishArea.disabled = true;
+    els.generate.disabled = true;
+    map.getContainer().style.cursor = '';
+  });
+
+  map.on('click', function (e) {
+    if (!manualDrawing) return;
+    manualVertices.push(e.latlng);
+    updateManualGuide();
+  });
 
   function currentPolygonLayer() {
     let result = null;
@@ -349,6 +507,7 @@ format:
 
   function clearTracksAndSummary() {
     trackLayer.clearLayers();
+    surfaceLayer.clearLayers();
     document.getElementById('summary-empty').hidden = false;
     document.getElementById('summary-results').hidden = true;
     setButtons();
@@ -506,19 +665,52 @@ format:
       const p = turf.along(line, d, { units: 'kilometers' });
       const [lng, lat] = p.geometry.coordinates;
       L.circleMarker([lat, lng], {
-        radius: 3.5,
-        color: '#FFFFFF',
+        radius: 5,
+        color: '#5A3300',
         weight: 1.5,
-        fillColor: '#86570A',
+        fillColor: '#F59E0B',
         fillOpacity: 0.95,
         interactive: false,
+        pane: 'surfacePane',
         className: 'profile-marker'
-      }).addTo(trackLayer);
+      }).addTo(surfaceLayer);
       count += 1;
     }
     return count;
   }
 
+
+  let lastSurveyGeometry = null;
+
+  function updateDivePreviewOnly() {
+    const depthM = Math.max(0, Number(els.depth.value) || 0);
+    const glideAngleDeg = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
+    const cycleKm = diveCycleDistanceKm(depthM, glideAngleDeg);
+    if (!Number.isFinite(cycleKm) || cycleKm <= 0) return;
+    updateDiveGraphic(depthM, glideAngleDeg, cycleKm);
+    document.getElementById('m-cycle-distance').textContent = `${fmt(cycleKm, cycleKm < 10 ? 2 : 1)} km`;
+    document.getElementById('m-half-cycle').textContent = `${fmt(cycleKm / 2, cycleKm < 10 ? 2 : 1)} km`;
+    document.getElementById('m-profile-density').textContent = fmt(100 / cycleKm, 1);
+
+    if (lastSurveyGeometry) {
+      surfaceLayer.clearLayers();
+      let cycles = 0;
+      if (lastSurveyGeometry.type === 'route') {
+        const markerCount = addSurfaceMarkersToLine(lastSurveyGeometry.line, cycleKm);
+        document.getElementById('m-surface-markers').textContent = fmt(markerCount, 0);
+        cycles = lastSurveyGeometry.distanceKm / cycleKm;
+      } else {
+        let markerCount = 0;
+        lastSurveyGeometry.lines.forEach(line => { markerCount += addSurfaceMarkersToLine(line, cycleKm); });
+        document.getElementById('m-surface-markers').textContent = fmt(markerCount, 0);
+        cycles = lastSurveyGeometry.distanceKm / cycleKm;
+      }
+      document.getElementById('m-cycles').textContent = fmt(cycles, 0);
+    } else {
+      document.getElementById('m-cycles').textContent = '--';
+      document.getElementById('m-surface-markers').textContent = '--';
+    }
+  }
   function generateSurvey() {
     const layer = currentPolygonLayer();
     if (!layer) return;
@@ -548,25 +740,28 @@ format:
 
     let distanceKm = 0;
     let estimatedCycles = 0;
+    let surfaceMarkerCount = 0;
     if (els.pattern.value === 'parallel') {
       segments.forEach(seg => {
         const segKm = turf.length(seg, { units: 'kilometers' });
         distanceKm += segKm;
-        drawFeature(seg, { color: '#2780E3', weight: 3, opacity: 0.9 });
+        drawFeature(seg, { color: '#0057B8', weight: 4, opacity: 1.0 });
         if (Number.isFinite(cycleKm) && cycleKm > 0) {
-          addSurfaceMarkersToLine(seg, cycleKm);
+          surfaceMarkerCount += addSurfaceMarkersToLine(seg, cycleKm);
           estimatedCycles += segKm / cycleKm;
         }
       });
+      lastSurveyGeometry = { type: 'segments', lines: segments, distanceKm };
     } else {
       const route = buildLawnmowerRoute(segments);
       distanceKm = turf.length(route, { units: 'kilometers' });
-      drawFeature(route, { color: '#2780E3', weight: 3, opacity: 0.92 });
+      drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
       segments.forEach(seg => drawFeature(seg, { color: '#1A6B4E', weight: 5, opacity: 0.35 }));
       if (Number.isFinite(cycleKm) && cycleKm > 0) {
-        addSurfaceMarkersToLine(route, cycleKm);
+        surfaceMarkerCount += addSurfaceMarkersToLine(route, cycleKm);
         estimatedCycles = distanceKm / cycleKm;
       }
+      lastSurveyGeometry = { type: 'route', line: route, distanceKm };
     }
 
     const areaKm2 = turf.area(polygon) / 1e6;
@@ -583,6 +778,7 @@ format:
       document.getElementById('m-half-cycle').textContent = `${fmt(cycleKm / 2, cycleKm < 10 ? 2 : 1)} km`;
       document.getElementById('m-cycles').textContent = fmt(estimatedCycles, 0);
       document.getElementById('m-profile-density').textContent = fmt(100 / cycleKm, 1);
+      document.getElementById('m-surface-markers').textContent = fmt(surfaceMarkerCount, 0);
       updateDiveGraphic(depthM, glideAngleDeg, cycleKm);
     }
     document.getElementById('summary-empty').hidden = true;
@@ -591,6 +787,9 @@ format:
   }
 
   els.generate.addEventListener('click', generateSurvey);
+  els.depth.addEventListener('input', updateDivePreviewOnly);
+  els.glideAngle.addEventListener('input', updateDivePreviewOnly);
+  updateDivePreviewOnly();
   setButtons();
 
   // Refresh only after genuine page/window layout changes. Avoid continuously
