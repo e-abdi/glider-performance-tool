@@ -559,7 +559,27 @@ const PAM = {
 const BP = "https://e-abdi.github.io/Glider-Operation-Best-Practices/";
 const WIKI = "https://open-source-glider.readthedocs.io/en/latest/Commercial%20Gliders.html";
 const INTEG = "https://github.com/e-abdi/custom-glider-sensor-integration";
-const ENDURANCE_CALC = "https://docs.google.com/spreadsheets/d/1R6D_G6jzVCg-Iip6PC8pdTiSopxTKkCl/edit?gid=1026882386#gid=1026882386";
+// Our own endurance page, which evaluates this spreadsheet's formulas in the browser.
+// Relative, so it works in the rendered site and in a local preview alike.
+const ENDURANCE_CALC = "slocum-endurance.html";
+
+// Section anchors on the wiki's Commercial Gliders page, so a card lands on its own
+// glider rather than the top. Variants share their family's section: the page has no
+// heading of its own for the Sentinel, the SGX or the Spray2.
+const WIKI_ANCHOR = {
+  "slocum-g3": "slocum", "slocum-sentinel": "slocum",
+  "seaglider-m1": "seaglider", "seaglider-sgx": "seaglider",
+  "seaexplorer-1000": "seaexplorer", "seaexplorer-200": "seaexplorer",
+  "spray": "spray", "spray2": "spray",
+  "oceanscout": "oceanscout", "exocetus-mod2": "mod2",
+  "sg1-fathom": "sg-1-lura", "petrel-ii": "petrel", "petrel-x": "petrel"
+};
+
+// Only link a supporting site where it actually has something on that platform, rather
+// than sending everyone to the same page from every card.
+const BP_GLIDERS = new Set(["slocum-g3", "seaglider-m1", "seaglider-sgx"]);
+const INTEG_GLIDERS = new Set(["slocum-g3", "seaglider-m1"]);
+const MANUFACTURER_ONLY = new Set(["slocum-sentinel"]);
 
 const GLIDERS = [
   {
@@ -1080,10 +1100,14 @@ function card(g, s) {
   const add = (href, label) => { const a = el("a", null, label); a.href = href; a.target = "_blank"; a.rel = "noopener"; links.appendChild(a); };
   if (g.website) add(g.website, "Manufacturer");
   if (g.paper) add(g.paper, "Paper");
-  if (g.bp) add(BP + g.bp, "Best practices");
-  add(WIKI, "Wiki");
-  add(INTEG, "Sensor integration");
-  if (g.glider.includes("Slocum")) add(ENDURANCE_CALC, "Endurance calculator");
+  if (!MANUFACTURER_ONLY.has(g.id)) {
+    // Best practices goes to the site's front page: its sections are organised by task,
+    // not by platform, so a per-glider deep link was pointing at the wrong thing.
+    if (BP_GLIDERS.has(g.id)) add(BP, "Best practices");
+    add(WIKI + (WIKI_ANCHOR[g.id] ? "#" + WIKI_ANCHOR[g.id] : ""), "Wiki");
+    if (INTEG_GLIDERS.has(g.id)) add(INTEG, "Sensor integration");
+    if (g.id === "slocum-g3") add(ENDURANCE_CALC, "Endurance calculator");
+  }
   db.appendChild(links);
 
   d.appendChild(db);

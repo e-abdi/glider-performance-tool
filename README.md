@@ -1,17 +1,10 @@
----
-
-editor: 
-  markdown: 
-    wrap: 72
----
-
 # Glider Performance Tool
 
 Research compendium for comparing how the PAM-equipped gliders of the NOAA Fisheries Glider Rodeo 2026 performed across mission modes (fast, slow, intermediate, drift): piloting, navigation, endurance and self-noise.
 
-## Link to Final Report
+## Project website
 
-**TODO: link to the project website once GitHub Pages is on**
+<https://e-abdi.github.io/glider-performance-tool/>
 
 ## How to Cite
 
@@ -46,7 +39,7 @@ Input data: the Glider Rodeo deployment data, on the Glider Rodeo JupyterHub in 
 
 - Ehsan Abdi, Akvaplan-niva ([eab\@akvaplan.niva.no](mailto:eab@akvaplan.niva.no))
 - Héloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center ([heloise.frouin-mouy\@miami.edu](mailto:heloise.frouin-mouy@miami.edu))
-- Kasey Costello, Scripps Institution of Oceanography, Univeresity of California San Diego ([kcastello\@ucsd.edu](mailto:kcastello@ucsd.edu))
+- Kasey Costello, Scripps Institution of Oceanography, University of California San Diego ([kcastello\@ucsd.edu](mailto:kcastello@ucsd.edu))
 - Anne Simonis, Estuary and Ocean Science Center, San Francisco State University ([asimonis\@sfsu.edu](mailto:asimonis@sfsu.edu))
 
 ## Funding
