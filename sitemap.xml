@@ -2,26 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://e-abdi.github.io/glider-performance-tool/index.html</loc>
-    <lastmod>2026-09-18T18:38:35.152Z</lastmod>
-  </url>
-  <url>
-    <loc>https://e-abdi.github.io/glider-performance-tool/content/slocum-endurance.html</loc>
-    <lastmod>2026-09-18T18:39:57.342Z</lastmod>
-  </url>
-  <url>
-    <loc>https://e-abdi.github.io/glider-performance-tool/content/performance.html</loc>
-    <lastmod>2026-09-18T18:38:35.150Z</lastmod>
-  </url>
-  <url>
-    <loc>https://e-abdi.github.io/glider-performance-tool/content/glider-selection.html</loc>
-    <lastmod>2026-09-18T18:38:35.145Z</lastmod>
-  </url>
-  <url>
-    <loc>https://e-abdi.github.io/glider-performance-tool/content/project-info.html</loc>
-    <lastmod>2026-09-18T18:38:35.150Z</lastmod>
+    <lastmod>2026-09-15T21:48:35.035Z</lastmod>
   </url>
   <url>
     <loc>https://e-abdi.github.io/glider-performance-tool/content/study-design.html</loc>
-    <lastmod>2026-09-18T18:38:35.151Z</lastmod>
+    <lastmod>2026-09-17T19:34:18.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e-abdi.github.io/glider-performance-tool/content/results.html</loc>
+    <lastmod>2026-09-15T21:48:35.025Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e-abdi.github.io/glider-performance-tool/content/glider-selection.html</loc>
+    <lastmod>2026-09-17T18:45:27.722Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e-abdi.github.io/glider-performance-tool/content/endurance_plots.html</loc>
+    <lastmod>2026-09-17T19:34:18.750Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e-abdi.github.io/glider-performance-tool/content/project-info.html</loc>
+    <lastmod>2026-09-17T18:45:27.722Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e-abdi.github.io/glider-performance-tool/content/slocum-endurance.html</loc>
+    <lastmod>2026-09-17T18:45:27.732Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e-abdi.github.io/glider-performance-tool/content/workflow.html</loc>
+    <lastmod>2026-09-15T21:48:35.025Z</lastmod>
   </url>
 </urlset>
