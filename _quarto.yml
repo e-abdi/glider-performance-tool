@@ -41,18 +41,14 @@ website:
         text: Home
       - href: content/project-info.qmd
         text: Project Info
-      - href: content/workflow.qmd
-        text: Workflow
-      - href: content/results.qmd
-        text: Results
       - href: content/glider-selection.qmd
         text: Glider Selection Dashboard
-      - href: content/slocum-endurance.qmd
-        text: Endurance calculation
-      - href: content/endurance_plots.qmd
-        text: Endurance Results
       - href: content/study-design.qmd
         text: Study Design Tool
+      - href: content/slocum-endurance.qmd
+        text: Endurance calculation
+      - href: content/performance.qmd
+        text: Glider Performance
 
 format:
   html:

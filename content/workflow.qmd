@@ -1,8 +1,0 @@
----
-title: "Workflow"
-format: html
----
-
-## Run the performance analysis
-
-**TODO:** document the analysis steps as the code in `code/` is written.

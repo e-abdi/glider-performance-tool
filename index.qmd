@@ -23,4 +23,5 @@ Seven gliders from four platform types flew the same trackline off the coast of 
 3. Compare platforms and modes.
 
 See [Project Info](content/project-info.qmd) for goals and datasets, and
-[Workflow](content/workflow.qmd) for how to reproduce the analysis.
+[Glider Performance](content/performance.qmd) for what every glider actually did during
+the rodeo.

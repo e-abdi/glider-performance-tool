@@ -1,0 +1,1273 @@
+{
+ "generated": "2026-09-18",
+ "source": "glider_performance_summary.xlsx",
+ "modes": [
+  {
+   "name": "shakedown",
+   "short": "shake"
+  },
+  {
+   "name": "fast",
+   "short": "fast"
+  },
+  {
+   "name": "slow",
+   "short": "slow"
+  },
+  {
+   "name": "intermediate",
+   "short": "inter"
+  },
+  {
+   "name": "drift",
+   "short": "drift"
+  },
+  {
+   "name": "mini-slow",
+   "short": "m-slow"
+  },
+  {
+   "name": "mini-intermediate",
+   "short": "m-inter"
+  },
+  {
+   "name": "mini-fast",
+   "short": "m-fast"
+  }
+ ],
+ "miniSplit": 4.5,
+ "gliders": [
+  "sg607",
+  "sg274",
+  "risso",
+  "stenella",
+  "capex987",
+  "SEA117",
+  "belladonna"
+ ],
+ "metrics": [
+  {
+   "key": "watts",
+   "label": "Mean power draw",
+   "unit": "W",
+   "kind": "energy",
+   "default": true
+  },
+  {
+   "key": "whPerDive",
+   "label": "Energy per dive",
+   "unit": "W h",
+   "kind": "energy",
+   "default": true
+  },
+  {
+   "key": "whPerKm",
+   "label": "Energy per km travelled",
+   "unit": "W h/km",
+   "kind": "energy",
+   "default": false
+  },
+  {
+   "key": "vertSpeed",
+   "label": "Vertical speed",
+   "unit": "m/s",
+   "kind": "speed",
+   "default": true
+  },
+  {
+   "key": "kmPerHour",
+   "label": "Speed over ground",
+   "unit": "km/h",
+   "kind": "speed",
+   "default": true
+  },
+  {
+   "key": "kmPerDive",
+   "label": "Distance per dive",
+   "unit": "km",
+   "kind": "distance",
+   "default": false
+  },
+  {
+   "key": "diveHours",
+   "label": "Dive duration",
+   "unit": "h",
+   "kind": "time",
+   "default": false
+  },
+  {
+   "key": "maxDepth",
+   "label": "Dive depth",
+   "unit": "m",
+   "kind": "depth",
+   "default": false
+  },
+  {
+   "key": "ccPerHour",
+   "label": "Buoyancy pump volume",
+   "unit": "cc/h",
+   "kind": "pump",
+   "default": true
+  },
+  {
+   "key": "ccPerDive",
+   "label": "Pump volume per dive",
+   "unit": "cc",
+   "kind": "pump",
+   "default": false
+  },
+  {
+   "key": "pumpMoves",
+   "label": "Pump adjustments",
+   "unit": "per hour",
+   "kind": "pump",
+   "default": false
+  },
+  {
+   "key": "dives",
+   "label": "Dives completed in mode",
+   "unit": "count",
+   "kind": "count",
+   "default": false
+  }
+ ],
+ "series": {
+  "sg607": {
+   "watts": [
+    2.81,
+    2.77,
+    1.71,
+    1.86,
+    1.97,
+    1.61,
+    1.95,
+    2.47
+   ],
+   "whPerDive": [
+    7.1,
+    11.7,
+    9.7,
+    9.7,
+    8.8,
+    9.1,
+    10,
+    11.9
+   ],
+   "whPerKm": [
+    2.6,
+    2.2,
+    2.4,
+    2.2,
+    3,
+    3,
+    2.6,
+    2.2
+   ],
+   "vertSpeed": [
+    0.113,
+    0.129,
+    0.099,
+    0.105,
+    0.109,
+    0.097,
+    0.102,
+    0.109
+   ],
+   "kmPerHour": [
+    0.986,
+    1.264,
+    0.718,
+    0.85,
+    0.657,
+    0.537,
+    0.771,
+    1.114
+   ],
+   "kmPerDive": [
+    3.06,
+    5,
+    4.09,
+    4.25,
+    2.96,
+    3.03,
+    3.97,
+    5.35
+   ],
+   "diveHours": [
+    2.99,
+    4.42,
+    5.69,
+    5.17,
+    4.57,
+    5.62,
+    5.14,
+    4.8
+   ],
+   "maxDepth": [
+    641,
+    999,
+    992,
+    992,
+    842,
+    991,
+    992,
+    997
+   ],
+   "ccPerHour": [
+    432,
+    330,
+    151,
+    176,
+    193,
+    156,
+    160,
+    223
+   ],
+   "ccPerDive": [
+    1226,
+    1355,
+    901,
+    943,
+    933,
+    839,
+    1005,
+    1262
+   ],
+   "pumpMoves": [
+    31,
+    21,
+    9,
+    10,
+    9,
+    10,
+    9,
+    15
+   ],
+   "dives": [
+    10,
+    15,
+    12,
+    9,
+    10,
+    2,
+    2,
+    2
+   ]
+  },
+  "sg274": {
+   "watts": [
+    2.47,
+    3.03,
+    1.91,
+    2.17,
+    2.24,
+    2.02,
+    2.14,
+    2.69
+   ],
+   "whPerDive": [
+    6.3,
+    10.9,
+    10.4,
+    10.7,
+    9.8,
+    10.5,
+    10.2,
+    11.1
+   ],
+   "whPerKm": [
+    3.4,
+    3,
+    3.1,
+    2.7,
+    3.1,
+    3.3,
+    2.9,
+    2.6
+   ],
+   "vertSpeed": [
+    0.103,
+    0.129,
+    0.099,
+    0.107,
+    0.111,
+    0.097,
+    0.11,
+    0.126
+   ],
+   "kmPerHour": [
+    0.75,
+    1.027,
+    0.603,
+    0.854,
+    0.766,
+    0.622,
+    0.778,
+    1.029
+   ],
+   "kmPerDive": [
+    1.79,
+    3.8,
+    3.34,
+    3.96,
+    3.43,
+    3.22,
+    3.73,
+    4.26
+   ],
+   "diveHours": [
+    3,
+    3.89,
+    5.43,
+    4.97,
+    4.39,
+    5.19,
+    4.78,
+    4.14
+   ],
+   "maxDepth": [
+    544,
+    995,
+    991,
+    991,
+    828,
+    991,
+    991,
+    994
+   ],
+   "ccPerHour": [
+    453,
+    415,
+    192,
+    242,
+    269,
+    209,
+    211,
+    327
+   ],
+   "ccPerDive": [
+    1199,
+    1434,
+    1066,
+    1171,
+    1221,
+    1151,
+    1131,
+    1327
+   ],
+   "pumpMoves": [
+    31,
+    30,
+    14,
+    16,
+    20,
+    16,
+    15,
+    24
+   ],
+   "dives": [
+    11,
+    17,
+    13,
+    10,
+    11,
+    2,
+    2,
+    3
+   ]
+  },
+  "risso": {
+   "watts": [
+    2.45,
+    1.88,
+    1.73,
+    2.26,
+    2.23,
+    2.04,
+    2.38,
+    2.9
+   ],
+   "whPerDive": [
+    6.9,
+    7.6,
+    8,
+    6.7,
+    6.9,
+    7.8,
+    6.8,
+    7.2
+   ],
+   "whPerKm": [
+    3.2,
+    2.1,
+    2.6,
+    2.4,
+    2.8,
+    3.9,
+    1.8,
+    3.1
+   ],
+   "vertSpeed": [
+    0.151,
+    0.139,
+    0.119,
+    0.185,
+    0.173,
+    0.132,
+    0.199,
+    0.192
+   ],
+   "kmPerHour": [
+    0.875,
+    0.904,
+    0.674,
+    0.974,
+    0.774,
+    0.767,
+    1.305,
+    0.896
+   ],
+   "kmPerDive": [
+    2.62,
+    3.73,
+    3.24,
+    2.94,
+    2.52,
+    1.82,
+    3.69,
+    2.29
+   ],
+   "diveHours": [
+    2.79,
+    4,
+    4.63,
+    2.96,
+    3.34,
+    3.85,
+    2.85,
+    2.51
+   ],
+   "maxDepth": [
+    804,
+    972,
+    972,
+    973,
+    743,
+    971,
+    973,
+    976
+   ],
+   "ccPerHour": [
+    544,
+    272,
+    189,
+    301,
+    372,
+    346,
+    357,
+    508
+   ],
+   "ccPerDive": [
+    1005,
+    849,
+    755,
+    936,
+    1169,
+    1007,
+    974,
+    1370
+   ],
+   "pumpMoves": [
+    16,
+    9,
+    7,
+    9,
+    13,
+    11,
+    11,
+    15
+   ],
+   "dives": [
+    12,
+    15,
+    15,
+    15,
+    15,
+    3,
+    4,
+    5
+   ]
+  },
+  "stenella": {
+   "watts": [
+    2.67,
+    2.13,
+    2,
+    2.45,
+    2.33,
+    2.68,
+    2.78,
+    3.26
+   ],
+   "whPerDive": [
+    7,
+    8.2,
+    7.7,
+    6.5,
+    8.2,
+    6.5,
+    6.6,
+    7.8
+   ],
+   "whPerKm": [
+    2.9,
+    2.5,
+    3,
+    3,
+    3.6,
+    2.1,
+    3.8,
+    5
+   ],
+   "vertSpeed": [
+    0.162,
+    0.142,
+    0.133,
+    0.213,
+    0.168,
+    0.208,
+    0.233,
+    0.197
+   ],
+   "kmPerHour": [
+    0.8,
+    0.88,
+    0.631,
+    0.851,
+    0.674,
+    0.946,
+    0.872,
+    0.648
+   ],
+   "kmPerDive": [
+    2.38,
+    3.16,
+    2.57,
+    2.29,
+    2.39,
+    2.92,
+    1.99,
+    1.55
+   ],
+   "diveHours": [
+    3.05,
+    3.94,
+    4.03,
+    2.66,
+    3.55,
+    2.42,
+    2.36,
+    2.4
+   ],
+   "maxDepth": [
+    804,
+    504,
+    972,
+    974,
+    785,
+    974,
+    975,
+    979
+   ],
+   "ccPerHour": [
+    659,
+    331,
+    189,
+    344,
+    334,
+    435,
+    359,
+    591
+   ],
+   "ccPerDive": [
+    1203,
+    1044,
+    726,
+    895,
+    1189,
+    1021,
+    998,
+    1405
+   ],
+   "pumpMoves": [
+    25,
+    13,
+    8,
+    15,
+    14,
+    18,
+    16,
+    25
+   ],
+   "dives": [
+    13,
+    16,
+    17,
+    18,
+    13,
+    5,
+    5,
+    4
+   ]
+  },
+  "capex987": {
+   "watts": [
+    5.13,
+    5.71,
+    4.73,
+    4.92,
+    4.96,
+    4.88,
+    5.15,
+    5.7
+   ],
+   "whPerDive": [
+    12.8,
+    17.8,
+    25.1,
+    21.3,
+    19.3,
+    23.8,
+    20.3,
+    17.7
+   ],
+   "whPerKm": [
+    6.8,
+    6.4,
+    8.2,
+    9.4,
+    8.1,
+    13.5,
+    13.3,
+    6.8
+   ],
+   "vertSpeed": [
+    0.134,
+    0.176,
+    0.1,
+    0.127,
+    0.12,
+    0.115,
+    0.13,
+    0.179
+   ],
+   "kmPerHour": [
+    0.672,
+    0.881,
+    0.546,
+    0.522,
+    0.588,
+    0.358,
+    0.383,
+    0.843
+   ],
+   "kmPerDive": [
+    2.19,
+    2.58,
+    2.9,
+    2.23,
+    2.08,
+    1.79,
+    1.54,
+    2.57
+   ],
+   "diveHours": [
+    2.59,
+    3.37,
+    5.28,
+    4.36,
+    3.95,
+    4.75,
+    4,
+    3.11
+   ],
+   "maxDepth": [
+    603,
+    673,
+    951,
+    951,
+    767,
+    951,
+    952,
+    957
+   ],
+   "ccPerHour": [
+    621,
+    628,
+    212,
+    245,
+    262,
+    211,
+    183,
+    510
+   ],
+   "ccPerDive": [
+    1224,
+    1638,
+    779,
+    873,
+    826,
+    848,
+    946,
+    1571
+   ],
+   "pumpMoves": [
+    19,
+    19,
+    7,
+    8,
+    9,
+    6,
+    7,
+    18
+   ],
+   "dives": [
+    10,
+    17,
+    17,
+    11,
+    13,
+    3,
+    3,
+    3
+   ]
+  },
+  "SEA117": {
+   "watts": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "whPerDive": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "whPerKm": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "vertSpeed": [
+    0.225,
+    0.156,
+    0.099,
+    0.098,
+    0.123,
+    0.09,
+    0.123,
+    0.296
+   ],
+   "kmPerHour": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "kmPerDive": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "diveHours": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "maxDepth": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "ccPerHour": [
+    1022,
+    949,
+    512,
+    486,
+    501,
+    380,
+    435,
+    1164
+   ],
+   "ccPerDive": [
+    2245,
+    2163,
+    2278,
+    2260,
+    2196,
+    2418,
+    2299,
+    2284
+   ],
+   "pumpMoves": [
+    75,
+    81,
+    73,
+    70,
+    69,
+    68,
+    71,
+    81
+   ],
+   "dives": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  "belladonna": {
+   "watts": [
+    2.18,
+    2.14,
+    1.92,
+    2.24,
+    1.98,
+    2.32,
+    2.25,
+    2.23
+   ],
+   "whPerDive": [
+    1.4,
+    3.1,
+    3.1,
+    3,
+    1.9,
+    2.9,
+    2.6,
+    4.9
+   ],
+   "whPerKm": [
+    2,
+    2,
+    3.8,
+    2.9,
+    4.4,
+    9.4,
+    3.5,
+    2.7
+   ],
+   "vertSpeed": [
+    0.724,
+    0.762,
+    0.59,
+    0.713,
+    0.811,
+    0.847,
+    0.765,
+    0.773
+   ],
+   "kmPerHour": [
+    1.086,
+    1.09,
+    0.504,
+    0.78,
+    0.433,
+    0.248,
+    0.649,
+    0.814
+   ],
+   "kmPerDive": [
+    0.68,
+    1.82,
+    0.86,
+    0.99,
+    0.54,
+    0.32,
+    0.74,
+    1.8
+   ],
+   "diveHours": [
+    0.61,
+    1.48,
+    1.58,
+    1.31,
+    1.05,
+    1.27,
+    1.14,
+    2.2
+   ],
+   "maxDepth": [
+    191,
+    200,
+    200,
+    200,
+    152,
+    152,
+    202,
+    202
+   ],
+   "ccPerHour": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "ccPerDive": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "pumpMoves": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "dives": [
+    33,
+    31,
+    37,
+    28,
+    34,
+    8,
+    10,
+    6
+   ]
+  }
+ },
+ "flags": [
+  {
+   "glider": "belladonna",
+   "metric": "vertSpeed",
+   "reason": "CTD timestamps arrive in bursts (samples under 1 ms apart), so rates computed between samples are far too high. Shown for completeness only."
+  }
+ ],
+ "summaryCols": [
+  {
+   "col": "platform",
+   "header": "Platform"
+  },
+  {
+   "col": "owner",
+   "header": "Owner"
+  },
+  {
+   "col": "PAM system",
+   "header": "PAM system"
+  },
+  {
+   "col": "deployment days",
+   "header": "Days"
+  },
+  {
+   "col": "profiles",
+   "header": "Profiles"
+  },
+  {
+   "col": "max depth m",
+   "header": "Max depth (m)"
+  },
+  {
+   "col": "Raw Data size (GB)",
+   "header": "Data (GB)"
+  },
+  {
+   "col": "dives",
+   "header": "Dives"
+  },
+  {
+   "col": "W h/dive",
+   "header": "W h/dive"
+  },
+  {
+   "col": "Watts",
+   "header": "Watts"
+  },
+  {
+   "col": "energy source",
+   "header": "Energy measured by"
+  }
+ ],
+ "summary": [
+  {
+   "glider": "sg607",
+   "platform": "Kongsberg Maritime Seaglider M1",
+   "owner": "OSU",
+   "PAM system": "WISPR 3.0",
+   "deployment days": 12.4,
+   "profiles": 130,
+   "max depth m": 1007,
+   "Raw Data size (GB)": 561.6,
+   "dives": 63,
+   "W h/dive": 9.6,
+   "Watts": 2.01,
+   "energy source": "fuel gauge, 24 V + 10 V packs",
+   "hydrophone": "HTI-92WB (653007)",
+   "battery": "Lithium primary"
+  },
+  {
+   "glider": "sg274",
+   "platform": "University of Washington Seaglider SGX",
+   "owner": "PIFSC",
+   "PAM system": "WISPR 3.0",
+   "deployment days": 12.3,
+   "profiles": 139,
+   "max depth m": 995,
+   "Raw Data size (GB)": 555.3,
+   "dives": 69,
+   "W h/dive": 10.2,
+   "Watts": 2.24,
+   "energy source": "fuel gauge, 24 V + 10 V packs",
+   "hydrophone": "HTI-92WB (635054)",
+   "battery": "Lithium primary"
+  },
+  {
+   "glider": "risso",
+   "platform": "Teledyne Webb Research Slocum G3S",
+   "owner": "SWFSC",
+   "PAM system": "DMON2",
+   "deployment days": 14.2,
+   "profiles": 203,
+   "max depth m": 978,
+   "Raw Data size (GB)": 41.3,
+   "dives": 85,
+   "W h/dive": 7.2,
+   "Watts": 2.17,
+   "energy source": "coulomb counter at 16.1 V",
+   "hydrophone": "DMON2 hydrophone (65)",
+   "battery": "Lithium rechargable standard , 215 Amp Hours"
+  },
+  {
+   "glider": "stenella",
+   "platform": "Teledyne Webb Research Slocum G3S",
+   "owner": "SWFSC",
+   "PAM system": "WISPR 3.0",
+   "deployment days": 12.4,
+   "profiles": 230,
+   "max depth m": 980,
+   "Raw Data size (GB)": 534.2,
+   "dives": 92,
+   "W h/dive": 7.4,
+   "Watts": 2.4,
+   "energy source": "coulomb counter at 16.3 V",
+   "hydrophone": "HTI-99HF (856196)",
+   "battery": "Lithium rechargable standard , 215 Amp Hours"
+  },
+  {
+   "glider": "capex987",
+   "platform": "Teledyne Webb Research Slocum G3S",
+   "owner": "Teledyne",
+   "PAM system": "JASCO Observer",
+   "deployment days": 14.8,
+   "profiles": 235,
+   "max depth m": 959,
+   "Raw Data size (GB)": 1436.6,
+   "dives": 78,
+   "W h/dive": 20,
+   "Watts": 5.1,
+   "energy source": "coulomb counter at 15.3 V",
+   "hydrophone": "M36-V35-100 (H001202); M36-V35-100 (H001203); M36-V35-100 (H001305); M36-V35-EXBH-100 (H001896)",
+   "battery": "Lithium rechargable standard , 215 Amp Hours"
+  },
+  {
+   "glider": "SEA117",
+   "platform": "Alseamar SeaExplorer",
+   "owner": "Alseamar",
+   "PAM system": "Auris",
+   "deployment days": 12.4,
+   "profiles": 179,
+   "max depth m": 1003,
+   "Raw Data size (GB)": 547.9,
+   "dives": null,
+   "W h/dive": null,
+   "Watts": null,
+   "energy source": "voltage only, no charge counter",
+   "hydrophone": "ALSEAMAR Auris Acoustic Antenna (666)",
+   "battery": "Lithium rechargeable, Unknown"
+  },
+  {
+   "glider": "belladonna",
+   "platform": "Hefring Oceanscout",
+   "owner": "Cornell",
+   "PAM system": "WISPR 6.1",
+   "deployment days": 14,
+   "profiles": 254,
+   "max depth m": 203,
+   "Raw Data size (GB)": 586.4,
+   "dives": 256,
+   "W h/dive": 2.6,
+   "Watts": 2.17,
+   "energy source": "power log (current, voltage, energy)",
+   "hydrophone": "HTI-92WB",
+   "battery": "Lithium Primary MnO2, 1.2 kW-hours"
+  }
+ ],
+ "volume": [
+  {
+   "glider": "sg607",
+   "pam": "WISPR 3.0",
+   "platform": "Kongsberg Maritime Seaglider M1",
+   "gb": 561.6,
+   "days": 12.4,
+   "gbPerDay": 45.3
+  },
+  {
+   "glider": "sg274",
+   "pam": "WISPR 3.0",
+   "platform": "University of Washington Seaglider SGX",
+   "gb": 555.3,
+   "days": 12.3,
+   "gbPerDay": 45.1
+  },
+  {
+   "glider": "risso",
+   "pam": "DMON2",
+   "platform": "Teledyne Webb Research Slocum G3S",
+   "gb": 41.3,
+   "days": 14.2,
+   "gbPerDay": 2.9
+  },
+  {
+   "glider": "stenella",
+   "pam": "WISPR 3.0",
+   "platform": "Teledyne Webb Research Slocum G3S",
+   "gb": 534.2,
+   "days": 12.4,
+   "gbPerDay": 43.1
+  },
+  {
+   "glider": "capex987",
+   "pam": "JASCO Observer",
+   "platform": "Teledyne Webb Research Slocum G3S",
+   "gb": 1436.6,
+   "days": 14.8,
+   "gbPerDay": 97.1
+  },
+  {
+   "glider": "SEA117",
+   "pam": "Auris",
+   "platform": "Alseamar SeaExplorer",
+   "gb": 547.9,
+   "days": 12.4,
+   "gbPerDay": 44.2
+  },
+  {
+   "glider": "belladonna",
+   "pam": "WISPR 6.1",
+   "platform": "Hefring Oceanscout",
+   "gb": 586.4,
+   "days": 14,
+   "gbPerDay": 41.9
+  }
+ ],
+ "notes": [
+  {
+   "item": "Source",
+   "note": "Per-glider NetCDF files converted from the Glider Rodeo CSV exports; glider specifications from PAM_Glider_Specs.csv."
+  },
+  {
+   "item": "W h/dive",
+   "note": "Amp-hours x pack voltage. Seagliders: nominal 24 V and 10 V packs. Slocums: each glider's own median measured voltage."
+  },
+  {
+   "item": "Watts",
+   "note": "Mean power draw over a dive: watt-hours used divided by dive duration in hours."
+  },
+  {
+   "item": "Period measured",
+   "note": "Span of the energy record against the span of the whole deployment. risso and capex987 engineering data stop on 10 Feb while their CTDs keep recording."
+  },
+  {
+   "item": "Dives",
+   "note": "Seagliders: dives in the GPS file. belladonna: dives in dives_with_status.csv. Slocums: intervals between surfacings, keeping those deeper than 100 m and longer than 30 min."
+  },
+  {
+   "item": "SEA117",
+   "note": "Reports battery voltage only, with no charge counter, so energy use cannot be derived."
+  },
+  {
+   "item": "belladonna",
+   "note": "No flight/engineering export (no pitch, roll or buoyancy), but since 16 Sep it has a power log: current, voltage, power and cumulative energy every 25 s, plus per-dive battery percentage and free disk space."
+  },
+  {
+   "item": "capex987",
+   "note": "Energy use is about 2.4x its sister Slocums; its JASCO OceanObserver records 5 channels from 4 hydrophones (one at 512 kHz) against a single channel on the others."
+  },
+  {
+   "item": "Preliminary",
+   "note": "All rodeo data are marked PRELIMINARY and need further QA/QC."
+  },
+  {
+   "item": "Mission modes",
+   "note": "Rodeo fieldwork plan (UTC). A dive belongs to the mode its start time falls in; rows are labelled by their own timestamp."
+  },
+  {
+   "item": "belladonna vert speed",
+   "note": "Not trustworthy: its CTD timestamps arrive in bursts (samples under 1 ms apart), so rates computed between samples are far too high."
+  },
+  {
+   "item": "km per hour",
+   "note": "Straight-line distance over ground between the start and end of a dive, divided by dive duration. It is not speed through water and ignores what the glider did in between."
+  },
+  {
+   "item": "cc pumped per dive",
+   "note": "Same measure summed over one dive, then the median across the dives of that mode. Counts travel in both directions: a dive that pumps 400 cc down and 400 cc back up counts as 800 cc."
+  },
+  {
+   "item": "cc pumped per hour",
+   "note": "Total volume the buoyancy pump moved per hour, summing |change| between samples (Seaglider VBD, Slocum oil volume, SeaExplorer ballast). Changes under 1 cc are treated as sensor noise. A proxy for pump work; the gliders do not report pump energy."
+  }
+ ]
+}
