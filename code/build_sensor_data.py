@@ -22,6 +22,7 @@ Excel comment that openpyxl drops on save.
 """
 
 import argparse
+import csv
 import json
 import math
 import re
@@ -33,6 +34,7 @@ import pandas as pd
 REPO = Path(__file__).resolve().parent.parent
 DEFAULT_XLSX = REPO / "output" / "Copy of Glider_Acoustic_System_info.xlsx"
 JSON_OUT = REPO / "content" / "data" / "sensors.json"
+LINKS_CSV = REPO / "content" / "data" / "sensor-links.csv"
 QMD = REPO / "content" / "glider-selection.qmd"
 BEGIN, END = "<!-- SENSOR-DATA:BEGIN -->", "<!-- SENSOR-DATA:END -->"
 
@@ -107,6 +109,32 @@ def gliders_from_text(text, default_ids):
     return narrowed or default_ids
 
 
+def read_links(unmatched):
+    """Per-sensor, per-glider reference links from content/data/sensor-links.csv.
+
+    Kept out of the workbook on purpose: the workbook is gitignored, so anyone with
+    repository access can add a link without it. `match` is matched case-insensitively
+    against the sensor model, `glider` is either a card id or a family word resolved
+    the same way the sheet's own text is.
+    """
+    if not LINKS_CSV.exists():
+        return []
+    out = []
+    with LINKS_CSV.open(encoding="utf8", newline="") as fh:
+        for i, r in enumerate(csv.DictReader(fh)):
+            m, who, url = (r.get("match") or "").strip(), (r.get("glider") or "").strip(), (r.get("url") or "").strip()
+            if not (m and who and url):
+                continue
+            ids = gliders_from_text(who, None) or ([who] if who.startswith(("slocum-", "seaglider-",
+                  "seaexplorer-", "spray", "oceanscout", "exocetus-", "sg1-", "petrel-")) else [])
+            if not ids:
+                unmatched.append(f"sensor-links row {i + 2}: glider {who!r} matched nothing")
+                continue
+            out.append({"match": m.lower(), "ids": ids, "url": url,
+                        "label": (r.get("label") or "Integration notes").strip()})
+    return out
+
+
 def read_sensors(book, unmatched):
     rows = book.parse("Other glider sensors")
     out = []
@@ -137,6 +165,21 @@ def read_sensors(book, unmatched):
             "website": clean(r.get("Website")),
         })
     return out
+
+
+def attach_links(sensors, links):
+    """Hang each link on the sensors whose model matches, for the gliders named."""
+    used = set()
+    for s in sensors:
+        hay = f"{s['model']} {s['maker']}".lower()
+        for j, ln in enumerate(links):
+            if ln["match"] not in hay:
+                continue
+            for gid in ln["ids"]:
+                if gid in s["gliders"]:
+                    s.setdefault("links", {})[gid] = {"url": ln["url"], "label": ln["label"]}
+                    used.add(j)
+    return [ln for j, ln in enumerate(links) if j not in used]
 
 
 def read_pam(book, unmatched):
@@ -183,6 +226,9 @@ def build(xlsx):
     unmatched = []
     sensors = read_sensors(book, unmatched)
     pam = read_pam(book, unmatched)
+
+    for ln in attach_links(sensors, read_links(unmatched)):
+        unmatched.append(f"sensor-links: {ln['match']!r} matched no sensor on {ln['ids']}")
 
     # Categories in sheet order, because the sheet groups them the way a reader
     # thinks about them (CTD first, then the things hung off the payload bay).

@@ -1,0 +1,5 @@
+match,glider,url,label
+UVP6,seaglider,https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#seaglider,Integration notes
+UVP6,slocum,https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#slocum,Integration notes
+HydroC,seaglider,https://open-source-glider.readthedocs.io/en/latest/Sensors/Ocean%20Acidification.html,Integration notes
+eDNA,slocum,https://akvaplan.no/en/news/2026-06-08/autonomous-gliders-in-the-quest-for-ocean-biodiversity-the-edepthna-project-509271,eDepthNA project

@@ -10,7 +10,7 @@
   "Bioluminescence",
   "Imaging",
   "Nutrients",
-  "Carbon",
+  "Ocean Acidification",
   "Dissolved gas",
   "Currents",
   "Turbulence",
@@ -469,7 +469,25 @@
    "usage": "Zooplankton and marine snow distribution, carbon export",
    "notes": null,
    "sop": null,
-   "website": "https://www.hydroptic.com"
+   "website": "https://www.hydroptic.com",
+   "links": {
+    "seaglider-m1": {
+     "url": "https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#seaglider",
+     "label": "Integration notes"
+    },
+    "seaglider-sgx": {
+     "url": "https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#seaglider",
+     "label": "Integration notes"
+    },
+    "slocum-g3": {
+     "url": "https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#slocum",
+     "label": "Integration notes"
+    },
+    "slocum-sentinel": {
+     "url": "https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#slocum",
+     "label": "Integration notes"
+    }
+   }
   },
   {
    "id": "wassoc-shadowgraphv3",
@@ -537,7 +555,7 @@
   },
   {
    "id": "prooceanus-miniproco2minico2",
-   "category": "Carbon",
+   "category": "Ocean Acidification",
    "parameter": "pCO2",
    "maker": "Pro-Oceanus",
    "model": "Mini-Pro CO2 / Mini CO2",
@@ -554,7 +572,7 @@
   },
   {
    "id": "aanderaaxylem-pco2optode",
-   "category": "Carbon",
+   "category": "Ocean Acidification",
    "parameter": "pCO2 (optode)",
    "maker": "Aanderaa (Xylem)",
    "model": "pCO2 optode",
@@ -571,7 +589,7 @@
   },
   {
    "id": "seabirdscientificsbe41nphgliderfetmakernotstated-sbe41nphgli",
-   "category": "Carbon",
+   "category": "Ocean Acidification",
    "parameter": "pH (ISFET)",
    "maker": "Sea-Bird Scientific (SBE 41N pH); GliderFET maker not stated",
    "model": "SBE 41N pH; GliderFET (ISFET)",
@@ -588,7 +606,7 @@
   },
   {
    "id": "anbsensors-oc1250",
-   "category": "Carbon",
+   "category": "Ocean Acidification",
    "parameter": "pH (electrochemical)",
    "maker": "ANB Sensors",
    "model": "OC1250",
@@ -600,6 +618,56 @@
    "notes": null,
    "sop": null,
    "website": "https://anbsensors.com"
+  },
+  {
+   "id": "4hjenaengineeringgmbh-hydrocco2",
+   "category": "Ocean Acidification",
+   "parameter": "pCO2 (membrane equilibration, NDIR)",
+   "maker": "4H-Jena engineering GmbH",
+   "model": "HydroC CO2",
+   "gliders": {
+    "seaglider-m1": "Yes - integrated on Seaglider by Akvaplan-niva (this project)",
+    "seaglider-sgx": "Yes - integrated on Seaglider by Akvaplan-niva (this project)"
+   },
+   "usage": "Carbonate system: partial pressure of CO2 for ocean acidification, air-sea flux and carbon budget work.",
+   "notes": "Membrane equilibration means a response time of minutes, so profiles need a lag correction and the sensor is better suited to slow or drifting sections than to fast yos. Draws appreciably more than an optode.",
+   "sop": null,
+   "website": "https://www.4h-jena.de",
+   "links": {
+    "seaglider-m1": {
+     "url": "https://open-source-glider.readthedocs.io/en/latest/Sensors/Ocean%20Acidification.html",
+     "label": "Integration notes"
+    },
+    "seaglider-sgx": {
+     "url": "https://open-source-glider.readthedocs.io/en/latest/Sensors/Ocean%20Acidification.html",
+     "label": "Integration notes"
+    }
+   }
+  },
+  {
+   "id": "4hjenaengineeringgmbh-hydrocch4methane",
+   "category": "Ocean Acidification",
+   "parameter": "Dissolved methane (membrane equilibration, NDIR)",
+   "maker": "4H-Jena engineering GmbH",
+   "model": "HydroC CH4 (methane)",
+   "gliders": {
+    "seaglider-m1": "Yes - integrated on Seaglider by Akvaplan-niva (this project)",
+    "seaglider-sgx": "Yes - integrated on Seaglider by Akvaplan-niva (this project)"
+   },
+   "usage": "Dissolved methane: seep and pockmark surveys, gas hydrate margins, water-column methane inventories.",
+   "notes": "Same membrane-equilibration response time as the CO2 unit. Detection limit and settling time both reward slow profiling near the seabed.",
+   "sop": null,
+   "website": "https://www.4h-jena.de",
+   "links": {
+    "seaglider-m1": {
+     "url": "https://open-source-glider.readthedocs.io/en/latest/Sensors/Ocean%20Acidification.html",
+     "label": "Integration notes"
+    },
+    "seaglider-sgx": {
+     "url": "https://open-source-glider.readthedocs.io/en/latest/Sensors/Ocean%20Acidification.html",
+     "label": "Integration notes"
+    }
+   }
   },
   {
    "id": "franatech-metslasermethanesensorlms",
@@ -812,7 +880,17 @@
    "usage": null,
    "notes": null,
    "sop": null,
-   "website": null
+   "website": null,
+   "links": {
+    "slocum-g3": {
+     "url": "https://akvaplan.no/en/news/2026-06-08/autonomous-gliders-in-the-quest-for-ocean-biodiversity-the-edepthna-project-509271",
+     "label": "eDepthNA project"
+    },
+    "slocum-sentinel": {
+     "url": "https://akvaplan.no/en/news/2026-06-08/autonomous-gliders-in-the-quest-for-ocean-biodiversity-the-edepthna-project-509271",
+     "label": "eDepthNA project"
+    }
+   }
   }
  ],
  "pam": [
