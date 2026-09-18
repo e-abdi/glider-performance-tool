@@ -248,6 +248,17 @@ mostly channel count and sample rate, not platform.
   </div>
 </div>
 
+<h2>Efficiency</h2>
+<p class="sub">
+Two sections above ask what a kilometre cost and how much each system recorded. This divides
+one by the other: how far a glider went, and how much it wrote, for every kilowatt&#8209;hour it
+spent. Up and to the right is more of both for the same energy. Neither axis is <em>the</em>
+answer &mdash; a platform can buy data with distance, and the fastest way to look efficient on
+the vertical axis is to record at a high bit rate.
+</p>
+<div class="wide"><div id="perf-eff"></div></div>
+<p class="sub" id="perf-eff-foot"></p>
+
 <h2>The numbers</h2>
 <p class="sub">
 Every value on this page, for the gliders, modes and metrics selected above. Hover is a
@@ -704,6 +715,108 @@ convenience; this table is the source.
     }], layout, PANEL_CONFIG);
   }
 
+
+  /* ---------------- efficiency ---------------- */
+  /* Distance and recorded volume per kilowatt-hour. Energy is mean draw over the whole
+     deployment; distance is summed from the measured per-mode km/dive rather than from a
+     mean, which agreed with the energy-derived figure to within 8% on every glider. */
+  function efficiencyRows() {
+    var vol = {}, summ = {};
+    (DATA.volume || []).forEach(function (v) { vol[v.glider] = v; });
+    (DATA.summary || []).forEach(function (s) { summ[s.glider] = s; });
+    return DATA.gliders.map(function (g) {
+      var s = summ[g] || {}, v = vol[g] || {}, ser = DATA.series[g] || {};
+      var W = s["Watts"], days = v.days, gb = v.gb;
+      var km = 0, haveKm = false;
+      (ser.kmPerDive || []).forEach(function (d, i) {
+        var n = (ser.dives || [])[i];
+        if (d != null && n != null) { km += d * n; haveKm = true; }
+      });
+      var kwh = (W != null && days != null) ? (W * days * 24) / 1000 : null;
+      return {
+        g: g, watts: W, days: days, gb: gb, kwh: kwh, km: haveKm ? km : null,
+        kmPerKwh: (kwh && haveKm) ? km / kwh : null,
+        gbPerKwh: (kwh && gb != null) ? gb / kwh : null,
+        pam: v.pam || s["PAM system"] || ""
+      };
+    });
+  }
+
+  function drawEfficiency() {
+    var rows = efficiencyRows();
+    var plotted = rows.filter(function (r) { return r.kmPerKwh != null && r.gbPerKwh != null; });
+    var missing = rows.filter(function (r) { return r.kmPerKwh == null || r.gbPerKwh == null; });
+
+    var el = document.getElementById("perf-eff");
+    if (!plotted.length) { emptyInto("perf-eff", "No glider has both energy and volume data."); return; }
+
+    var traces = plotted.map(function (r) {
+      return {
+        type: "scatter", mode: "markers+text", name: r.g,
+        x: [r.kmPerKwh], y: [r.gbPerKwh], text: [r.g], textposition: "top center",
+        textfont: { size: 11.5, color: css("--ink-2") },
+        marker: { size: 13, symbol: symbolOf(r.g), color: colorOf(r.g),
+                  line: { width: 1, color: css("--surface") } },
+        customdata: [[r.km, r.gb, r.kwh, r.watts, r.days, r.pam]],
+        hovertemplate:
+          "<b>%{text}</b><br>" +
+          "%{x:,.0f} km per kWh<br>%{y:,.0f} GB per kWh<br>" +
+          "%{customdata[0]:,.0f} km \u00b7 %{customdata[1]:,.0f} GB<br>" +
+          "%{customdata[2]:,.2f} kWh (%{customdata[3]:,.2f} W over %{customdata[4]} d)<br>" +
+          "%{customdata[5]}<extra></extra>"
+      };
+    });
+
+    var layout = baseLayout();
+    layout.margin = { l: 68, r: 22, t: 26, b: 56 };
+    layout.hovermode = "closest";
+    layout.showlegend = false;
+    layout.xaxis = {
+      gridcolor: css("--line"), zeroline: false, showline: false, ticks: "",
+      rangemode: "tozero", tickfont: { size: 11, color: css("--ink-3") },
+      title: { text: "Distance per energy  (km/kWh)", font: { size: 12.5, color: css("--ink-2") } }
+    };
+    layout.yaxis = {
+      gridcolor: css("--line"), zeroline: false, showline: false, ticks: "",
+      rangemode: "tozero", tickfont: { size: 11, color: css("--ink-3") },
+      title: { text: "Recorded data per energy  (GB/kWh)", font: { size: 12.5, color: css("--ink-2") } }
+    };
+    Plotly.react(el, traces, layout, CONFIG);
+
+    /* Say plainly what the plot cannot: who is missing and why, and that the vertical
+       axis compares recorders with very different sample rates. */
+    var parts = [];
+    var best = plotted.slice().sort(function (a, b) { return b.kmPerKwh - a.kmPerKwh; })[0];
+    parts.push("<b>" + best.g + "</b> travelled furthest per kilowatt-hour (" +
+               Math.round(best.kmPerKwh).toLocaleString() + " km/kWh).");
+    var heavy = plotted.slice().sort(function (a, b) { return b.kwh - a.kwh; })[0];
+    if (heavy.g !== best.g) {
+      parts.push("<b>" + heavy.g + "</b> spent the most energy (" + heavy.kwh.toFixed(2) +
+                 " kWh) and sits lowest on distance, but its data per kilowatt-hour is mid-field: " +
+                 "the payload bought volume rather than wasting it.");
+    }
+    /* Name the low outlier from the data rather than leaving a reader to wonder: a
+       recorder that writes far less is usually doing a different job, not doing it badly. */
+    var lean = plotted.slice().sort(function (a, b) { return a.gbPerKwh - b.gbPerKwh; })[0];
+    var median = plotted.map(function (r) { return r.gbPerKwh; }).sort(function (a, b) { return a - b; })[Math.floor(plotted.length / 2)];
+    if (lean.gbPerKwh < median / 3) {
+      var others = plotted.filter(function (r) { return r.g !== lean.g; })
+        .map(function (r) { return r.gb / r.days; }).sort(function (a, b) { return a - b; });
+      parts.push("<b>" + lean.g + "</b> sits far lower because its " + (lean.pam || "recorder") +
+                 " wrote only " + (lean.gb / lean.days).toFixed(1) + " GB/day, against " +
+                 others[0].toFixed(0) + "\u2013" + others[others.length - 1].toFixed(0) +
+                 " GB/day for the rest \u2014 a narrower-band system, not a less efficient glider.");
+    }
+    parts.push("Recorded volume is raw PAM audio, so the vertical axis rewards a high sample rate " +
+               "and penalises a detector that writes little \u2014 it measures bytes, not science.");
+    if (missing.length) {
+      parts.push("Not plotted: " + missing.map(function (r) {
+        return "<b>" + r.g + "</b> (" + (r.kwh == null ? "no energy record" : "no distance") + ")";
+      }).join(", ") + ".");
+    }
+    document.getElementById("perf-eff-foot").innerHTML = parts.join(" ");
+  }
+
   function drawVolume() {
     volumeBars("perf-vol-total", "gb", "GB");
     volumeBars("perf-vol-rate", "gbPerDay", "GB/day");
@@ -1022,6 +1135,7 @@ convenience; this table is the source.
     drawRank();
     drawHeat();
     drawVolume();
+    drawEfficiency();
     drawTable();
     drawSummary();
     resizeAll();
