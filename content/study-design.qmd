@@ -12,6 +12,8 @@ format:
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+        <!-- gl3d-only Plotly bundle (surface + scatter3d): 1.7 MB rather than 4.8 MB. -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.3/plotly-gl3d.min.js"></script>
 ---
 
 ```{=html}
@@ -139,6 +141,36 @@ format:
   #study-design .assumptions { margin-top: 14px; font-size: 12.5px; color: var(--ink-2); }
   #study-design .assumptions summary { cursor: pointer; font-weight: 700; color: var(--accent-ink); }
   #study-design .assumptions ul { margin-bottom: 0; }
+
+  /* ---- 3D seafloor view ---- */
+  #dive3d { margin-top: 26px; }
+  #dive3d .d3-head { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: baseline; }
+  #dive3d h2 { margin: 0; }
+  #dive3d .d3-controls {
+    display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 8px; padding: 12px 14px; margin: 12px 0;
+  }
+  #dive3d .d3-controls label { font-size: 13.5px; color: var(--ink-2); display: flex; align-items: center; gap: 7px; }
+  #dive3d .d3-controls input[type="number"] { width: 82px; }
+  #dive3d .d3-controls .mode { display: flex; gap: 6px; align-items: center; }
+  #dive3d #d3-build { margin-left: auto; }
+  #dive3d .plotwrap {
+    position: relative; border: 1px solid var(--line); border-radius: 8px;
+    overflow: hidden; background: var(--surface); min-height: 200px;
+  }
+  #dive3d #d3-plot { width: 100%; height: 560px; }
+  #dive3d .d3-status {
+    padding: 22px 16px; font-size: 13.5px; color: var(--ink-3); text-align: center;
+  }
+  #dive3d .d3-status.err { color: var(--warn); }
+  #dive3d .d3-stats {
+    display: flex; flex-wrap: wrap; gap: 6px 26px; margin-top: 10px;
+    font-size: 13px; color: var(--ink-2);
+  }
+  #dive3d .d3-stats b { color: var(--ink); font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  #dive3d .d3-credit { margin-top: 10px; font-size: 12px; color: var(--ink-3); }
+  @media (max-width: 700px) { #dive3d #d3-plot { height: 420px; } }
 
   .leaflet-container { font-family: var(--sans); }
   #study-map .leaflet-top, #study-map .leaflet-bottom { z-index: 1000; pointer-events: none; }
@@ -335,9 +367,298 @@ format:
 </div>
 
 
+
+<section id="dive3d">
+  <div class="d3-head">
+    <h2>The mission over the seafloor</h2>
+  </div>
+  <p class="note">Draws the planned track as it would actually be flown, against real bathymetry for
+  the study area. Dive depth can follow the seafloor instead of being fixed, which is what a pilot
+  would really do over a shelf break or a canyon.</p>
+
+  <div class="d3-controls">
+    <div class="mode">
+      <label><input type="radio" name="d3-mode" value="fixed" checked> Fixed depth</label>
+      <label><input type="radio" name="d3-mode" value="bathy"> Follow the seafloor</label>
+    </div>
+    <label>Clearance above seabed
+      <input type="number" id="d3-margin" value="50" min="5" max="500" step="5"> m</label>
+    <button id="d3-build" class="btn" type="button" disabled>Build 3D view</button>
+  </div>
+
+  <div class="plotwrap">
+    <div id="d3-plot" hidden></div>
+    <div class="d3-status" id="d3-status">Draw a study area and press Generate survey, then build the 3D view.</div>
+  </div>
+
+  <div class="d3-stats" id="d3-stats" hidden>
+    <div>Dives <b id="d3-n">&ndash;</b></div>
+    <div>Deepest <b id="d3-max">&ndash;</b></div>
+    <div>Mean dive <b id="d3-mean">&ndash;</b></div>
+    <div>Seabed range <b id="d3-bed">&ndash;</b></div>
+    <div>Grid <b id="d3-grid">&ndash;</b></div>
+    <div>Too shallow to dive <b id="d3-shallow">&ndash;</b></div>
+  </div>
+
+  <p class="d3-credit">Bathymetry from the
+  <a href="https://www.gmrt.org/">GMRT Synthesis</a> (Ryan et al., <i>Geochem. Geophys. Geosyst.</i>, 2009),
+  fetched live for the drawn area. The 3D view follows
+  <a href="https://github.com/Orlando-PB/glider-playground">Glider Playground</a>
+  (Orlando Prugel-Bennett, National Oceanography Centre, Apache&nbsp;2.0).</p>
+</section>
+
 <div class="land-note">
   <strong>Distance note:</strong> route distance and mission duration are first-order estimates. The current planner does not yet remove over-land transect segments or calculate water-only transit paths around coastlines, islands, or other barriers.
 </div>
+
+<script>
+/* 3D seafloor + dive view. Reads the planned route from window.studyDesign, fetches
+   bathymetry for the study area, and walks a saw-tooth dive profile along the track.
+
+   Bathymetry: GMRT GridServer, which sends Access-Control-Allow-Origin, so the browser
+   can fetch an arbitrary area directly. NOAA's ERDDAP (what Glider Playground uses
+   server-side) does not, so it cannot be called from a published page. */
+(function () {
+  'use strict';
+
+  const GMRT = 'https://www.gmrt.org/services/GridServer';
+  const MAX_SURFACE = 110;     // grid columns/rows sent to Plotly; the full grid is kept for depth lookup
+  const MAX_POINTS = 6000;     // guard against a huge area generating an unbounded track
+  const MIN_DIVE = 15;         // below this a dive is not worth planning; water this shallow is flagged
+
+  const statusEl = document.getElementById('d3-status');
+  const plotEl = document.getElementById('d3-plot');
+  const statsEl = document.getElementById('d3-stats');
+  const buildBtn = document.getElementById('d3-build');
+  const marginEl = document.getElementById('d3-margin');
+  const modeEls = Array.from(document.querySelectorAll('input[name="d3-mode"]'));
+
+  const mode = () => (modeEls.find((r) => r.checked) || {}).value || 'fixed';
+  const say = (msg, isErr) => {
+    statusEl.textContent = msg;
+    statusEl.classList.toggle('err', !!isErr);
+    statusEl.hidden = false;
+    plotEl.hidden = true;
+  };
+
+  window.addEventListener('studydesign:generated', () => {
+    buildBtn.disabled = false;
+    say('Survey generated. Press "Build 3D view" to fetch bathymetry for this area.');
+  });
+
+  // ---------------------------------------------------------------- bathymetry
+  /* GMRT returns an ESRI ASCII grid: six header lines, then rows north to south. */
+  function parseEsriAscii(text) {
+    const lines = text.split('\n');
+    const head = {};
+    let i = 0;
+    for (; i < lines.length; i++) {
+      const m = lines[i].trim().match(/^([A-Za-z_]+)\s+(-?[\d.eE+]+)$/);
+      if (!m) break;
+      head[m[1].toLowerCase()] = parseFloat(m[2]);
+    }
+    const ncols = head.ncols, nrows = head.nrows, cell = head.cellsize;
+    const nodata = head.nodata_value;
+    const z = [];
+    for (let r = 0; r < nrows; r++) {
+      const row = (lines[i + r] || '').trim();
+      if (!row) break;
+      const vals = row.split(/\s+/).map(Number);
+      z.push(vals.map((v) => (v === nodata || !isFinite(v) ? null : v)));
+    }
+    // Flip to south-to-north so the row index increases with latitude, as Plotly expects.
+    z.reverse();
+    const lons = Array.from({ length: ncols }, (_, c) => head.xllcorner + (c + 0.5) * cell);
+    const lats = Array.from({ length: z.length }, (_, r) => head.yllcorner + (r + 0.5) * cell);
+    return { lons, lats, z, cell };
+  }
+
+  async function fetchBathy(bbox) {
+    const [w, s, e, n] = bbox;
+    const pad = Math.max(0.01, Math.max(e - w, n - s) * 0.05);
+    const url = `${GMRT}?minlongitude=${(w - pad).toFixed(4)}&maxlongitude=${(e + pad).toFixed(4)}` +
+                `&minlatitude=${(s - pad).toFixed(4)}&maxlatitude=${(n + pad).toFixed(4)}` +
+                `&format=esriascii&resolution=low&layer=topo`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`GMRT returned HTTP ${resp.status}`);
+    const grid = parseEsriAscii(await resp.text());
+    if (!grid.z.length || !grid.z[0].length) throw new Error('GMRT returned an empty grid');
+    return grid;
+  }
+
+  /* Nearest-cell depth, in metres below sea level (positive down). null over land or gaps. */
+  function seabedAt(grid, lon, lat) {
+    const c = Math.round((lon - grid.lons[0]) / grid.cell);
+    const r = Math.round((lat - grid.lats[0]) / grid.cell);
+    if (r < 0 || r >= grid.z.length || c < 0 || c >= grid.z[0].length) return null;
+    const v = grid.z[r][c];
+    if (v === null || v >= 0) return null;          // land, or above sea level
+    return -v;
+  }
+
+  function subsample(grid) {
+    const stepC = Math.max(1, Math.ceil(grid.z[0].length / MAX_SURFACE));
+    const stepR = Math.max(1, Math.ceil(grid.z.length / MAX_SURFACE));
+    const lons = grid.lons.filter((_, i) => i % stepC === 0);
+    const lats = grid.lats.filter((_, i) => i % stepR === 0);
+    const z = grid.z.filter((_, r) => r % stepR === 0).map((row) => row.filter((_, c) => c % stepC === 0));
+    return { lons, lats, z };
+  }
+
+  // ---------------------------------------------------------------- dive profile
+  /* Walk the planned line, alternating surface and apex. Each half cycle runs
+     depth / tan(glide angle) horizontally, so when the depth follows the seabed the
+     dives genuinely lengthen in deep water and shorten over a bank. */
+  function diveProfile(line, grid, opts) {
+    const tan = Math.tan(opts.glideAngleDeg * Math.PI / 180);
+    const totalKm = turf.length(line, { units: 'kilometers' });
+    const pts = [];
+    let dist = 0, down = true, guard = 0, tooShallow = 0;
+    const bedRange = { min: Infinity, max: -Infinity };
+    const depths = [];
+
+    while (dist <= totalKm && guard++ < MAX_POINTS) {
+      const p = turf.along(line, dist, { units: 'kilometers' });
+      const [lon, lat] = p.geometry.coordinates;
+      const bed = seabedAt(grid, lon, lat);
+      if (bed !== null) {
+        bedRange.min = Math.min(bedRange.min, bed);
+        bedRange.max = Math.max(bedRange.max, bed);
+      }
+
+      // Fixed mode means fixed: the track is NOT clipped to the seabed, so a plan that
+      // would fly into the shelf shows itself by passing under the surface in the plot.
+      // Only "follow the seabed" trades depth for clearance.
+      let target = opts.fixedDepth;
+      if (opts.mode === 'bathy' && bed !== null) {
+        target = Math.min(opts.fixedDepth, bed - opts.margin);
+      }
+      target = Math.max(MIN_DIVE, target);
+      if (opts.mode === 'bathy' && bed !== null && bed - opts.margin < MIN_DIVE) tooShallow++;
+
+      pts.push([lon, lat, down ? -target : 0]);
+      if (down) depths.push(target);
+
+      const halfKm = target / tan / 1000;
+      if (!isFinite(halfKm) || halfKm <= 0.001) break;
+      dist += halfKm;
+      down = !down;
+    }
+    return { pts, depths, bedRange, tooShallow, truncated: guard >= MAX_POINTS };
+  }
+
+  function routeLine(geom) {
+    if (!geom) return null;
+    if (geom.type === 'route') return geom.line;
+    // Parallel transects: stitch them into one path so the profile runs continuously.
+    const coords = [];
+    geom.lines.forEach((seg) => {
+      const c = seg.geometry.coordinates;
+      (coords.length && c.length ? c : c).forEach((xy) => coords.push(xy));
+    });
+    return coords.length > 1 ? turf.lineString(coords) : null;
+  }
+
+  // ---------------------------------------------------------------- render
+  async function build() {
+    const sd = window.studyDesign;
+    if (!sd || !sd.geometry) { say('Generate a survey first.', true); return; }
+    const line = routeLine(sd.geometry);
+    if (!line) { say('No usable track in the generated survey.', true); return; }
+
+    buildBtn.disabled = true;
+    say('Fetching bathymetry for the study area…');
+    let grid;
+    try {
+      grid = await fetchBathy(turf.bbox(sd.polygon));
+    } catch (err) {
+      say('Could not load bathymetry: ' + err.message + '. The GMRT service may be busy — try again.', true);
+      buildBtn.disabled = false;
+      return;
+    }
+
+    const opts = {
+      mode: mode(),
+      margin: Math.max(5, Number(marginEl.value) || 50),
+      fixedDepth: Math.max(10, Number(sd.els.depth.value) || 200),
+      glideAngleDeg: sd.glideAngleDeg
+    };
+    const prof = diveProfile(line, grid, opts);
+    if (!prof.pts.length) { say('The track produced no dives.', true); buildBtn.disabled = false; return; }
+
+    const surf = subsample(grid);
+    const midLat = (surf.lats[0] + surf.lats[surf.lats.length - 1]) / 2;
+    const dx = (surf.lons[surf.lons.length - 1] - surf.lons[0]) * Math.cos(midLat * Math.PI / 180);
+    const dy = surf.lats[surf.lats.length - 1] - surf.lats[0];
+    const span = Math.max(dx, dy) || 1;
+
+    const dark = document.body.classList.contains('quarto-dark');
+    const ink = dark ? '#E8EEF0' : '#1F2C31';
+    const gridc = dark ? '#3A3A3A' : '#DAE3E5';
+
+    const traces = [{
+      type: 'surface', x: surf.lons, y: surf.lats, z: surf.z,
+      // Plotly's Earth scale already runs blue (deep) -> green -> brown (high);
+      // reversing it painted the abyss pale and the land blue.
+      colorscale: 'Earth', showscale: true,
+      colorbar: { title: { text: 'Seabed (m)', font: { color: ink } }, tickfont: { color: ink }, len: 0.55, thickness: 12 },
+      contours: { z: { show: true, usecolormap: true, width: 1, highlightcolor: '#ffffff' } },
+      hovertemplate: 'lon %{x:.3f}<br>lat %{y:.3f}<br>seabed %{z:.0f} m<extra></extra>',
+      name: 'Seafloor'
+    }, {
+      type: 'scatter3d', mode: 'lines',
+      x: prof.pts.map((p) => p[0]), y: prof.pts.map((p) => p[1]), z: prof.pts.map((p) => p[2]),
+      line: { width: 4, color: '#2780E3' },
+      hovertemplate: 'lon %{x:.3f}<br>lat %{y:.3f}<br>depth %{z:.0f} m<extra></extra>',
+      name: 'Planned dives'
+    }];
+
+    const layout = {
+      margin: { l: 0, r: 0, t: 0, b: 0 },
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      showlegend: true,
+      legend: { x: 0, y: 1, font: { color: ink } },
+      scene: {
+        xaxis: { title: { text: 'Longitude', font: { color: ink } }, color: ink, gridcolor: gridc },
+        yaxis: { title: { text: 'Latitude', font: { color: ink } }, color: ink, gridcolor: gridc },
+        zaxis: { title: { text: 'Depth (m)', font: { color: ink } }, color: ink, gridcolor: gridc },
+        aspectmode: 'manual',
+        aspectratio: { x: dx / span, y: dy / span, z: 0.45 },
+        camera: { eye: { x: 1.5, y: -1.5, z: 0.9 } }
+      }
+    };
+
+    plotEl.hidden = false;
+    statusEl.hidden = true;
+    await Plotly.newPlot(plotEl, traces, layout, { responsive: true, displaylogo: false });
+
+    const d = prof.depths;
+    const mean = d.reduce((a, b) => a + b, 0) / (d.length || 1);
+    document.getElementById('d3-n').textContent = d.length + (prof.truncated ? '+' : '');
+    document.getElementById('d3-max').textContent = Math.round(Math.max.apply(null, d)) + ' m';
+    document.getElementById('d3-mean').textContent = Math.round(mean) + ' m';
+    document.getElementById('d3-bed').textContent = isFinite(prof.bedRange.min)
+      ? Math.round(prof.bedRange.min) + '–' + Math.round(prof.bedRange.max) + ' m' : 'no data';
+    document.getElementById('d3-grid').textContent = surf.z[0].length + '×' + surf.z.length;
+    document.getElementById('d3-shallow').textContent = opts.mode === 'bathy'
+      ? prof.tooShallow + ' points' : 'n/a (fixed depth)';
+    statsEl.hidden = false;
+    buildBtn.disabled = false;
+
+    if (prof.truncated) {
+      say('Track truncated at ' + MAX_POINTS + ' points — the area is very large for this dive depth.', true);
+      statusEl.hidden = false;
+      plotEl.hidden = false;
+    }
+  }
+
+  buildBtn.addEventListener('click', build);
+  modeEls.forEach((r) => r.addEventListener('change', () => {
+    marginEl.disabled = mode() !== 'bathy';
+  }));
+  marginEl.disabled = true;
+})();
+</script>
 
 <script>
 (function () {
@@ -791,6 +1112,10 @@ format:
     document.getElementById('summary-empty').hidden = true;
     document.getElementById('summary-results').hidden = false;
     setButtons();
+
+    // Hook for the 3D seafloor view below; it reads the route rather than rebuilding it.
+    window.studyDesign = { geometry: lastSurveyGeometry, polygon, els, cycleKm, depthM, glideAngleDeg };
+    window.dispatchEvent(new CustomEvent('studydesign:generated'));
   }
 
   els.generate.addEventListener('click', generateSurvey);
