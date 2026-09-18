@@ -53,7 +53,9 @@ const MAPPED = {
   "Thruster": { cell: "P!K43", kind: "percent", ah: 11.2 },
   "UVP6": { cell: "P!F50", kind: "fraction", ah: 1.6 },
   "EK80": { cell: "P!F51", kind: "fraction", ah: 11.2 },
-  "JASCO OceanObserver": { cell: "P!F52", kind: "fraction", ah: 1.6 },
+  // The workbook's single "Hydrophone" row is the single-channel configuration; the
+  // 5-channel one is measured, has no workbook equivalent, and is reported as an addition.
+  "JASCO OceanObserver (1 channel)": { cell: "P!F52", kind: "fraction", ah: 1.6 },
   "eDNA": { cell: "P!F53", kind: "fraction", ah: 6.4 }
 };
 

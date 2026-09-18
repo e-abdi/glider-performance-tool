@@ -2,5 +2,6 @@ name,ah_per_day,kind,default,source,note
 Thruster,11.2,percent,0,Slocum Endurance Tool K20,11.2 Ah/day at 100% duty (7 W)
 UVP6,1.6,fraction,0,Slocum Endurance Tool K20,
 EK80,11.2,fraction,0,Slocum Endurance Tool K20,
-JASCO OceanObserver,1.6,fraction,1,Slocum Endurance Tool K20,Workbook's generic hydrophone figure. Rodeo 2026 measured capex987 at 5.1 W against ~2.2 W for the rest, which implies nearer 6.4 Ah/day.
+JASCO OceanObserver (1 channel),1.6,fraction,1,Slocum Endurance Tool K20,The workbook's generic hydrophone row. Single-channel configuration.
+JASCO OceanObserver (5 channel),6.4,fraction,0,Rodeo 2026 measured (capex987),capex987 drew 5.1 W mean against ~2.2 W for the rest of the fleet; the ~2.9 W difference is 6.4 Ah/day at 10.8 V. Five channels, one at 512 kHz.
 eDNA,6.4,fraction,0,Slocum Endurance Tool K20,

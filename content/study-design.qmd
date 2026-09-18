@@ -367,12 +367,19 @@ format:
   els.glideAngle.addEventListener('input', () => els.glideAngleVal.textContent = els.glideAngle.value);
 
   const map = L.map('study-map', { zoomControl: true }).setView([36.75, -122.0], 7);
-  const baseTiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  // Esri World Ocean Base, the same basemap Glider Playground uses
+  // (github.com/Orlando-PB/glider-playground). It shades bathymetry, which a street
+  // map does not, so a study area reads against the shelf and canyons it sits on.
+  // Note the {z}/{y}/{x} order: ArcGIS puts row before column.
+  const baseTiles = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 19,
+    maxNativeZoom: 13,   // the service stops here; beyond it Leaflet upscales rather than blanking
     tileSize: 256,
     updateWhenIdle: true,
     keepBuffer: 4,
-    attribution: '&copy; OpenStreetMap contributors'
+    attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, National Geographic, ' +
+                 'Garmin, HERE, Geonames.org and other contributors'
   }).addTo(map);
 
   // Log true network failures separately from layout/CSS problems.
