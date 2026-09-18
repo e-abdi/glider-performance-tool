@@ -7,7 +7,7 @@ format: html
 
 - Ehsan Abdi, Akvaplan-niva ([eab\@akvaplan.niva.no](mailto:eab@akvaplan.niva.no))
 - Héloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center ([heloise.frouin-mouy\@miami.edu](mailto:heloise.frouin-mouy@miami.edu))
-- Kasey Costello, Scripps Institution of Oceanography, Univeresity of California San Diego ([kcastello\@ucsd.edu](mailto:kcastello@ucsd.edu))
+- Kasey Castello, Scripps Institution of Oceanography, Univeresity of California San Diego ([kcastello\@ucsd.edu](mailto:kcastello@ucsd.edu))
 - Anne Simonis, Estuary and Ocean Science Center, San Francisco State University ([asimonis\@sfsu.edu](mailto:asimonis@sfsu.edu))
 
 ## Background
