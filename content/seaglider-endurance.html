@@ -49,9 +49,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-d3afe8230f4e8efc5f9e520bcaeb6a52.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-4200c13e256f42cc5e203c5f516c2120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-d3afe8230f4e8efc5f9e520bcaeb6a52.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3245a9efd2d27e2c6a1ec784bf206a0c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-d949c74a40ea39fb0bf3b5edfd17d417.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-3245a9efd2d27e2c6a1ec784bf206a0c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -373,14 +373,15 @@ ul.task-list li input[type="checkbox"] {
   generated (by code/build_seaglider_page.js); everything else can be edited directly.
   How the model is built:   code/extract_seaglider_dives.py -> content/data/seaglider-dives.csv
                             code/fit_seaglider_model.py     -> content/data/seaglider-model.json
-                            node code/build_seaglider_page.js  (validates, then updates the block)
+                            node code/build_seaglider_page.js  (tests the model against every
+                            logged mission, then updates the block)
 -->
 <style>
   #sge {
     --surface: #FFFFFF; --surface-2: #F1F6F7; --line: #DAE3E5; --line-strong: #BCCBCE;
     --ink: #1F2C31; --ink-2: #536268; --ink-3: #78888E;
     --accent: #2780E3; --accent-ink: #1B62B0; --accent-soft: #E3EEFB;
-    --good: #1A6B4E; --warn: #A33227; --warn-soft: #F8E4E1;
+    --warn: #A33227; --warn-soft: #F8E4E1;
     --s1: #2a78d6; --s2: #eb6834;
     --grid: #E6ECEE;
     --sans: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
@@ -391,7 +392,7 @@ ul.task-list li input[type="checkbox"] {
     --surface: #212121; --surface-2: #2A2A2A; --line: #3A3A3A; --line-strong: #4E4E4E;
     --ink: #F2F2F2; --ink-2: #BFC6C8; --ink-3: #939A9D;
     --accent: #75AADB; --accent-ink: #9CC6EC; --accent-soft: #23323F;
-    --good: #6DC49B; --warn: #E08278; --warn-soft: #3A211E;
+    --warn: #E08278; --warn-soft: #3A211E;
     --s1: #3987e5; --s2: #d95926;
     --grid: #333333;
   }
@@ -420,12 +421,6 @@ ul.task-list li input[type="checkbox"] {
   #sge .alerts { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
   #sge .alert { font-size: 13px; color: var(--warn); background: var(--warn-soft); border-radius: 6px; padding: 7px 11px; }
 
-  /* ---- preset ---- */
-  #sge .preset { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin: 4px 0 14px; }
-  #sge .preset label { font-size: 13.5px; font-weight: 700; }
-  #sge .preset select { width: auto; max-width: 100%; }
-  #sge .preset .note { font-size: 12.5px; color: var(--ink-3); flex-basis: 100%; }
-
   /* ---- inputs ---- */
   #sge .panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
   #sge .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
@@ -433,39 +428,41 @@ ul.task-list li input[type="checkbox"] {
     font-size: 12px; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3);
     margin: 0 0 10px; font-weight: 700;
   }
+  #sge .panel h4 { font-size: 13px; font-weight: 700; margin: 14px 0 4px; color: var(--ink); }
   #sge .f { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 5px 0; }
   #sge .f + .f { border-top: 1px solid var(--line); }
-  #sge .f label, #sge .f .lbl { font-size: 13.5px; color: var(--ink-2); }
-  #sge .f .hint { grid-column: 1 / -1; font-size: 11.5px; color: var(--ink-3); margin-top: -2px; }
+  #sge .f label { font-size: 13.5px; color: var(--ink-2); }
+  #sge .hint { grid-column: 1 / -1; font-size: 11.5px; color: var(--ink-3); margin-top: -2px; }
   #sge .f .ctl { display: flex; align-items: center; gap: 6px; }
-  #sge input[type="number"], #sge input[type="text"], #sge select {
+  #sge input[type="number"], #sge input[type="text"] {
     font: inherit; font-size: 13.5px; font-family: var(--mono); text-align: right;
     width: 84px; padding: 4px 7px; border: 1px solid var(--line-strong);
     border-radius: 6px; background: var(--surface); color: var(--ink);
   }
   #sge input[type="text"] { text-align: left; font-family: var(--sans); width: 120px; }
-  #sge select { width: 150px; text-align: left; font-family: var(--sans); }
   #sge input:disabled { opacity: .45; }
-  #sge input[type="checkbox"], #sge input[type="radio"] { width: 17px; height: 17px; accent-color: var(--accent); margin: 0; }
+  #sge input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--accent); margin: 0; }
   #sge .unit { font-size: 12px; color: var(--ink-3); min-width: 30px; }
-  #sge input:focus-visible, #sge select:focus-visible, #sge button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  #sge .host { display: flex; gap: 16px; flex-wrap: wrap; padding: 2px 0 8px; font-size: 13.5px; }
-  #sge .host label { display: flex; gap: 6px; align-items: center; color: var(--ink); }
+  #sge input:focus-visible, #sge button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #sge .toggle { display: flex; gap: 8px; align-items: center; font-size: 14px; font-weight: 700; padding: 2px 0 8px; }
   #sge .sensor { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); }
   #sge .sensor .name { font-size: 13.5px; color: var(--ink-2); }
   #sge .sensor .sub { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12px; color: var(--ink-3); }
   #sge .sensor .sub input { width: 70px; }
   #sge .tag { font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); border: 1px solid var(--line-strong); border-radius: 4px; padding: 0 4px; margin-left: 4px; }
+  #sge table.sci { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 2px; }
+  #sge table.sci th { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; text-align: left; padding: 4px 4px 4px 0; }
+  #sge table.sci td { padding: 3px 4px 3px 0; color: var(--ink-2); }
+  #sge table.sci input { width: 76px; }
+  #sge p.note { font-size: 12px; color: var(--ink-3); margin: 8px 0 0; }
 
   /* ---- charts ---- */
-  #sge h2.sec { font-size: 18px; margin: 30px 0 6px; font-weight: 700; }
-  #sge p.sub { color: var(--ink-2); font-size: 13.5px; margin: 0 0 10px; max-width: 80ch; }
+  #sge h2.sec { font-size: 18px; margin: 30px 0 10px; font-weight: 700; }
   #sge .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
   #sge figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; position: relative; min-width: 0; }
   #sge figcaption { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
   #sge .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--ink-2); margin-bottom: 4px; }
   #sge .legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
-  #sge .legend i.dot { width: 9px; height: 9px; border-radius: 50%; }
   #sge svg { display: block; width: 100%; height: auto; overflow: visible; }
   #sge svg text { font-family: var(--sans); fill: var(--ink-3); font-size: 11px; }
   #sge svg .val { fill: var(--ink-2); font-family: var(--mono); font-size: 11px; }
@@ -478,42 +475,24 @@ ul.task-list li input[type="checkbox"] {
     box-shadow: 0 4px 14px rgba(0,0,0,.12); white-space: nowrap; display: none; z-index: 3;
   }
   #sge .tip b { font-family: var(--mono); }
-
-  /* ---- tables and notes ---- */
-  #sge .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
-  #sge table { border-collapse: collapse; width: 100%; font-size: 13px; }
-  #sge th, #sge td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
-  #sge th { font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; background: var(--surface-2); }
-  #sge td { font-family: var(--mono); font-variant-numeric: tabular-nums; }
-  #sge td.t, #sge th.t { text-align: left; font-family: var(--sans); }
-  #sge #t_missions td.t { white-space: normal; min-width: 140px; }
-  #sge tr:last-child td { border-bottom: none; }
-  #sge .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-top: 8px; }
-  #sge .note { background: var(--surface-2); border-radius: 10px; padding: 12px 16px; font-size: 13.5px; color: var(--ink-2); }
-  #sge .note h4 { font-size: 14px; margin: 0 0 6px; color: var(--ink); font-weight: 700; }
-  #sge .note p { margin: 0 0 8px; }
-  #sge .note p:last-child { margin: 0; }
-  #sge .bar { display: flex; gap: 10px; align-items: center; margin: 16px 0 6px; flex-wrap: wrap; }
+  #sge .bar { display: flex; gap: 10px; align-items: center; margin: 16px 0 6px; }
   #sge button {
     font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; border-radius: 7px;
     padding: 7px 15px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--accent-ink);
   }
-  #sge footer.src { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 12px; font-size: 12.5px; color: var(--ink-3); }
-  #sge code { font-family: var(--mono); font-size: .92em; }
   @media (max-width: 560px) {
     #sge .big .v { font-size: 32px; }
     #sge .load { margin-left: 0; }
-    #sge .panels, #sge .charts, #sge .notes { grid-template-columns: 1fr; }
+    #sge .panels, #sge .charts { grid-template-columns: 1fr; }
   }
 </style>
 
 <div id="sge">
 
-  <p class="lede">Predicts how long a Seaglider will last on a given mission. Kongsberg publishes
-  no endurance tool for firmware 66.12, so this one is <b>fitted to our own gliders' logs</b>:
-  every dive's per-device on-times and currents from SG644 (2018, 2019, 2022) and SG150 (2021),
-  <span id="n_dives">1,500+</span> dives in all. Run against those dives, it reproduces each
-  mission's logged energy to within a few percent (see <a href="#validation">How well it fits</a>).</p>
+  <p class="lede">How long our Seaglider (firmware 66.12, single 310 Ah lithium pack) will last
+  on a mission. There is no manufacturer endurance tool for it, so the model is fitted to the
+  glider's own energy logs: <span id="n_dives">1,500+</span> dives from 2018 to 2022, every
+  device's on-time and current. Endurance is from a full pack, less the reserve you keep.</p>
 
   <div class="results" aria-live="polite">
     <div class="headline">
@@ -524,18 +503,11 @@ ul.task-list li input[type="checkbox"] {
         <div>Energy <b id="o_ahday">–</b> Ah/day</div>
         <div>Per dive <b id="o_ahdive">–</b> Ah</div>
         <div>Dive cycle <b id="o_cycle">–</b></div>
-        <div>Limited by <b id="o_limit">–</b></div>
+        <div>Usable <b id="o_usable">–</b> Ah</div>
       </div>
     </div>
     <div class="compare" id="compare"></div>
     <div class="alerts" id="alerts"></div>
-  </div>
-
-  <div class="preset">
-    <label for="preset">Start from</label>
-    <select id="preset"></select>
-    <button id="reset" type="button">Reset to this mission</button>
-    <span class="note" id="preset_note"></span>
   </div>
 
   <div class="panels">
@@ -543,40 +515,46 @@ ul.task-list li input[type="checkbox"] {
       <h3 class="anchored">Dive</h3>
       <div class="f"><label for="i_depth">Dive depth</label><div class="ctl"><input type="number" id="i_depth" min="10" max="1000" step="10"><span class="unit">m</span></div></div>
       <div class="f"><label for="i_w">Mean vertical speed</label><div class="ctl"><input type="number" id="i_w" min="0.02" max="0.3" step="0.005"><span class="unit">m/s</span></div>
-        <span class="hint" id="h_w">Including apogee. T_DIVE equivalent –</span></div>
+        <span class="hint" id="h_w">Including apogee.</span></div>
       <div class="f"><label for="i_surface">Time at surface</label><div class="ctl"><input type="number" id="i_surface" min="0" step="1"><span class="unit">min</span></div></div>
       <div class="f"><label for="i_maxbuoy">$MAX_BUOY</label><div class="ctl"><input type="number" id="i_maxbuoy" min="0" step="10"><span class="unit">cc</span></div></div>
       <div class="f"><label for="i_smcc">$SM_CC</label><div class="ctl"><input type="number" id="i_smcc" min="0" step="10"><span class="unit">cc</span></div></div>
       <div class="f"><label for="i_kb">Data sent per call</label><div class="ctl"><input type="number" id="i_kb" min="0" step="10"><span class="unit">kB</span></div>
-        <span class="hint">Dive data plus capture file. SciCon years sent ~250 kB, 2022 ~90 kB.</span></div>
+        <span class="hint">Dive data plus capture file.</span></div>
       <div class="f"><label for="i_calln">$CALL_NDIVES</label><div class="ctl"><input type="number" id="i_calln" min="1" max="10" step="1"></div></div>
     </section>
 
     <section class="panel">
-      <h3 class="anchored">Glider and battery</h3>
-      <div class="f"><label for="i_glider">Calibrated on</label><div class="ctl"><select id="i_glider"><option value="644">SG644 (ours)</option><option value="150">SG150</option></select></div>
-        <span class="hint">Which glider's fitted loads to use. Another 66.12 Seaglider: pick the closer pack layout.</span></div>
-      <div class="f"><label for="i_dual">Pack layout</label><div class="ctl"><select id="i_dual"><option value="0">Single pack</option><option value="1">24 V + 10 V packs</option></select></div></div>
-      <div class="f"><label for="i_cap24" id="l_cap24">Capacity</label><div class="ctl"><input type="number" id="i_cap24" min="1" step="5"><span class="unit">Ah</span></div></div>
-      <div class="f"><label for="i_cap10">10 V pack capacity</label><div class="ctl"><input type="number" id="i_cap10" min="0" step="5"><span class="unit">Ah</span></div></div>
-      <div class="f"><label for="i_v24" id="l_v24">Pack voltage</label><div class="ctl"><input type="number" id="i_v24" min="5" step="0.1"><span class="unit">V</span></div>
-        <span class="hint">Converts the pump's energy into Ah. SG644's lithium pack sat at 12.4–13.9 V.</span></div>
+      <h3 class="anchored">Battery and flight</h3>
+      <div class="f"><label for="i_cap">Pack capacity</label><div class="ctl"><input type="number" id="i_cap" min="1" step="5"><span class="unit">Ah</span></div></div>
       <div class="f"><label for="i_reserve">Keep in reserve</label><div class="ctl"><input type="number" id="i_reserve" min="0" max="90" step="1"><span class="unit">%</span></div></div>
+      <div class="f"><label for="i_volts">Pack voltage</label><div class="ctl"><input type="number" id="i_volts" min="5" step="0.1"><span class="unit">V</span></div>
+        <span class="hint">Converts the pump's energy into Ah. The pack has run between 12.4 and 13.9 V.</span></div>
       <div class="f"><label for="i_pumpf">Pump condition factor</label><div class="ctl"><input type="number" id="i_pumpf" min="0.5" max="3" step="0.05"></div>
-        <span class="hint">1 = the fitted pump law. SG644's pump cost 1.22× that in 2022.</span></div>
+        <span class="hint">1 is the fitted pump cost. The 2022 deployment ran at 1.22.</span></div>
       <div class="f"><label for="i_glide">Glide ratio</label><div class="ctl"><input type="number" id="i_glide" min="0.5" max="6" step="0.1"><span class="unit">: 1</span></div>
-        <span class="hint">Horizontal to vertical, from the flight model. Only affects distance.</span></div>
+        <span class="hint">Horizontal to vertical, through the water. Only affects distance.</span></div>
     </section>
 
     <section class="panel">
       <h3 class="anchored">Science sensors</h3>
-      <div class="host" role="radiogroup" aria-label="Sensor host">
-        <label><input type="radio" name="host" value="scicon" id="host_scicon"> On the SciCon</label>
-        <label><input type="radio" name="host" value="tt8" id="host_tt8"> On the TT8 (no SciCon)</label>
-      </div>
-      <div class="f"><label for="i_interval">Sample interval</label><div class="ctl"><input type="number" id="i_interval" min="1" step="1"><span class="unit">s</span></div></div>
+      <label class="toggle"><input type="checkbox" id="i_scicon"> SciCon fitted</label>
       <div id="sci_rows"></div>
-      <p class="sub" id="sci_note" style="font-size:12px;margin:8px 0 0"></p>
+      <h4 class="anchored">Sampling (science file)</h4>
+      
+<table class="sci caption-top">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Down to</th>
+<th data-quarto-table-cell-role="th">Sample every</th>
+</tr>
+</thead>
+<tbody id="bins">
+</tbody>
+</table>
+
+      <p class="note" id="bins_note"></p>
+      <p class="note" id="sci_note"></p>
     </section>
 
     <section class="panel">
@@ -584,6 +562,8 @@ ul.task-list li input[type="checkbox"] {
       <div id="log_rows"></div>
     </section>
   </div>
+
+  <div class="bar"><button id="reset" type="button">Reset to defaults</button></div>
 
   <h2 class="sec anchored">Where the energy goes</h2>
   <div class="charts">
@@ -599,204 +579,117 @@ ul.task-list li input[type="checkbox"] {
       <div class="tip" id="tip_parts"></div>
     </figure>
   </div>
-
-  <h2 class="sec anchored" id="validation">How well it fits</h2>
-  <p class="sub">Each logged dive run through the model using only what a pilot plans with: the
-  dive's depth and duration, surface time, $MAX_BUOY, $SM_CC, the data it sent and its sensor
-  settings. The model's total against what the glider logged, mission by mission.</p>
-  <figure class="figure">
-    <figcaption>Energy per mission: logged against model</figcaption>
-    <div class="legend"><span><i class="dot" style="background:var(--s1)"></i>Logged by the glider</span><span><i class="dot" style="background:var(--s2)"></i>Model</span></div>
-    <div id="ch_valid"></div>
-    <div class="tip" id="tip_valid"></div>
-  </figure>
-  <div class="tablewrap" style="margin-top:12px">
-    <table id="t_valid"></table>
-  </div>
-
-  <h2 class="sec anchored">What the logs showed</h2>
-  <div class="notes">
-    <div class="note">
-      <h4 class="anchored">The glider's battery counter leaves the PAM out</h4>
-      <p>SG644's $24V_AH counter books every device except the PAM recorder. The CF card's
-      <code>BATTERY</code> tally for mission 5 (to 3 July 2018) lists 45 Ah drawn by the PAM,
-      and the counter's 247.6 Ah equals the tally <em>without</em> it. The recorder's
-      <code>PAM.CNF</code> puts it on the 15 V main line, so the pack gave
-      <b>~293 Ah of 310</b> while the glider reported 248.</p>
-      <p>This calculator counts the PAM. When a PAM is fitted, add its time to the glider's
-      counter before trusting the remaining capacity.</p>
-    </div>
-    <div class="note">
-      <h4 class="anchored">SciCon or TT8: which is cheaper</h4>
-      <p>With the CT, optode and SeaOWL on the SciCon sampling every ~10 s, the SciCon
-      averaged <b>25 mA</b> for all of it. Polled by the TT8 instead, the glider charges each
-      sensor its <code>.cnf</code> current for every second it is powered, and keeps the TT8
-      awake ~3 s per sensor-second. The Contros optode's <code>.cnf</code> says 300 mA for
-      2.8 s a sample: 845 mAs, ~3.6× what the SciCon drew for all its sensors over a 10 s cycle. On mission 6's dives, without the PAM, that is <b>~88 days on the SciCon against ~44 on the TT8</b>.</p>
-      <p>The SciCon reports its own consumption; the TT8 figure is the glider's bookkeeping.
-      Part of the gap may be a conservative .cnf rating, so a bench measurement of the optode
-      would settle it. Until then, edit a sensor's mA to try a measured value.</p>
-    </div>
-    <div class="note">
-      <h4 class="anchored">What moves endurance most</h4>
-      <p><b>The echosounder.</b> In 2022 it logged 400 mA for the whole dive: 0.77 Ah per dive,
-      more than everything else together, which is why that mission ran at 16.5 Ah/day against
-      2.6–4.5 in the SciCon years.</p>
-      <p><b>The pump, then depth.</b> A cc pumped at apogee costs 13 J plus 0.021 J per metre
-      of depth, so ~15 J at 100 m and ~34 J at 1000 m. Volume is (MAX_BUOY&nbsp;+&nbsp;SM_CC)
-      per dive. SG644 pumped 1.22× that in 2022, at a lower pack voltage (12.4 V against
-      13.4 V in 2018).</p>
-    </div>
-    <div class="note">
-      <h4 class="anchored">The earlier spreadsheet</h4>
-      <p><code>endurance calc.xlsx</code> fitted per-device factors to 92 dives of one
-      deployment, and its pump term already scaled with MAX_BUOY&nbsp;+&nbsp;SM_CC. For its own
-      settings (990 m, T_DIVE 420, CT and optode on the SciCon) it and this model agree on the
-      energy of a dive: <b>0.51 Ah</b> there, <b>0.50 Ah</b> here.</p>
-      <p>The endurance differs because it fixed every dive at 2 h. At T_DIVE 420 a 990 m dive
-      takes about 7 h, so 303 Ah lasts ~180 days, not 49. It also scaled Iridium and the motors
-      by 0.5 and the pump by 0.3 by hand, and added the CTD and O2 on top of the SciCon, which
-      already includes them. Those roughly cancelled out.</p>
-    </div>
-  </div>
-
-  <h2 class="sec anchored">Missions in the archive</h2>
-  <div class="tablewrap">
-    <table id="t_missions"></table>
-  </div>
-
-  <footer class="src">
-    <p><b>How it is built.</b> <code>code/extract_seaglider_dives.py</code> reduces the
-    deployment archive (the basestation's per-dive netCDF files, 1.6 GB, kept outside the
-    repository) to one row per dive in <code>content/data/seaglider-dives.csv</code>.
-    <code>code/fit_seaglider_model.py</code> fits each group of loads against what drives it:
-    the pump against volume and depth, the motors against dive time, the processor against
-    cycle time, Iridium against data sent, and the SciCon against its sample rate. The fit is
-    written to <code>content/data/seaglider-model.json</code>.
-    <code>node code/build_seaglider_page.js</code> runs <code>code/seaglider_model.js</code>
-    on every dive, fails if any mission misses by more than 25%, and only then updates this
-    page. Fitted on 2018 alone, the model predicted the 2022 mission, with different sensors
-    and no SciCon, to within 7%.</p>
-    <p><b>Limits.</b> Everything is calibrated on two gliders on firmware 66.12. Depths beyond
-    1000 m, and anything past 300 m for SG150, are extrapolation. The SeaOWL's cost on the
-    TT8 is estimated, since it only ever flew on the SciCon. The Kongsberg (iRobot) Seaglider
-    Mission Endurance Estimator user guide (doc. 4366008) was used for parameter names and the
-    rule that a dual-pack glider lasts as long as its weaker pack.</p>
-  </footer>
 </div>
 <!-- SEAGLIDER-DATA:BEGIN -->
 <!-- Written by code/build_seaglider_page.js from content/data/seaglider-model.json and
      code/seaglider_model.js. Edit those and re-run; edits inside this block are overwritten. -->
 <script>
-window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to content/data/seaglider-dives.csv","dives":1691,"gliders":{"150":{"pump":{"a":8.679974476742158,"b":0.020920925645456195},"motors":{"m0":0.004419078385783082,"m1":0.0016679697417580474},"hotel":{"h0":0.00554359761737852,"h1":0.012004501374938716},"comms":{"c0":0.010985890927536228,"c1":0},"tt8":{"per_hour":1729.5520293385482,"per_eng":0,"per_polled":0,"mA":39.79999207888303},"battery":{"dual":true,"cap24":135,"cap10":115,"v24":23.235,"v10":9.83}},"644":{"pump":{"a":12.992320801859373,"b":0.020920925645456195},"motors":{"m0":0.004621157463589271,"m1":0.0008654385128068371},"hotel":{"h0":0.014938559138436669,"h1":0.006386223642142614},"comms":{"c0":0.011546681687738319,"c1":0.0000465393087381684},"tt8":{"per_hour":650.4778640586778,"per_eng":0.7736460227857326,"per_polled":3.0554616643642505,"mA":32.94},"battery":{"dual":false,"cap24":310,"cap10":0,"v24":13.28,"v10":12.95}}},"scicon":{"base_mA":6.07,"per_set_mAs":176.7,"fit_missions":[5,6],"hosts":"SBE CT, Contros optode, WET Labs SeaOWL, auxiliary compass/pressure"},"tt8_sensors":{"SBE_CT":{"label":"Sea-Bird CT (SBE 41 style)","mA":24,"s_per_sample":0.678,"measured":true},"CONTOPT":{"label":"Contros HydroFlash O2 optode","mA":300,"s_per_sample":2.816,"measured":true},"WL_ECO":{"label":"WET Labs ECO puck (BB2FL)","mA":105,"s_per_sample":2.521,"measured":true},"SEAOWL":{"label":"WET Labs SeaOWL","mA":105,"s_per_sample":2.521,"measured":false}},"missions":[{"glider":150,"mission":20,"start":"2021-05-16","end":"2021-05-18","dives":30,"firmware":"66.12","instrument":"magnetometer wlbb2fl sbe41","depth":221,"d_tgt":210,"w":0.098,"surface_min":5.7,"max_buoy":250,"sm_cc":500,"kb":100,"glide_ratio":2.79,"eng_interval":6.3,"sensors":["SBE_CT","WL_blue_red_Chl_old_fw","UVP"],"settings":{"UVP":{"mA":50,"duty":0.73,"frac":0.41},"SBE_CT":{"interval":6.3},"WL_ECO":{"interval":6.3}},"used":{"ah_logged":7.5,"ah_per_dive":0.2499,"ah_per_day":5.413,"days":1.4,"counter_ah":7.64},"pump_factor":1.17},{"glider":150,"mission":21,"start":"2021-05-27","end":"2021-05-28","dives":26,"firmware":"66.12","instrument":"magnetometer wlbb2fl sbe41","depth":218,"d_tgt":270,"w":0.109,"surface_min":6.3,"max_buoy":250,"sm_cc":450,"kb":103,"glide_ratio":2.58,"eng_interval":11.5,"sensors":["SBE_CT","WL_blue_red_Chl_old_fw","UVP"],"settings":{"UVP":{"mA":50,"duty":1,"frac":0.95},"SBE_CT":{"interval":11.5},"WL_ECO":{"interval":11.5}},"used":{"ah_logged":6.68,"ah_per_dive":0.2571,"ah_per_day":5.072,"days":1.3,"counter_ah":7.08},"pump_factor":1.07},{"glider":150,"mission":22,"start":"2021-06-01","end":"2021-06-06","dives":82,"firmware":"66.12","instrument":"magnetometer wlbb2fl sbe41","depth":280,"d_tgt":270,"w":0.127,"surface_min":5.3,"max_buoy":200,"sm_cc":470,"kb":108,"glide_ratio":1.75,"eng_interval":11.5,"sensors":["SBE_CT","WL_blue_red_Chl_old_fw","UVP"],"settings":{"UVP":{"mA":80,"duty":1,"frac":0.93},"SBE_CT":{"interval":11.5},"WL_ECO":{"interval":11.5}},"used":{"ah_logged":24.32,"ah_per_dive":0.2966,"ah_per_day":5.257,"days":4.6,"counter_ah":24.05},"pump_factor":0.96},{"glider":644,"mission":5,"start":"2018-03-08","end":"2018-07-03","dives":716,"firmware":"66.12","instrument":"sbe41 contopt wlseaowl","depth":337,"d_tgt":990,"w":0.074,"surface_min":12.5,"max_buoy":150,"sm_cc":200,"kb":275,"glide_ratio":3.35,"eng_interval":9.1,"sensors":["SciCon","PAM"],"settings":{"scicon":{"interval":11},"PAM":{"mA":55,"duty":0.51,"record_above":200}},"used":{"ah_logged":298.81,"ah_per_dive":0.4173,"ah_per_day":2.573,"days":116.1,"counter_ah":246.51},"pump_factor":0.95},{"glider":644,"mission":6,"start":"2018-07-05","end":"2018-09-10","dives":634,"firmware":"66.12","instrument":"magnetometer sbe41 contopt wlseaowl","depth":281,"d_tgt":990,"w":0.067,"surface_min":14.4,"max_buoy":200,"sm_cc":300,"kb":244,"glide_ratio":3.4,"eng_interval":6.8,"sensors":["SciCon","PAM"],"settings":{"scicon":{"interval":10.2},"PAM":{"mA":55,"duty":1,"record_above":200}},"used":{"ah_logged":250.57,"ah_per_dive":0.3952,"ah_per_day":3.753,"days":66.8,"counter_ah":189.81},"pump_factor":0.97},{"glider":644,"mission":7,"start":"2019-04-28","end":"2019-05-23","dives":117,"firmware":"66.12","instrument":"magnetometer sbe41 contopt wlseaowl","depth":980,"d_tgt":980,"w":0.101,"surface_min":18.6,"max_buoy":290,"sm_cc":250,"kb":696,"glide_ratio":2.42,"eng_interval":8.6,"sensors":["SciCon","PAM"],"settings":{"scicon":{"interval":19},"PAM":{"mA":55,"duty":1,"record_above":900}},"used":{"ah_logged":85.58,"ah_per_dive":0.7314,"ah_per_day":4.53,"days":18.9,"counter_ah":88.98},"pump_factor":1.15},{"glider":644,"mission":11,"start":"2022-05-19","end":"2022-05-26","dives":86,"firmware":"66.12","instrument":"magnetometer sbe41 contopt","depth":268,"d_tgt":260,"w":0.079,"surface_min":7.7,"max_buoy":160,"sm_cc":350,"kb":90,"glide_ratio":2.03,"eng_interval":18.8,"sensors":["SBE_CT","CONTOPT","UVP","ESNDR"],"settings":{"UVP":{"mA":80,"duty":1,"frac":1.03},"ESNDR":{"mA":400,"duty":1,"frac":1.04},"SBE_CT":{"interval":18.8},"CONTOPT":{"interval":18.8}},"used":{"ah_logged":105.71,"ah_per_dive":1.2292,"ah_per_day":16.546,"days":6.4,"counter_ah":104.45},"pump_factor":1.22}],"validation":[{"glider":150,"mission":20,"dives":30,"logged_ah":7.5,"model_ah":7.35,"model_ah_with_factor":7.9,"ratio":0.98,"ratio_with_factor":1.054,"median_dive_error":0.07},{"glider":150,"mission":21,"dives":26,"logged_ah":6.68,"model_ah":6.59,"model_ah_with_factor":6.79,"ratio":0.985,"ratio_with_factor":1.015,"median_dive_error":0.043},{"glider":150,"mission":22,"dives":82,"logged_ah":24.32,"model_ah":25.17,"model_ah_with_factor":24.81,"ratio":1.035,"ratio_with_factor":1.02,"median_dive_error":0.038},{"glider":644,"mission":5,"dives":716,"logged_ah":298.81,"model_ah":298.17,"model_ah_with_factor":290.98,"ratio":0.998,"ratio_with_factor":0.974,"median_dive_error":0.108},{"glider":644,"mission":6,"dives":634,"logged_ah":250.57,"model_ah":254.35,"model_ah_with_factor":250.94,"ratio":1.015,"ratio_with_factor":1.001,"median_dive_error":0.028},{"glider":644,"mission":7,"dives":117,"logged_ah":85.58,"model_ah":72.51,"model_ah_with_factor":77.82,"ratio":0.847,"ratio_with_factor":0.909,"median_dive_error":0.084},{"glider":644,"mission":11,"dives":86,"logged_ah":105.71,"model_ah":101.38,"model_ah_with_factor":105.26,"ratio":0.959,"ratio_with_factor":0.996,"median_dive_error":0.035}]};
+window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to content/data/seaglider-dives.csv","dives":1553,"glider":{"pump":{"a":12.992320801859373,"b":0.020920925645456195},"motors":{"m0":0.004621157463589271,"m1":0.0008654385128068371},"hotel":{"h0":0.014938559138436669,"h1":0.006386223642142614},"comms":{"c0":0.011546681687738319,"c1":0.0000465393087381684},"tt8":{"per_hour":650.4778640586778,"per_eng":0.7736460227857326,"per_polled":3.0554616643642505,"mA":32.94},"battery":{"capacity":310,"volts":13.28}},"scicon":{"base_mA":6.07,"per_set_mAs":176.7,"fit_missions":[5,6],"hosts":"CT, Contros optode, WET Labs ECO puck (SeaOWL), auxiliary compass"},"sensors":{"SBE_CT":{"label":"CT (Sea-Bird)","mA":24,"s_per_sample":0.672,"measured":true},"CONTOPT":{"label":"Contros HydroFlash O2 optode","mA":300,"s_per_sample":2.816,"measured":true},"ECO":{"label":"WET Labs ECO puck","mA":105,"s_per_sample":2.52,"measured":false}}};
 </script>
 <script>
 /*
- * Seaglider endurance model (firmware 66.12), fitted to our own dive logs.
+ * Seaglider endurance model (firmware 66.12, single battery pack), fitted to our glider's logs.
  *
  * One function, used both by the page (content/seaglider-endurance.qmd, where the build
  * script inlines it) and by code/build_seaglider_page.js, which runs it against every logged
  * dive before the page is rebuilt. Coefficients come from content/data/seaglider-model.json;
  * see code/fit_seaglider_model.py for how each one was fitted.
  *
- * Everything is Ah drawn from the pack per dive cycle (surface + dive). On a dual-pack
- * glider the pump and motors draw from the 24 V pack and everything else from the 10 V pack,
- * as the Seaglider's own counters book it.
+ * Everything is Ah drawn from the pack per dive cycle (surface + dive).
  */
 (function (root) {
   "use strict";
 
-  // Science sensors that can be hosted either by the SciCon or polled by the TT8.
-  // The SciCon fit covers CT + optode + SeaOWL (+ its aux compass) sampled together, so a
-  // subset on the SciCon is charged that fit's per-set energy in proportion to the sensors'
-  // TT8-equivalent energy per sample. The proportion is an estimate; the total is measured.
-  var SCICON_FITTED_SET = ["SBE_CT", "CONTOPT", "SEAOWL"];
+  // Sensors that can be hosted by the SciCon or polled by the TT8. The SciCon fit covers
+  // all three sampled together, so a subset on the SciCon is charged that fit's per-sample
+  // energy in proportion to the sensors' TT8-equivalent energy per sample. The proportion is
+  // an estimate; the total is measured.
+  var SCICON_FITTED_SET = ["SBE_CT", "CONTOPT", "ECO"];
 
   function sampleEnergy(model, key, mA) {
-    var s = model.tt8_sensors[key];
+    var s = model.sensors[key];
     return (mA == null ? s.mA : mA) * s.s_per_sample; // mAs per sample
   }
 
+  // Samples in one dive from a science-file style table: rows of {to: depth (m), interval (s)},
+  // each row covering from the previous row's depth down to its own. The glider passes through
+  // every band twice (down and up) at the mean vertical speed w.
+  function samplesPerDive(bins, depth, w) {
+    var n = 0, top = 0;
+    var rows = (bins || []).filter(function (b) { return b && b.to > 0 && b.interval > 0; })
+      .sort(function (a, b) { return a.to - b.to; });
+    for (var i = 0; i < rows.length && top < depth; i++) {
+      var bottom = Math.min(rows[i].to, depth);
+      if (bottom > top) n += 2 * (bottom - top) / w / rows[i].interval;
+      top = Math.max(top, rows[i].to);
+    }
+    if (top < depth && rows.length) n += 2 * (depth - top) / w / rows[rows.length - 1].interval;
+    return n;
+  }
+
   function evaluate(model, cfg) {
-    var g = model.gliders[cfg.glider];
+    var g = model.glider;
     var diveS = 2 * cfg.depth / cfg.w;              // w is the mean vertical speed over the dive
     var diveH = diveS / 3600;
     var cycleH = diveH + cfg.surface_min / 60;
     var callN = Math.max(1, cfg.call_ndives || 1);
-    var interval = Math.max(1, cfg.sample_interval);
-    var nSamples = diveS / interval;
-    var v24 = cfg.battery.v24;
+    var nSamples = samplesPerDive(cfg.bins, cfg.depth, cfg.w);
 
-    var parts = [];                                  // [key, label, Ah per dive, bus]
-    function add(key, label, ah, bus) { parts.push({ key: key, label: label, ah: ah, bus: bus }); }
+    var parts = [];                                  // {key, label, ah per dive}
+    function add(key, label, ah) { parts.push({ key: key, label: label, ah: ah }); }
 
     var pumpJ = (cfg.pump_factor || 1) * (cfg.max_buoy + cfg.sm_cc) * (g.pump.a + g.pump.b * cfg.depth);
-    add("pump", "Buoyancy pump", pumpJ / (v24 * 3600), 24);
-    add("motors", "Pitch and roll motors", g.motors.m0 + g.motors.m1 * diveH, 24);
-    add("hotel", "Processor, compass and sleep", g.hotel.h0 + g.hotel.h1 * cycleH, 10);
+    add("pump", "Buoyancy pump", pumpJ / (cfg.battery.volts * 3600));
+    add("motors", "Pitch and roll motors", g.motors.m0 + g.motors.m1 * diveH);
+    add("hotel", "Processor, compass and sleep", g.hotel.h0 + g.hotel.h1 * cycleH);
     // Iridium: the fixed cost of a call is paid every CALL_NDIVES dives, but the data volume
     // still has to go up, so only the fixed part divides.
-    add("comms", "Iridium and GPS", g.comms.c0 / callN + g.comms.c1 * cfg.kb, 10);
+    add("comms", "Iridium and GPS", g.comms.c0 / callN + g.comms.c1 * cfg.kb);
 
-    // Science sensors, on the SciCon or on the TT8.
+    // Science sensors, on the SciCon or polled by the TT8.
     var sci = cfg.science || {};
-    var polledS = 0;
-    var onSciCon = !!cfg.scicon;
-    var fitted = 0, chosen = 0;
+    var polledS = 0, fitted = 0, chosen = 0;
     SCICON_FITTED_SET.forEach(function (k) { fitted += sampleEnergy(model, k); });
     Object.keys(sci).forEach(function (k) {
       var s = sci[k];
       if (!s || !s.on) return;
-      var label = model.tt8_sensors[k].label;
-      if (onSciCon) {
+      if (cfg.scicon) {
         chosen += sampleEnergy(model, k);
       } else {
-        polledS += model.tt8_sensors[k].s_per_sample * nSamples;
-        add("sci_" + k, label + " (on TT8)", sampleEnergy(model, k, s.mA) * nSamples / 3.6e6, 10);
+        polledS += model.sensors[k].s_per_sample * nSamples;
+        add("sci_" + k, model.sensors[k].label, sampleEnergy(model, k, s.mA) * nSamples / 3.6e6);
       }
     });
-    if (onSciCon && chosen > 0) {
+    if (cfg.scicon && chosen > 0) {
       var sc = model.scicon;
-      var mA = sc.base_mA + sc.per_set_mAs * (chosen / fitted) / interval;
-      add("scicon", "SciCon and its sensors", mA * diveS / 3.6e6, 10);
+      add("scicon", "SciCon and its sensors",
+          (sc.base_mA * diveS + sc.per_set_mAs * (chosen / fitted) * nSamples) / 3.6e6);
     }
     var tt8S = g.tt8.per_hour * cycleH + g.tt8.per_eng * nSamples + g.tt8.per_polled * polledS;
-    add("tt8", "TT8 sampling", g.tt8.mA * tt8S / 3.6e6, 10);
+    add("tt8", "TT8 sampling", g.tt8.mA * tt8S / 3.6e6);
 
     // Loggers: current x time recording. They record above a depth, on a share of dives.
     (cfg.loggers || []).forEach(function (L) {
       if (!L.on) return;
       var above = L.record_above == null ? 1 : Math.min(1, L.record_above / cfg.depth);
       var duty = L.duty == null ? 1 : L.duty;
-      add("log_" + L.key, L.label, L.mA * diveS * above * duty / 3.6e6, 10);
+      add("log_" + L.key, L.label, L.mA * diveS * above * duty / 3.6e6);
     });
 
-    var bus24 = 0, bus10 = 0, total = 0;
-    parts.forEach(function (p) {
-      total += p.ah;
-      if (p.bus === 24) bus24 += p.ah; else bus10 += p.ah;
-    });
-
-    var b = cfg.battery, keep = 1 - (b.reserve_pct || 0) / 100, dives, limit;
-    if (b.dual) {
-      var d24 = b.cap24 * keep / bus24, d10 = b.cap10 * keep / bus10;
-      dives = Math.min(d24, d10);
-      limit = d24 < d10 ? "24 V pack" : "10 V pack";
-    } else {
-      dives = b.cap24 * keep / total;
-      limit = "pack";
-    }
+    var total = 0;
+    parts.forEach(function (p) { total += p.ah; });
+    var usable = cfg.battery.capacity * (1 - (cfg.battery.reserve_pct || 0) / 100);
+    var dives = usable / total;
     var kmPerDive = 2 * cfg.depth * cfg.glide_ratio / 1000;
     return {
-      parts: parts, total: total, bus24: bus24, bus10: bus10,
+      parts: parts, total: total, samples: nSamples,
       dive_h: diveH, cycle_h: cycleH, t_dive_min: diveS / 60,
-      dives: dives, days: dives * cycleH / 24, km: dives * kmPerDive,
-      ah_per_day: total * 24 / cycleH, km_per_day: kmPerDive * 24 / cycleH,
-      limit: limit
+      usable_ah: usable, dives: dives, days: dives * cycleH / 24, km: dives * kmPerDive,
+      ah_per_day: total * 24 / cycleH, km_per_day: kmPerDive * 24 / cycleH
     };
   }
 
-  var api = { evaluate: evaluate };
+  var api = { evaluate: evaluate, samplesPerDive: samplesPerDive };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.SeagliderModel = api;
 })(this);
@@ -812,25 +705,32 @@ window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to con
 
   $("n_dives").textContent = M.dives.toLocaleString("en");
 
-  // ------------------------------------------------------------ sensor rows
-  var SCI = [
-    { key: "SBE_CT", name: "CT (Sea-Bird)" },
-    { key: "CONTOPT", name: "Contros HydroFlash O2 optode" },
-    { key: "SEAOWL", name: "WET Labs SeaOWL" },
-    { key: "WL_ECO", name: "WET Labs ECO puck (BB2FL)" }
-  ];
+  // ------------------------------------------------------------ inputs
+  var SCI = ["SBE_CT", "CONTOPT", "ECO"];
   var LOG = [
     { key: "PAM", name: "PAM recorder", mA: 55, above: 200 },
     { key: "UVP", name: "UVP6", mA: 80, above: 1000 },
-    { key: "ESNDR", name: "Echosounder (ESNDR)", mA: 400, above: 1000 },
+    { key: "ESNDR", name: "Echosounder", mA: 400, above: 1000 },
     { key: "CUSTOM", name: "Other sensor", mA: 20, above: 1000, custom: true }
   ];
-  $("sci_rows").innerHTML = SCI.map(function (s) {
-    var t = M.tt8_sensors[s.key];
-    return '<div class="sensor"><input type="checkbox" id="c_' + s.key + '" aria-label="' + esc(s.name) + '">' +
-      '<label class="name" for="c_' + s.key + '">' + esc(s.name) + (t.measured ? "" : '<span class="tag" title="Never flew on the TT8; on-time per sample taken from the ECO puck">est.</span>') + '</label>' +
-      '<span class="ctl"><input type="number" id="m_' + s.key + '" min="0" step="1" aria-label="' + esc(s.name) + ' current"><span class="unit">mA</span></span>' +
-      '<span class="sub">' + t.s_per_sample.toFixed(2) + ' s powered per sample on the TT8</span></div>';
+  var NBINS = 4;
+
+  // Where the page opens. Our glider as it now flies: no SciCon, CT and optode on the TT8.
+  var DEFAULTS = {
+    depth: 1000, w: 0.1, surface_min: 10, max_buoy: 200, sm_cc: 300, kb: 150, call_ndives: 1,
+    capacity: M.glider.battery.capacity, reserve: 10, volts: M.glider.battery.volts,
+    pump_factor: 1, glide_ratio: 2.5,
+    scicon: false, sci: { SBE_CT: true, CONTOPT: true, ECO: false },
+    bins: [{ to: 200, interval: 5 }, { to: 1000, interval: 10 }],
+    log: { PAM: false, UVP: false, ESNDR: false, CUSTOM: false }
+  };
+
+  $("sci_rows").innerHTML = SCI.map(function (k) {
+    var s = M.sensors[k];
+    return '<div class="sensor"><input type="checkbox" id="c_' + k + '" aria-label="' + esc(s.label) + '">' +
+      '<label class="name" for="c_' + k + '">' + esc(s.label) + (s.measured ? "" : '<span class="tag" title="Only ever flew on the SciCon; its cost on the TT8 is estimated">est.</span>') + '</label>' +
+      '<span class="ctl"><input type="number" id="m_' + k + '" min="0" step="1" aria-label="' + esc(s.label) + ' current"><span class="unit">mA</span></span>' +
+      '<span class="sub">' + s.s_per_sample.toFixed(2) + ' s powered per sample without the SciCon</span></div>';
   }).join("");
   $("log_rows").innerHTML = LOG.map(function (s) {
     return '<div class="sensor"><input type="checkbox" id="c_' + s.key + '" aria-label="' + esc(s.name) + '">' +
@@ -839,79 +739,51 @@ window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to con
       '<span class="sub"><span>records above <input type="number" id="a_' + s.key + '" min="1" step="10" aria-label="' + esc(s.name) + ' records above depth"> m</span>' +
       '<span>on <input type="number" id="d_' + s.key + '" min="0" max="100" step="5" aria-label="' + esc(s.name) + ' share of dives"> % of dives</span></span></div>';
   }).join("");
-
-  // ------------------------------------------------------------ presets
-  var PRESETS = M.missions.map(function (m) {
-    var g = M.gliders[String(m.glider)], s = m.settings, scicon = !!s.scicon;
-    var p = {
-      label: "SG" + m.glider + " mission " + m.mission + ", " + m.start.slice(0, 7) + " (" + m.dives + " dives)",
-      mission: m,
-      glider: String(m.glider), depth: m.depth, w: m.w, surface_min: m.surface_min,
-      max_buoy: m.max_buoy, sm_cc: m.sm_cc, kb: m.kb, call_ndives: 1,
-      pump_factor: m.pump_factor > 1.1 ? m.pump_factor : 1, glide_ratio: m.glide_ratio,
-      dual: g.battery.dual, cap24: g.battery.cap24, cap10: g.battery.cap10 || 0,
-      v24: g.battery.v24, reserve: 10,
-      host: scicon ? "scicon" : "tt8",
-      interval: scicon ? s.scicon.interval : m.eng_interval,
-      sci: {}, log: {}
-    };
-    SCI.forEach(function (x) {
-      var on = scicon ? ["SBE_CT", "CONTOPT", "SEAOWL"].indexOf(x.key) >= 0 : !!s[x.key];
-      p.sci[x.key] = { on: on, mA: M.tt8_sensors[x.key].mA };
-    });
-    LOG.forEach(function (x) {
-      var e = s[x.key];
-      p.log[x.key] = { on: !!e, mA: e ? e.mA : x.mA, above: e && e.record_above ? e.record_above : x.above,
-                       duty: e ? Math.round(e.duty * 100) : 100 };
-    });
-    return p;
-  });
-  var DEFAULT = PRESETS.findIndex(function (p) { return p.mission.glider === 644 && p.mission.mission === 6; });
-  if (DEFAULT < 0) DEFAULT = 0;
-  $("preset").innerHTML = PRESETS.map(function (p, i) { return '<option value="' + i + '">' + esc(p.label) + "</option>"; }).join("");
-
-  function describe(m) {
-    var names = { SciCon: "SciCon (CT, optode, SeaOWL)", PAM: "PAM", UVP: "UVP6", ESNDR: "echosounder",
-                  SBE_CT: "CT", CONTOPT: "Contros optode", WL_blue_red_Chl_old_fw: "ECO puck" };
-    return m.sensors.map(function (s) { return names[s] || s; }).join(" + ");
+  var binRows = "";
+  for (var i = 0; i < NBINS; i++) {
+    binRows += '<tr><td><input type="number" id="bt_' + i + '" min="1" step="10" aria-label="Band ' + (i + 1) + ' down to depth"> m</td>' +
+      '<td><input type="number" id="bi_' + i + '" min="1" step="1" aria-label="Band ' + (i + 1) + ' sample interval"> s</td></tr>';
   }
+  $("bins").innerHTML = binRows;
 
   function load(p) {
     $("i_depth").value = p.depth; $("i_w").value = p.w; $("i_surface").value = p.surface_min;
     $("i_maxbuoy").value = p.max_buoy; $("i_smcc").value = p.sm_cc; $("i_kb").value = p.kb;
-    $("i_calln").value = p.call_ndives; $("i_glider").value = p.glider; $("i_dual").value = p.dual ? "1" : "0";
-    $("i_cap24").value = p.cap24; $("i_cap10").value = p.cap10; $("i_v24").value = p.v24;
-    $("i_reserve").value = p.reserve; $("i_pumpf").value = p.pump_factor; $("i_glide").value = p.glide_ratio;
-    $("host_" + p.host).checked = true; $("i_interval").value = p.interval;
-    SCI.forEach(function (x) { $("c_" + x.key).checked = p.sci[x.key].on; $("m_" + x.key).value = p.sci[x.key].mA; });
+    $("i_calln").value = p.call_ndives; $("i_cap").value = p.capacity; $("i_reserve").value = p.reserve;
+    $("i_volts").value = p.volts; $("i_pumpf").value = p.pump_factor; $("i_glide").value = p.glide_ratio;
+    $("i_scicon").checked = p.scicon;
+    SCI.forEach(function (k) { $("c_" + k).checked = p.sci[k]; $("m_" + k).value = M.sensors[k].mA; });
     LOG.forEach(function (x) {
-      var l = p.log[x.key];
-      $("c_" + x.key).checked = l.on; $("m_" + x.key).value = l.mA; $("a_" + x.key).value = l.above; $("d_" + x.key).value = l.duty;
+      $("c_" + x.key).checked = p.log[x.key]; $("m_" + x.key).value = x.mA; $("a_" + x.key).value = x.above; $("d_" + x.key).value = 100;
     });
-    var m = p.mission, u = m.used;
-    $("preset_note").textContent = "As flown " + m.start + " to " + m.end + ": " + describe(m) + ". Dives to " + m.depth +
-      " m, " + fmt(u.days, 0) + " days, " + fmt(u.ah_logged, 0) + " Ah logged (" + fmt(u.ah_per_day, 1) + " Ah/day).";
+    for (var i = 0; i < NBINS; i++) {
+      var b = p.bins[i];
+      $("bt_" + i).value = b ? b.to : ""; $("bi_" + i).value = b ? b.interval : "";
+    }
   }
 
-  function signedPct(f) { var v = Math.round(100 * f); return (v > 0 ? "+" : v < 0 ? "\u2212" : "") + Math.abs(v) + "%"; }
   var num = function (id) { var v = parseFloat($(id).value); return isFinite(v) ? v : 0; };
 
   function readConfig(overrides) {
-    var dual = $("i_dual").value === "1";
     var science = {};
-    SCI.forEach(function (x) { science[x.key] = { on: $("c_" + x.key).checked, mA: num("m_" + x.key) }; });
+    SCI.forEach(function (k) { science[k] = { on: $("c_" + k).checked, mA: num("m_" + k) }; });
     var loggers = LOG.map(function (x) {
       return { key: x.key, label: x.custom ? ($("n_" + x.key).value || "Other sensor") : x.name,
                on: $("c_" + x.key).checked, mA: num("m_" + x.key), record_above: num("a_" + x.key) || null,
                duty: num("d_" + x.key) / 100 };
     });
+    var bins = [];
+    for (var i = 0; i < NBINS; i++) {
+      var to = num("bt_" + i), iv = num("bi_" + i);
+      if (to > 0 && iv > 0) bins.push({ to: to, interval: iv });
+    }
     var cfg = {
-      glider: $("i_glider").value, depth: Math.max(1, num("i_depth")), w: Math.max(0.005, num("i_w")),
+      depth: Math.max(1, num("i_depth")), w: Math.max(0.005, num("i_w")),
       surface_min: num("i_surface"), max_buoy: num("i_maxbuoy"), sm_cc: num("i_smcc"), kb: num("i_kb"),
-      call_ndives: Math.max(1, Math.round(num("i_calln"))), sample_interval: Math.max(1, num("i_interval")),
+      call_ndives: Math.max(1, Math.round(num("i_calln"))), bins: bins,
       pump_factor: num("i_pumpf") || 1, glide_ratio: num("i_glide"),
-      scicon: $("host_scicon").checked, science: science, loggers: loggers,
-      battery: { dual: dual, cap24: num("i_cap24"), cap10: num("i_cap10"), v24: Math.max(1, num("i_v24")), reserve_pct: num("i_reserve") }
+      scicon: $("i_scicon").checked, science: science, loggers: loggers,
+      battery: { capacity: num("i_cap"), volts: Math.max(1, num("i_volts")), reserve_pct: num("i_reserve") }
     };
     for (var k in overrides || {}) cfg[k] = overrides[k];
     return cfg;
@@ -934,20 +806,21 @@ window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to con
     tip.style.top = Math.max(4, y - 10) + "px";
   }
 
-  function drawDepth(cfg, res) {
-    var anySci = SCI.some(function (x) { return cfg.science[x.key].on; });
+  function drawDepth(cfg) {
+    var anySci = SCI.some(function (k) { return cfg.science[k].on; });
     W = widthOf("ch_depth"); H = Math.round(Math.min(320, Math.max(240, W * 0.5)));
     var depths = []; for (var d = 50; d <= 1000; d += 25) depths.push(d);
     var series = [
-      { name: "Sensors on the SciCon", cls: "var(--s1)", scicon: true },
-      { name: "Sensors on the TT8", cls: "var(--s2)", scicon: false }
+      { name: "With the SciCon", color: "var(--s1)", scicon: true },
+      { name: "Without the SciCon", color: "var(--s2)", scicon: false }
     ];
-    if (!anySci) series = [{ name: "Endurance", cls: "var(--s1)", scicon: cfg.scicon }];
+    if (!anySci) series = [{ name: "Endurance", color: "var(--s1)", scicon: cfg.scicon }];
     series.forEach(function (s) {
       s.pts = depths.map(function (d) {
         var r = EV(M, readConfig({ depth: d, scicon: s.scicon }));
         return { d: d, days: r.days, km: r.km };
       });
+      s.here = EV(M, readConfig({ scicon: s.scicon })).days;
     });
     var ymax = niceMax(Math.max.apply(null, series.map(function (s) { return Math.max.apply(null, s.pts.map(function (p) { return p.days; })); })));
     var x = function (d) { return PAD.l + (d - 50) / 950 * (W - PAD.l - PAD.r); };
@@ -963,43 +836,40 @@ window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to con
     svg += '<text x="' + ((W + PAD.l) / 2) + '" y="' + (H - 4) + '" text-anchor="middle">Dive depth (m)</text>';
     svg += '<text x="12" y="' + (PAD.t + 4) + '" transform="rotate(-90 12 ' + (PAD.t + 4) + ')" text-anchor="end">days</text>';
     svg += '<line class="axis" x1="' + PAD.l + '" x2="' + (W - PAD.r) + '" y1="' + y(0) + '" y2="' + y(0) + '"/>';
-    if (cfg.depth >= 50 && cfg.depth <= 1000)
-      svg += '<line x1="' + x(cfg.depth) + '" x2="' + x(cfg.depth) + '" y1="' + PAD.t + '" y2="' + y(0) + '" style="stroke:var(--ink-3);stroke-dasharray:3 3"/>';
+    var cx = x(Math.min(1000, Math.max(50, cfg.depth)));
+    svg += '<line x1="' + cx + '" x2="' + cx + '" y1="' + PAD.t + '" y2="' + y(0) + '" style="stroke:var(--ink-3);stroke-dasharray:3 3"/>';
     series.forEach(function (s) {
       svg += '<path d="' + s.pts.map(function (p, i) { return (i ? "L" : "M") + x(p.d).toFixed(1) + "," + y(p.days).toFixed(1); }).join("") +
-        '" fill="none" style="stroke:' + s.cls + '" stroke-width="2" stroke-linejoin="round"/>';
+        '" fill="none" style="stroke:' + s.color + '" stroke-width="2" stroke-linejoin="round"/>';
     });
     series.forEach(function (s) {
-      var last = s.pts[s.pts.length - 1];
-      var cur = s.scicon === cfg.scicon;
-      svg += '<circle cx="' + x(Math.min(1000, Math.max(50, cfg.depth))) + '" cy="' + y(EV(M, readConfig({ scicon: s.scicon })).days) + '" r="' + (cur ? 5 : 4) + '" style="fill:' + s.cls + ';stroke:var(--surface);stroke-width:2"/>';
+      svg += '<circle cx="' + cx + '" cy="' + y(s.here) + '" r="' + (s.scicon === cfg.scicon ? 5 : 4) + '" style="fill:' + s.color + ';stroke:var(--surface);stroke-width:2"/>';
     });
     svg += '<g id="xh" style="display:none"><line class="axis" y1="' + PAD.t + '" y2="' + y(0) + '"/></g>';
     svg += '<rect x="' + PAD.l + '" y="' + PAD.t + '" width="' + (W - PAD.l - PAD.r) + '" height="' + (H - PAD.t - PAD.b) + '" fill="transparent" id="hit_depth"/>';
     svg += "</svg>";
     $("ch_depth").innerHTML = svg;
     $("leg_depth").innerHTML = series.map(function (s) {
-      return '<span><i style="background:' + s.cls + '"></i>' + esc(s.name) + (s.scicon === cfg.scicon && series.length > 1 ? " (selected)" : "") + "</span>";
+      return '<span><i style="background:' + s.color + '"></i>' + esc(s.name) + (series.length > 1 && s.scicon === cfg.scicon ? " (selected)" : "") + "</span>";
     }).join("") + '<span style="color:var(--ink-3)">dashed line: your depth</span>';
 
     var fig = $("fig_depth"), tip = $("tip_depth"), svgEl = fig.querySelector("svg"), xh = svgEl.querySelector("#xh");
     var hit = svgEl.querySelector("#hit_depth");
-    function move(ev) {
+    hit.addEventListener("mousemove", function (ev) {
       var r = svgEl.getBoundingClientRect(), sx = (ev.clientX - r.left) / r.width * W;
       var i = Math.max(0, Math.min(depths.length - 1, Math.round((sx - PAD.l) / (W - PAD.l - PAD.r) * (depths.length - 1))));
       var line = xh.querySelector("line"); line.setAttribute("x1", x(depths[i])); line.setAttribute("x2", x(depths[i])); xh.style.display = "";
       var fr = fig.getBoundingClientRect();
       showTip(tip, fig, "<div>" + depths[i] + " m dives</div>" + series.map(function (s) {
-        return '<div><i style="display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:' + s.cls + '"></i>' + esc(s.name) + ": <b>" + fmt(s.pts[i].days, 0) + "</b> days, " + fmt(s.pts[i].km, 0) + " km</div>";
+        return '<div><i style="display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:' + s.color + '"></i>' + esc(s.name) + ": <b>" + fmt(s.pts[i].days, 0) + "</b> days, " + fmt(s.pts[i].km, 0) + " km</div>";
       }).join(""), ev.clientX - fr.left, ev.clientY - fr.top);
-    }
-    hit.addEventListener("mousemove", move);
+    });
     hit.addEventListener("mouseleave", function () { tip.style.display = "none"; xh.style.display = "none"; });
   }
 
   function drawParts(res) {
     var perDay = 24 / res.cycle_h;
-    var rows = res.parts.filter(function (p) { return p.ah > 0; }).map(function (p) { return { label: p.label, v: p.ah * perDay, dive: p.ah, bus: p.bus }; })
+    var rows = res.parts.filter(function (p) { return p.ah > 0; }).map(function (p) { return { label: p.label, v: p.ah * perDay, dive: p.ah }; })
       .sort(function (a, b) { return b.v - a.v; });
     var W2 = widthOf("ch_parts"), rowH = 26, LBL = Math.min(190, W2 * 0.45), H2 = rows.length * rowH + 30;
     var xmax = niceMax(rows.length ? rows[0].v : 1);
@@ -1018,78 +888,25 @@ window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to con
     });
     svg += "</svg>";
     $("ch_parts").innerHTML = svg;
-    var fig = $("fig_parts"), tip = $("tip_parts"), total = res.total;
+    var fig = $("fig_parts"), tip = $("tip_parts");
     fig.querySelectorAll("rect[data-i]").forEach(function (el) {
       el.addEventListener("mousemove", function (ev) {
         var r = rows[+el.getAttribute("data-i")], fr = fig.getBoundingClientRect();
         showTip(tip, fig, "<div>" + esc(r.label) + "</div><div><b>" + fmt(r.v, 3) + "</b> Ah/day, <b>" + fmt(r.dive, 4) + "</b> Ah/dive</div><div>" +
-          fmt(100 * r.dive / total, 0) + "% of the load" + ($("i_dual").value === "1" ? ", " + r.bus + " V pack" : "") + "</div>", ev.clientX - fr.left, ev.clientY - fr.top);
+          fmt(100 * r.dive / res.total, 0) + "% of the load</div>", ev.clientX - fr.left, ev.clientY - fr.top);
       });
       el.addEventListener("mouseleave", function () { tip.style.display = "none"; });
     });
-  }
-
-  function drawValidation() {
-    var rows = M.validation.map(function (v) {
-      var m = M.missions.find(function (x) { return x.glider === v.glider && x.mission === v.mission; });
-      return { v: v, m: m, logged: m.used.ah_per_day, model: m.used.ah_per_day * v.ratio };
-    });
-    var W2 = Math.min(760, widthOf("ch_valid")), rowH = 30, LBL = 130, H2 = rows.length * rowH + 32;
-    var xmax = niceMax(Math.max.apply(null, rows.map(function (r) { return Math.max(r.logged, r.model); })));
-    var x = function (v) { return LBL + v / xmax * (W2 - LBL - 70); };
-    var svg = '<svg style="max-width:' + W2 + 'px" viewBox="0 0 ' + W2 + " " + H2 + '" role="img" aria-label="Energy per day by mission, logged against model">';
-    ticks(xmax, 4).forEach(function (t) {
-      svg += '<line class="grid" x1="' + x(t) + '" x2="' + x(t) + '" y1="0" y2="' + (rows.length * rowH) + '"/>' +
-        '<text x="' + x(t) + '" y="' + (rows.length * rowH + 16) + '" text-anchor="middle">' + fmt(t, 0) + "</text>";
-    });
-    svg += '<text x="' + ((W2 + LBL) / 2) + '" y="' + (H2 - 2) + '" text-anchor="middle">Ah per day</text>';
-    rows.forEach(function (r, i) {
-      var yc = i * rowH + rowH / 2;
-      var a = x(Math.min(r.logged, r.model)), b = x(Math.max(r.logged, r.model));
-      svg += '<text class="lab" x="' + (LBL - 10) + '" y="' + (yc + 4) + '" text-anchor="end">SG' + r.v.glider + " m" + r.v.mission + " · " + r.m.start.slice(0, 4) + "</text>" +
-        '<line x1="' + a + '" x2="' + b + '" y1="' + yc + '" y2="' + yc + '" style="stroke:var(--line-strong)" stroke-width="2"/>' +
-        '<circle cx="' + x(r.logged) + '" cy="' + yc + '" r="5" style="fill:var(--s1);stroke:var(--surface);stroke-width:2"/>' +
-        '<circle cx="' + x(r.model) + '" cy="' + yc + '" r="5" style="fill:var(--s2);stroke:var(--surface);stroke-width:2"/>' +
-        '<text class="val" x="' + (b + 10) + '" y="' + (yc + 4) + '">' + signedPct(r.v.ratio - 1) + "</text>" +
-        '<rect x="0" y="' + (i * rowH) + '" width="' + W2 + '" height="' + rowH + '" fill="transparent" data-i="' + i + '"/>';
-    });
-    svg += "</svg>";
-    $("ch_valid").innerHTML = svg;
-    var fig = $("ch_valid").parentNode, tip = $("tip_valid");
-    fig.querySelectorAll("rect[data-i]").forEach(function (el) {
-      el.addEventListener("mousemove", function (ev) {
-        var r = rows[+el.getAttribute("data-i")], fr = fig.getBoundingClientRect();
-        showTip(tip, fig, "<div>SG" + r.v.glider + " mission " + r.v.mission + ", " + r.v.dives + " dives</div><div>Logged <b>" + fmt(r.logged, 2) + "</b> Ah/day, model <b>" + fmt(r.model, 2) + "</b></div><div>Median error on a single dive " + fmt(100 * r.v.median_dive_error, 0) + "%</div>", ev.clientX - fr.left, ev.clientY - fr.top);
-      });
-      el.addEventListener("mouseleave", function () { tip.style.display = "none"; });
-    });
-
-    $("t_valid").innerHTML = "<thead><tr><th class='t'>Mission</th><th>Dives</th><th>Logged Ah</th><th>Model Ah</th><th>Model / logged</th><th>With pump factor</th><th>Median dive error</th></tr></thead><tbody>" +
-      rows.map(function (r) {
-        return "<tr><td class='t'>SG" + r.v.glider + " mission " + r.v.mission + " (" + r.m.start.slice(0, 7) + ")</td><td>" + r.v.dives + "</td><td>" + fmt(r.v.logged_ah, 1) + "</td><td>" + fmt(r.v.model_ah, 1) +
-          "</td><td>" + r.v.ratio.toFixed(2) + "</td><td>" + r.v.ratio_with_factor.toFixed(2) + " (&times;" + r.m.pump_factor.toFixed(2) + ")</td><td>" + fmt(100 * r.v.median_dive_error, 0) + "%</td></tr>";
-      }).join("") + "</tbody>";
-  }
-
-  function drawMissions() {
-    $("t_missions").innerHTML = "<thead><tr><th class='t'>Mission</th><th class='t'>Dates</th><th class='t'>Sensors</th><th>Dives</th><th>Median depth</th><th>Days</th><th>Ah logged</th><th>Glider counter</th><th>Ah/day</th></tr></thead><tbody>" +
-      M.missions.map(function (m) {
-        return "<tr><td class='t'>SG" + m.glider + " m" + m.mission + "</td><td class='t'>" + m.start + " to " + m.end + "</td><td class='t'>" + esc(describe(m)) + "</td><td>" + m.dives + "</td><td>" + m.depth + " m</td><td>" + fmt(m.used.days, 1) + "</td><td>" + fmt(m.used.ah_logged, 1) + "</td><td>" + fmt(m.used.counter_ah, 1) + "</td><td>" + fmt(m.used.ah_per_day, 2) + "</td></tr>";
-      }).join("") + "</tbody>";
   }
 
   // ------------------------------------------------------------ update
   function update() {
-    var dual = $("i_dual").value === "1";
-    $("i_cap10").disabled = !dual;
-    $("l_cap24").textContent = dual ? "24 V pack capacity" : "Capacity";
-    $("l_v24").textContent = dual ? "24 V pack voltage" : "Pack voltage";
-    var onSci = $("host_scicon").checked;
-    SCI.forEach(function (x) { $("m_" + x.key).disabled = onSci || !$("c_" + x.key).checked; });
+    var onSci = $("i_scicon").checked;
+    SCI.forEach(function (k) { $("m_" + k).disabled = onSci || !$("c_" + k).checked; });
     LOG.forEach(function (x) { ["m_", "a_", "d_"].forEach(function (p) { $(p + x.key).disabled = !$("c_" + x.key).checked; }); });
     $("sci_note").textContent = onSci
-      ? "On the SciCon, cost follows the SciCon's own measured draw (" + M.scicon.base_mA + " mA plus " + M.scicon.per_set_mAs + " mAs per sample of the CT, optode and SeaOWL together), so the mA boxes are not used."
-      : "On the TT8, each sensor is charged its current for the seconds it is powered per sample, and the TT8 stays awake while it is polled.";
+      ? "With the SciCon, the sensors cost what the SciCon measured drawing for them (" + M.scicon.base_mA + " mA plus " + M.scicon.per_set_mAs + " mAs per sample of all three), so the mA boxes are not used."
+      : "Without the SciCon, the TT8 polls each sensor: it is charged its current for the seconds it is powered per sample, and the TT8 stays awake while it waits.";
 
     var cfg = readConfig(), res = EV(M, cfg);
     $("o_days").textContent = fmt(res.days, 0);
@@ -1098,49 +915,47 @@ window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to con
     $("o_ahday").textContent = fmt(res.ah_per_day, 2);
     $("o_ahdive").textContent = fmt(res.total, 3);
     $("o_cycle").textContent = fmt(res.cycle_h, 2) + " h";
-    $("o_limit").textContent = res.limit;
+    $("o_usable").textContent = fmt(res.usable_ah, 0);
     $("h_w").textContent = "Including apogee. T_DIVE equivalent " + fmt(res.t_dive_min, 0) + " min.";
+    $("bins_note").textContent = cfg.bins.length
+      ? "Each band runs from the one above it down to its depth; below the last band, its interval carries on. " + fmt(res.samples, 0) + " samples per dive."
+      : "Enter at least one band.";
 
-    var anySci = SCI.some(function (x) { return cfg.science[x.key].on; });
+    var anySci = SCI.some(function (k) { return cfg.science[k].on; });
     if (anySci) {
       var a = EV(M, readConfig({ scicon: true })), b = EV(M, readConfig({ scicon: false }));
       $("compare").innerHTML =
-        '<span class="' + (cfg.scicon ? "cur" : "") + '">Science sensors on the SciCon: <b>' + fmt(a.days, 0) + "</b> days, " + fmt(a.ah_per_day, 2) + " Ah/day</span>" +
-        '<span class="' + (!cfg.scicon ? "cur" : "") + '">On the TT8 (no SciCon): <b>' + fmt(b.days, 0) + "</b> days, " + fmt(b.ah_per_day, 2) + " Ah/day</span>" +
-        "<span>Difference <b>" + (b.days - a.days >= 0 ? "+" : "") + fmt(b.days - a.days, 0) + "</b> days without the SciCon</span>";
+        '<span class="' + (cfg.scicon ? "cur" : "") + '">With the SciCon: <b>' + fmt(a.days, 0) + "</b> days, " + fmt(a.ah_per_day, 2) + " Ah/day</span>" +
+        '<span class="' + (!cfg.scicon ? "cur" : "") + '">Without the SciCon: <b>' + fmt(b.days, 0) + "</b> days, " + fmt(b.ah_per_day, 2) + " Ah/day</span>";
     } else {
-      $("compare").innerHTML = "<span>No science sensors ticked, so there is nothing to compare between the SciCon and the TT8.</span>";
+      $("compare").innerHTML = "<span>No science sensors ticked, so the SciCon makes no difference.</span>";
     }
 
     var alerts = [];
-    if (cfg.depth > 1000) alerts.push("Deeper than 1000 m: beyond the Seaglider's rating and anything these gliders logged.");
-    if (cfg.glider === "150" && cfg.depth > 300) alerts.push("SG150 never dove past 300 m; its pump cost at this depth is extrapolated with SG644's depth slope.");
-    if (cfg.w < 0.05 || cfg.w > 0.2) alerts.push("Mean vertical speed outside 0.05–0.2 m/s, the range these missions flew.");
-    if (cfg.battery.dual !== M.gliders[cfg.glider].battery.dual) alerts.push("Pack layout differs from the calibration glider's; loads are split 24 V (pump, motors) and 10 V (everything else) as Seaglider books them.");
-    if (!cfg.scicon && cfg.science.SEAOWL.on) alerts.push("The SeaOWL never flew on the TT8; its cost there is estimated from the ECO puck.");
+    if (!cfg.bins.length) alerts.push("No sampling bands entered: the sensors are not being charged.");
+    if (cfg.depth > 1000) alerts.push("Deeper than 1000 m: beyond the Seaglider's rating and anything the glider has logged.");
+    if (cfg.w < 0.05 || cfg.w > 0.2) alerts.push("Mean vertical speed outside 0.05–0.2 m/s, the range the glider has flown.");
+    if (!cfg.scicon && cfg.science.ECO.on) alerts.push("The ECO puck has only flown on the SciCon; its cost without it is estimated.");
+    if (!cfg.scicon && cfg.science.CONTOPT.on) alerts.push("Without the SciCon the optode is charged its rated 300 mA while powered, as the glider books it. Its real draw may be lower; edit the mA if it has been measured.");
     var pam = cfg.loggers[0];
     if (pam.on && pam.mA > 0) alerts.push("The PAM is counted here, but the glider's own battery counter leaves it out: expect the glider to report more remaining than there is.");
     $("alerts").innerHTML = alerts.map(function (t) { return '<div class="alert">' + esc(t) + "</div>"; }).join("");
 
-    drawDepth(cfg, res);
+    drawDepth(cfg);
     drawParts(res);
   }
 
-  $("preset").addEventListener("change", function () { load(PRESETS[+this.value]); update(); });
-  $("reset").addEventListener("click", function () { load(PRESETS[+$("preset").value]); update(); });
-  document.querySelectorAll("#sge .panels input, #sge .panels select").forEach(function (el) {
+  $("reset").addEventListener("click", function () { load(DEFAULTS); update(); });
+  document.querySelectorAll("#sge .panels input").forEach(function (el) {
     el.addEventListener("input", update); el.addEventListener("change", update);
   });
-  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { update(); drawValidation(); }, 150); });
+  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(update, 150); });
 
-  $("preset").value = String(DEFAULT);
-  load(PRESETS[DEFAULT]);
+  load(DEFAULTS);
   update();
-  drawValidation();
-  drawMissions();
   // Quarto settles its layout (sidebar, margins) after this script runs, and the charts are
   // drawn at their container's width, so draw once more when the page has finished loading.
-  window.addEventListener("load", function () { update(); drawValidation(); });
+  window.addEventListener("load", update);
 })();
 </script>
 
