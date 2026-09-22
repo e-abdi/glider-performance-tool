@@ -45,8 +45,12 @@ website:
         text: Glider Selection Dashboard
       - href: content/study-design.qmd
         text: Study Design Tool
-      - href: content/slocum-endurance.qmd
-        text: Endurance calculation
+      - section: Endurance calculation
+        contents:
+          - href: content/slocum-endurance.qmd
+            text: Slocum
+          - href: content/seaglider-endurance.qmd
+            text: Seaglider
       - href: content/performance.qmd
         text: Glider Performance
 

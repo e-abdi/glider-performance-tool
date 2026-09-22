@@ -579,6 +579,8 @@ const INTEG = "https://github.com/e-abdi/custom-glider-sensor-integration";
 // Our own endurance page, which evaluates this spreadsheet's formulas in the browser.
 // Relative, so it works in the rendered site and in a local preview alike.
 const ENDURANCE_CALC = "slocum-endurance.html";
+// Seaglider counterpart, fitted to our own SG644/SG150 dive logs (firmware 66.12, so not the SGX).
+const SEAGLIDER_ENDURANCE_CALC = "seaglider-endurance.html";
 
 // Section anchors on the wiki's Commercial Gliders page, so a card lands on its own
 // glider rather than the top. Variants share their family's section: the page has no
@@ -1178,6 +1180,7 @@ function card(g, s) {
     add(WIKI + (WIKI_ANCHOR[g.id] ? "#" + WIKI_ANCHOR[g.id] : ""), "Wiki");
     if (INTEG_GLIDERS.has(g.id)) add(INTEG, "Sensor integration");
     if (g.id === "slocum-g3") add(ENDURANCE_CALC, "Endurance calculator");
+    if (g.id === "seaglider-m1") add(SEAGLIDER_ENDURANCE_CALC, "Endurance calculator");
   }
   db.appendChild(links);
 

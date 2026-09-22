@@ -48,6 +48,11 @@ jobs:
       - name: Check the sensor list still matches the workbook
         run: node code/check_extra_sensors.js && node code/check_endurance_model.js
 
+      # The Seaglider model is fitted to our own dive logs; re-run it against all of them so a
+      # refit that no longer reproduces a mission cannot publish.
+      - name: Check the Seaglider endurance model against the logged dives
+        run: node code/build_seaglider_page.js --check
+
       - name: Publish to GitHub Pages (and render)
         uses: quarto-dev/quarto-actions/publish@v2
         with:
