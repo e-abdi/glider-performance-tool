@@ -13,9 +13,9 @@ bookkeeping for that dive, which is what the endurance calculator is fitted to:
 Energy of a device in a dive is secs * mA. The buoyancy pump is additionally broken down per
 move, so its cost can be fitted against pressure instead of per dive.
 
-Only files with engineering data are read (the 2017 psc*.nc files are science-only). A dive
-that appears in several folders (reprocessed copies, the Lofoten "eddy mission" duplicate) is
-kept once, keyed on (glider, mission, dive).
+Only files with engineering data from our glider are read (the 2017 psc*.nc files are
+science-only). A dive that appears in several folders (reprocessed copies) is kept once, keyed
+on (glider, mission, dive).
 
 Usage:  python3 code/extract_seaglider_dives.py
 Writes: content/data/seaglider-dives.csv
@@ -36,6 +36,10 @@ warnings.filterwarnings("ignore")
 REPO = Path(__file__).resolve().parent.parent
 ARCHIVE = REPO / "output" / "Seaglider endurance tool" / "SG644 deployments"
 OUT = REPO / "content" / "data" / "seaglider-dives.csv"
+
+# The model is for our own glider. The archive also holds a sister Seaglider's 2021 dives
+# (a dual 24 V + 10 V pack), which are left out until dual-pack support is added.
+GLIDER = 644
 
 # Log parameters carried through as-is (pilot settings and battery configuration).
 PARAMS = ["ID", "MISSION", "DIVE", "D_TGT", "T_DIVE", "MAX_BUOY", "SM_CC", "CALL_NDIVES",
@@ -185,6 +189,8 @@ def main():
             print(f"skipped {os.path.relpath(path, ARCHIVE)}: {e}")
             continue
         if r is None:
+            continue
+        if int(r["ID"]) != GLIDER:
             continue
         key = (int(r["ID"]), int(r["MISSION"]), int(r["DIVE"]))
         rows.setdefault(key, r)

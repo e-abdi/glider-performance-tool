@@ -1,68 +1,32 @@
 {
  "source": "Fitted by code/fit_seaglider_model.py to content/data/seaglider-dives.csv",
- "dives": 1691,
- "gliders": {
-  "644": {
-   "pump": {
-    "a": 12.992320801859373,
-    "b": 0.020920925645456195
-   },
-   "motors": {
-    "m0": 0.004621157463589271,
-    "m1": 0.0008654385128068371
-   },
-   "hotel": {
-    "h0": 0.014938559138436669,
-    "h1": 0.006386223642142614
-   },
-   "comms": {
-    "c0": 0.011546681687738319,
-    "c1": 4.65393087381684e-05
-   },
-   "tt8": {
-    "per_hour": 650.4778640586778,
-    "per_eng": 0.7736460227857326,
-    "per_polled": 3.0554616643642505,
-    "mA": 32.94
-   },
-   "battery": {
-    "dual": false,
-    "cap24": 310.0,
-    "cap10": 0.0,
-    "v24": 13.28,
-    "v10": 12.95
-   }
+ "dives": 1553,
+ "glider": {
+  "pump": {
+   "a": 12.992320801859373,
+   "b": 0.020920925645456195
   },
-  "150": {
-   "pump": {
-    "a": 8.679974476742158,
-    "b": 0.020920925645456195
-   },
-   "motors": {
-    "m0": 0.004419078385783082,
-    "m1": 0.0016679697417580474
-   },
-   "hotel": {
-    "h0": 0.00554359761737852,
-    "h1": 0.012004501374938716
-   },
-   "comms": {
-    "c0": 0.010985890927536228,
-    "c1": 0.0
-   },
-   "tt8": {
-    "per_hour": 1729.5520293385482,
-    "per_eng": 0.0,
-    "per_polled": 0.0,
-    "mA": 39.79999207888303
-   },
-   "battery": {
-    "dual": true,
-    "cap24": 135.0,
-    "cap10": 115.0,
-    "v24": 23.235,
-    "v10": 9.83
-   }
+  "motors": {
+   "m0": 0.004621157463589271,
+   "m1": 0.0008654385128068371
+  },
+  "hotel": {
+   "h0": 0.014938559138436669,
+   "h1": 0.006386223642142614
+  },
+  "comms": {
+   "c0": 0.011546681687738319,
+   "c1": 4.65393087381684e-05
+  },
+  "tt8": {
+   "per_hour": 650.4778640586778,
+   "per_eng": 0.7736460227857326,
+   "per_polled": 3.0554616643642505,
+   "mA": 32.94
+  },
+  "battery": {
+   "capacity": 310.0,
+   "volts": 13.28
   }
  },
  "scicon": {
@@ -72,13 +36,13 @@
    5,
    6
   ],
-  "hosts": "SBE CT, Contros optode, WET Labs SeaOWL, auxiliary compass/pressure"
+  "hosts": "CT, Contros optode, WET Labs ECO puck (SeaOWL), auxiliary compass"
  },
- "tt8_sensors": {
+ "sensors": {
   "SBE_CT": {
-   "label": "Sea-Bird CT (SBE 41 style)",
+   "label": "CT (Sea-Bird)",
    "mA": 24.0,
-   "s_per_sample": 0.678,
+   "s_per_sample": 0.672,
    "measured": true
   },
   "CONTOPT": {
@@ -87,152 +51,14 @@
    "s_per_sample": 2.816,
    "measured": true
   },
-  "WL_ECO": {
-   "label": "WET Labs ECO puck (BB2FL)",
+  "ECO": {
+   "label": "WET Labs ECO puck",
    "mA": 105.0,
-   "s_per_sample": 2.521,
-   "measured": true
-  },
-  "SEAOWL": {
-   "label": "WET Labs SeaOWL",
-   "mA": 105.0,
-   "s_per_sample": 2.521,
+   "s_per_sample": 2.52,
    "measured": false
   }
  },
  "missions": [
-  {
-   "glider": 150,
-   "mission": 20,
-   "start": "2021-05-16",
-   "end": "2021-05-18",
-   "dives": 30,
-   "firmware": "66.12",
-   "instrument": "magnetometer wlbb2fl sbe41",
-   "depth": 221,
-   "d_tgt": 210.0,
-   "w": 0.098,
-   "surface_min": 5.7,
-   "max_buoy": 250.0,
-   "sm_cc": 500.0,
-   "kb": 100,
-   "glide_ratio": 2.79,
-   "eng_interval": 6.3,
-   "sensors": [
-    "SBE_CT",
-    "WL_blue_red_Chl_old_fw",
-    "UVP"
-   ],
-   "settings": {
-    "UVP": {
-     "mA": 50.0,
-     "duty": 0.73,
-     "frac": 0.41
-    },
-    "SBE_CT": {
-     "interval": 6.3
-    },
-    "WL_ECO": {
-     "interval": 6.3
-    }
-   },
-   "used": {
-    "ah_logged": 7.5,
-    "ah_per_dive": 0.2499,
-    "ah_per_day": 5.413,
-    "days": 1.4,
-    "counter_ah": 7.64
-   },
-   "pump_factor": 1.17
-  },
-  {
-   "glider": 150,
-   "mission": 21,
-   "start": "2021-05-27",
-   "end": "2021-05-28",
-   "dives": 26,
-   "firmware": "66.12",
-   "instrument": "magnetometer wlbb2fl sbe41",
-   "depth": 218,
-   "d_tgt": 270.0,
-   "w": 0.109,
-   "surface_min": 6.3,
-   "max_buoy": 250.0,
-   "sm_cc": 450.0,
-   "kb": 103,
-   "glide_ratio": 2.58,
-   "eng_interval": 11.5,
-   "sensors": [
-    "SBE_CT",
-    "WL_blue_red_Chl_old_fw",
-    "UVP"
-   ],
-   "settings": {
-    "UVP": {
-     "mA": 50.0,
-     "duty": 1.0,
-     "frac": 0.95
-    },
-    "SBE_CT": {
-     "interval": 11.5
-    },
-    "WL_ECO": {
-     "interval": 11.5
-    }
-   },
-   "used": {
-    "ah_logged": 6.68,
-    "ah_per_dive": 0.2571,
-    "ah_per_day": 5.072,
-    "days": 1.3,
-    "counter_ah": 7.08
-   },
-   "pump_factor": 1.07
-  },
-  {
-   "glider": 150,
-   "mission": 22,
-   "start": "2021-06-01",
-   "end": "2021-06-06",
-   "dives": 82,
-   "firmware": "66.12",
-   "instrument": "magnetometer wlbb2fl sbe41",
-   "depth": 280,
-   "d_tgt": 270.0,
-   "w": 0.127,
-   "surface_min": 5.3,
-   "max_buoy": 200.0,
-   "sm_cc": 470.0,
-   "kb": 108,
-   "glide_ratio": 1.75,
-   "eng_interval": 11.5,
-   "sensors": [
-    "SBE_CT",
-    "WL_blue_red_Chl_old_fw",
-    "UVP"
-   ],
-   "settings": {
-    "UVP": {
-     "mA": 80.0,
-     "duty": 1.0,
-     "frac": 0.93
-    },
-    "SBE_CT": {
-     "interval": 11.5
-    },
-    "WL_ECO": {
-     "interval": 11.5
-    }
-   },
-   "used": {
-    "ah_logged": 24.32,
-    "ah_per_dive": 0.2966,
-    "ah_per_day": 5.257,
-    "days": 4.6,
-    "counter_ah": 24.05
-   },
-   "pump_factor": 0.96
-  },
   {
    "glider": 644,
    "mission": 5,
@@ -388,10 +214,10 @@
      "frac": 1.04
     },
     "SBE_CT": {
-     "interval": 18.8
+     "on": true
     },
     "CONTOPT": {
-     "interval": 18.8
+     "on": true
     }
    },
    "used": {

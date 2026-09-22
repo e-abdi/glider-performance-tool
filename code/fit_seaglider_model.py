@@ -13,11 +13,15 @@ against the variable that physically drives it, fitted separately for each glide
   hotel           Ah/dive = h0 + h1 * cycle hours       (TT8, sleep, CF card, compass, analog)
   comms           Ah/dive = c0 + c1 * kB sent           (Iridium, GPS, transponder ping)
   TT8 sampling    secs    = t0 * cycle h + t1 * eng samples + t2 * polled-sensor secs
-  SciCon          mA      = base + per_set / sample interval  (fitted on missions 5 and 6)
+  SciCon          mAs     = base * dive secs + per_set * samples  (fitted on missions 5 and 6)
 
 Sensors on the TT8 are charged as logged current * on-time per sample, the on-time per sample
 being measured (e.g. SBE CT 0.68 s, Contros optode 2.8 s). Loggers (PAM, UVP6, echosounder)
 are charged current * the time they record.
+
+The model is for our own glider, a single-pack (lithium, ~13 V) Seaglider. The per-mission
+summaries in the output are for code/build_seaglider_page.js to test the model against; the
+page itself carries only the fitted model.
 
 Usage:  python3 code/fit_seaglider_model.py
 Reads:  content/data/seaglider-dives.csv   (from code/extract_seaglider_dives.py)
@@ -39,18 +43,17 @@ OUT = REPO / "content" / "data" / "seaglider-model.json"
 # it is shown in the validation, not fitted.
 SCICON_FIT_MISSIONS = [5, 6]
 
-# The pump law's depth slope is only identifiable from SG644, the one glider that dove
-# deeper than 300 m. Other gliders keep their own intercept and borrow this slope.
-SLOPE_FROM = 644
 
-# Sensors that can run on the TT8 (polled each sample). On-time per sample is measured where
-# the sensor flew on the TT8; the SeaOWL never did, so its figure comes from its .cnf
-# (105 mA, 1.2 s warm-up) and the ECO puck's measured on-time, and is marked estimated.
+# Sensors that can run on the TT8 (polled each sample), with on-time per sample measured
+# from the 2022 deployment, when they flew on the TT8.
 TT8_SENSORS = {
-    "SBE_CT": {"label": "Sea-Bird CT (SBE 41 style)", "log": "SBE_CT"},
+    "SBE_CT": {"label": "CT (Sea-Bird)", "log": "SBE_CT"},
     "CONTOPT": {"label": "Contros HydroFlash O2 optode", "log": "CONTOPT"},
-    "WL_ECO": {"label": "WET Labs ECO puck (BB2FL)", "log": "WL_blue_red_Chl_old_fw"},
 }
+# The ECO puck (the WET Labs SeaOWL here) only flew on the SciCon, so its TT8 cost is not in our
+# logs. 105 mA is its .cnf rating; 2.52 s powered per sample was measured for a WET Labs ECO puck
+# on the TT8 of another Seaglider on the same firmware (2021). Marked estimated on the page.
+ECO_ON_TT8 = {"label": "WET Labs ECO puck", "mA": 105.0, "s_per_sample": 2.52, "measured": False}
 
 LOGGERS = {"PAM": "PAM", "UVP": "UVP", "ESNDR": "ESNDR"}
 
@@ -85,14 +88,10 @@ def prepare(d):
     return d
 
 
-def fit_glider(g, slope=None):
+def fit_glider(g):
     pump_j = (g.e_pump_apogee + g.e_pump_surface) * g.v24 * 3600
     vol = g.MAX_BUOY + g.SM_CC
-    if slope is None:
-        a, b = lstsq(pump_j, vol, vol * g.maxdepth)
-    else:
-        b = slope
-        a = float(np.median(pump_j / vol - b * g.maxdepth))
+    a, b = lstsq(pump_j, vol, vol * g.maxdepth)
     m0, m1 = lstsq(g.e_motors, np.ones(len(g)), g.dive_h)
     h0, h1 = lstsq(g.e_hotel, np.ones(len(g)), g.cycle_h)
     c0, c1 = lstsq(g.e_comms, np.ones(len(g)), g.kb)
@@ -100,22 +99,17 @@ def fit_glider(g, slope=None):
                  for s in TT8_SENSORS.values())
     t0, t1, t2 = lstsq(g.s_tt8_sampling, g.cycle_h, g.n_eng, polled)
     tt8_ma = float(np.median((g.e_tt8_sampling * 3.6e6 / g.s_tt8_sampling)[g.s_tt8_sampling > 0]))
-    dual = bool(g.AH0_10V.median() > 0)
     return {
         "pump": {"a": a, "b": b},
         "motors": {"m0": m0, "m1": m1},
         "hotel": {"h0": h0, "h1": h1},
         "comms": {"c0": c0, "c1": c1},
         "tt8": {"per_hour": t0, "per_eng": t1, "per_polled": t2, "mA": tt8_ma},
-        "battery": {
-            "dual": dual,
-            "cap24": float(g.AH0_24V.median()), "cap10": float(g.AH0_10V.median()),
-            "v24": float(g.v24.median()), "v10": float(g.v10.median()),
-        },
+        "battery": {"capacity": float(g.AH0_24V.median()), "volts": round(float(g.v24.median()), 2)},
     }
 
 
-def mission_summary(g, fit):
+def mission_summary(g):
     """Median settings of one mission, as a preset, plus what it actually used."""
     first = g.iloc[0]
     sensors = str(first.sensors).split("|") if isinstance(first.sensors, str) else []
@@ -152,7 +146,7 @@ def mission_summary(g, fit):
             s[key] = entry
     for key, meta in TT8_SENSORS.items():
         if meta["log"] in sensors:
-            s[key] = {"interval": p["eng_interval"]}
+            s[key] = {"on": True}
     p["settings"] = s
 
     # What it used, from the device logs (all loads, PAM included) and from the glider's
@@ -174,55 +168,44 @@ def mission_summary(g, fit):
 
 def main():
     d = prepare(pd.read_csv(DIVES))
-    fits = {}
-    slope = None
-    for gid in [SLOPE_FROM] + [i for i in sorted(d.ID.unique()) if i != SLOPE_FROM]:
-        g = d[d.ID == gid]
-        fits[str(gid)] = fit_glider(g, None if gid == SLOPE_FROM else slope)
-        if gid == SLOPE_FROM:
-            slope = fits[str(gid)]["pump"]["b"]
+    glider = fit_glider(d)
 
-    # SciCon: mA = base + per_set / interval, where interval is seconds between sample sets.
-    sc = d[(d.ID == 644) & d.MISSION.isin(SCICON_FIT_MISSIONS) & (d.S_SciCon > 0)]
+    # SciCon: mAs per dive = base * secs on + per_set * sample sets taken.
+    sc = d[d.MISSION.isin(SCICON_FIT_MISSIONS) & (d.S_SciCon > 0)]
     base, per_set = lstsq(sc.I_SciCon, np.ones(len(sc)), sc.n_sbect / sc.S_SciCon)
 
-    tt8 = {}
+    sensors = {}
     for key, meta in TT8_SENSORS.items():
-        col = "S_" + meta["log"]
-        if col in d:
-            on = d[d[col].fillna(0) > 0]
-            tt8[key] = {"label": meta["label"], "mA": float(on["I_" + meta["log"]].median()),
-                        "s_per_sample": round(float((on[col] / on.n_eng).median()), 3),
+        on = d[d["S_" + meta["log"]].fillna(0) > 0]
+        sensors[key] = {"label": meta["label"], "mA": float(on["I_" + meta["log"]].median()),
+                        "s_per_sample": round(float((on["S_" + meta["log"]] / on.n_eng).median()), 3),
                         "measured": True}
-    tt8["SEAOWL"] = {"label": "WET Labs SeaOWL", "mA": 105.0,
-                     "s_per_sample": tt8["WL_ECO"]["s_per_sample"], "measured": False}
+    sensors["ECO"] = ECO_ON_TT8
 
-    missions = [mission_summary(g, fits[str(k[0])]) for k, g in d.groupby(["ID", "MISSION"])]
-
-    # Pump factor per mission: how much more (or less) the pump cost than the glider's law.
-    for m in missions:
-        g = d[(d.ID == m["glider"]) & (d.MISSION == m["mission"])]
-        f = fits[str(m["glider"])]["pump"]
+    missions = []
+    for _, g in d.groupby("MISSION"):
+        m = mission_summary(g)
         j = (g.e_pump_apogee + g.e_pump_surface) * g.v24 * 3600
-        law = (g.MAX_BUOY + g.SM_CC) * (f["a"] + f["b"] * g.maxdepth)
+        law = (g.MAX_BUOY + g.SM_CC) * (glider["pump"]["a"] + glider["pump"]["b"] * g.maxdepth)
         m["pump_factor"] = round(float(np.median(j / law)), 2)
+        missions.append(m)
 
     model = {
         "source": "Fitted by code/fit_seaglider_model.py to content/data/seaglider-dives.csv",
         "dives": int(len(d)),
-        "gliders": fits,
+        "glider": glider,
         "scicon": {"base_mA": round(base, 2), "per_set_mAs": round(per_set, 1),
                    "fit_missions": SCICON_FIT_MISSIONS,
-                   "hosts": "SBE CT, Contros optode, WET Labs SeaOWL, auxiliary compass/pressure"},
-        "tt8_sensors": tt8,
+                   "hosts": "CT, Contros optode, WET Labs ECO puck (SeaOWL), auxiliary compass"},
+        "sensors": sensors,
         "missions": missions,
     }
     OUT.write_text(json.dumps(model, indent=1) + "\n")
     print(f"wrote {OUT.relative_to(REPO)}")
     print(json.dumps({k: v for k, v in model.items() if k != "missions"}, indent=1))
     for m in missions:
-        print(m["glider"], m["mission"], m["start"], m["dives"], m["depth"], m["w"],
-              m["surface_min"], m["pump_factor"], m["settings"], m["used"])
+        print(m["mission"], m["start"], m["dives"], m["depth"], m["w"], m["surface_min"],
+              m["pump_factor"], m["settings"], m["used"])
 
 
 if __name__ == "__main__":

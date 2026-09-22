@@ -8,7 +8,7 @@
  *    logged for that dive. Exits non-zero if any mission's total is off by more than
  *    TOLERANCE, so a refit that breaks the model cannot quietly reach the page.
  * 2. Rewrites only the block between the SEAGLIDER-DATA markers in
- *    content/seaglider-endurance.qmd with the model, the validation and the model code.
+ *    content/seaglider-endurance.qmd with the fitted model and the model code.
  *    The rest of the page is hand-maintained; the script refuses to run without the markers.
  *
  * Usage: node code/build_seaglider_page.js          (validate and update the page)
@@ -62,8 +62,7 @@ function parseCsv(text) {
 
 const n = (v) => (v == null ? 0 : v);
 
-// The science sensors as they appear in the log, and the model's key for each.
-const SCI_LOG = { SBE_CT: "SBE_CT", CONTOPT: "CONTOPT", WL_ECO: "WL_blue_red_Chl_old_fw" };
+// Loggers as they appear in the log.
 const LOGGERS = { PAM: "PAM", UVP: "UVP", ESNDR: "ESNDR" };
 
 function loggedAh(d) {
@@ -75,21 +74,20 @@ function loggedAh(d) {
   return ah;
 }
 
+// A logged dive as the calculator would describe it. Sampling is one depth band at the dive's
+// own average interval: the science file itself is not in the logs.
 function diveConfig(d, mission) {
-  const glider = model.gliders[String(d.ID)];
   const diveS = d.dive_min * 60;
   const sensors = String(d.sensors || "").split("|");
   const scicon = sensors.includes("SciCon");
   const science = {};
   let interval = diveS / d.n_eng;
   if (scicon) {
-    // The SciCon on SG644 carried the CT, the Contros optode and the SeaOWL.
-    ["SBE_CT", "CONTOPT", "SEAOWL"].forEach((k) => (science[k] = { on: true }));
+    // The SciCon carried the CT, the Contros optode and the ECO puck (SeaOWL).
+    ["SBE_CT", "CONTOPT", "ECO"].forEach((k) => (science[k] = { on: true }));
     if (d.S_SciCon > 0 && d.n_sbect > 0) interval = d.S_SciCon / d.n_sbect;
   } else {
-    for (const [k, log] of Object.entries(SCI_LOG)) {
-      if (sensors.includes(log)) science[k] = { on: true, mA: d["I_" + log] };
-    }
+    for (const k of ["SBE_CT", "CONTOPT"]) if (sensors.includes(k)) science[k] = { on: true, mA: d["I_" + k] };
   }
   const loggers = [];
   for (const [k, log] of Object.entries(LOGGERS)) {
@@ -100,13 +98,11 @@ function diveConfig(d, mission) {
     });
   }
   return {
-    glider: String(d.ID),
     depth: d.maxdepth, w: (2 * d.maxdepth) / diveS, surface_min: d.surface_min,
     max_buoy: d.MAX_BUOY, sm_cc: d.SM_CC, kb: n(d.kb_data) + n(d.kb_cap),
-    call_ndives: 1, sample_interval: interval, pump_factor: 1,
+    call_ndives: 1, bins: [{ to: 1e6, interval: interval }], pump_factor: 1,
     glide_ratio: mission.glide_ratio, scicon: scicon, science: science, loggers: loggers,
-    battery: { dual: glider.battery.dual, cap24: glider.battery.cap24, cap10: glider.battery.cap10,
-               v24: d.v24, v10: d.v10, reserve_pct: 0 },
+    battery: { capacity: model.glider.battery.capacity, volts: d.v24, reserve_pct: 0 },
   };
 }
 
@@ -116,9 +112,8 @@ function validate() {
   const out = [];
   let worst = 0;
   for (const m of model.missions) {
-    const ds = dives.filter((d) => d.ID === m.glider && d.MISSION === m.mission);
+    const ds = dives.filter((d) => d.MISSION === m.mission);
     let logged = 0, predicted = 0, predictedLaw = 0, errs = [];
-    const comp = {};
     for (const d of ds) {
       const cfg = diveConfig(d, m);
       const law = SeagliderModel.evaluate(model, cfg);
@@ -127,13 +122,12 @@ function validate() {
       const l = loggedAh(d);
       logged += l; predicted += r.total; predictedLaw += law.total;
       errs.push(Math.abs(r.total / l - 1));
-      r.parts.forEach((p) => (comp[p.key] = (comp[p.key] || 0) + p.ah));
     }
     errs.sort((a, b) => a - b);
     const ratio = predicted / logged, ratioLaw = predictedLaw / logged;
     worst = Math.max(worst, Math.abs(ratioLaw - 1));
     out.push({
-      glider: m.glider, mission: m.mission, dives: ds.length,
+      mission: m.mission, dives: ds.length,
       logged_ah: +logged.toFixed(2), model_ah: +predictedLaw.toFixed(2),
       model_ah_with_factor: +predicted.toFixed(2),
       ratio: +ratioLaw.toFixed(3), ratio_with_factor: +ratio.toFixed(3),
@@ -144,10 +138,10 @@ function validate() {
 }
 
 const v = validate();
-console.log("glider mission dives  logged Ah  model Ah  ratio  (with pump factor)  median |dive error|");
+console.log("mission dives  logged Ah  model Ah  ratio  (with pump factor)  median |dive error|");
 for (const r of v.rows) {
   console.log(
-    `${r.glider}  ${String(r.mission).padStart(3)}  ${String(r.dives).padStart(5)}  ` +
+    `${String(r.mission).padStart(7)}  ${String(r.dives).padStart(5)}  ` +
     `${r.logged_ah.toFixed(1).padStart(9)}  ${r.model_ah.toFixed(1).padStart(8)}  ` +
     `${r.ratio.toFixed(3)}  ${r.ratio_with_factor.toFixed(3).padStart(8)}  ` +
     `${(100 * r.median_dive_error).toFixed(1).padStart(12)}%`);
@@ -166,7 +160,8 @@ if (a < 0 || b < a) {
   console.error(`${path.relative(REPO, PAGE)} has no ${BEGIN} ... ${END} block; refusing to edit it.`);
   process.exit(1);
 }
-const payload = { ...model, validation: v.rows };
+// The page gets the fitted model only; the missions are what it is tested against, not inputs.
+const { missions, ...payload } = model;
 const block = [
   BEGIN,
   "<!-- Written by code/build_seaglider_page.js from content/data/seaglider-model.json and",
