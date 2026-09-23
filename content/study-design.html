@@ -49,9 +49,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-3245a9efd2d27e2c6a1ec784bf206a0c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-d949c74a40ea39fb0bf3b5edfd17d417.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-3245a9efd2d27e2c6a1ec784bf206a0c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d3afe8230f4e8efc5f9e520bcaeb6a52.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-4200c13e256f42cc5e203c5f516c2120.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-d3afe8230f4e8efc5f9e520bcaeb6a52.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3qFnAtFP7Htu6jo9tMZrA2ykXH0g=" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
@@ -591,6 +591,35 @@ ul.task-list li input[type="checkbox"] {
   pointer-events: none;
 }
 
+
+  /* ---- waypoint files ---- */
+  #study-design .wpt { margin-top: 18px; }
+  #study-design .wpt h2 { font-size: 19px; margin-bottom: 4px; }
+  #study-design .wpt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 10px; }
+  #study-design .wpt-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+  #study-design .wpt-card h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin: 0 0 8px; }
+  #study-design .wpt-card .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 5px 0; font-size: 13.5px; color: var(--ink-2); }
+  #study-design .wpt-card .row + .row { border-top: 1px solid var(--line); }
+  #study-design .wpt-card input[type="number"], #study-design .wpt-card input[type="text"], #study-design .wpt-card select {
+    font: inherit; font-size: 13px; padding: 4px 7px; border: 1px solid var(--line-strong); border-radius: 6px;
+    background: var(--surface); color: var(--ink); width: 130px;
+  }
+  #study-design .wpt-card input[type="number"] { width: 90px; text-align: right; font-family: var(--mono); }
+  #study-design .wpt-card .btn { margin-top: 10px; width: 100%; }
+  #study-design .wpt-source { font-size: 13.5px; color: var(--ink-2); margin: 6px 0 0; }
+  #study-design .wpt-source b { color: var(--ink); }
+  #study-design .wpt-msg { font-size: 13px; margin-top: 8px; color: var(--ink-2); }
+  #study-design .wpt-msg.err { color: var(--flag); }
+  #study-design .wpt-drop { border: 1.5px dashed var(--line-strong); border-radius: 9px; padding: 14px; text-align: center; font-size: 13px; color: var(--ink-2); }
+  #study-design .wpt-drop.over { border-color: var(--accent); background: var(--accent-soft); }
+  #study-design .wpt-drop input { display: block; margin: 8px auto 0; font-size: 12.5px; max-width: 100%; }
+  #study-design .wpt-table-wrap { max-height: 260px; overflow: auto; border: 1px solid var(--line); border-radius: 9px; margin-top: 12px; }
+  #study-design .wpt-table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  #study-design .wpt-table th { position: sticky; top: 0; background: var(--surface-2); color: var(--ink-3); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; text-align: right; padding: 6px 10px; }
+  #study-design .wpt-table td { padding: 5px 10px; border-top: 1px solid var(--line); text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  #study-design .wpt-table th:first-child, #study-design .wpt-table td:first-child { text-align: left; }
+  #study-design .wpt-label { background: transparent; border: none; box-shadow: none; color: #4a3aa7; font-weight: 700; font-size: 11px; padding: 0; }
+  #study-design .wpt-label::before { display: none; }
 </style>
 
 <div id="study-design">
@@ -720,6 +749,59 @@ ul.task-list li input[type="checkbox"] {
           <li>With multiple gliders, route distance is divided evenly among vehicles for the duration estimate only; tracks are not yet spatially assigned to individual gliders.</li>
         </ul>
       </details>
+    </div>
+  </section>
+
+  <section class="wpt" id="waypoints">
+    <h2 class="anchored">Waypoint files</h2>
+    <p class="note">Turn the generated survey into a mission file for a Slocum or a Seaglider, or load a waypoint file from either glider to see it on the map. A loaded file becomes the waypoint set, so it can also be converted from one glider's format to the other.</p>
+    <p class="wpt-source" id="wpt-source">No waypoints yet. Generate a survey or import a file.</p>
+
+    <div class="wpt-grid">
+      <div class="wpt-card">
+        <h3 class="anchored">Slocum · goto_list (.ma)</h3>
+        <div class="row"><label for="wpt-slocum-name">File name</label><input type="text" id="wpt-slocum-name" value="goto_l10.ma"></div>
+        <div class="row"><label for="wpt-slocum-dist">Waypoint reached within</label><span><input type="number" id="wpt-slocum-dist" value="10" min="1" step="10"> m</span></div>
+        <div class="row"><label for="wpt-slocum-start">Start at</label><select id="wpt-slocum-start"><option value="0">First waypoint</option><option value="-2">Closest waypoint</option><option value="-1">After last one reached</option></select></div>
+        <div class="row"><label for="wpt-slocum-end">After the last</label><select id="wpt-slocum-end"><option value="-1">Loop forever</option><option value="-2">Stop at last</option></select></div>
+        <button class="btn" id="wpt-slocum-dl" disabled="">Download Slocum file</button>
+      </div>
+
+      <div class="wpt-card">
+        <h3 class="anchored">Seaglider · targets</h3>
+        <div class="row"><label for="wpt-sg-prefix">Target names</label><input type="text" id="wpt-sg-prefix" value="WP" maxlength="8"></div>
+        <div class="row"><label for="wpt-sg-radius">Radius</label><span><input type="number" id="wpt-sg-radius" value="2000" min="10" step="100"> m</span></div>
+        <div class="row"><label for="wpt-sg-end">After the last</label><select id="wpt-sg-end"><option value="loop">Loop to first</option><option value="hold">Hold at last</option></select></div>
+        <button class="btn" id="wpt-sg-dl" disabled="">Download Seaglider targets</button>
+      </div>
+
+      <div class="wpt-card">
+        <h3 class="anchored">Import a waypoint file</h3>
+        <div class="wpt-drop" id="wpt-drop">Drop a Slocum <b>goto_l*.ma</b> or a Seaglider <b>targets</b> file here, or choose one
+          <input type="file" id="wpt-file" aria-label="Waypoint file to import">
+        </div>
+        <button class="btn ghost" id="wpt-clear" disabled="">Clear imported waypoints</button>
+        <div class="wpt-msg" id="wpt-msg"></div>
+      </div>
+    </div>
+
+    <div class="wpt-table-wrap" id="wpt-table-wrap" hidden="">
+      
+<table class="wpt-table caption-top">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Waypoint</th>
+<th data-quarto-table-cell-role="th">Latitude</th>
+<th data-quarto-table-cell-role="th">Longitude</th>
+<th data-quarto-table-cell-role="th">Lat (DDMM.mmm)</th>
+<th data-quarto-table-cell-role="th">Lon (DDMM.mmm)</th>
+<th data-quarto-table-cell-role="th">Next</th>
+</tr>
+</thead>
+<tbody id="wpt-rows">
+</tbody>
+</table>
+
     </div>
   </section>
 </div>
@@ -1074,6 +1156,8 @@ ul.task-list li input[type="checkbox"] {
   map.getPane('surfacePane').style.zIndex = 650;
   map.getPane('surfacePane').style.pointerEvents = 'none';
   const surfaceLayer = new L.FeatureGroup().addTo(map);
+  // The waypoint-file panel below draws imported waypoints on this same map.
+  window.studyMap = map;
 
   const drawControl = new L.Control.Draw({
     position: 'topleft',
@@ -1197,6 +1281,7 @@ ul.task-list li input[type="checkbox"] {
     document.getElementById('summary-empty').hidden = false;
     document.getElementById('summary-results').hidden = true;
     setButtons();
+    window.dispatchEvent(new CustomEvent('studydesign:cleared'));
   }
 
   map.on(L.Draw.Event.CREATED, function (e) {
@@ -1496,6 +1581,266 @@ ul.task-list li input[type="checkbox"] {
   window.addEventListener('load', refreshMapSize);
   setTimeout(refreshMapSize, 300);
   setTimeout(refreshMapSize, 1000);
+})();
+</script>
+<script>
+/* Waypoint files: export the generated survey as Slocum / Seaglider waypoint files, and import
+ * either format onto the map.
+ *
+ * Both gliders write positions as signed degrees-and-decimal-minutes packed into one number,
+ * DDDMM.mmm (-12225.500 is 122 deg 25.5' W). The layouts follow real files:
+ *   Slocum goto_list (.ma)  "<start:waypoints>" block of "lon lat" lines, '#' comments,
+ *                           b_arg lines for start/stop behaviour (NOC's goto_l10.ma).
+ *   Seaglider targets       one target per line, "NAME lat=DDMM.m lon=DDDMM.m radius=R goto=NEXT",
+ *                           '/' comment lines (the targets file on our own glider's CF card).
+ */
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const map = window.studyMap;
+  if (!map) return;
+
+  // One active waypoint set: [{name, lat, lon, next (index or null), radius}]
+  let active = { points: [], source: "" };
+  let generated = [];
+  const imported = L.featureGroup().addTo(map);
+  const WPT_COLOR = "#4a3aa7";
+
+  // ------------------------------------------------------------ coordinates
+  function toDdmm(dec) {
+    const sign = dec < 0 ? "-" : "";
+    const a = Math.abs(dec);
+    let deg = Math.floor(a);
+    let min = +((a - deg) * 60).toFixed(3);
+    if (min >= 60) { deg += 1; min -= 60; }
+    return sign + (deg * 100 + min).toFixed(3);
+  }
+  function fromDdmm(v) {
+    const x = parseFloat(v);
+    if (!isFinite(x)) return NaN;
+    const a = Math.abs(x), deg = Math.floor(a / 100), min = a - deg * 100;
+    if (min >= 60) return NaN;
+    return Math.sign(x || 1) * (deg + min / 60);
+  }
+
+  // ------------------------------------------------------------ from the generated survey
+  // The survey's waypoints are its turn points: every vertex of the route, in order, with
+  // near-duplicates (the join between two transects) merged.
+  function surveyPoints(geom) {
+    if (!geom) return [];
+    let coords = [];
+    if (geom.type === "route") coords = geom.line.geometry.coordinates;
+    else geom.lines.forEach((seg, i) => {
+      const c = seg.geometry.coordinates.slice();
+      coords.push(...(i % 2 ? c.reverse() : c));
+    });
+    const out = [];
+    coords.forEach(([lon, lat]) => {
+      const last = out[out.length - 1];
+      if (last && turf.distance([last.lon, last.lat], [lon, lat], { units: "meters" }) < 5) return;
+      out.push({ lat, lon });
+    });
+    return out;
+  }
+
+  // ------------------------------------------------------------ writers
+  function stamp() { return new Date().toISOString().slice(0, 10); }
+
+  function writeSlocum(points) {
+    const dist = Math.max(1, Number($("wpt-slocum-dist").value) || 10);
+    const start = $("wpt-slocum-start").value, legs = $("wpt-slocum-end").value;
+    const name = ($("wpt-slocum-name").value || "goto_l10.ma").trim();
+    const lines = [
+      "behavior_name=goto_list",
+      "# " + name,
+      "# " + points.length + " waypoints from the Glider Performance Tool study design, " + stamp(),
+      "# Coordinates are DDMM.mmm, longitude first. Check them before the glider flies.",
+      "",
+      "<start:b_arg>",
+      "b_arg: start_when(enum) 0",
+      "b_arg: list_stop_when(enum) 7",
+      "b_arg: initial_wpt(enum) " + start + (start === "0" ? "    # first in the list" : start === "-2" ? "   # closest" : "   # one after the last achieved"),
+      "b_arg: num_legs_to_run(nodim) " + legs + (legs === "-1" ? "   # loop" : "   # traverse the list once, stop at the last"),
+      "b_arg: list_when_wpt_dist(m) " + dist + "   # used because list_stop_when == 7",
+      "<end:b_arg>",
+      "",
+      "<start:waypoints>",
+    ];
+    const prefix = ($("wpt-sg-prefix").value || "WP").replace(/\s+/g, "");
+    points.forEach((p, i) => lines.push(toDdmm(p.lon) + " " + toDdmm(p.lat) + "   # " + (p.name || prefix + (i + 1))));
+    lines.push("<end:waypoints>", "");
+    return lines.join("\n");
+  }
+
+  function writeSeaglider(points) {
+    const prefix = ($("wpt-sg-prefix").value || "WP").replace(/\s+/g, "");
+    const radius = Math.max(10, Math.round(Number($("wpt-sg-radius").value) || 2000));
+    const loop = $("wpt-sg-end").value === "loop";
+    // A waypoint keeps its own name, radius and successor when it has them (an imported file);
+    // otherwise it gets the prefix, the radius above, and "After the last" decides where the
+    // final one goes.
+    const names = points.map((p, i) => p.name || prefix + (i + 1));
+    const width = Math.max(...names.map((n) => n.length)) + 2;
+    const lines = [
+      "/ Seaglider targets: " + points.length + " waypoints from the Glider Performance Tool study design, " + stamp(),
+      "/ lat/lon are DDMM.mmm. Check them before the glider flies.",
+    ];
+    points.forEach((p, i) => {
+      const next = p.next !== null && p.next !== undefined ? names[p.next] : (loop ? names[0] : names[i]);
+      lines.push((names[i] + " ".repeat(width)).slice(0, width) + "lat=" + toDdmm(p.lat) + " lon=" + toDdmm(p.lon) +
+        " radius=" + (p.radius || radius) + " goto=" + next);
+    });
+    lines.push("");
+    return lines.join("\n");
+  }
+
+  function download(name, text) {
+    const url = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  // ------------------------------------------------------------ readers
+  function readSlocum(text) {
+    const block = text.match(/<start:waypoints>([\s\S]*?)<end:waypoints>/i);
+    if (!block) throw new Error("no <start:waypoints> block");
+    const points = [];
+    block[1].split(/\r?\n/).forEach((raw, i) => {
+      const comment = (raw.split("#")[1] || "").trim();
+      const t = raw.split("#")[0].trim();
+      if (!t) return;
+      const [lon, lat] = t.split(/[\s,]+/).map(fromDdmm);
+      if (!isFinite(lat) || !isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180)
+        throw new Error("could not read waypoint line \"" + t + "\"");
+      points.push({ lat, lon, name: comment && comment.length <= 16 && !/\s/.test(comment) ? comment : "WP" + (points.length + 1) });
+    });
+    const legs = (text.match(/num_legs_to_run\(nodim\)\s+(-?\d+)/) || [])[1];
+    const loop = legs === "-1";
+    points.forEach((p, i) => (p.next = i < points.length - 1 ? i + 1 : (loop ? 0 : null)));
+    if (loop && points.length > 1) points[points.length - 1].loopBack = true;
+    return { points, kind: "Slocum goto_list", note: loop ? "loops back to the first" : "stops at the last" };
+  }
+
+  function readSeaglider(text) {
+    const points = [];
+    text.split(/\r?\n/).forEach((raw) => {
+      const t = raw.trim();
+      if (!t || t.startsWith("/")) return;
+      const parts = t.split(/\s+/);
+      const kv = {};
+      parts.slice(1).forEach((p) => { const m = p.match(/^(\w+)=(.*)$/); if (m) kv[m[1].toLowerCase()] = m[2]; });
+      if (kv.lat === undefined || kv.lon === undefined) return;
+      const lat = fromDdmm(kv.lat), lon = fromDdmm(kv.lon);
+      if (!isFinite(lat) || !isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180)
+        throw new Error("could not read target \"" + parts[0] + "\"");
+      points.push({ name: parts[0], lat, lon, radius: parseFloat(kv.radius) || null, gotoName: kv.goto });
+    });
+    if (!points.length) throw new Error("no targets with lat= and lon= found");
+    const byName = {};
+    points.forEach((p, i) => (byName[p.name] = i));
+    points.forEach((p) => (p.next = p.gotoName in byName ? byName[p.gotoName] : null));
+    return { points, kind: "Seaglider targets", note: "arrows follow each target's goto" };
+  }
+
+  function parse(text) {
+    if (/<start:waypoints>/i.test(text)) return readSlocum(text);
+    if (/\blat\s*=/.test(text) && /\blon\s*=/.test(text)) return readSeaglider(text);
+    throw new Error("not a Slocum goto_list (.ma) or Seaglider targets file");
+  }
+
+  // ------------------------------------------------------------ map + table
+  function drawImported(points) {
+    imported.clearLayers();
+    points.forEach((p, i) => {
+      if (p.radius) L.circle([p.lat, p.lon], { radius: p.radius, color: WPT_COLOR, weight: 1, fillOpacity: 0.06 }).addTo(imported);
+      if (p.next !== null && p.next !== undefined && p.next !== i) {
+        const q = points[p.next];
+        // A Slocum list's return from the last waypoint to the first is dashed.
+        L.polyline([[p.lat, p.lon], [q.lat, q.lon]], { color: WPT_COLOR, weight: 2.5, opacity: 0.9, dashArray: p.loopBack ? "6 6" : null }).addTo(imported);
+      }
+    });
+    points.forEach((p) => {
+      L.circleMarker([p.lat, p.lon], { radius: 5, color: "#fff", weight: 2, fillColor: WPT_COLOR, fillOpacity: 1 })
+        .bindTooltip(p.name, { permanent: true, direction: "right", offset: [6, 0], className: "wpt-label" })
+        .addTo(imported);
+    });
+  }
+
+  function render() {
+    const pts = active.points, has = pts.length > 0;
+    $("wpt-slocum-dl").disabled = !has;
+    $("wpt-sg-dl").disabled = !has;
+    $("wpt-table-wrap").hidden = !has;
+    $("wpt-source").innerHTML = has
+      ? "<b>" + pts.length + " waypoints</b> " + active.source
+      : "No waypoints yet. Generate a survey or import a file.";
+    const prefix = ($("wpt-sg-prefix").value || "WP").replace(/\s+/g, "");
+    const nm = (i) => pts[i].name || prefix + (i + 1);
+    $("wpt-rows").innerHTML = pts.map((p, i) =>
+      "<tr><td>" + nm(i) + "</td><td>" + p.lat.toFixed(5) + "</td><td>" + p.lon.toFixed(5) + "</td><td>" +
+      toDdmm(p.lat) + "</td><td>" + toDdmm(p.lon) + "</td><td>" +
+      (p.next === null || p.next === undefined ? (p.gotoName ? "–" : "last") : p.next === i ? "holds" : nm(p.next)) +
+      "</td></tr>").join("");
+  }
+
+  function useGenerated() {
+    const pts = generated.map((p, i) => ({ ...p, next: i < generated.length - 1 ? i + 1 : null }));
+    active = { points: pts, source: pts.length ? "from the generated survey (its turn points, in the order flown)." : "" };
+    render();
+  }
+
+  // ------------------------------------------------------------ events
+  window.addEventListener("studydesign:generated", () => {
+    generated = surveyPoints(window.studyDesign && window.studyDesign.geometry);
+    if (!imported.getLayers().length) useGenerated();
+  });
+  window.addEventListener("studydesign:cleared", () => {
+    generated = [];
+    if (!imported.getLayers().length) useGenerated();
+  });
+
+  $("wpt-slocum-dl").addEventListener("click", () => {
+    const name = ($("wpt-slocum-name").value || "goto_l10.ma").trim();
+    download(/\.ma$/i.test(name) ? name : name + ".ma", writeSlocum(active.points));
+  });
+  $("wpt-sg-dl").addEventListener("click", () => download("targets", writeSeaglider(active.points)));
+  $("wpt-sg-prefix").addEventListener("input", render);
+
+  function msg(text, err) { $("wpt-msg").textContent = text; $("wpt-msg").className = "wpt-msg" + (err ? " err" : ""); }
+
+  function load(file) {
+    if (!file) return;
+    if (file.size > 2e6) { msg(file.name + " is too large to be a waypoint file.", true); return; }
+    file.text().then((text) => {
+      let r;
+      try { r = parse(text); } catch (e) { msg(file.name + ": " + e.message + ".", true); return; }
+      active = { points: r.points, source: "from " + file.name + " (" + r.kind + ", " + r.note + ")." };
+      drawImported(r.points);
+      map.fitBounds(imported.getBounds(), { padding: [30, 30], maxZoom: 11 });
+      $("wpt-clear").disabled = false;
+      msg("Loaded " + r.points.length + " waypoints from " + file.name + ". The download buttons now write these." +
+        (r.kind === "Seaglider targets" ? " A Slocum list is a single sequence, so it takes the targets in the file's order, not their goto links." : ""));
+      render();
+    });
+  }
+  $("wpt-file").addEventListener("change", (e) => { load(e.target.files[0]); e.target.value = ""; });
+  const drop = $("wpt-drop");
+  ["dragenter", "dragover"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach((t) => drop.addEventListener(t, () => drop.classList.remove("over")));
+  drop.addEventListener("drop", (e) => { e.preventDefault(); load(e.dataTransfer.files[0]); });
+
+  $("wpt-clear").addEventListener("click", () => {
+    imported.clearLayers();
+    $("wpt-clear").disabled = true;
+    msg("");
+    useGenerated();
+  });
+
+  // For the check in the repository; not used by the page itself.
+  window.studyWaypoints = { toDdmm, fromDdmm, parse, writeSlocum, writeSeaglider };
+  render();
 })();
 </script>
 
