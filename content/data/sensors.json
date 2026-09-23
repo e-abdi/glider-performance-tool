@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-18",
+ "generated": "2026-09-23",
  "source": "Copy of Glider_Acoustic_System_info.xlsx",
  "categories": [
   "CTD",
@@ -913,13 +913,11 @@
     "Mid-frequency sources (e.g. delphinid whistles) - recording",
     "High-frequency sources (e.g. odontocete clicks) - recording"
    ],
-   "sampleRate": "LFDCS runs on 2 kHz audio (16-bit). Seaglider DMON: MF channel 120 kHz, HF channel 240 kHz",
-   "power": "~150 mW while sampling (~450 mW incl. linear-regulator losses) - Seaglider DMON; DMON2 internal battery 10 Ah",
+   "sampleRate": "LFDCS runs on 2 kHz audio (16-bit)",
+   "power": "~150 mW while sampling (~450 mW incl. linear-regulator losses), measured on the earlier DMON; DMON2 internal battery 10 Ah",
    "size": "Oil-filled urethane housing with integrated hydrophones; mounted on the Slocum science bay (G2 topside / G3 underside)",
-   "integrations": "Slocum G2/G3 (sci_dmon driver, science-bay integration); Seaglider (SCSC DMON: 3 hydrophones, wingtips + aft hatch); moored buoys; Wave Glider",
+   "integrations": "Slocum G2/G3 (sci_dmon driver, science-bay integration); moored buoys; Wave Glider",
    "gliders": [
-    "seaglider-m1",
-    "seaglider-sgx",
     "slocum-g3",
     "slocum-sentinel"
    ]
