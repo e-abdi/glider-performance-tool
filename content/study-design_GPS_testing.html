@@ -35,8 +35,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../content/slocum-endurance.html" rel="next">
-<link href="../content/glider-selection.html" rel="prev">
 <link href="../content/images/GliderRodeo.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -80,7 +78,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3qFnAtFP7Htu6jo9tMZrA2ykXH0g=" crossorigin="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
@@ -262,7 +260,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/study-design.html">Study Design Tool</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Study Design Tool</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -313,7 +311,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../content/study-design.html" class="sidebar-item-text sidebar-link active">
+  <a href="../content/study-design.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Study Design Tool</span></a>
   </div>
 </li>
@@ -592,34 +590,60 @@ ul.task-list li input[type="checkbox"] {
 }
 
 
-  /* ---- waypoint files ---- */
-  #study-design .wpt { margin-top: 18px; }
-  #study-design .wpt h2 { font-size: 19px; margin-bottom: 4px; }
-  #study-design .wpt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 10px; }
-  #study-design .wpt-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
-  #study-design .wpt-card h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin: 0 0 8px; }
-  #study-design .wpt-card .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 5px 0; font-size: 13.5px; color: var(--ink-2); }
-  #study-design .wpt-card .row + .row { border-top: 1px solid var(--line); }
-  #study-design .wpt-card input[type="number"], #study-design .wpt-card input[type="text"], #study-design .wpt-card select {
-    font: inherit; font-size: 13px; padding: 4px 7px; border: 1px solid var(--line-strong); border-radius: 6px;
-    background: var(--surface); color: var(--ink); width: 130px;
+  #study-design .gps-box {
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);
   }
-  #study-design .wpt-card input[type="number"] { width: 90px; text-align: right; font-family: var(--mono); }
-  #study-design .wpt-card .btn { margin-top: 10px; width: 100%; }
-  #study-design .wpt-source { font-size: 13.5px; color: var(--ink-2); margin: 6px 0 0; }
-  #study-design .wpt-source b { color: var(--ink); }
-  #study-design .wpt-msg { font-size: 13px; margin-top: 8px; color: var(--ink-2); }
-  #study-design .wpt-msg.err { color: var(--flag); }
-  #study-design .wpt-drop { border: 1.5px dashed var(--line-strong); border-radius: 9px; padding: 14px; text-align: center; font-size: 13px; color: var(--ink-2); }
-  #study-design .wpt-drop.over { border-color: var(--accent); background: var(--accent-soft); }
-  #study-design .wpt-drop input { display: block; margin: 8px auto 0; font-size: 12.5px; max-width: 100%; }
-  #study-design .wpt-table-wrap { max-height: 260px; overflow: auto; border: 1px solid var(--line); border-radius: 9px; margin-top: 12px; }
-  #study-design .wpt-table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
-  #study-design .wpt-table th { position: sticky; top: 0; background: var(--surface-2); color: var(--ink-3); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; text-align: right; padding: 6px 10px; }
-  #study-design .wpt-table td { padding: 5px 10px; border-top: 1px solid var(--line); text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  #study-design .wpt-table th:first-child, #study-design .wpt-table td:first-child { text-align: left; }
-  #study-design .wpt-label { background: transparent; border: none; box-shadow: none; color: #4a3aa7; font-weight: 700; font-size: 11px; padding: 0; }
-  #study-design .wpt-label::before { display: none; }
+  #study-design .gps-box textarea {
+    width: 100%; min-height: 105px; resize: vertical;
+    font-family: var(--mono); font-size: 12px; line-height: 1.4;
+    color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line-strong); border-radius: 7px; padding: 8px 9px;
+  }
+  #study-design .gps-help { color: var(--ink-3); font-size: 12px; margin: 5px 0 0; }
+  #study-design .export-actions { margin-top: 10px; }
+  #study-design .surface-marker { pointer-events: none; }
+
+
+  #study-design .area-mode {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0 12px;
+  }
+  #study-design .area-mode label {
+    display: flex; align-items: center; gap: 7px;
+    border: 1px solid var(--line-strong); border-radius: 8px;
+    padding: 9px 10px; cursor: pointer; background: var(--surface);
+    color: var(--ink-2); font-size: 13px;
+  }
+  #study-design .area-mode input { accent-color: var(--accent); }
+  #study-design .area-method {
+    transition: opacity .15s ease, filter .15s ease;
+  }
+  #study-design .area-method.inactive {
+    opacity: .38;
+    filter: grayscale(.15);
+    pointer-events: none;
+  }
+  #study-design .area-method.active {
+    opacity: 1;
+  }
+
+
+  #study-design .vertex-editor {
+    margin-top: 10px; padding: 10px; border: 1px solid var(--line);
+    border-radius: 8px; background: var(--surface-2);
+  }
+  #study-design .vertex-editor[hidden] { display: none !important; }
+  #study-design .vertex-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  #study-design .vertex-table th, #study-design .vertex-table td { padding: 4px; vertical-align: middle; }
+  #study-design .vertex-table th { text-align: left; color: var(--ink-3); font-weight: 700; }
+  #study-design .vertex-table input {
+    width: 100%; min-width: 0; font-family: var(--mono); font-size: 12px;
+    padding: 5px 6px; border: 1px solid var(--line-strong); border-radius: 5px;
+    background: var(--surface); color: var(--ink);
+  }
+  #study-design .vertex-table button {
+    white-space: nowrap; font-size: 11px; padding: 5px 7px;
+  }
+
 </style>
 
 <div id="study-design">
@@ -675,19 +699,69 @@ ul.task-list li input[type="checkbox"] {
         </div>
       </div>
 
+      <h3 class="anchored">Study area input</h3>
+      <div class="area-mode" role="radiogroup" aria-label="Study area input method">
+        <label><input type="radio" name="area-mode" value="draw" checked=""> Draw polygon</label>
+        <label><input type="radio" name="area-mode" value="gps"> Enter GPS points</label>
+      </div>
+
+      <div class="area-method active" id="area-method-draw">
+        <div class="actions" style="margin-top:0;padding-top:0;border-top:0;">
+          <button class="btn" id="draw-area">Draw study area</button>
+          <button class="btn" id="finish-area" disabled="">Finish polygon</button>
+        </div>
+      </div>
+
+      <div class="area-method inactive" id="area-method-gps">
+        <div class="gps-box" style="margin-top:0;padding-top:0;border-top:0;">
+          <div class="field" style="margin-bottom:8px;">
+            <label for="gps-points"><b>GPS vertices</b></label>
+            <textarea id="gps-points" placeholder="36.95, -122.35
+36.95, -121.85
+36.55, -121.78
+36.48, -122.25"></textarea>
+            <p class="gps-help">Enter one vertex per line as <b>latitude, longitude</b>. At least three valid points are required; the polygon closes automatically.</p>
+          </div>
+          <button class="btn ghost" id="load-gps" type="button">Use GPS points</button>
+        </div>
+      </div>
+
       <div class="actions">
-        <button class="btn" id="draw-area">Draw study area</button>
-        <button class="btn" id="finish-area" disabled="">Finish polygon</button>
+        <button class="btn ghost" id="edit-area" disabled="">Edit polygon</button>
         <button class="btn" id="clear-area">Clear area</button>
         <button class="btn" id="generate" disabled="">Generate survey</button>
         <button class="btn ghost" id="clear-tracks" disabled="">Clear tracks</button>
+        <button class="btn ghost" id="export-geojson" disabled="">Export GeoJSON</button>
+        <button class="btn ghost" id="export-csv" disabled="">Export waypoints CSV</button>
         <button class="btn ghost" id="example-area">Load example</button>
+      </div>
+
+      <div class="vertex-editor" id="vertex-editor" hidden="">
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px;">
+          <b>Edit polygon vertices</b>
+          <button class="btn ghost" id="close-vertex-editor" type="button">Close</button>
+        </div>
+        <p class="gps-help" id="vertex-edit-status">Change coordinates directly, or choose <b>Move on map</b> and click the new location.</p>
+        
+<table class="vertex-table caption-top">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">#</th>
+<th data-quarto-table-cell-role="th">Latitude</th>
+<th data-quarto-table-cell-role="th">Longitude</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody id="vertex-table-body">
+</tbody>
+</table>
+
       </div>
     </section>
 
     <section class="panel map-panel">
       <div id="study-map" aria-label="Interactive map for drawing the study area"></div>
-      <div class="map-help"><b>Map controls:</b> click <b>Draw study area</b>, then click successive points on the map to add vertices. When you have at least three vertices, click <b>Finish polygon</b>. Use <b>Clear area</b> to start over. Then click <b>Generate survey</b>. While drawing, the rest of the map should remain fully clickable.</div>
+      <div class="map-help"><b>Study area:</b> choose either <b>Draw polygon</b> or <b>Enter GPS points</b>. After creating the polygon, use <b>Edit polygon</b> to change coordinates or reposition a vertex with a map click.</div>
       <div class="map-help"><b>Map layers:</b> <span style="color:#0057B8;font-weight:800;">blue lines</span> = survey track; <span style="color:#F28E2B;font-weight:800;">orange dots</span> = estimated surfacing locations.</div>
       <div class="map-help"><b>Land mask:</b> shaded land is shown for visual guidance only. Survey tracks are not yet routed around land, so route distance and mission duration should be treated as approximate.</div>
       <div id="land-mask-status" class="land-mask-status">Loading land mask…</div>
@@ -749,59 +823,6 @@ ul.task-list li input[type="checkbox"] {
           <li>With multiple gliders, route distance is divided evenly among vehicles for the duration estimate only; tracks are not yet spatially assigned to individual gliders.</li>
         </ul>
       </details>
-    </div>
-  </section>
-
-  <section class="wpt" id="waypoints">
-    <h2 class="anchored">Waypoint files</h2>
-    <p class="note">Turn the generated survey into a mission file for a Slocum or a Seaglider, or load a waypoint file from either glider to see it on the map. A loaded file becomes the waypoint set, so it can also be converted from one glider's format to the other.</p>
-    <p class="wpt-source" id="wpt-source">No waypoints yet. Generate a survey or import a file.</p>
-
-    <div class="wpt-grid">
-      <div class="wpt-card">
-        <h3 class="anchored">Slocum · goto_list (.ma)</h3>
-        <div class="row"><label for="wpt-slocum-name">File name</label><input type="text" id="wpt-slocum-name" value="goto_l10.ma"></div>
-        <div class="row"><label for="wpt-slocum-dist">Waypoint reached within</label><span><input type="number" id="wpt-slocum-dist" value="10" min="1" step="10"> m</span></div>
-        <div class="row"><label for="wpt-slocum-start">Start at</label><select id="wpt-slocum-start"><option value="0">First waypoint</option><option value="-2">Closest waypoint</option><option value="-1">After last one reached</option></select></div>
-        <div class="row"><label for="wpt-slocum-end">After the last</label><select id="wpt-slocum-end"><option value="-1">Loop forever</option><option value="-2">Stop at last</option></select></div>
-        <button class="btn" id="wpt-slocum-dl" disabled="">Download Slocum file</button>
-      </div>
-
-      <div class="wpt-card">
-        <h3 class="anchored">Seaglider · targets</h3>
-        <div class="row"><label for="wpt-sg-prefix">Target names</label><input type="text" id="wpt-sg-prefix" value="WP" maxlength="8"></div>
-        <div class="row"><label for="wpt-sg-radius">Radius</label><span><input type="number" id="wpt-sg-radius" value="2000" min="10" step="100"> m</span></div>
-        <div class="row"><label for="wpt-sg-end">After the last</label><select id="wpt-sg-end"><option value="loop">Loop to first</option><option value="hold">Hold at last</option></select></div>
-        <button class="btn" id="wpt-sg-dl" disabled="">Download Seaglider targets</button>
-      </div>
-
-      <div class="wpt-card">
-        <h3 class="anchored">Import a waypoint file</h3>
-        <div class="wpt-drop" id="wpt-drop">Drop a Slocum <b>goto_l*.ma</b> or a Seaglider <b>targets</b> file here, or choose one
-          <input type="file" id="wpt-file" aria-label="Waypoint file to import">
-        </div>
-        <button class="btn ghost" id="wpt-clear" disabled="">Clear imported waypoints</button>
-        <div class="wpt-msg" id="wpt-msg"></div>
-      </div>
-    </div>
-
-    <div class="wpt-table-wrap" id="wpt-table-wrap" hidden="">
-      
-<table class="wpt-table caption-top">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th">Waypoint</th>
-<th data-quarto-table-cell-role="th">Latitude</th>
-<th data-quarto-table-cell-role="th">Longitude</th>
-<th data-quarto-table-cell-role="th">Lat (DDMM.mmm)</th>
-<th data-quarto-table-cell-role="th">Lon (DDMM.mmm)</th>
-<th data-quarto-table-cell-role="th">Next</th>
-</tr>
-</thead>
-<tbody id="wpt-rows">
-</tbody>
-</table>
-
     </div>
   </section>
 </div>
@@ -1116,9 +1137,20 @@ ul.task-list li input[type="checkbox"] {
     pattern: document.getElementById('pattern'),
     drawArea: document.getElementById('draw-area'),
     finishArea: document.getElementById('finish-area'),
+    areaModeDraw: document.getElementById('area-method-draw'),
+    areaModeGps: document.getElementById('area-method-gps'),
+    editArea: document.getElementById('edit-area'),
+    vertexEditor: document.getElementById('vertex-editor'),
+    vertexTableBody: document.getElementById('vertex-table-body'),
+    vertexEditStatus: document.getElementById('vertex-edit-status'),
+    closeVertexEditor: document.getElementById('close-vertex-editor'),
     clearArea: document.getElementById('clear-area'),
     generate: document.getElementById('generate'),
     clearTracks: document.getElementById('clear-tracks'),
+    gpsPoints: document.getElementById('gps-points'),
+    loadGps: document.getElementById('load-gps'),
+    exportGeojson: document.getElementById('export-geojson'),
+    exportCsv: document.getElementById('export-csv'),
     exampleArea: document.getElementById('example-area')
   };
 
@@ -1151,13 +1183,9 @@ ul.task-list li input[type="checkbox"] {
   const drawnItems = new L.FeatureGroup().addTo(map);
   const trackLayer = new L.FeatureGroup().addTo(map);
 
-  // Keep estimated surfacing locations in their own pane above survey lines.
-  map.createPane('surfacePane');
-  map.getPane('surfacePane').style.zIndex = 650;
-  map.getPane('surfacePane').style.pointerEvents = 'none';
+  // Estimated surfacing locations use Leaflet's standard vector pane.
+  // This is more stable across zoom levels than a custom SVG pane.
   const surfaceLayer = new L.FeatureGroup().addTo(map);
-  // The waypoint-file panel below draws imported waypoints on this same map.
-  window.studyMap = map;
 
   const drawControl = new L.Control.Draw({
     position: 'topleft',
@@ -1184,6 +1212,8 @@ ul.task-list li input[type="checkbox"] {
   let manualVertices = [];
   let manualGuide = null;
   let manualVertexLayer = L.layerGroup().addTo(map);
+  let movingVertexIndex = null;
+
 
   function resetManualGuide() {
     if (manualGuide) {
@@ -1216,7 +1246,35 @@ ul.task-list li input[type="checkbox"] {
     els.finishArea.disabled = manualVertices.length < 3;
   }
 
+
+  function setAreaMode(mode) {
+    const drawMode = mode === 'draw';
+    els.areaModeDraw.classList.toggle('active', drawMode);
+    els.areaModeDraw.classList.toggle('inactive', !drawMode);
+    els.areaModeGps.classList.toggle('active', !drawMode);
+    els.areaModeGps.classList.toggle('inactive', drawMode);
+
+    if (!drawMode) {
+      manualDrawing = false;
+      resetManualGuide();
+      els.drawArea.textContent = 'Draw study area';
+      els.finishArea.disabled = true;
+      map.getContainer().style.cursor = '';
+    }
+  }
+
+  document.querySelectorAll('input[name="area-mode"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+      if (this.checked) setAreaMode(this.value);
+    });
+  });
+
+  setAreaMode(document.querySelector('input[name="area-mode"]:checked')?.value || 'draw');
+
   els.drawArea.addEventListener('click', function () {
+    const drawRadio = document.querySelector('input[name="area-mode"][value="draw"]');
+    if (drawRadio) drawRadio.checked = true;
+    setAreaMode('draw');
     manualDrawing = true;
     manualVertices = [];
     resetManualGuide();
@@ -1227,25 +1285,11 @@ ul.task-list li input[type="checkbox"] {
 
   els.finishArea.addEventListener('click', function () {
     if (manualVertices.length < 3) return;
-    drawnItems.clearLayers();
-    const poly = L.polygon(manualVertices, {
-      color: '#0057B8',
-      weight: 3,
-      opacity: 1,
-      fillOpacity: 0.12
-    }).addTo(drawnItems);
-    manualDrawing = false;
-    resetManualGuide();
-    els.drawArea.textContent = 'Draw study area';
-    els.finishArea.disabled = true;
-    map.getContainer().style.cursor = '';
-    els.generate.disabled = false;
-    if (typeof clearSurvey === 'function') clearSurvey();
-    map.fitBounds(poly.getBounds(), {padding: [20,20]});
-    setTimeout(() => map.invalidateSize({pan:false}), 50);
+    installStudyPolygon(manualVertices.slice());
   });
 
   els.clearArea.addEventListener('click', function () {
+    closeVertexEditor();
     manualDrawing = false;
     manualVertices = [];
     resetManualGuide();
@@ -1258,10 +1302,156 @@ ul.task-list li input[type="checkbox"] {
   });
 
   map.on('click', function (e) {
+    if (movingVertexIndex !== null) {
+      const idx = movingVertexIndex;
+      movingVertexIndex = null;
+      updatePolygonVertex(idx, e.latlng.lat, e.latlng.lng);
+      els.vertexEditStatus.innerHTML = 'Change coordinates directly, or choose <b>Move on map</b> and click the new location.';
+      map.getContainer().style.cursor = '';
+      return;
+    }
     if (!manualDrawing) return;
     manualVertices.push(e.latlng);
     updateManualGuide();
   });
+
+
+  function parseGpsVertices(raw) {
+    const points = [];
+    const errors = [];
+    raw.split(/\r?\n/).forEach((line, index) => {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+      const parts = trimmed.split(/[,\t ]+/).filter(Boolean);
+      if (parts.length < 2) {
+        errors.push(`line ${index + 1}`);
+        return;
+      }
+      const lat = Number(parts[0]);
+      const lng = Number(parts[1]);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng) ||
+          lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+        errors.push(`line ${index + 1}`);
+        return;
+      }
+      points.push(L.latLng(lat, lng));
+    });
+    return { points, errors };
+  }
+
+  function installStudyPolygon(latlngs) {
+    if (latlngs.length < 3) return null;
+    closeVertexEditor();
+    manualDrawing = false;
+    manualVertices = [];
+    resetManualGuide();
+    drawnItems.clearLayers();
+    clearTracksAndSummary();
+    const poly = L.polygon(latlngs, {
+      color: '#0057B8', weight: 3, opacity: 1, fillOpacity: 0.12
+    }).addTo(drawnItems);
+    els.drawArea.textContent = 'Draw study area';
+    els.finishArea.disabled = true;
+    map.getContainer().style.cursor = '';
+    map.fitBounds(poly.getBounds(), { padding: [20, 20] });
+    setTimeout(() => map.invalidateSize({ pan: false }), 50);
+    setButtons();
+    return poly;
+  }
+
+  els.loadGps.addEventListener('click', function () {
+    const gpsRadio = document.querySelector('input[name="area-mode"][value="gps"]');
+    if (gpsRadio) gpsRadio.checked = true;
+    setAreaMode('gps');
+    const parsed = parseGpsVertices(els.gpsPoints.value);
+    if (parsed.errors.length) {
+      alert(`Could not read GPS coordinates on ${parsed.errors.join(', ')}. Use one latitude, longitude pair per line.`);
+      return;
+    }
+    if (parsed.points.length < 3) {
+      alert('Please enter at least three valid GPS points.');
+      return;
+    }
+    installStudyPolygon(parsed.points);
+  });
+
+  function getPolygonVertices(layer) {
+    if (!layer) return [];
+    const latlngs = layer.getLatLngs();
+    if (!Array.isArray(latlngs) || !latlngs.length) return [];
+    return Array.isArray(latlngs[0]) ? latlngs[0] : latlngs;
+  }
+
+  function updatePolygonVertex(index, lat, lng) {
+    const poly = currentPolygonLayer();
+    if (!poly) return;
+    const vertices = getPolygonVertices(poly).map(ll => L.latLng(ll.lat, ll.lng));
+    if (index < 0 || index >= vertices.length) return;
+    vertices[index] = L.latLng(lat, lng);
+    poly.setLatLngs(vertices);
+    poly.redraw();
+    clearTracksAndSummary();
+    renderVertexEditor();
+    setButtons();
+  }
+
+  function renderVertexEditor() {
+    const poly = currentPolygonLayer();
+    if (!poly || !els.vertexTableBody) return;
+    const vertices = getPolygonVertices(poly);
+    els.vertexTableBody.innerHTML = '';
+
+    vertices.forEach((ll, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td><input type="number" step="0.000001" value="${ll.lat.toFixed(6)}" data-vertex-lat="${index}"></td>
+        <td><input type="number" step="0.000001" value="${ll.lng.toFixed(6)}" data-vertex-lng="${index}"></td>
+        <td><button type="button" class="btn ghost" data-move-vertex="${index}">Move on map</button></td>`;
+      els.vertexTableBody.appendChild(tr);
+    });
+
+    els.vertexTableBody.querySelectorAll('input[data-vertex-lat], input[data-vertex-lng]').forEach(input => {
+      input.addEventListener('change', function () {
+        const idx = Number(this.dataset.vertexLat ?? this.dataset.vertexLng);
+        const latInput = els.vertexTableBody.querySelector(`input[data-vertex-lat="${idx}"]`);
+        const lngInput = els.vertexTableBody.querySelector(`input[data-vertex-lng="${idx}"]`);
+        const lat = Number(latInput.value);
+        const lng = Number(lngInput.value);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+          alert('Please enter valid latitude and longitude values.');
+          renderVertexEditor();
+          return;
+        }
+        updatePolygonVertex(idx, lat, lng);
+      });
+    });
+
+    els.vertexTableBody.querySelectorAll('button[data-move-vertex]').forEach(button => {
+      button.addEventListener('click', function () {
+        movingVertexIndex = Number(this.dataset.moveVertex);
+        els.vertexEditStatus.textContent = `Click the map to move vertex ${movingVertexIndex + 1}.`;
+        map.getContainer().style.cursor = 'crosshair';
+      });
+    });
+  }
+
+  function closeVertexEditor() {
+    movingVertexIndex = null;
+    map.getContainer().style.cursor = manualDrawing ? 'crosshair' : '';
+    if (els.vertexEditor) els.vertexEditor.hidden = true;
+    if (els.editArea) els.editArea.textContent = 'Edit polygon';
+    if (els.vertexEditStatus) els.vertexEditStatus.innerHTML = 'Change coordinates directly, or choose <b>Move on map</b> and click the new location.';
+  }
+
+  els.editArea.addEventListener('click', function () {
+    if (!currentPolygonLayer()) return;
+    renderVertexEditor();
+    els.vertexEditor.hidden = false;
+    els.editArea.textContent = 'Editing polygon';
+  });
+
+  els.closeVertexEditor.addEventListener('click', closeVertexEditor);
 
   function currentPolygonLayer() {
     let result = null;
@@ -1272,16 +1462,20 @@ ul.task-list li input[type="checkbox"] {
   function setButtons() {
     const hasPolygon = !!currentPolygonLayer();
     els.generate.disabled = !hasPolygon;
+    els.editArea.disabled = !hasPolygon;
+    const hasTracks = !!lastSurveyGeometry && trackLayer.getLayers().length > 0;
     els.clearTracks.disabled = trackLayer.getLayers().length === 0;
+    els.exportGeojson.disabled = !hasTracks;
+    els.exportCsv.disabled = !hasTracks;
   }
 
   function clearTracksAndSummary() {
     trackLayer.clearLayers();
     surfaceLayer.clearLayers();
+    lastSurveyGeometry = null;
     document.getElementById('summary-empty').hidden = false;
     document.getElementById('summary-results').hidden = true;
     setButtons();
-    window.dispatchEvent(new CustomEvent('studydesign:cleared'));
   }
 
   map.on(L.Draw.Event.CREATED, function (e) {
@@ -1442,8 +1636,8 @@ ul.task-list li input[type="checkbox"] {
         fillColor: '#F59E0B',
         fillOpacity: 0.95,
         interactive: false,
-        pane: 'surfacePane',
-        className: 'profile-marker'
+        pane: 'overlayPane',
+        className: 'surface-marker'
       }).addTo(surfaceLayer);
       count += 1;
     }
@@ -1482,6 +1676,106 @@ ul.task-list li input[type="checkbox"] {
       document.getElementById('m-surface-markers').textContent = '--';
     }
   }
+
+  function surveyTrackFeatures() {
+    if (!lastSurveyGeometry) return [];
+    if (lastSurveyGeometry.type === 'route') {
+      return [turf.feature(lastSurveyGeometry.line.geometry, {
+        feature_type: 'survey_route',
+        distance_km: lastSurveyGeometry.distanceKm
+      })];
+    }
+    return lastSurveyGeometry.lines.map((line, i) =>
+      turf.feature(line.geometry, { feature_type: 'transect', transect_id: i + 1 })
+    );
+  }
+
+  function currentSurfacePoints() {
+    const depthM = Math.max(0, Number(els.depth.value) || 0);
+    const angle = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
+    const cycleKm = diveCycleDistanceKm(depthM, angle);
+    const points = [];
+    let id = 1;
+
+    function collect(line, lineId) {
+      const lenKm = turf.length(line, { units: 'kilometers' });
+      for (let d = cycleKm; d < lenKm; d += cycleKm) {
+        const p = turf.along(line, d, { units: 'kilometers' });
+        p.properties = {
+          feature_type: 'estimated_surfacing',
+          waypoint_id: id++,
+          line_id: lineId,
+          distance_along_line_km: Number(d.toFixed(3)),
+          target_depth_m: depthM,
+          glide_angle_deg: angle
+        };
+        points.push(p);
+      }
+    }
+
+    if (!lastSurveyGeometry || !(cycleKm > 0)) return points;
+    if (lastSurveyGeometry.type === 'route') collect(lastSurveyGeometry.line, 1);
+    else lastSurveyGeometry.lines.forEach((line, i) => collect(line, i + 1));
+    return points;
+  }
+
+  function downloadText(filename, mime, content) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  els.exportGeojson.addEventListener('click', function () {
+    if (!lastSurveyGeometry) return;
+    const polygonLayer = currentPolygonLayer();
+    const features = [];
+    if (polygonLayer) {
+      const study = polygonLayer.toGeoJSON();
+      study.properties = { ...(study.properties || {}), feature_type: 'study_area' };
+      features.push(study);
+    }
+    features.push(...surveyTrackFeatures(), ...currentSurfacePoints());
+    downloadText(
+      'glider-study-design.geojson',
+      'application/geo+json;charset=utf-8',
+      JSON.stringify(turf.featureCollection(features), null, 2)
+    );
+  });
+
+  els.exportCsv.addEventListener('click', function () {
+    const points = currentSurfacePoints();
+    if (!points.length) {
+      alert('No estimated surfacing waypoints are available to export.');
+      return;
+    }
+    const rows = [
+      ['waypoint_id','latitude','longitude','line_id','distance_along_line_km','target_depth_m','glide_angle_deg']
+    ];
+    points.forEach(p => {
+      const [lng, lat] = p.geometry.coordinates;
+      rows.push([
+        p.properties.waypoint_id,
+        lat.toFixed(7),
+        lng.toFixed(7),
+        p.properties.line_id,
+        p.properties.distance_along_line_km,
+        p.properties.target_depth_m,
+        p.properties.glide_angle_deg
+      ]);
+    });
+    downloadText(
+      'glider-estimated-surfacing-waypoints.csv',
+      'text/csv;charset=utf-8',
+      rows.map(r => r.join(',')).join('\n')
+    );
+  });
+
   function generateSurvey() {
     const layer = currentPolygonLayer();
     if (!layer) return;
@@ -1581,266 +1875,6 @@ ul.task-list li input[type="checkbox"] {
   window.addEventListener('load', refreshMapSize);
   setTimeout(refreshMapSize, 300);
   setTimeout(refreshMapSize, 1000);
-})();
-</script>
-<script>
-/* Waypoint files: export the generated survey as Slocum / Seaglider waypoint files, and import
- * either format onto the map.
- *
- * Both gliders write positions as signed degrees-and-decimal-minutes packed into one number,
- * DDDMM.mmm (-12225.500 is 122 deg 25.5' W). The layouts follow real files:
- *   Slocum goto_list (.ma)  "<start:waypoints>" block of "lon lat" lines, '#' comments,
- *                           b_arg lines for start/stop behaviour (NOC's goto_l10.ma).
- *   Seaglider targets       one target per line, "NAME lat=DDMM.m lon=DDDMM.m radius=R goto=NEXT",
- *                           '/' comment lines (the targets file on our own glider's CF card).
- */
-(function () {
-  "use strict";
-  const $ = (id) => document.getElementById(id);
-  const map = window.studyMap;
-  if (!map) return;
-
-  // One active waypoint set: [{name, lat, lon, next (index or null), radius}]
-  let active = { points: [], source: "" };
-  let generated = [];
-  const imported = L.featureGroup().addTo(map);
-  const WPT_COLOR = "#4a3aa7";
-
-  // ------------------------------------------------------------ coordinates
-  function toDdmm(dec) {
-    const sign = dec < 0 ? "-" : "";
-    const a = Math.abs(dec);
-    let deg = Math.floor(a);
-    let min = +((a - deg) * 60).toFixed(3);
-    if (min >= 60) { deg += 1; min -= 60; }
-    return sign + (deg * 100 + min).toFixed(3);
-  }
-  function fromDdmm(v) {
-    const x = parseFloat(v);
-    if (!isFinite(x)) return NaN;
-    const a = Math.abs(x), deg = Math.floor(a / 100), min = a - deg * 100;
-    if (min >= 60) return NaN;
-    return Math.sign(x || 1) * (deg + min / 60);
-  }
-
-  // ------------------------------------------------------------ from the generated survey
-  // The survey's waypoints are its turn points: every vertex of the route, in order, with
-  // near-duplicates (the join between two transects) merged.
-  function surveyPoints(geom) {
-    if (!geom) return [];
-    let coords = [];
-    if (geom.type === "route") coords = geom.line.geometry.coordinates;
-    else geom.lines.forEach((seg, i) => {
-      const c = seg.geometry.coordinates.slice();
-      coords.push(...(i % 2 ? c.reverse() : c));
-    });
-    const out = [];
-    coords.forEach(([lon, lat]) => {
-      const last = out[out.length - 1];
-      if (last && turf.distance([last.lon, last.lat], [lon, lat], { units: "meters" }) < 5) return;
-      out.push({ lat, lon });
-    });
-    return out;
-  }
-
-  // ------------------------------------------------------------ writers
-  function stamp() { return new Date().toISOString().slice(0, 10); }
-
-  function writeSlocum(points) {
-    const dist = Math.max(1, Number($("wpt-slocum-dist").value) || 10);
-    const start = $("wpt-slocum-start").value, legs = $("wpt-slocum-end").value;
-    const name = ($("wpt-slocum-name").value || "goto_l10.ma").trim();
-    const lines = [
-      "behavior_name=goto_list",
-      "# " + name,
-      "# " + points.length + " waypoints from the Glider Performance Tool study design, " + stamp(),
-      "# Coordinates are DDMM.mmm, longitude first. Check them before the glider flies.",
-      "",
-      "<start:b_arg>",
-      "b_arg: start_when(enum) 0",
-      "b_arg: list_stop_when(enum) 7",
-      "b_arg: initial_wpt(enum) " + start + (start === "0" ? "    # first in the list" : start === "-2" ? "   # closest" : "   # one after the last achieved"),
-      "b_arg: num_legs_to_run(nodim) " + legs + (legs === "-1" ? "   # loop" : "   # traverse the list once, stop at the last"),
-      "b_arg: list_when_wpt_dist(m) " + dist + "   # used because list_stop_when == 7",
-      "<end:b_arg>",
-      "",
-      "<start:waypoints>",
-    ];
-    const prefix = ($("wpt-sg-prefix").value || "WP").replace(/\s+/g, "");
-    points.forEach((p, i) => lines.push(toDdmm(p.lon) + " " + toDdmm(p.lat) + "   # " + (p.name || prefix + (i + 1))));
-    lines.push("<end:waypoints>", "");
-    return lines.join("\n");
-  }
-
-  function writeSeaglider(points) {
-    const prefix = ($("wpt-sg-prefix").value || "WP").replace(/\s+/g, "");
-    const radius = Math.max(10, Math.round(Number($("wpt-sg-radius").value) || 2000));
-    const loop = $("wpt-sg-end").value === "loop";
-    // A waypoint keeps its own name, radius and successor when it has them (an imported file);
-    // otherwise it gets the prefix, the radius above, and "After the last" decides where the
-    // final one goes.
-    const names = points.map((p, i) => p.name || prefix + (i + 1));
-    const width = Math.max(...names.map((n) => n.length)) + 2;
-    const lines = [
-      "/ Seaglider targets: " + points.length + " waypoints from the Glider Performance Tool study design, " + stamp(),
-      "/ lat/lon are DDMM.mmm. Check them before the glider flies.",
-    ];
-    points.forEach((p, i) => {
-      const next = p.next !== null && p.next !== undefined ? names[p.next] : (loop ? names[0] : names[i]);
-      lines.push((names[i] + " ".repeat(width)).slice(0, width) + "lat=" + toDdmm(p.lat) + " lon=" + toDdmm(p.lon) +
-        " radius=" + (p.radius || radius) + " goto=" + next);
-    });
-    lines.push("");
-    return lines.join("\n");
-  }
-
-  function download(name, text) {
-    const url = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
-    const a = document.createElement("a");
-    a.href = url; a.download = name;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-
-  // ------------------------------------------------------------ readers
-  function readSlocum(text) {
-    const block = text.match(/<start:waypoints>([\s\S]*?)<end:waypoints>/i);
-    if (!block) throw new Error("no <start:waypoints> block");
-    const points = [];
-    block[1].split(/\r?\n/).forEach((raw, i) => {
-      const comment = (raw.split("#")[1] || "").trim();
-      const t = raw.split("#")[0].trim();
-      if (!t) return;
-      const [lon, lat] = t.split(/[\s,]+/).map(fromDdmm);
-      if (!isFinite(lat) || !isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180)
-        throw new Error("could not read waypoint line \"" + t + "\"");
-      points.push({ lat, lon, name: comment && comment.length <= 16 && !/\s/.test(comment) ? comment : "WP" + (points.length + 1) });
-    });
-    const legs = (text.match(/num_legs_to_run\(nodim\)\s+(-?\d+)/) || [])[1];
-    const loop = legs === "-1";
-    points.forEach((p, i) => (p.next = i < points.length - 1 ? i + 1 : (loop ? 0 : null)));
-    if (loop && points.length > 1) points[points.length - 1].loopBack = true;
-    return { points, kind: "Slocum goto_list", note: loop ? "loops back to the first" : "stops at the last" };
-  }
-
-  function readSeaglider(text) {
-    const points = [];
-    text.split(/\r?\n/).forEach((raw) => {
-      const t = raw.trim();
-      if (!t || t.startsWith("/")) return;
-      const parts = t.split(/\s+/);
-      const kv = {};
-      parts.slice(1).forEach((p) => { const m = p.match(/^(\w+)=(.*)$/); if (m) kv[m[1].toLowerCase()] = m[2]; });
-      if (kv.lat === undefined || kv.lon === undefined) return;
-      const lat = fromDdmm(kv.lat), lon = fromDdmm(kv.lon);
-      if (!isFinite(lat) || !isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180)
-        throw new Error("could not read target \"" + parts[0] + "\"");
-      points.push({ name: parts[0], lat, lon, radius: parseFloat(kv.radius) || null, gotoName: kv.goto });
-    });
-    if (!points.length) throw new Error("no targets with lat= and lon= found");
-    const byName = {};
-    points.forEach((p, i) => (byName[p.name] = i));
-    points.forEach((p) => (p.next = p.gotoName in byName ? byName[p.gotoName] : null));
-    return { points, kind: "Seaglider targets", note: "arrows follow each target's goto" };
-  }
-
-  function parse(text) {
-    if (/<start:waypoints>/i.test(text)) return readSlocum(text);
-    if (/\blat\s*=/.test(text) && /\blon\s*=/.test(text)) return readSeaglider(text);
-    throw new Error("not a Slocum goto_list (.ma) or Seaglider targets file");
-  }
-
-  // ------------------------------------------------------------ map + table
-  function drawImported(points) {
-    imported.clearLayers();
-    points.forEach((p, i) => {
-      if (p.radius) L.circle([p.lat, p.lon], { radius: p.radius, color: WPT_COLOR, weight: 1, fillOpacity: 0.06 }).addTo(imported);
-      if (p.next !== null && p.next !== undefined && p.next !== i) {
-        const q = points[p.next];
-        // A Slocum list's return from the last waypoint to the first is dashed.
-        L.polyline([[p.lat, p.lon], [q.lat, q.lon]], { color: WPT_COLOR, weight: 2.5, opacity: 0.9, dashArray: p.loopBack ? "6 6" : null }).addTo(imported);
-      }
-    });
-    points.forEach((p) => {
-      L.circleMarker([p.lat, p.lon], { radius: 5, color: "#fff", weight: 2, fillColor: WPT_COLOR, fillOpacity: 1 })
-        .bindTooltip(p.name, { permanent: true, direction: "right", offset: [6, 0], className: "wpt-label" })
-        .addTo(imported);
-    });
-  }
-
-  function render() {
-    const pts = active.points, has = pts.length > 0;
-    $("wpt-slocum-dl").disabled = !has;
-    $("wpt-sg-dl").disabled = !has;
-    $("wpt-table-wrap").hidden = !has;
-    $("wpt-source").innerHTML = has
-      ? "<b>" + pts.length + " waypoints</b> " + active.source
-      : "No waypoints yet. Generate a survey or import a file.";
-    const prefix = ($("wpt-sg-prefix").value || "WP").replace(/\s+/g, "");
-    const nm = (i) => pts[i].name || prefix + (i + 1);
-    $("wpt-rows").innerHTML = pts.map((p, i) =>
-      "<tr><td>" + nm(i) + "</td><td>" + p.lat.toFixed(5) + "</td><td>" + p.lon.toFixed(5) + "</td><td>" +
-      toDdmm(p.lat) + "</td><td>" + toDdmm(p.lon) + "</td><td>" +
-      (p.next === null || p.next === undefined ? (p.gotoName ? "–" : "last") : p.next === i ? "holds" : nm(p.next)) +
-      "</td></tr>").join("");
-  }
-
-  function useGenerated() {
-    const pts = generated.map((p, i) => ({ ...p, next: i < generated.length - 1 ? i + 1 : null }));
-    active = { points: pts, source: pts.length ? "from the generated survey (its turn points, in the order flown)." : "" };
-    render();
-  }
-
-  // ------------------------------------------------------------ events
-  window.addEventListener("studydesign:generated", () => {
-    generated = surveyPoints(window.studyDesign && window.studyDesign.geometry);
-    if (!imported.getLayers().length) useGenerated();
-  });
-  window.addEventListener("studydesign:cleared", () => {
-    generated = [];
-    if (!imported.getLayers().length) useGenerated();
-  });
-
-  $("wpt-slocum-dl").addEventListener("click", () => {
-    const name = ($("wpt-slocum-name").value || "goto_l10.ma").trim();
-    download(/\.ma$/i.test(name) ? name : name + ".ma", writeSlocum(active.points));
-  });
-  $("wpt-sg-dl").addEventListener("click", () => download("targets", writeSeaglider(active.points)));
-  $("wpt-sg-prefix").addEventListener("input", render);
-
-  function msg(text, err) { $("wpt-msg").textContent = text; $("wpt-msg").className = "wpt-msg" + (err ? " err" : ""); }
-
-  function load(file) {
-    if (!file) return;
-    if (file.size > 2e6) { msg(file.name + " is too large to be a waypoint file.", true); return; }
-    file.text().then((text) => {
-      let r;
-      try { r = parse(text); } catch (e) { msg(file.name + ": " + e.message + ".", true); return; }
-      active = { points: r.points, source: "from " + file.name + " (" + r.kind + ", " + r.note + ")." };
-      drawImported(r.points);
-      map.fitBounds(imported.getBounds(), { padding: [30, 30], maxZoom: 11 });
-      $("wpt-clear").disabled = false;
-      msg("Loaded " + r.points.length + " waypoints from " + file.name + ". The download buttons now write these." +
-        (r.kind === "Seaglider targets" ? " A Slocum list is a single sequence, so it takes the targets in the file's order, not their goto links." : ""));
-      render();
-    });
-  }
-  $("wpt-file").addEventListener("change", (e) => { load(e.target.files[0]); e.target.value = ""; });
-  const drop = $("wpt-drop");
-  ["dragenter", "dragover"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
-  ["dragleave", "drop"].forEach((t) => drop.addEventListener(t, () => drop.classList.remove("over")));
-  drop.addEventListener("drop", (e) => { e.preventDefault(); load(e.dataTransfer.files[0]); });
-
-  $("wpt-clear").addEventListener("click", () => {
-    imported.clearLayers();
-    $("wpt-clear").disabled = true;
-    msg("");
-    useGenerated();
-  });
-
-  // For the check in the repository; not used by the page itself.
-  window.studyWaypoints = { toDdmm, fromDdmm, parse, writeSlocum, writeSeaglider };
-  render();
 })();
 </script>
 
@@ -2260,18 +2294,6 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
-<nav class="page-navigation column-page-right">
-  <div class="nav-page nav-page-previous">
-      <a href="../content/glider-selection.html" class="pagination-link" aria-label="Glider Selection Dashboard">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Glider Selection Dashboard</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../content/slocum-endurance.html" class="pagination-link" aria-label="Slocum">
-        <span class="nav-page-text">Slocum</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -2280,7 +2302,7 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/content/study-design.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/content/study-design.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/content/study-design_GPS_testing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/content/study-design_GPS_testing.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

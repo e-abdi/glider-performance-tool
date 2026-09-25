@@ -2,23 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Glider Performance Tool</title>
+<title>Study Design Tool – Glider Performance Tool</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
+code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: 1.5em;}
-div.column{flex: auto;}
-@media screen {
-div.columns{gap: min(4vw, 1.5em);}
-div.column{overflow-x: auto;}
-}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -29,28 +26,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./content/project-info.html" rel="next">
-<link href="./content/images/GliderRodeo.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3245a9efd2d27e2c6a1ec784bf206a0c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-d949c74a40ea39fb0bf3b5edfd17d417.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-3245a9efd2d27e2c6a1ec784bf206a0c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../content/images/GliderRodeo.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d9a3b1d5427c00bf2a6c708c2a700a09.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-5c441ac52919a6e8136589e9d5787bd9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-d9a3b1d5427c00bf2a6c708c2a700a09.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -78,6 +74,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3qFnAtFP7Htu6jo9tMZrA2ykXH0g=" crossorigin="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
 
 
 </head>
@@ -253,7 +255,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Study Design Tool</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -267,9 +269,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="./index.html" class="sidebar-logo-link">
-      <img src="./content/images/GliderRodeo.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="./content/images/GliderRodeo.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../content/images/GliderRodeo.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../content/images/GliderRodeo.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main tools-wide">
     <a href="https://nmfs-pam-glider.github.io/GliderRodeo/" title="NOAA Fisheries PAM-Glider Rodeo" class="quarto-navigation-tool px-1" aria-label="NOAA Fisheries PAM-Glider Rodeo"><i class="bi bi-globe"></i></a>
@@ -286,55 +288,38 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/project-info.html" class="sidebar-item-text sidebar-link">
+  <a href="../content/project-info.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Project Info</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/glider-selection.html" class="sidebar-item-text sidebar-link">
+  <a href="../content/workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Workflow</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Results</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/glider-selection.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Glider Selection Dashboard</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/study-design.html" class="sidebar-item-text sidebar-link">
+  <a href="../content/study-design.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Study Design Tool</span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
- <span class="menu-text">Endurance calculation</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./content/slocum-endurance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Slocum</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./content/seaglider-endurance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Seaglider</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./content/performance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Glider Performance</span></a>
   </div>
 </li>
     </ul>
@@ -342,27 +327,19 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#approach" id="toc-approach" class="nav-link active" data-scroll-target="#approach">Approach</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/index.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
-    </div>
+    
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content column-page-right" id="quarto-document-content">
 
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Glider Performance Tool</h1>
+<h1 class="title">Study Design Tool</h1>
 </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta column-page-right">
 
     
   
@@ -374,55 +351,501 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Comparing the PAM-equipped gliders of the <strong>NOAA Fisheries Glider Rodeo 2026</strong> across mission modes: how each platform was piloted, how well it navigated, how long its battery and storage last, and how much noise it makes.</p>
-<p>Seven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Glider</th>
-<th>Platform</th>
-<th>PAM system</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>risso, stenella, capex987</td>
-<td>Teledyne Webb Slocum G3S</td>
-<td>DMON2, WISPR 3.0, JASCO OceanObserver</td>
-</tr>
-<tr class="even">
-<td>sg607, sg274</td>
-<td>Seaglider M1 / SGX</td>
-<td>WISPR 3.0</td>
-</tr>
-<tr class="odd">
-<td>SEA117</td>
-<td>ALSEAMAR SeaExplorer</td>
-<td>Auris</td>
-</tr>
-<tr class="even">
-<td>belladonna</td>
-<td>Hefring Oceanscout</td>
-<td>WISPR 6.1</td>
-</tr>
-</tbody>
-</table>
-<section id="approach" class="level2">
-<h2 class="anchored" data-anchor-id="approach">Approach</h2>
-<ol type="1">
-<li>Split each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).</li>
-<li>Compute the same performance metrics for every glider.</li>
-<li>Compare platforms and modes.</li>
-</ol>
-<p>See <a href="./content/project-info.html">Project Info</a> for goals and datasets, and <a href="./content/performance.html">Glider Performance</a> for what every glider actually did during the rodeo.</p>
+<style>
+  :root {
+    --page: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-2: #F1F6F7;
+    --line: #DAE3E5;
+    --line-strong: #BCCBCE;
+    --ink: #1F2C31;
+    --ink-2: #536268;
+    --ink-3: #78888E;
+    --accent: #2780E3;
+    --accent-ink: #1B62B0;
+    --accent-soft: #E3EEFB;
+    --measured: #1A6B4E;
+    --measured-soft: #DCEDE4;
+    --derived: #86570A;
+    --derived-soft: #F6E9CF;
+    --flag: #A33227;
+    --flag-soft: #F8E4E1;
+    --shadow: 0 1px 2px rgba(31, 44, 49, .05), 0 6px 18px rgba(31, 44, 49, .07);
+    --sans: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+  body.quarto-dark, :root[data-bs-theme="dark"] {
+    --page: #181818;
+    --surface: #212121;
+    --surface-2: #2A2A2A;
+    --line: #3A3A3A;
+    --line-strong: #4E4E4E;
+    --ink: #F2F2F2;
+    --ink-2: #BFC6C8;
+    --ink-3: #939A9D;
+    --accent: #75AADB;
+    --accent-ink: #9CC6EC;
+    --accent-soft: #23323F;
+    --measured: #6DC49B;
+    --measured-soft: #1B2F27;
+    --derived: #DCA847;
+    --derived-soft: #342A12;
+    --flag: #E08278;
+    --flag-soft: #3A211E;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 22px rgba(0,0,0,.4);
+  }
+
+  #study-design * { box-sizing: border-box; }
+  #study-design {
+    max-width: 1280px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  #study-design h1, #study-design h2, #study-design h3, #study-design h4 { margin: 0; font-weight: 700; }
+  #study-design .page-head { border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 20px; }
+  #study-design .page-head p { margin: 8px 0 0; color: var(--ink-2); max-width: 78ch; }
+  #study-design .layout { display: grid; grid-template-columns: minmax(280px, 340px) minmax(0, 1fr); gap: 18px; align-items: start; }
+  #study-design .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
+  #study-design .panel h2 { font-size: 17px; margin-bottom: 4px; }
+  #study-design .panel h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin: 18px 0 8px; }
+  #study-design .note { color: var(--ink-2); font-size: 13px; margin: 0 0 10px; }
+  #study-design .field { margin: 10px 0 14px; }
+  #study-design .field label { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: var(--ink-2); font-size: 13.5px; margin-bottom: 5px; }
+  #study-design .field label b { color: var(--ink); }
+  #study-design .val { font-family: var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+  #study-design input[type="range"] { width: 100%; accent-color: var(--accent); }
+  #study-design select, #study-design input[type="number"] {
+    width: 100%; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong);
+    border-radius: 7px; padding: 7px 9px;
+  }
+  #study-design .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  #study-design .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+  #study-design .btn {
+    font: inherit; font-weight: 700; cursor: pointer; border-radius: 7px; padding: 8px 14px;
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+  }
+  #study-design .btn.ghost { background: transparent; color: var(--accent-ink); }
+  #study-design .btn:disabled { opacity: .45; cursor: not-allowed; }
+  #study-design .map-panel { padding: 0; overflow: hidden; min-width: 0; }
+  #study-map { height: min(68vh, 720px); min-height: 520px; width: 100%; min-width: 0; background: var(--surface-2); position: relative; }
+
+  /* Keep Quarto/Bootstrap's global image rules from altering Leaflet tiles. */
+  #study-map .leaflet-tile {
+    position: absolute !important;
+    max-width: none !important;
+    max-height: none !important;
+    width: 256px;
+    height: 256px;
+  }
+  #study-map .leaflet-pane img {
+    max-width: none !important;
+  }
+  #study-design .map-help { padding: 10px 14px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); }
+  #study-design .summary { margin-top: 18px; }
+  #study-design .summary h2 { font-size: 19px; margin-bottom: 4px; }
+  #study-design .metrics { display: grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
+  #study-design .metric { background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 12px; }
+  #study-design .metric .k { text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-size: 10.5px; }
+  #study-design .metric .v { font-family: var(--mono); font-weight: 700; font-size: 18px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  #study-design .metric .sub { color: var(--ink-2); font-size: 11.5px; margin-top: 2px; }
+  #study-design .status { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; margin-top: 12px; }
+  #study-design .status-row { display: flex; gap: 8px; align-items: flex-start; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-size: 12.5px; color: var(--ink-2); }
+  #study-design .status-row .ic { font-family: var(--mono); font-weight: 700; }
+  #study-design .status-row.ok .ic { color: var(--measured); }
+  #study-design .status-row.warn .ic { color: var(--derived); }
+  #study-design .status-row b { color: var(--ink); }
+  #study-design .empty { margin-top: 12px; background: var(--surface-2); border: 1px dashed var(--line-strong); border-radius: 9px; padding: 15px; color: var(--ink-2); }
+  #study-design .badge { display:inline-flex; align-items:center; font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:4px; padding:3px 7px; }
+  #study-design .badge.derived { color:var(--derived); background:var(--derived-soft); }
+  #study-design .assumptions { margin-top: 14px; font-size: 12.5px; color: var(--ink-2); }
+  #study-design .assumptions summary { cursor: pointer; font-weight: 700; color: var(--accent-ink); }
+  #study-design .assumptions ul { margin-bottom: 0; }
+
+  .leaflet-container { font-family: var(--sans); }
+  .leaflet-draw-toolbar a { background-color: #fff; }
+
+  @media (max-width: 980px) {
+    #study-design .layout { grid-template-columns: 1fr; }
+    #study-map { height: 560px; min-height: 460px; }
+    #study-design .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    #study-design .metrics, #study-design .two { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div id="study-design">
+  <header class="page-head">
+    <p>Draw a study area, choose a simple transect design, and estimate survey distance and nominal mission duration. This prototype is intended for first-order study design rather than operational mission planning.</p>
+  </header>
+
+  <div class="layout">
+    <section class="panel controls">
+      <h2 class="anchored">Study requirements</h2>
+      <p class="note">Use the polygon tool on the map to define one study area. Edit the polygon at any time; the design will update when you regenerate it.</p>
+
+      <h3 class="anchored">Survey geometry</h3>
+      <div class="field">
+        <label for="pattern"><b>Survey pattern</b></label>
+        <select id="pattern">
+          <option value="lawnmower" selected="">Lawnmower (connected transects)</option>
+          <option value="parallel">Parallel transects only</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="spacing"><b>Transect spacing</b><span class="val"><span id="spacing-val">10</span> km</span></label>
+        <input id="spacing" type="range" min="1" max="50" step="1" value="10">
+      </div>
+
+      <div class="field">
+        <label for="bearing"><b>Track orientation</b><span class="val"><span id="bearing-val">0</span>°</span></label>
+        <input id="bearing" type="range" min="0" max="179" step="1" value="0">
+        <p class="note">0° = north-south transects; 90° = east-west.</p>
+      </div>
+
+      <h3 class="anchored">Mission assumptions</h3>
+      <div class="field">
+        <label for="speed"><b>Nominal horizontal speed</b><span class="val"><span id="speed-val">0.50</span> kt</span></label>
+        <input id="speed" type="range" min="0.1" max="2.0" step="0.05" value="0.5">
+      </div>
+
+      <div class="two">
+        <div class="field">
+          <label for="depth"><b>Target depth</b></label>
+          <input id="depth" type="number" min="1" max="6000" step="10" value="500">
+        </div>
+        <div class="field">
+          <label for="gliders"><b>Number of gliders</b></label>
+          <input id="gliders" type="number" min="1" max="20" step="1" value="1">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="generate" disabled="">Generate survey</button>
+        <button class="btn ghost" id="clear-tracks" disabled="">Clear tracks</button>
+        <button class="btn ghost" id="example-area">Load example</button>
+      </div>
+    </section>
+
+    <section class="panel map-panel">
+      <div id="study-map" aria-label="Interactive map for drawing the study area"></div>
+      <div class="map-help"><b>Map controls:</b> use the polygon tool at upper left to draw a study area. The edit and delete tools become available after a polygon exists.</div>
+    </section>
+  </div>
+
+  <section class="summary">
+    <h2 class="anchored">Survey estimate</h2>
+    <p class="note">Values below are geometric and first-order estimates. Currents, dive behavior, bathymetry, payload power, navigation, launch/recovery, and operational safety margins are not yet included.</p>
+    <div id="summary-empty" class="empty">Draw a study polygon and press <b>Generate survey</b> to create an estimate.</div>
+    <div id="summary-results" hidden="">
+      <div class="metrics">
+        <div class="metric"><div class="k">Study area</div><div class="v" id="m-area">--</div><div class="sub">polygon area</div></div>
+        <div class="metric"><div class="k">Transects</div><div class="v" id="m-transects">--</div><div class="sub">inside study area</div></div>
+        <div class="metric"><div class="k">Track length</div><div class="v" id="m-distance">--</div><div class="sub">survey route</div></div>
+        <div class="metric"><div class="k">Nominal duration</div><div class="v" id="m-duration">--</div><div class="sub">distance / aggregate speed</div></div>
+        <div class="metric"><div class="k">Target depth</div><div class="v" id="m-depth">--</div><div class="sub">user requirement</div></div>
+      </div>
+      <div class="status">
+        <div class="status-row warn"><span class="ic">~</span><span><b>Duration is derived.</b> It assumes constant horizontal speed and an even division of route distance among gliders.</span></div>
+        <div class="status-row warn"><span class="ic">!</span><span><b>Not an operational plan.</b> Currents, bathymetry, dive cycles, energy use, station keeping, and deployment logistics are not modeled.</span></div>
+        <div class="status-row ok"><span class="ic">+</span><span><b>Geometry is reproducible.</b> Area, transect count, and route length are calculated directly from the polygon and generated tracks.</span></div>
+      </div>
+      <details class="assumptions">
+        <summary>Calculation assumptions</summary>
+        <ul>
+          <li>Transects are generated at the selected compass orientation and clipped to the study polygon.</li>
+          <li>For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included.</li>
+          <li>Nominal travel rate is speed in knots × 1.852 km/nmi × 24 h/day.</li>
+          <li>With multiple gliders, route distance is divided evenly among vehicles for the duration estimate only; tracks are not yet spatially assigned to individual gliders.</li>
+        </ul>
+      </details>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  const els = {
+    spacing: document.getElementById('spacing'),
+    spacingVal: document.getElementById('spacing-val'),
+    bearing: document.getElementById('bearing'),
+    bearingVal: document.getElementById('bearing-val'),
+    speed: document.getElementById('speed'),
+    speedVal: document.getElementById('speed-val'),
+    depth: document.getElementById('depth'),
+    gliders: document.getElementById('gliders'),
+    pattern: document.getElementById('pattern'),
+    generate: document.getElementById('generate'),
+    clearTracks: document.getElementById('clear-tracks'),
+    exampleArea: document.getElementById('example-area')
+  };
+
+  els.spacing.addEventListener('input', () => els.spacingVal.textContent = els.spacing.value);
+  els.bearing.addEventListener('input', () => els.bearingVal.textContent = els.bearing.value);
+  els.speed.addEventListener('input', () => els.speedVal.textContent = Number(els.speed.value).toFixed(2));
+
+  const map = L.map('study-map', { zoomControl: true }).setView([36.75, -122.0], 7);
+  const baseTiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    tileSize: 256,
+    updateWhenIdle: true,
+    keepBuffer: 4,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Log true network failures separately from layout/CSS problems.
+  baseTiles.on('tileerror', (e) => {
+    console.warn('Basemap tile failed to load:', e.tile?.src || e);
+  });
+
+  const drawnItems = new L.FeatureGroup().addTo(map);
+  const trackLayer = new L.FeatureGroup().addTo(map);
+
+  const drawControl = new L.Control.Draw({
+    position: 'topleft',
+    draw: {
+      polygon: {
+        allowIntersection: false,
+        showArea: true,
+        shapeOptions: { color: '#2780E3', weight: 2, fillOpacity: 0.12 }
+      },
+      polyline: false,
+      rectangle: false,
+      circle: false,
+      circlemarker: false,
+      marker: false
+    },
+    edit: { featureGroup: drawnItems, remove: true }
+  });
+  map.addControl(drawControl);
+
+  function currentPolygonLayer() {
+    let result = null;
+    drawnItems.eachLayer(layer => { result = layer; });
+    return result;
+  }
+
+  function setButtons() {
+    const hasPolygon = !!currentPolygonLayer();
+    els.generate.disabled = !hasPolygon;
+    els.clearTracks.disabled = trackLayer.getLayers().length === 0;
+  }
+
+  function clearTracksAndSummary() {
+    trackLayer.clearLayers();
+    document.getElementById('summary-empty').hidden = false;
+    document.getElementById('summary-results').hidden = true;
+    setButtons();
+  }
+
+  map.on(L.Draw.Event.CREATED, function (e) {
+    drawnItems.clearLayers();
+    drawnItems.addLayer(e.layer);
+    clearTracksAndSummary();
+    map.invalidateSize(false);
+    map.fitBounds(e.layer.getBounds(), { padding: [20, 20] });
+    setTimeout(() => map.invalidateSize(false), 100);
+    setButtons();
+  });
+  map.on(L.Draw.Event.EDITED, clearTracksAndSummary);
+  map.on(L.Draw.Event.DELETED, clearTracksAndSummary);
+
+  els.clearTracks.addEventListener('click', clearTracksAndSummary);
+
+  els.exampleArea.addEventListener('click', function () {
+    drawnItems.clearLayers();
+    clearTracksAndSummary();
+    const example = L.polygon([
+      [36.95, -122.35],
+      [36.95, -121.85],
+      [36.55, -121.78],
+      [36.48, -122.25]
+    ], { color: '#2780E3', weight: 2, fillOpacity: 0.12 });
+    drawnItems.addLayer(example);
+    map.invalidateSize(false);
+    map.fitBounds(example.getBounds(), { padding: [20, 20] });
+    setTimeout(() => map.invalidateSize(false), 100);
+    setButtons();
+  });
+
+  function leafletPolygonToTurf(layer) {
+    const gj = layer.toGeoJSON();
+    if (gj.geometry.type === 'Polygon') return gj;
+    throw new Error('Study area must be a polygon.');
+  }
+
+  function rotatePointKm(x, y, degrees) {
+    const r = degrees * Math.PI / 180;
+    return [x * Math.cos(r) - y * Math.sin(r), x * Math.sin(r) + y * Math.cos(r)];
+  }
+
+  function localKmToLngLat(center, xKm, yKm) {
+    const distance = Math.sqrt(xKm * xKm + yKm * yKm);
+    if (distance === 0) return center.geometry.coordinates;
+    const bearing = Math.atan2(xKm, yKm) * 180 / Math.PI;
+    return turf.destination(center, distance, bearing, { units: 'kilometers' }).geometry.coordinates;
+  }
+
+  function buildCandidateLines(polygon, spacingKm, bearingDeg) {
+    const center = turf.centroid(polygon);
+    const bbox = turf.bbox(polygon);
+    const corners = [
+      turf.point([bbox[0], bbox[1]]), turf.point([bbox[0], bbox[3]]),
+      turf.point([bbox[2], bbox[1]]), turf.point([bbox[2], bbox[3]])
+    ];
+    const radiusKm = Math.max(...corners.map(p => turf.distance(center, p, { units: 'kilometers' }))) * 1.6 + spacingKm * 2;
+    const count = Math.ceil((radiusKm * 2) / spacingKm) + 2;
+    const lines = [];
+
+    for (let i = -count; i <= count; i++) {
+      const offset = i * spacingKm;
+      // In a local x=east, y=north frame, the transect direction is the selected bearing.
+      // A line is created along local north-south, offset east-west, then rotated by bearing.
+      const a0 = [-offset, -radiusKm * 1.8];
+      const b0 = [-offset,  radiusKm * 1.8];
+      const aRot = rotatePointKm(a0[0], a0[1], -bearingDeg);
+      const bRot = rotatePointKm(b0[0], b0[1], -bearingDeg);
+      lines.push(turf.lineString([
+        localKmToLngLat(center, aRot[0], aRot[1]),
+        localKmToLngLat(center, bRot[0], bRot[1])
+      ]));
+    }
+    return lines;
+  }
+
+  function clipLineToPolygon(line, polygon) {
+    const boundary = turf.polygonToLine(polygon);
+    let pieces;
+    try {
+      pieces = turf.lineSplit(line, boundary);
+    } catch (err) {
+      pieces = turf.featureCollection([line]);
+    }
+    const inside = [];
+    pieces.features.forEach(seg => {
+      if (!seg.geometry || seg.geometry.coordinates.length < 2) return;
+      const mid = turf.along(seg, turf.length(seg, { units: 'kilometers' }) / 2, { units: 'kilometers' });
+      if (turf.booleanPointInPolygon(mid, polygon, { ignoreBoundary: false })) inside.push(seg);
+    });
+    return inside;
+  }
+
+  function segmentCenter(seg) {
+    return turf.centroid(seg).geometry.coordinates;
+  }
+
+  function orderSegments(segments, bearingDeg) {
+    // Order by position along the normal to the transect bearing.
+    const normal = (bearingDeg + 90) * Math.PI / 180;
+    return segments.slice().sort((a, b) => {
+      const ca = segmentCenter(a), cb = segmentCenter(b);
+      const lat0 = (ca[1] + cb[1]) / 2 * Math.PI / 180;
+      const ax = ca[0] * Math.cos(lat0), ay = ca[1];
+      const bx = cb[0] * Math.cos(lat0), by = cb[1];
+      return (ax * Math.sin(normal) + ay * Math.cos(normal)) - (bx * Math.sin(normal) + by * Math.cos(normal));
+    });
+  }
+
+  function orientSegment(seg, reverse) {
+    const c = seg.geometry.coordinates.slice();
+    return reverse ? c.reverse() : c;
+  }
+
+  function buildLawnmowerRoute(segments) {
+    if (!segments.length) return null;
+    const coords = [];
+    segments.forEach((seg, i) => {
+      const part = orientSegment(seg, i % 2 === 1);
+      if (coords.length === 0) coords.push(...part);
+      else coords.push(...part);
+    });
+    return turf.lineString(coords);
+  }
+
+  function drawFeature(feature, style) {
+    return L.geoJSON(feature, { style }).addTo(trackLayer);
+  }
+
+  function fmt(value, digits = 0) {
+    return Number(value).toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: digits });
+  }
+
+  function generateSurvey() {
+    const layer = currentPolygonLayer();
+    if (!layer) return;
+
+    clearTracksAndSummary();
+
+    const polygon = leafletPolygonToTurf(layer);
+    const spacingKm = Number(els.spacing.value);
+    const bearing = Number(els.bearing.value);
+    const speedKt = Math.max(0.01, Number(els.speed.value));
+    const gliders = Math.max(1, Math.round(Number(els.gliders.value) || 1));
+    const depthM = Math.max(0, Number(els.depth.value) || 0);
+
+    const candidates = buildCandidateLines(polygon, spacingKm, bearing);
+    let segments = [];
+    candidates.forEach(line => { segments.push(...clipLineToPolygon(line, polygon)); });
+    segments = orderSegments(segments, bearing);
+
+    if (!segments.length) {
+      document.getElementById('summary-empty').innerHTML = 'No transects were generated. Try a smaller spacing value or redraw the study area.';
+      document.getElementById('summary-empty').hidden = false;
+      setButtons();
+      return;
+    }
+
+    let distanceKm = 0;
+    if (els.pattern.value === 'parallel') {
+      segments.forEach(seg => {
+        distanceKm += turf.length(seg, { units: 'kilometers' });
+        drawFeature(seg, { color: '#2780E3', weight: 3, opacity: 0.9 });
+      });
+    } else {
+      const route = buildLawnmowerRoute(segments);
+      distanceKm = turf.length(route, { units: 'kilometers' });
+      drawFeature(route, { color: '#2780E3', weight: 3, opacity: 0.92 });
+      segments.forEach(seg => drawFeature(seg, { color: '#1A6B4E', weight: 5, opacity: 0.35 }));
+    }
+
+    const areaKm2 = turf.area(polygon) / 1e6;
+    const kmPerDayPerGlider = speedKt * 1.852 * 24;
+    const days = distanceKm / (kmPerDayPerGlider * gliders);
+
+    document.getElementById('m-area').textContent = `${fmt(areaKm2, areaKm2 < 100 ? 1 : 0)} km²`;
+    document.getElementById('m-transects').textContent = fmt(segments.length, 0);
+    document.getElementById('m-distance').textContent = `${fmt(distanceKm, distanceKm < 100 ? 1 : 0)} km`;
+    document.getElementById('m-duration').textContent = days < 1 ? `${fmt(days * 24, 1)} h` : `${fmt(days, 1)} d`;
+    document.getElementById('m-depth').textContent = `${fmt(depthM, 0)} m`;
+    document.getElementById('summary-empty').hidden = true;
+    document.getElementById('summary-results').hidden = false;
+    setButtons();
+  }
+
+  els.generate.addEventListener('click', generateSurvey);
+  setButtons();
+
+  // Refresh only after genuine page/window layout changes. Avoid continuously
+  // invalidating during normal map interaction, which can cause unnecessary tile churn.
+  let resizeTimer = null;
+  function refreshMapSize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      map.invalidateSize({ pan: false, debounceMoveend: true });
+    }, 150);
+  }
+
+  window.addEventListener('resize', refreshMapSize);
+  window.addEventListener('load', refreshMapSize);
+  setTimeout(refreshMapSize, 300);
+  setTimeout(refreshMapSize, 1000);
+})();
+</script>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -838,15 +1261,6 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
-<nav class="page-navigation column-body">
-  <div class="nav-page nav-page-previous">
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="./content/project-info.html" class="pagination-link" aria-label="Project Info">
-        <span class="nav-page-text">Project Info</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -855,7 +1269,7 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/index.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/content/study-design_Orig.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/content/study-design_Orig.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
