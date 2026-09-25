@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Glider Selection Dashboard – Glider Performance Tool</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../content/study-design.html" rel="next">
+<link href="../content/project-info.html" rel="prev">
+<link href="../content/images/GliderRodeo.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d9a3b1d5427c00bf2a6c708c2a700a09.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-5c441ac52919a6e8136589e9d5787bd9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-d9a3b1d5427c00bf2a6c708c2a700a09.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/glider-selection.html">Glider Selection Dashboard</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../content/images/GliderRodeo.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../content/images/GliderRodeo.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main tools-wide">
+    <a href="https://nmfs-pam-glider.github.io/GliderRodeo/" title="NOAA Fisheries PAM-Glider Rodeo" class="quarto-navigation-tool px-1" aria-label="NOAA Fisheries PAM-Glider Rodeo"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/e-abdi/glider-performance-tool" title="Source code" class="quarto-navigation-tool px-1" aria-label="Source code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/project-info.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Project Info</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/glider-selection.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Glider Selection Dashboard</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/study-design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Study Design Tool</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/slocum-endurance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Endurance calculation</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/performance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glider Performance</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page-right" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Glider Selection Dashboard</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-right">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<style>
+  :root {
+    --page: #FFFFFF;
+    --sidebar: #D9E3E4;
+    --surface: #FFFFFF;
+    --surface-2: #F1F6F7;
+    --line: #DAE3E5;
+    --line-strong: #BCCBCE;
+    --ink: #1F2C31;
+    --ink-2: #536268;
+    --ink-3: #78888E;
+    --accent: #2780E3;
+    --accent-ink: #1B62B0;
+    --accent-soft: #E3EEFB;
+    --measured: #1A6B4E;
+    --measured-soft: #DCEDE4;
+    --vendor: #56666D;
+    --vendor-soft: #E9EEEF;
+    --derived: #86570A;
+    --derived-soft: #F6E9CF;
+    --flag: #A33227;
+    --flag-soft: #F8E4E1;
+    --track: #E2E9EA;
+    --shadow: 0 1px 2px rgba(31, 44, 49, .05), 0 6px 18px rgba(31, 44, 49, .07);
+    --sans: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+  body.quarto-dark, :root[data-bs-theme="dark"] {
+      --page: #181818;
+      --sidebar: #303030;
+      --surface: #212121;
+      --surface-2: #2A2A2A;
+      --line: #3A3A3A;
+      --line-strong: #4E4E4E;
+      --ink: #F2F2F2;
+      --ink-2: #BFC6C8;
+      --ink-3: #939A9D;
+      --accent: #75AADB;
+      --accent-ink: #9CC6EC;
+      --accent-soft: #23323F;
+      --measured: #6DC49B;
+      --measured-soft: #1B2F27;
+      --vendor: #A6B1B5;
+      --vendor-soft: #2C2C2C;
+      --derived: #DCA847;
+      --derived-soft: #342A12;
+      --flag: #E08278;
+      --flag-soft: #3A211E;
+      --track: #333;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 8px 22px rgba(0, 0, 0, .4);
+  }
+
+  #gsd * { box-sizing: border-box; }
+  #gsd {
+    max-width: 1100px; color: var(--ink); font-family: var(--sans);
+    font-size: 15px; line-height: 1.55;
+  }
+  #gsd h1, #gsd h2, #gsd h3, #gsd h4 { margin: 0; font-weight: 700; text-wrap: balance; }
+  #gsd a { color: var(--accent); }
+
+  #gsd .page-head { border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 22px; }
+  #gsd .page-head p { margin: 8px 0 0; color: var(--ink-2); max-width: 72ch; }
+
+  #gsd h2.section { font-size: 19px; margin: 30px 0 4px; }
+  #gsd h2.section:first-of-type { margin-top: 8px; }
+  #gsd .section-note { margin: 0 0 14px; color: var(--ink-2); font-size: 14px; }
+
+  /* ---------- panel: mission parameters ---------- */
+  #gsd .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; box-shadow: var(--shadow); }
+  #gsd .panel h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin-bottom: 10px; }
+  #gsd .caps { display: flex; flex-wrap: wrap; gap: 8px; }
+  #gsd .cap {
+    display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+    border: 1px solid var(--line-strong); border-radius: 999px; padding: 6px 13px 6px 10px;
+    font-size: 13.5px; color: var(--ink-2); background: var(--surface); user-select: none;
+  }
+  #gsd .cap input { accent-color: var(--accent); margin: 0; }
+  #gsd .cap:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+  #gsd .cap:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  #gsd .slider-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 14px 26px; margin-top: 6px; }
+  #gsd .sl { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 10px; align-items: center; }
+  #gsd .sl .lab { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-2); }
+  #gsd .sl .lab input { accent-color: var(--accent); }
+  #gsd .sl .lab b { color: var(--ink); font-weight: 700; }
+  #gsd .sl .lab .val { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  #gsd .sl .end { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  #gsd .sl input[type="range"] { width: 100%; accent-color: var(--accent); }
+  #gsd .depth-range-wrap { grid-column: 1 / -1; display: grid; grid-template-columns: 30px 1fr 46px; gap: 8px; align-items: center; margin-top: 2px; }
+  #gsd .depth-range { position: relative; height: 26px; min-width: 0; }
+  #gsd .depth-range-track {
+    position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+    height: 6px; border-radius: 999px; background: var(--line-strong); overflow: hidden;
+  }
+  #gsd .depth-range-fill {
+    position: absolute; top: 0; bottom: 0; border-radius: inherit;
+    background: var(--accent); left: 0%; right: 100%;
+  }
+  #gsd .depth-range input[type="range"] {
+    position: absolute; inset: 0; width: 100%; margin: 0;
+    background: transparent; pointer-events: none; appearance: none; -webkit-appearance: none;
+  }
+  #gsd .depth-range input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: transparent; border: 0; }
+  #gsd .depth-range input[type="range"]::-moz-range-track { height: 6px; background: transparent; border: 0; }
+  #gsd .depth-range input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 18px; height: 18px; margin-top: -6px;
+    border-radius: 50%; border: 2px solid var(--surface); background: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent); pointer-events: auto; cursor: grab;
+  }
+  #gsd .depth-range input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--surface);
+    background: var(--accent); box-shadow: 0 0 0 1px var(--accent); pointer-events: auto; cursor: grab;
+  }
+  #gsd .depth-range input[type="range"]:focus-visible { outline: none; }
+  #gsd .depth-range input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--accent); }
+  #gsd .depth-range input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--accent); }
+  #gsd .sl.off { opacity: .48; }
+  #gsd .panel-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+  #gsd .btn {
+    font: inherit; font-weight: 700; cursor: pointer; border-radius: 7px; padding: 8px 18px;
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+  }
+  #gsd .btn.ghost { background: transparent; color: var(--accent-ink); }
+  #gsd .btn:focus-visible, #gsd .toggle button:focus-visible, #gsd .cap:focus-within, #gsd summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #gsd .dirty { font-size: 13px; color: var(--derived); }
+
+  /* ---------- results ---------- */
+  #gsd .results-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+  #gsd .results-bar .count { font-size: 14px; color: var(--ink-2); }
+  #gsd .results-bar .count b { color: var(--ink); }
+  #gsd .toggle { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 7px; overflow: hidden; margin-left: auto; }
+  #gsd .toggle button {
+    font: inherit; font-size: 13px; cursor: pointer; border: 0; background: var(--surface);
+    color: var(--ink-2); padding: 6px 14px;
+  }
+  #gsd .toggle button[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 700; }
+
+  #gsd .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+  #gsd .gcard { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+  #gsd .gcard:hover { box-shadow: var(--shadow); }
+  #gsd .photo { aspect-ratio: 16 / 9; background: var(--surface-2); position: relative; }
+  #gsd .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #gsd .photo .ribbon {
+    position: absolute; left: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+    background: var(--measured); color: #fff; border-radius: 4px; padding: 3px 8px;
+  }
+  #gsd .gbody { padding: 14px; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+  #gsd .gname { display: flex; gap: 10px; justify-content: space-between; align-items: baseline; }
+  #gsd .gname h3 { font-size: 17px; }
+  #gsd .gname .maker { font-size: 12px; color: var(--ink-3); }
+  #gsd .affordance { margin: 0; font-size: 13px; color: var(--ink-2); }
+
+  #gsd .meter { display: grid; grid-template-columns: 74px 1fr auto; gap: 9px; align-items: center; }
+  #gsd .meter .k { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
+  #gsd .track { height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+  #gsd .track.none { background: repeating-linear-gradient(90deg, var(--track) 0 5px, transparent 5px 10px); }
+  #gsd .track span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  #gsd .track span.over { background-image: repeating-linear-gradient(115deg,
+    rgba(255, 255, 255, .5) 0 3px, transparent 3px 8px); }
+  #gsd .meter .v { font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+  #gsd .meter .v.dim { color: var(--ink-3); }
+
+  #gsd .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  #gsd .chip { font-family: var(--mono); font-size: 11px; background: var(--surface-2); color: var(--ink-2); border-radius: 5px; padding: 3px 7px; }
+  #gsd .fit { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  #gsd .fit-row { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; color: var(--ink-2); }
+  #gsd .fit-row .ic { flex: 0 0 auto; font-weight: 700; font-family: var(--mono); }
+  #gsd .fit-row.ok .ic { color: var(--measured); }
+  #gsd .fit-row.warn .ic { color: var(--flag); }
+  #gsd .fit-row.unknown .ic { color: var(--ink-3); }
+  #gsd .fit-row b { color: var(--ink); font-weight: 700; }
+
+  #gsd .badge {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700;
+    letter-spacing: .04em; text-transform: uppercase; border-radius: 4px; padding: 3px 7px;
+  }
+  #gsd .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  #gsd .badge.measured { color: var(--measured); background: var(--measured-soft); }
+  #gsd .badge.vendor { color: var(--vendor); background: var(--vendor-soft); }
+  #gsd .badge.derived { color: var(--derived); background: var(--derived-soft); }
+  #gsd .badge.flag { color: var(--flag); background: var(--flag-soft); }
+
+  #gsd details.more { border-top: 1px solid var(--line); margin-top: auto; }
+  #gsd details.more summary {
+    cursor: pointer; list-style: none; padding: 9px 0 0; font-size: 12.5px; font-weight: 700;
+    color: var(--accent-ink);
+  }
+  #gsd details.more summary::-webkit-details-marker { display: none; }
+  #gsd details.more > summary::after { content: " ▸"; }
+  #gsd details.more[open] > summary::after { content: " ▾"; }
+  #gsd .more-body { padding-top: 8px; display: flex; flex-direction: column; gap: 12px; }
+  #gsd .spec { display: grid; grid-template-columns: 1fr auto; gap: 3px 10px; font-size: 12.5px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+  #gsd .spec:last-of-type { border-bottom: 0; }
+  #gsd .spec .sk { color: var(--ink-2); }
+  #gsd .spec .sv { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+  #gsd .note-list { margin: 0; padding-left: 16px; font-size: 12.5px; color: var(--ink-2); }
+  #gsd .note-list li { margin-bottom: 3px; }
+  /* ---------- per-glider sensor tree (inside Details & sources) ---------- */
+  #gsd details.sensors { border-top: 1px solid var(--line); padding-top: 9px; }
+  #gsd details.sensors > summary,
+  #gsd details.sensor-cat > summary {
+    cursor: pointer; list-style: none; font-size: 12.5px; font-weight: 700;
+    color: var(--accent-ink); padding: 3px 0;
+  }
+  #gsd details.sensors > summary::-webkit-details-marker,
+  #gsd details.sensor-cat > summary::-webkit-details-marker { display: none; }
+  #gsd details.sensors > summary::after,
+  #gsd details.sensor-cat > summary::after { content: " ▸"; }
+  #gsd details.sensors[open] > summary::after,
+  #gsd details.sensor-cat[open] > summary::after { content: " ▾"; }
+  #gsd details.sensors .count { font-family: var(--mono); font-weight: 400; color: var(--ink-3); }
+  #gsd .sensor-body { padding: 4px 0 0 2px; }
+  #gsd details.sensor-cat { border-left: 2px solid var(--line); padding-left: 9px; margin-top: 3px; }
+  #gsd details.sensor-cat > summary { color: var(--ink-2); font-weight: 400; }
+  #gsd .sensor-list { padding: 3px 0 5px; display: flex; flex-direction: column; gap: 7px; }
+  #gsd .sensor { font-size: 12.5px; }
+  #gsd .s-name { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+  #gsd .s-name b { color: var(--ink); }
+  #gsd .s-maker { color: var(--ink-3); font-size: 11.5px; }
+  #gsd .s-param { color: var(--ink-2); }
+  #gsd .s-note { color: var(--ink-3); border-left: 2px solid var(--line-strong); padding-left: 7px; margin-top: 2px; }
+  #gsd .s-sop { color: var(--ink-3); font-family: var(--mono); font-size: 11px; margin-top: 2px; }
+  #gsd .s-link { display: inline-block; margin-top: 3px; font-size: 12px; color: var(--accent-ink);
+    text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+  #gsd .s-link:hover { border-bottom-color: var(--accent); }
+
+  #gsd .linkrow { display: flex; flex-wrap: wrap; gap: 6px; }
+  #gsd .linkrow a {
+    font-size: 12px; text-decoration: none; color: var(--accent-ink);
+    border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 10px; background: var(--surface);
+  }
+  #gsd .linkrow a:hover { background: var(--accent-soft); border-color: var(--accent); }
+
+  /* ---------- table view ---------- */
+  #gsd .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+  #gsd table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  #gsd th, #gsd td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  #gsd th { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); background: var(--surface-2); position: sticky; top: 0; }
+  #gsd td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  #gsd tbody tr:last-child td { border-bottom: 0; }
+  #gsd td .muted { color: var(--ink-3); }
+
+  /* ---------- comparison charts ---------- */
+  #gsd .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+  #gsd .chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  #gsd .chart h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); margin-bottom: 10px; }
+  #gsd .bar { display: grid; grid-template-columns: 96px 1fr auto; gap: 8px; align-items: center; margin-bottom: 7px; font-size: 12px; }
+  #gsd .bar .n { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #gsd .bar .b { height: 10px; background: var(--track); border-radius: 3px; overflow: hidden; }
+  #gsd .bar .b span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  #gsd .bar .b.measured span { background: var(--measured); }
+  #gsd .bar .val { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); }
+  #gsd .bar.nodata .val { color: var(--ink-3); }
+  #gsd .chart .foot { font-size: 11.5px; color: var(--ink-3); margin-top: 8px; }
+
+  #gsd .empty { background: var(--surface-2); border: 1px dashed var(--line-strong); border-radius: 10px; padding: 20px; color: var(--ink-2); }
+
+  #gsd details.schema { margin-top: 30px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 14px 16px; }
+  #gsd details.schema > summary { cursor: pointer; font-weight: 700; font-size: 14px; }
+  #gsd details.schema .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 12px; }
+  #gsd details.schema .f { border-left: 3px solid var(--accent); padding-left: 10px; }
+  #gsd details.schema .f b { font-family: var(--mono); font-size: 12.5px; }
+  #gsd details.schema .f p { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-2); }
+
+  #gsd footer.credits { margin-top: 34px; border-top: 1px solid var(--line); padding-top: 14px; font-size: 12.5px; color: var(--ink-3); }
+  #gsd footer.credits a { color: var(--accent); }
+  #gsd .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 14px 0 0; font-size: 12.5px; color: var(--ink-2); }
+
+  #gsd .handling-row { margin-top: 14px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+  #gsd .handling-row.off { opacity: .62; }
+  #gsd .handling-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+  #gsd .handling-options { display:flex; flex-wrap:wrap; gap:8px; }
+  #gsd .handling-options label { display:flex; align-items:center; gap:6px; padding:7px 10px; border:1px solid var(--border); border-radius:999px; cursor:pointer; background:var(--surface); font-size:.92rem; }
+  #gsd .handling-options label:has(input:checked) { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; font-weight:700; }
+  #gsd .handling-note { margin-top:8px; color:var(--muted); font-size:.84rem; line-height:1.35; }
+
+
+/* Deployment / recovery styling: single source of truth */
+#gsd #sl-handling {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#gsd #sl-handling .handling-head {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#gsd #sl-handling .handling-head .lab {
+  margin: 0;
+  padding: 0;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+#gsd #sl-handling .handling-head .lab b {
+  font-size: 13.5px;
+  line-height: 1.35;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+#gsd #sl-handling .handling-options label {
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+#gsd #sl-handling .handling-options label:has(input:checked) {
+  font-weight: 400;
+}
+
+#gsd #sl-handling.off {
+  opacity: .48;
+}
+
+#gsd #sl-handling:not(.off) {
+  opacity: 1;
+}
+
+/* ---- science payload and PAM pickers ---- */
+#gsd .payload-grid { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+#gsd .payload-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; flex: 1 1 280px; }
+#gsd .payload-field > span {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+#gsd .payload-field select {
+  font: inherit; font-size: 13.5px; padding: 8px 10px; width: 100%;
+  border: 1px solid var(--line-strong); border-radius: 8px;
+  background: var(--surface); color: var(--ink);
+}
+#gsd .payload-field select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#gsd .payload-detail {
+  margin-top: 10px; border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 8px; background: var(--surface-2); padding: 10px 13px;
+  font-size: 13px; color: var(--ink-2); line-height: 1.5;
+}
+#gsd .payload-detail b { color: var(--ink); }
+#gsd .payload-detail .pd-row { margin-top: 5px; }
+#gsd .payload-detail .pd-row:first-child { margin-top: 0; }
+#gsd .payload-detail .pd-none { color: var(--flag); }
+
+</style>
+
+<div id="gsd">
+
+      <header class="page-head">
+        <p>Comparing the PAM-equipped gliders of the
+          <a href="https://nmfs-pam-glider.github.io/GliderRodeo/">NOAA Fisheries Glider Rodeo 2026</a>.
+          Same structure Kasey built — set what the mission needs, apply, then your options — with
+          photos, sourcing and the rodeo measurements added.</p>
+      </header>
+
+      <h2 class="section anchored">Mission Parameters</h2>
+      <p class="section-note">Enter requirements for your mission below. Tick a row to make it a
+        requirement; leave it unticked and it is ignored. Then press Apply.</p>
+
+      <div class="panel mission-params">
+        <h3 class="anchored">Battery type</h3>
+        <div class="caps" role="radiogroup" aria-label="Battery type">
+          <label class="cap"><input type="radio" name="battery" id="batt-any" value="any" checked=""> Any</label>
+          <label class="cap"><input type="radio" name="battery" id="batt-rechargeable" value="rechargeable"> Rechargeable</label>
+          <label class="cap"><input type="radio" name="battery" id="batt-primary" value="primary"> Primary   (single-use)</label>
+        </div>
+
+        <h3 style="margin-top:20px;" class="anchored">Mission parameters</h3>
+        <div class="slider-grid">
+          <div class="sl off" id="sl-duration">
+            <label class="lab"><input type="checkbox" data-for="duration"> <b>Deployment duration</b>
+              <span class="val"><span id="v-duration">30</span> days</span></label>
+            <span class="end">1</span>
+            <input type="range" id="r-duration" min="1" max="730" value="30" step="1">
+            <span class="end">730</span>
+          </div>
+          <div class="sl off" id="sl-depth">
+            <label class="lab"><input type="checkbox" data-for="depth"> <b>Depth range</b>
+              <span class="val"><span id="v-depth">50–300</span> m</span></label>
+            <div class="depth-range-wrap">
+              <span class="end">5</span>
+              <div class="depth-range" aria-label="Required depth range">
+                <div class="depth-range-track"><div class="depth-range-fill" id="depth-range-fill"></div></div>
+                <input type="range" id="r-depth-min" min="0" max="20" value="7" step="1" aria-label="Minimum depth">
+                <input type="range" id="r-depth-max" min="0" max="20" value="13" step="1" aria-label="Maximum depth">
+              </div>
+              <span class="end">1,500+</span>
+            </div>
+          </div>
+          <div class="sl off" id="sl-speed">
+            <label class="lab"><input type="checkbox" data-for="speed"> <b>Speed needed</b>
+              <span class="val"><span id="v-speed">1.0</span> kt</span></label>
+            <span class="end">0.2</span>
+            <input type="range" id="r-speed" min="0.2" max="3.5" value="1" step="0.1">
+            <span class="end">3.5</span>
+          </div>
+          <div class="sl off" id="sl-mass">
+            <label class="lab"><input type="checkbox" data-for="mass"> <b>Maximum weight</b>
+              <span class="val"><span id="v-mass">80</span> kg</span></label>
+            <span class="end">20</span>
+            <input type="range" id="r-mass" min="20" max="200" value="80" step="5">
+            <span class="end">200</span>
+          </div>
+        </div>
+
+        <div class="handling-row off" id="sl-handling">
+          <div class="deploy-recover-group handling-head">
+            <label class="lab" style="margin:0;"><input type="checkbox" data-for="handling"> <b>Deployment / recovery capability</b></label>
+          </div>
+          <div class="handling-options" role="radiogroup" aria-label="Available deployment and recovery capability">
+            <label><input type="radio" name="handling" value="1" checked=""> Single-person handling</label>
+            <label><input type="radio" name="handling" value="2"> Two-person handling</label>
+            <label><input type="radio" name="handling" value="3"> Crane / LARS available</label>
+          </div>
+          <div class="handling-note">Choose the highest level of handling support available. Higher capability also includes gliders with lower handling requirements.</div>
+        </div>
+
+        <h3 style="margin-top:20px;" class="anchored">Science payload</h3>
+        <p class="section-note">Pick what you need to measure, then a specific sensor if you have
+          one in mind. The list narrows to gliders that sensor is already integrated on. Sensors and
+          their integrations come from the glider/PAM workbook.</p>
+        <div class="payload-grid">
+          <label class="payload-field"><span>Measurement</span>
+            <select id="sensor-cat"><option value="any">Any</option></select></label>
+          <label class="payload-field"><span>Sensor</span>
+            <select id="sensor-model"><option value="any">Any in this group</option></select></label>
+        </div>
+        <div class="payload-detail" id="sensor-detail" hidden=""></div>
+
+        <h3 style="margin-top:20px;" class="anchored">PAM system</h3>
+        <p class="section-note">Choose a recorder to keep only the gliders it is documented on, and
+          to see its memory, channel count and bandwidth.</p>
+        <div class="payload-grid">
+          <label class="payload-field"><span>Recorder</span>
+            <select id="pam-select"><option value="any">Any</option></select></label>
+        </div>
+        <div class="payload-detail" id="pam-detail" hidden=""></div>
+
+        <h3 style="margin-top:20px;" class="anchored">Acoustic parameters</h3>
+        <div class="slider-grid">
+          <div class="sl off" id="sl-freq">
+            <label class="lab"><input type="checkbox" data-for="freq"> <b>Highest frequency of interest</b>
+              <span class="val"><span id="v-freq">50</span> kHz</span></label>
+            <span class="end">1</span>
+            <input type="range" id="r-freq" min="1" max="200" value="50" step="1">
+            <span class="end">200</span>
+          </div>
+          <div class="sl off" id="sl-duty">
+            <label class="lab"><input type="checkbox" data-for="duty"> <b>Recording duty cycle</b>
+              <span class="val"><span id="v-duty">25</span> %</span></label>
+            <span class="end">1</span>
+            <input type="range" id="r-duty" min="1" max="100" value="25" step="1">
+            <span class="end">100</span>
+          </div>
+        </div>
+
+        <div class="panel-actions">
+          <button class="btn" id="apply">Apply</button>
+          <button class="btn ghost" id="reset">Reset</button>
+          <span class="dirty" id="dirty" hidden="">Settings changed — press Apply</span>
+        </div>
+      </div>
+
+      <h2 class="section anchored">Your Options</h2>
+      <div class="results-bar">
+        <span class="count" id="count"></span>
+        <div class="toggle" role="group" aria-label="View">
+          <button id="view-cards" aria-pressed="true">Cards</button>
+          <button id="view-table" aria-pressed="false">Table</button>
+        </div>
+      </div>
+      <div id="cards" class="cards"></div>
+      <div id="tableview" hidden="" class="table-wrap">
+        
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Manufacturer</th>
+<th data-quarto-table-cell-role="th">Glider</th>
+<th data-quarto-table-cell-role="th">Max depth (m)</th>
+<th data-quarto-table-cell-role="th">Endurance (days)</th>
+<th data-quarto-table-cell-role="th">Speed (kt)</th>
+<th data-quarto-table-cell-role="th">Mass (kg)</th>
+<th data-quarto-table-cell-role="th">Capacity (Wh)</th>
+<th data-quarto-table-cell-role="th">Propeller</th>
+<th data-quarto-table-cell-role="th">Real-time</th>
+<th data-quarto-table-cell-role="th">Acoustic</th>
+<th data-quarto-table-cell-role="th">Ice</th>
+<th data-quarto-table-cell-role="th">Evidence</th>
+</tr>
+</thead>
+<tbody id="tbody">
+</tbody>
+</table>
+
+      </div>
+      <div id="empty" class="empty" hidden="">No glider meets every requirement. Untick the one that is
+        least important — depth and duration are usually what rules platforms out.</div>
+
+      <div class="legend">
+        <span class="badge measured"><span class="dot"></span>Measured at Rodeo</span>
+      </div>
+
+      <h2 class="section anchored">Glider Comparisons</h2>
+      <p class="section-note">Only the gliders that matched, on one scale each. Green bars are measured
+        at the Rodeo; blue are vendor figures.</p>
+      <div class="charts" id="charts"></div>
+
+      <details class="schema">
+        <summary>How the data behind this is organised</summary>
+        <p style="font-size:13.5px; color:var(--ink-2); margin-top:10px;">
+          The cards, table and charts all read one row per glider, extending the columns already in
+          <code>gliders_cleaned.csv</code>. Four companion files join on the same <code>id</code>:
+          <code>payloads.csv</code> (PAM and sensors), <code>integrations.csv</code> (which payload runs
+          on which glider, with evidence), <code>rodeo.csv</code> (straight from
+          <code>build_summary.py</code>) and <code>links.csv</code> (so the reference sites appear in the
+          same place on every card).</p>
+        <div class="cols">
+          <div class="f"><b>value__source</b><p>Where the number came from. No source, no publish.</p></div>
+          <div class="f"><b>value__confidence</b><p>vendor / measured / derived — what paints the badge.</p></div>
+          <div class="f"><b>value__checked</b><p>Date someone last verified it against the source.</p></div>
+          <div class="f"><b>conflicts</b><p>Two sources disagree: show both, never silently pick.</p></div>
+        </div>
+      </details>
+
+      <footer class="credits">
+        <p>Glider photographs from the
+          <a href="https://open-source-glider.readthedocs.io/en/latest/Commercial%20Gliders.html">open-source glider wiki</a>,
+          which credits the manufacturers. Specifications from vendor documentation and manuals;
+          at-sea figures from the Glider Rodeo 2026 summary (<code>build_summary.py</code>). All rodeo
+          data are preliminary.</p>
+        <p>Where to look next:
+          <a href="https://e-abdi.github.io/Glider-Operation-Best-Practices/">Glider Operation Best Practices</a> ·
+          <a href="https://open-source-glider.readthedocs.io/en/latest/">Open-source glider wiki</a> ·
+          <a href="https://github.com/e-abdi/custom-glider-sensor-integration">Custom sensor integration</a></p>
+      </footer>
+    </div>
+</main></div>
+
+<!-- SENSOR-DATA:BEGIN -->
+<script id="sensor-data" type="application/json">
+{"generated":"2026-09-18","source":"Copy of Glider_Acoustic_System_info.xlsx","categories":["CTD","Oxygen","Bio-optics","Light","Optics","Bioluminescence","Imaging","Nutrients","Ocean Acidification","Dissolved gas","Currents","Turbulence","Active acoustics","Animal telemetry","Communications","Biodiversity"],"sensors":[{"id":"seabirdscientific-gpctdgliderpayloadctd","category":"CTD","parameter":"Conductivity, temperature, pressure (pumped)","maker":"Sea-Bird Scientific","model":"GPCTD (Glider Payload CTD)","gliders":{"slocum-g3":"Yes - pumped CTD option (Teledyne brochure)","slocum-sentinel":"Yes - pumped CTD option (Teledyne brochure)","seaglider-m1":"Yes (payload CTD extension)","seaglider-sgx":"Yes (payload CTD extension)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes","spray2":"Spray2 standard"},"usage":"Hydrography: T/S/density profiles, water masses, mixed layer, fronts, input to flight model and DAC","notes":"Pumped flow reduces thermal-lag/response errors but the pump draws power and is audible to PAM systems (some PAM missions switch the CTD off).","sop":"OceanGliders Salinity SOP","website":"https://www.seabird.com"},{"id":"seabirdscientific-ctsailunpumped","category":"CTD","parameter":"Conductivity, temperature (unpumped)","maker":"Sea-Bird Scientific","model":"CT Sail (unpumped)","gliders":{"seaglider-m1":"Yes - legacy Seaglider standard (sbect / sailct)","seaglider-sgx":"Yes - legacy Seaglider standard (sbect / sailct)"},"usage":"Hydrography on Seagliders","notes":"Unpumped: needs thermal-lag correction and careful QC in sharp thermoclines; silent.","sop":"OceanGliders Salinity SOP","website":"https://www.seabird.com"},{"id":"seabirdscientific-sbe41cpprofilingfloatctd","category":"CTD","parameter":"Conductivity, temperature, pressure","maker":"Sea-Bird Scientific","model":"SBE 41CP (profiling-float CTD)","gliders":{"slocum-g3":"Yes (sci_ctd41cp)","slocum-sentinel":"Yes (sci_ctd41cp)","spray":"Spray: modified SBE 41CP with pump"},"usage":"Hydrography","notes":"Float-heritage sensor; Spray used a pumped variant.","sop":"OceanGliders Salinity SOP","website":"https://www.seabird.com"},{"id":"rbr-rbrlegato3","category":"CTD","parameter":"Conductivity, temperature, pressure (unpumped, inductive cell)","maker":"RBR","model":"RBRlegato3","gliders":{"slocum-g3":"Yes (sci_rbrctd - becomes primary CTD)","slocum-sentinel":"Yes (sci_rbrctd - becomes primary CTD)","seaglider-sgx":"Yes - SGX standard (legato extension)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Hydrography; a good match with PAM because it makes no noise","notes":"Silent and low power (RBR: 'completely silent', widely paired with PAM); unpumped, so thermal-lag correction is still needed.","sop":"OceanGliders Salinity SOP","website":"https://rbr-global.com"},{"id":"jfeadvantech-actdoemuz105ct","category":"CTD","parameter":"Conductivity, temperature","maker":"JFE Advantech","model":"ACTD-OEMU-Z105 CT","gliders":{"oceanscout":"OceanScout (standard)"},"usage":"Hydrography on OceanScout","notes":"Range -3-45 C, 0.5-70 mS/cm; response < 0.2 s.","sop":"OceanGliders Salinity SOP","website":"https://www.hefring.com/oceanscout"},{"id":"whoi-fastctd","category":"CTD","parameter":"Fast-response T/C (research)","maker":"WHOI","model":"Fast CTD","gliders":{"slocum-g3":"Yes (sci_whfctd)","slocum-sentinel":"Yes (sci_whfctd)"},"usage":"Fine-scale / mixing research","notes":null,"sop":null,"website":null},{"id":"aanderaaxylem-optode4831433038303835","category":"Oxygen","parameter":"Dissolved O2 (optode)","maker":"Aanderaa (Xylem)","model":"Optode 4831 / 4330 / 3830 / 3835","gliders":{"slocum-g3":"Yes (sci_oxy4, sci_oxy3835)","slocum-sentinel":"Yes (sci_oxy4, sci_oxy3835)","seaglider-m1":"Yes (aa4831 / aa4330 / aa3830 extensions)","seaglider-sgx":"Yes (aa4831 / aa4330 / aa3830 extensions)"},"usage":"Oxygen minimum zones, primary production / net community production, ventilation, hypoxia","notes":"Response time lags a moving glider (standard foil tens of seconds; fast foils available) - apply lag correction; drift requires in-situ reference.","sop":"OceanGliders Oxygen SOP (incl. in-air calibration)","website":"https://www.aanderaa.com"},{"id":"seabirdscientific-sbe43f","category":"Oxygen","parameter":"Dissolved O2 (Clark electrode, pumped)","maker":"Sea-Bird Scientific","model":"SBE 43F","gliders":{"seaglider-m1":"Yes (sbe43 extension)","seaglider-sgx":"Yes (sbe43 extension)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Oxygen profiling alongside a pumped CTD","notes":"Needs pumped flow (GPCTD plumbing); membrane drift.","sop":"OceanGliders Oxygen SOP","website":"https://www.seabird.com"},{"id":"seabirdscientific-sbe63","category":"Oxygen","parameter":"Dissolved O2 (optode)","maker":"Sea-Bird Scientific","model":"SBE 63","gliders":{"spray2":"Spray2 supported"},"usage":"Oxygen profiling","notes":null,"sop":"OceanGliders Oxygen SOP","website":"https://www.seabird.com"},{"id":"rbr-rbrcodatodo","category":"Oxygen","parameter":"Dissolved O2 + temperature (optode)","maker":"RBR","model":"RBRcoda T.ODO","gliders":{"slocum-g3":"Yes (sci_rbrodo)","slocum-sentinel":"Yes (sci_rbrodo)","seaglider-m1":"Yes (coda extension)","seaglider-sgx":"Yes (coda extension)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Oxygen profiling; fast versions for gradients","notes":"Available with fast response foils.","sop":"OceanGliders Oxygen SOP","website":"https://rbr-global.com"},{"id":"jfeadvantech-rinkoiirinkoarodft","category":"Oxygen","parameter":"Dissolved O2 + temperature (fast optode)","maker":"JFE Advantech","model":"RINKO-II / RINKO AROD-FT","gliders":{"slocum-g3":"Yes (sci_rinkoII)","slocum-sentinel":"Yes (sci_rinkoII)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Oxygen in sharp gradients (fast response)","notes":null,"sop":"OceanGliders Oxygen SOP","website":"https://www.jfe-advantech.co.jp/eng/"},{"id":"seabirdscientificwetlabs-ecopuckflbbcdflbbflntubb2flbb3fl3fl","category":"Bio-optics","parameter":"Chlorophyll-a fluorescence, optical backscatter, CDOM, turbidity (1-3 channel combinations)","maker":"Sea-Bird Scientific (WET Labs)","model":"ECO puck: FLBBCD, FLBB, FLNTU, BB2FL, BB3, FL3, FLBBPE/PL","gliders":{"slocum-g3":"Yes (many: sci_flbbcd, sci_flntu, sci_bb3slo, sci_fl3slo, generic wetlabsA/B/C...)","slocum-sentinel":"Yes (many: sci_flbbcd, sci_flntu, sci_bb3slo, sci_fl3slo, generic wetlabsA/B/C...)","seaglider-m1":"Yes (WETlabs extension)","seaglider-sgx":"Yes (WETlabs extension)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Phytoplankton biomass, particle load / POC proxy, CDOM, blooms, satellite ocean-colour validation","notes":"Daytime fluorescence quenching (NPQ) - correct or use night profiles; dark counts and biofouling drift; spikes from particles.","sop":"OceanGliders Chla SOP","website":"https://www.seabird.com"},{"id":"seabirdscientificwetlabs-seaowluva","category":"Bio-optics","parameter":"Oil-in-water (UV fluorescence), chlorophyll, backscatter, FDOM","maker":"Sea-Bird Scientific (WET Labs)","model":"SeaOWL UV-A","gliders":{"slocum-g3":"Yes (sci_seaOWL)","slocum-sentinel":"Yes (sci_seaOWL)","seaglider-m1":"Yes (listed by Kongsberg)","seaglider-sgx":"Yes (listed by Kongsberg)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Oil spill / seep response, water-quality baselines","notes":null,"sop":null,"website":"https://www.seabird.com"},{"id":"rbr-rbrtridente","category":"Bio-optics","parameter":"Chlorophyll, fDOM, phycocyanin, phycoerythrin, backscatter, turbidity (3 selectable channels)","maker":"RBR","model":"RBRtridente","gliders":{"slocum-g3":"Yes (sci_rbrtridente)","slocum-sentinel":"Yes (sci_rbrtridente)","seaglider-m1":"Yes (tridente extension)","seaglider-sgx":"Yes (tridente extension)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Phytoplankton groups, CDOM, particles","notes":"Used by Alseamar in ultra-low-power (~5-month) payloads.","sop":"OceanGliders Chla SOP","website":"https://rbr-global.com"},{"id":"turnerdesigns-c3submersiblefluorometercyclops7","category":"Bio-optics","parameter":"Fluorescence (chl, crude oil, rhodamine, etc. by filter)","maker":"Turner Designs","model":"C3 submersible fluorometer / Cyclops-7","gliders":{"slocum-g3":"Yes (sci_c3sfl)","slocum-sentinel":"Yes (sci_c3sfl)","seaglider-m1":"Yes - Cyclops (Kongsberg list)","seaglider-sgx":"Yes - Cyclops (Kongsberg list)"},"usage":"Hydrocarbon detection, dye tracing, chlorophyll","notes":null,"sop":null,"website":"https://www.turnerdesigns.com"},{"id":"chelseatechnologies-uviluxpah","category":"Bio-optics","parameter":"PAH / hydrocarbons (UV fluorescence)","maker":"Chelsea Technologies","model":"UviLux PAH","gliders":{"slocum-g3":"Yes (sci_uviluxPAH)","slocum-sentinel":"Yes (sci_uviluxPAH)"},"usage":"Oil and produced-water monitoring","notes":null,"sop":null,"website":"https://chelsea.co.uk"},{"id":"seabirdscientificwetlabs-flurflrhfl2uraninerhodamine","category":"Bio-optics","parameter":"Dye tracers: uranine, rhodamine","maker":"Sea-Bird Scientific (WET Labs)","model":"FLUR / FLRH / FL2 Uranine-Rhodamine","gliders":{"slocum-g3":"Yes (sci_flur, sci_flrh, sci_fl2UrRh)","slocum-sentinel":"Yes (sci_flur, sci_flrh, sci_fl2UrRh)","seaexplorer-1000":"Nanoflux fluorescein listed","seaexplorer-200":"Nanoflux fluorescein listed"},"usage":"Dye-release dispersion / mixing experiments","notes":null,"sop":null,"website":"https://www.seabird.com"},{"id":"seapointsensors-chlorophyllfluorometerobs","category":"Bio-optics","parameter":"Chlorophyll fluorescence; optical backscatter","maker":"Seapoint Sensors","model":"Chlorophyll Fluorometer / OBS","gliders":{"spray2":"Spray; Spray2 supported","spray":"Spray; Spray2 supported"},"usage":"Phytoplankton and particles on Spray","notes":null,"sop":"OceanGliders Chla SOP","website":"https://www.seapoint.com"},{"id":"satlanticseabird-fire","category":"Bio-optics","parameter":"Variable fluorescence (phytoplankton photophysiology)","maker":"Satlantic (Sea-Bird)","model":"FIRe","gliders":{"slocum-g3":"Yes (sci_FIRe)","slocum-sentinel":"Yes (sci_FIRe)","seaexplorer-1000":"Fast Rate Fluorimeter (FRFF) listed","seaexplorer-200":"Fast Rate Fluorimeter (FRFF) listed"},"usage":"Primary productivity, nutrient stress","notes":null,"sop":null,"website":null},{"id":"motemarinelaboratory-opticalphytoplanktondiscriminatorbreveb","category":"Bio-optics","parameter":"Phytoplankton discrimination (Karenia brevis)","maker":"Mote Marine Laboratory","model":"Optical Phytoplankton Discriminator (BreveBuster)","gliders":{"slocum-g3":"Yes (sci_moteopd)","slocum-sentinel":"Yes (sci_moteopd)"},"usage":"Harmful algal bloom detection","notes":null,"sop":null,"website":null},{"id":"satlanticseabird-ocr504ocr507","category":"Light","parameter":"Spectral irradiance / radiance","maker":"Satlantic (Sea-Bird)","model":"OCR-504 / OCR-507","gliders":{"slocum-g3":"Yes (sci_ocr504I/R, sci_ocr507I/R)","slocum-sentinel":"Yes (sci_ocr504I/R, sci_ocr507I/R)","seaglider-sgx":"Yes (ocr504i) - SGX optional"},"usage":"Light attenuation (Kd), ocean-colour validation, euphotic depth","notes":"Only meaningful in daylight and upper ocean; tilt affects readings.","sop":null,"website":"https://www.seabird.com"},{"id":"biosphericalinstrumentssatlantic-qsp2150mpeparsatlanticpar","category":"Light","parameter":"PAR","maker":"Biospherical Instruments / Satlantic","model":"QSP-2150, MPE-PAR / Satlantic PAR","gliders":{"slocum-g3":"Yes (sci_bsipar, sci_satpar)","slocum-sentinel":"Yes (sci_bsipar, sci_satpar)","seaglider-m1":"Yes (qsp2150, sat1000)","seaglider-sgx":"Yes (qsp2150, sat1000)","seaexplorer-1000":"Yes (Biospherical MPE-PAR)","seaexplorer-200":"Yes (Biospherical MPE-PAR)"},"usage":"Photosynthetically available radiation, productivity models","notes":null,"sop":null,"website":"https://www.biospherical.com"},{"id":"seabirdwetlabssequoia-cstarbamlissttau","category":"Optics","parameter":"Beam attenuation / transmission","maker":"Sea-Bird (WET Labs) / Sequoia","model":"C-Star BAM; LISST-Tau","gliders":{"slocum-g3":"Yes (sci_bbam, sci_tau)","slocum-sentinel":"Yes (sci_bbam, sci_tau)"},"usage":"Particle concentration, POC, sediment plumes","notes":null,"sop":null,"website":null},{"id":"sequoiascientific-lisstgliderversion","category":"Optics","parameter":"Particle size distribution (laser diffraction)","maker":"Sequoia Scientific","model":"LISST (glider version)","gliders":{"slocum-g3":"Yes (sci_lisst)","slocum-sentinel":"Yes (sci_lisst)"},"usage":"Sediment resuspension, dredging plumes, particle dynamics","notes":"Large sensor - check the power budget and drag.","sop":null,"website":"https://www.sequoiasci.com"},{"id":"seabirdwetlabshobilabs-vsfmetersamhydroscat2","category":"Optics","parameter":"Volume scattering function; scattering-attenuation","maker":"Sea-Bird (WET Labs) / HOBI Labs","model":"VSF meter, SAM, HydroScat-2","gliders":{"slocum-g3":"Yes (sci_vsf, sci_sam, sci_hs2)","slocum-sentinel":"Yes (sci_vsf, sci_sam, sci_hs2)"},"usage":"Research optics","notes":null,"sop":null,"website":null},{"id":"seabirdwetlabswhoi-ubatwhoigliderbathyphotometer","category":"Bioluminescence","parameter":"Bioluminescence","maker":"Sea-Bird (WET Labs) / WHOI","model":"UBAT; WHOI Glider Bathy-Photometer","gliders":{"slocum-g3":"Yes (sci_ubat, sci_whgpbm)","slocum-sentinel":"Yes (sci_ubat, sci_whgpbm)","seaexplorer-1000":"Yes (UBAT)","seaexplorer-200":"Yes (UBAT)"},"usage":"Bioluminescent plankton distribution","notes":"Pumped chamber - adds pump noise and power draw.","sop":null,"website":"https://www.seabird.com"},{"id":"hydroptic-uvp6","category":"Imaging","parameter":"Large particles and zooplankton images","maker":"Hydroptic","model":"UVP6","gliders":{"slocum-g3":"Yes","slocum-sentinel":"Yes","seaglider-m1":"Yes","seaglider-sgx":"Yes","seaexplorer-1000":"Yes (low-power config)","seaexplorer-200":"Yes (low-power config)"},"usage":"Zooplankton and marine snow distribution, carbon export","notes":null,"sop":null,"website":"https://www.hydroptic.com","links":{"seaglider-m1":{"url":"https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#seaglider","label":"Integration notes"},"seaglider-sgx":{"url":"https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#seaglider","label":"Integration notes"},"slocum-g3":{"url":"https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#slocum","label":"Integration notes"},"slocum-sentinel":{"url":"https://open-source-glider.readthedocs.io/en/latest/Sensors/Optical%20Imaging.html#slocum","label":"Integration notes"}}},{"id":"wassoc-shadowgraphv3","category":"Imaging","parameter":"Large particles and zooplankton images","maker":"WASSOC","model":"shadowgraph V3","gliders":{"slocum-g3":"Yes","slocum-sentinel":"Yes"},"usage":null,"notes":null,"sop":null,"website":null},{"id":"williamsonassociates-solocam","category":"Imaging","parameter":"Still camera","maker":"Williamson & Associates","model":"SOLOCAM","gliders":{"slocum-g3":"Yes (sci_solocam)","slocum-sentinel":"Yes (sci_solocam)"},"usage":"Seafloor / water-column imaging","notes":null,"sop":null,"website":null},{"id":"seabirdscientificsatlantic-sunadeepsuna","category":"Nutrients","parameter":"Nitrate (UV absorption)","maker":"Sea-Bird Scientific (Satlantic)","model":"SUNA / Deep SUNA","gliders":{"slocum-g3":"Yes (sci_suna)","slocum-sentinel":"Yes (sci_suna)","seaglider-m1":"Yes (suna extension)","seaglider-sgx":"Yes (suna extension)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Nitrate supply, nutricline, new production, biogeochemical cycles","notes":"Big and power-hungry (Deep SUNA ~500 g in water, ~1.5 L); usually duty-cycled; needs T/S-dependent bromide correction.","sop":"OceanGliders Nitrate SOP","website":"https://www.seabird.com"},{"id":"clearwatersensors-labonchip","category":"Nutrients","parameter":"Nitrate, phosphate, pH, iron... (one per unit, wet chemistry)","maker":"Clearwater Sensors","model":"Lab-on-Chip","gliders":{"seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"In-situ nutrient chemistry at high accuracy","notes":"Slow sampling (minutes per measurement) - suits virtual-mooring or slow profiles.","sop":null,"website":null},{"id":"prooceanus-miniproco2minico2","category":"Ocean Acidification","parameter":"pCO2","maker":"Pro-Oceanus","model":"Mini-Pro CO2 / Mini CO2","gliders":{"slocum-g3":"Yes (sci_miniProCO2)","slocum-sentinel":"Yes (sci_miniProCO2)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Air-sea CO2 flux, ocean acidification, respiration","notes":"Slow response (minutes) - interpret profiles carefully.","sop":null,"website":"https://pro-oceanus.com"},{"id":"aanderaaxylem-pco2optode","category":"Ocean Acidification","parameter":"pCO2 (optode)","maker":"Aanderaa (Xylem)","model":"pCO2 optode","gliders":{"slocum-g3":"Yes (sci_pCO2)","slocum-sentinel":"Yes (sci_pCO2)","seaglider-m1":"Yes - pCO2 optode (Kongsberg list)","seaglider-sgx":"Yes - pCO2 optode (Kongsberg list)"},"usage":"Carbonate chemistry","notes":"Slow response.","sop":null,"website":"https://www.aanderaa.com"},{"id":"seabirdscientificsbe41nphgliderfetmakernotstated-sbe41nphgli","category":"Ocean Acidification","parameter":"pH (ISFET)","maker":"Sea-Bird Scientific (SBE 41N pH); GliderFET maker not stated","model":"SBE 41N pH; GliderFET (ISFET)","gliders":{"slocum-g3":"Yes (sci_sbe41n_ph)","slocum-sentinel":"Yes (sci_sbe41n_ph)","seaglider-m1":"Yes (GliderFET extension)","seaglider-sgx":"Yes (GliderFET extension)"},"usage":"Ocean acidification; with T/S-derived alkalinity -> full carbonate system","notes":"Needs conditioning and reference samples; drift checks.","sop":null,"website":null},{"id":"anbsensors-oc1250","category":"Ocean Acidification","parameter":"pH (electrochemical)","maker":"ANB Sensors","model":"OC1250","gliders":{"seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Ocean acidification","notes":null,"sop":null,"website":"https://anbsensors.com"},{"id":"4hjenaengineeringgmbh-hydrocco2","category":"Ocean Acidification","parameter":"pCO2 (membrane equilibration, NDIR)","maker":"4H-Jena engineering GmbH","model":"HydroC CO2","gliders":{"seaglider-m1":"Yes - integrated on Seaglider by Akvaplan-niva (this project)","seaglider-sgx":"Yes - integrated on Seaglider by Akvaplan-niva (this project)"},"usage":"Carbonate system: partial pressure of CO2 for ocean acidification, air-sea flux and carbon budget work.","notes":"Membrane equilibration means a response time of minutes, so profiles need a lag correction and the sensor is better suited to slow or drifting sections than to fast yos. Draws appreciably more than an optode.","sop":null,"website":"https://www.4h-jena.de","links":{"seaglider-m1":{"url":"https://open-source-glider.readthedocs.io/en/latest/Sensors/Ocean%20Acidification.html","label":"Integration notes"},"seaglider-sgx":{"url":"https://open-source-glider.readthedocs.io/en/latest/Sensors/Ocean%20Acidification.html","label":"Integration notes"}}},{"id":"4hjenaengineeringgmbh-hydrocch4methane","category":"Ocean Acidification","parameter":"Dissolved methane (membrane equilibration, NDIR)","maker":"4H-Jena engineering GmbH","model":"HydroC CH4 (methane)","gliders":{"seaglider-m1":"Yes - integrated on Seaglider by Akvaplan-niva (this project)","seaglider-sgx":"Yes - integrated on Seaglider by Akvaplan-niva (this project)"},"usage":"Dissolved methane: seep and pockmark surveys, gas hydrate margins, water-column methane inventories.","notes":"Same membrane-equilibration response time as the CO2 unit. Detection limit and settling time both reward slow profiling near the seabed.","sop":null,"website":"https://www.4h-jena.de","links":{"seaglider-m1":{"url":"https://open-source-glider.readthedocs.io/en/latest/Sensors/Ocean%20Acidification.html","label":"Integration notes"},"seaglider-sgx":{"url":"https://open-source-glider.readthedocs.io/en/latest/Sensors/Ocean%20Acidification.html","label":"Integration notes"}}},{"id":"franatech-metslasermethanesensorlms","category":"Dissolved gas","parameter":"Methane","maker":"Franatech","model":"METS; Laser Methane Sensor (LMS)","gliders":{"slocum-g3":"Yes (sci_lms)","slocum-sentinel":"Yes (sci_lms)","seaexplorer-1000":"Yes (METS)","seaexplorer-200":"Yes (METS)"},"usage":"Natural seep and leak detection, carbon cycle","notes":"METS response is slow; LMS is laser-based (faster).","sop":null,"website":"https://franatech.com"},{"id":"nortekgeneraloceans-ad2cpglidersignature1000","category":"Currents","parameter":"Velocity profiles, shear, acoustic backscatter (echosounder mode on some models)","maker":"Nortek (General Oceans)","model":"AD2CP Glider / Signature1000","gliders":{"slocum-g3":"Yes (sci_ad2cp)","slocum-sentinel":"Yes (sci_ad2cp)","seaglider-sgx":"Yes (ad2cp / cp / echo extensions) - SGX optional","seaexplorer-1000":"Yes","seaexplorer-200":"Yes","spray2":"Spray2 supported"},"usage":"Absolute velocity profiles (with DAC), shear and mixing, zooplankton backscatter","notes":"Power and data volume; needs a good compass calibration and a stable pitch for beam geometry; Alseamar computes absolute currents on shore (Glimpse).","sop":"OceanGliders ADCP SOP; Depth Average Currents SOP","website":"https://www.nortekgroup.com"},{"id":"teledynerdinstruments-explorerpathfinderdvl","category":"Currents","parameter":"Bottom-track velocity, current profiles","maker":"Teledyne RD Instruments","model":"Explorer / Pathfinder DVL","gliders":{"slocum-g3":"Yes (sci_dvl)","slocum-sentinel":"Yes (sci_dvl)"},"usage":"Near-bottom navigation, bottom-referenced currents","notes":"Range-limited to near the seabed; power.","sop":"OceanGliders ADCP SOP","website":"https://www.teledynemarine.com"},{"id":"jfeadvantech-aem1g","category":"Currents","parameter":"Speed through water (electromagnetic)","maker":"JFE Advantech","model":"AEM1-G","gliders":{"seaglider-m1":"Yes (velo extension)","seaglider-sgx":"Yes (velo extension)"},"usage":"Flight-model validation, relative velocity","notes":null,"sop":null,"website":null},{"id":"sontek-argonaut750khz","category":"Currents","parameter":"Velocity profiles (legacy)","maker":"SonTek","model":"Argonaut 750 kHz","gliders":{"spray":"Spray (historic)"},"usage":"Early glider ADCP work","notes":null,"sop":null,"website":null},{"id":"rocklandscientific-microrider1000mr1000g","category":"Turbulence","parameter":"Microstructure shear (epsilon), fast temperature (chi)","maker":"Rockland Scientific","model":"MicroRider-1000 (MR1000G)","gliders":{"slocum-g3":"Yes (sci_microRider)","slocum-sentinel":"Yes (sci_microRider)","seaglider-m1":"Yes (microriderg logdev extension)","seaglider-sgx":"Yes (microriderg logdev extension)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Ocean mixing, dissipation rates, boundary-layer turbulence","notes":"Large (~5.5 L displacement); sensitive to vehicle vibration (pumps, motors, thrusters); large data volume; needs steady flight.","sop":"ATOMIX shear-probe best practices","website":"https://rocklandscientific.com"},{"id":"imagenex-853echosounder120khz","category":"Active acoustics","parameter":"Echosounding / backscatter (single frequency)","maker":"Imagenex","model":"853 echosounder (120 kHz)","gliders":{"slocum-g3":"Yes (sci_echosndr853)","slocum-sentinel":"Yes (sci_echosndr853)","seaglider-m1":"Yes (Kongsberg list)","seaglider-sgx":"Yes (Kongsberg list)","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Bottom detection, fish and zooplankton layers","notes":"Active pings are audible to onboard PAM systems.","sop":null,"website":"https://imagenex.com"},{"id":"aslenvironmentalsciences-azfpacousticzooplanktonfishprofiler","category":"Active acoustics","parameter":"Multi-frequency zooplankton / fish backscatter","maker":"ASL Environmental Sciences","model":"AZFP (Acoustic Zooplankton Fish Profiler)","gliders":{"slocum-g3":"Yes (sci_azfp)","slocum-sentinel":"Yes (sci_azfp)"},"usage":"Krill and zooplankton biomass, fish distribution","notes":null,"sop":null,"website":"https://aslenv.com"},{"id":"kongsbergdiscoverysimrad-wbtminiek80","category":"Active acoustics","parameter":"Broadband fisheries echosounder","maker":"Kongsberg Discovery (Simrad)","model":"WBT Mini / EK80","gliders":{"slocum-g3":"Yes (sci_ek80)","slocum-sentinel":"Yes (sci_ek80)","seaglider-m1":"Yes","seaglider-sgx":"Yes","seaexplorer-1000":"Yes","seaexplorer-200":"Yes"},"usage":"Fisheries acoustics, species discrimination","notes":"Power and data volume.","sop":null,"website":"https://www.kongsberg.com"},{"id":"aslenvironmentalsciences-glbpssonar","category":"Active acoustics","parameter":"Sonar","maker":"ASL Environmental Sciences","model":"GLBPS sonar","gliders":{"slocum-g3":"Yes (sci_glbps)","slocum-sentinel":"Yes (sci_glbps)"},"usage":"Details not public","notes":null,"sop":null,"website":"https://aslenv.com"},{"id":"innovaseavemco-vr2cvmtreceiveroffloadmodule","category":"Animal telemetry","parameter":"Acoustic fish-tag detections","maker":"Innovasea (Vemco)","model":"VR2C / VMT / Receiver Offload module","gliders":{"slocum-g3":"Slocum Sentinel 'Redwing' carries a fish tracker","slocum-sentinel":"Slocum Sentinel 'Redwing' carries a fish tracker"},"usage":"Tracking tagged fish, sharks, turtles along glider tracks","notes":null,"sop":null,"website":"https://www.innovasea.com"},{"id":"whoiteledynebenthos-micromodembenthosatmmodems","category":"Communications","parameter":"Acoustic modem (data from subsea nodes, ranging)","maker":"WHOI / Teledyne Benthos","model":"Micro-Modem; Benthos ATM modems","gliders":{"slocum-g3":"Yes (sci_uModem; acoustic modem option)","slocum-sentinel":"Yes (sci_uModem; acoustic modem option)","seaglider-sgx":"Transponder / RAFOS navigation (SGX)"},"usage":"Retrieving data from moorings, under-ice navigation, glider-glider comms","notes":null,"sop":null,"website":null},{"id":"dot-dotednasamplerdeep","category":"Biodiversity","parameter":"eDNA","maker":"DoT","model":"DoT eDNA sampler (deep)","gliders":{"slocum-g3":"Yes","slocum-sentinel":"Yes"},"usage":null,"notes":null,"sop":null,"website":null,"links":{"slocum-g3":{"url":"https://akvaplan.no/en/news/2026-06-08/autonomous-gliders-in-the-quest-for-ocean-biodiversity-the-edepthna-project-509271","label":"eDepthNA project"},"slocum-sentinel":{"url":"https://akvaplan.no/en/news/2026-06-08/autonomous-gliders-in-the-quest-for-ocean-biodiversity-the-edepthna-project-509271","label":"eDepthNA project"}}}],"pam":[{"key":"dmon2","maker":"WHOI","model":"DMON2","memory":"64 GB","channels":"3 (LF, MF, HF) in one urethane housing","bandwidth":["10 Hz - 7.5 kHz","100 Hz - 50 kHz","1 kHz - 160 kHz"],"duty":"Yes","detector":"LFDCS","realtime":"Yes","target":["Baleen whales","Mid-frequency sources (e.g. delphinid whistles) - recording","High-frequency sources (e.g. odontocete clicks) - recording"],"sampleRate":"LFDCS runs on 2 kHz audio (16-bit). Seaglider DMON: MF channel 120 kHz, HF channel 240 kHz","power":"~150 mW while sampling (~450 mW incl. linear-regulator losses) - Seaglider DMON; DMON2 internal battery 10 Ah","size":"Oil-filled urethane housing with integrated hydrophones; mounted on the Slocum science bay (G2 topside / G3 underside)","integrations":"Slocum G2/G3 (sci_dmon driver, science-bay integration); Seaglider (SCSC DMON: 3 hydrophones, wingtips + aft hatch); moored buoys; Wave Glider","gliders":["seaglider-m1","seaglider-sgx","slocum-g3","slocum-sentinel"]},{"key":"wispr3","maker":"EOS","model":"WISPR3","memory":"4 TB","channels":"1","bandwidth":["up to 150 kHz"],"duty":"Yes","detector":"none","realtime":"none","target":[],"sampleRate":"1-300 kSPS configurable (decimation 4/8/16); 16- or 24-bit samples","power":"Separate digital (4-24 V) and analog (5.5-24 V) supply inputs; consumption not published","size":"Controller board (Microchip ATSAMD51) with 2 SD-card slots; WISPR2: 2.2 x 2.56 in board, up to 1 TB","integrations":"Seaglider (NOAA/PMEL & others; basis of Kongsberg/HII Seaglider PAM); Slocum driver exists (sci_wispr) - NOAA Fisheries exploring Slocum integration; also floats (QUEphone) and moorings","gliders":["seaglider-m1","seaglider-sgx","slocum-g3","slocum-sentinel"]},{"key":"observer","maker":"JASCO","model":"OceanObserver","memory":"up to 10 TB","channels":"up to 16","bandwidth":["Per-channel 8-512 ksps; optional 2048 ksps high-speed channel"],"duty":"Yes (configurable recording schedules)","detector":"PAMlab INT - detectors tailored per species/call type (baleen whales, toothed whales, seismic pulses), ambient-noise metrics","realtime":"Yes","target":["Both"],"sampleRate":"8-512 ksps, 24-bit; optional 2048 ksps channel","power":"~2.5 W recording one channel (JASCO comparison brochure)","size":"Slocum OceanObserver payload rated 1000 m","integrations":"Slocum (Teledyne partnership, sci_obsvr driver; Kowarski et al. 2020, 45-day mission); Observer/AMAR trials in Seaglider and SeaExplorer; ObserverSnout on BOMTS gliders; buoys, cabled stations","gliders":["seaglider-m1","seaglider-sgx","seaexplorer-1000","seaexplorer-200","slocum-g3","slocum-sentinel"]},{"key":"amar","maker":"JASCO","model":"AMAR G4","memory":"Up to 20 TB (1 TB removable SD cards)","channels":"4-16","bandwidth":["Example bands: 1 Hz-50 kHz, 5 Hz-100 kHz, 20 Hz-200 kHz"],"duty":"Yes (AMARlink schedules and duty cycles)","detector":null,"realtime":"No (Wi-Fi configuration/status on deck)","target":["Both (configurable)"],"sampleRate":"8-512 ksps, 24-bit; noise floor better than -150 dB re FS/rtHz","power":"~560 mW (1 or 4 channels); G4-ACE internal 93 Wh ~5 days @ 256 ksps","size":"G4-ACE: 500 m, 101 x 692 mm, 5.2 kg air / 0.3 kg water. G4-AL: 3000 m. UD-G4: 6700 m","integrations":"Slocum (sci_amar driver 'Jasco AMAR-G4'); Seaglider (Aniceto et al. 2020, 40-day mission); SeaExplorer trials","gliders":["seaglider-m1","seaglider-sgx","seaexplorer-1000","seaexplorer-200","slocum-g3","slocum-sentinel"]},{"key":"sgPam","maker":"Kongsberg / HII","model":"Seaglider PAM package (WISPR v1)","memory":"512 GB CompactFlash (~50 days FLAC at 16-bit, ~35 days at 24-bit)","channels":"1","bandwidth":["5 Hz-62.5 kHz"],"duty":"Yes (pilot-controlled through Seaglider parameters)","detector":"None documented (test 'snippets' only)","realtime":"Status/snippets via Seaglider telemetry","target":[],"sampleRate":"125 kHz; 16- or 24-bit; raw WAV or FLAC lossless","power":"10-30 VDC from the glider","size":"Hydrophone on the top hatch of the Seaglider payload bay","integrations":"Seaglider","gliders":["seaglider-m1","seaglider-sgx"]},{"key":"pmar","maker":"HII (Huntington Ingalls)","model":"PMAR-XL","memory":"512 GB (up to ~7,761 h reported)","channels":"1","bandwidth":["10 Hz-~90 kHz (user-set anti-alias cutoff; max valid setting 60 kHz)"],"duty":"Yes (e.g. 10-min files every 15 min)","detector":null,"realtime":null,"target":[],"sampleRate":"180 kHz, 16-bit","power":null,"size":"Electronics inside the pressure hull; small hydrophone in the aft fairing near the bladder","integrations":"Seaglider","gliders":["seaglider-m1","seaglider-sgx"]},{"key":"osPam","maker":"Hefring Engineering","model":"OceanScout-PAM","memory":"2 TB","channels":"1","bandwidth":["2 Hz-50 kHz"],"duty":null,"detector":"Anomaly detection triggers surfacing","realtime":"Yes - surfaces to report detected anomalies","target":[],"sampleRate":"Up to 250 kSPS, 24-bit","power":null,"size":null,"integrations":"OceanScout","gliders":["oceanscout"]},{"key":"auris","maker":"Alseamar","model":"AURIS","memory":null,"channels":"4 (acoustic payloads with 4-8 hydrophones)","bandwidth":[],"duty":null,"detector":"AI-based onboard detection/classification; AMBIA (ambient noise, sound-speed profiles), PULSA (sonar localisation)","realtime":"Yes - in-situ detection and alert","target":["Marine life; surveillance"],"sampleRate":"8-192 kHz (4 channels)","power":null,"size":"NVIDIA Jetson Nano processor; ROS (Python/C++)","integrations":"SeaExplorer","gliders":["seaexplorer-1000","seaexplorer-200"]},{"key":"porpoise","maker":"Turbulent Research (also RS Aqua)","model":"Porpoise","memory":"1 TB microSD standard, up to 16 TB","channels":"1 (Porpoise Pod: up to 4 synchronous)","bandwidth":["Analogue bandwidth > 150 kHz"],"duty":"Yes (flexible scheduling)","detector":null,"realtime":"Real-time Ethernet streaming when cabled (spectrograms, live audio)","target":[],"sampleRate":"2-384 kHz, 24-bit sigma-delta","power":null,"size":"Standard 750 m; EXT to 6000 m; 36D/84D to 4500 m; OEM board ~0.15 kg","integrations":"SeaExplorer (listed in Alseamar payloads); OEM version aimed at AUVs/gliders","gliders":["seaexplorer-1000","seaexplorer-200"]},{"key":"iclistenhf","maker":"Ocean Sonics","model":"icListen HF","memory":null,"channels":"1","bandwidth":["10 Hz-200 kHz"],"duty":null,"detector":"Event detection mode","realtime":"Yes - Ethernet real-time streaming (waveform / FFT / events)","target":[],"sampleRate":null,"power":null,"size":"900 m, 3500 m and 6000 m variants","integrations":"integrated on Seagliders by the author","gliders":["seaglider-m1","seaglider-sgx"]},{"key":"iclistenkayakalta","maker":"Ocean Sonics","model":"icListen Kayak (ALTA)","memory":null,"channels":"1","bandwidth":["10 Hz-200 kHz"],"duty":null,"detector":"Event detection mode","realtime":"Yes - Ethernet real-time (waveform / FFT / events)","target":[],"sampleRate":null,"power":null,"size":"900 m or 3500 m; one-hand size","integrations":"integrated on Seagliders by the author","gliders":["seaglider-m1","seaglider-sgx"]},{"key":"soundtrapst600std","maker":"Ocean Instruments (NZ)","model":"SoundTrap ST600 STD","memory":"Up to 2 TB (4 x 512 GB SDXC); ~6 TB WAV-equivalent with lossless compression","channels":"1","bandwidth":["20 Hz-60 kHz"],"duty":"Yes (delayed start, duty cycling)","detector":null,"realtime":"No","target":["Both"],"sampleRate":"16-192 kHz; 16-bit SAR","power":"12 x 18650 Li-ion; up to 160 days continuous","size":"Titanium, 530 x 60 mm; 2.6 kg air / 1.2 kg water; 200 m (500 m with PRV)","integrations":"Strapped externally; smaller ST300/ST400 used on gliders in studies reviewed by Cauchy et al. 2023","gliders":[]},{"key":"soundtrapst600hf","maker":"Ocean Instruments (NZ)","model":"SoundTrap ST600 HF","memory":"Up to 2 TB (4 x 512 GB SDXC); ~6 TB WAV-equivalent with lossless compression","channels":"1","bandwidth":["20 Hz-150 kHz"],"duty":"Yes (delayed start, duty cycling)","detector":"HF model: toothed-whale click detector","realtime":"No","target":["Both"],"sampleRate":"32-384 kHz; 16-bit SAR","power":"12 x 18650 Li-ion; up to 160 days continuous","size":"Titanium, 530 x 60 mm; 2.6 kg air / 1.2 kg water; 200 m (500 m with PRV)","integrations":"Strapped externally; smaller ST300/ST400 used on gliders in studies reviewed by Cauchy et al. 2023","gliders":[]},{"key":"acousonde3b","maker":"Acoustimetrics (Greeneridge Sciences)","model":"Acousonde 3B","memory":"128 GB (below 26 kHz sampling the battery limits first)","channels":"1-2 (low-power channel + optional HF channel)","bandwidth":["LP channel 22 Hz-9.2 kHz; HF channel to 42 kHz (-3 dB) / 100 kHz (-22 dB)"],"duty":"Yes","detector":null,"realtime":"No","target":[],"sampleRate":"Up to 232 kHz continuous, 16-bit","power":"Internal A-cell lithium: 6-14 days below 26 kHz; external battery packs used on gliders","size":"22.9 cm long, 362 g in air; 500 / 1000 / 2000 / 3000 m builds","integrations":"Seaglider (Cauchy et al. dive-cycle noise study); other gliders with external battery","gliders":["seaglider-m1","seaglider-sgx"]},{"key":"dtaglegacy","maker":"WHOI","model":"DTAG (legacy)","memory":"6.6 GB","channels":"1-4","bandwidth":[],"duty":null,"detector":null,"realtime":null,"target":[],"sampleRate":"48-192 kHz, 16-bit","power":"Endurance < 1 day","size":"12 x 5 x 2.5 cm; 150 g in water; 2000 m","integrations":"Early glider trials (per Cauchy et al. 2023)","gliders":[]}]}
+</script>
+<!-- SENSOR-DATA:END -->
+
+<script>
+const PHOTOS = {
+  "slocum": "images/gliders/slocum.jpg",
+  "sentinel": "images/gliders/sentinel.jpg",
+  "seaglider": "images/gliders/seaglider.jpg",
+  "SGX": "images/gliders/SGX.jpg",
+  "seaexplorer": "images/gliders/seaexplorer.jpg",
+  "spray": "images/gliders/spray.jpg",
+  "spray2": "images/gliders/spray2.jpg",
+  "oceanscout": "images/gliders/oceanscout.jpg",
+  "petrel": "images/gliders/petrel.jpg",
+  "mod2": "images/gliders/mod2.jpg",
+  "SG1-Lura": "images/gliders/SG1-Lura.jpg"
+};
+
+const PAM = {
+  dmon2: { name: "DMON2", maxKhz: 80, bits: 16, storageGb: 64, watts: 0.15 },
+  wispr3: { name: "WISPR3", maxKhz: 150, bits: 16, storageGb: 4000, watts: null },
+  observer: { name: "JASCO OceanObserver", maxKhz: 256, bits: 24, storageGb: 12000, watts: 2.5 },
+  amar: { name: "AMAR G4", maxKhz: 256, bits: 24, storageGb: 20000, watts: 0.56 },
+  auris: { name: "AURIS", maxKhz: 96, bits: 24, storageGb: null, watts: null },
+  osPam: { name: "OceanScout-PAM", maxKhz: 125, bits: 24, storageGb: 2000, watts: null },
+  sgPam: { name: "Seaglider PAM (WISPR v1)", maxKhz: 62.5, bits: 24, storageGb: 512, watts: null },
+  pmar: { name: "PMAR-XL", maxKhz: 90, bits: 16, storageGb: 512, watts: null },
+  porpoise: { name: "Porpoise", maxKhz: 192, bits: 24, storageGb: 1000, watts: null },
+  lura: { name: "Lura (onboard AI)", maxKhz: null, bits: null, storageGb: null, watts: null }
+};
+
+const BP = "https://e-abdi.github.io/Glider-Operation-Best-Practices/";
+const WIKI = "https://open-source-glider.readthedocs.io/en/latest/Commercial%20Gliders.html";
+const INTEG = "https://github.com/e-abdi/custom-glider-sensor-integration";
+// Our own endurance page, which evaluates this spreadsheet's formulas in the browser.
+// Relative, so it works in the rendered site and in a local preview alike.
+const ENDURANCE_CALC = "slocum-endurance.html";
+
+// Section anchors on the wiki's Commercial Gliders page, so a card lands on its own
+// glider rather than the top. Variants share their family's section: the page has no
+// heading of its own for the Sentinel, the SGX or the Spray2.
+const WIKI_ANCHOR = {
+  "slocum-g3": "slocum", "slocum-sentinel": "slocum",
+  "seaglider-m1": "seaglider", "seaglider-sgx": "seaglider",
+  "seaexplorer-1000": "seaexplorer", "seaexplorer-200": "seaexplorer",
+  "spray": "spray", "spray2": "spray",
+  "oceanscout": "oceanscout", "exocetus-mod2": "mod2",
+  "sg1-fathom": "sg-1-lura", "petrel-ii": "petrel", "petrel-x": "petrel"
+};
+
+// Only link a supporting site where it actually has something on that platform, rather
+// than sending everyone to the same page from every card.
+const BP_GLIDERS = new Set(["slocum-g3", "seaglider-m1", "seaglider-sgx"]);
+const INTEG_GLIDERS = new Set(["slocum-g3", "seaglider-m1"]);
+const MANUFACTURER_ONLY = new Set(["slocum-sentinel"]);
+
+const GLIDERS = [
+  {
+    id: "slocum-g3", glider: "Slocum G3", maker: "Teledyne Marine", photo: "slocum",
+    deployRecover: 2, deployRecoverNote: "2 person job",
+    affordance: "The most widely flown glider; shallow pump plus an optional thruster for currents.",
+    depth: [4, 1000], depthNote: "4–150 m shallow pump, 40–1000 m deep pump",
+    endurance: [15, 540], endNote: "15–50 d alkaline · 1–4 mo rechargeable · 4–18 mo lithium",
+    speedKt: 2.0, speedNote: "0.68 kt glide, 2 kt with thruster",
+    massKg: 70, massNote: "55–70 kg by configuration",
+    energy: [2520, 12500], battery: "Alkaline / rechargeable / lithium", batteryType: "both",
+    propeller: "Optional hybrid thruster, >1000 cc extra drive (up to 2 kt)",
+    realTime: true, acoustic: true, ice: true, edge: true, bathy: true, backseat: true,
+    pam: ["dmon2", "wispr3", "observer", "amar"],
+    rodeo: { names: "risso · stenella · capex987", watts: 2.2, whDive: 7.2, whKm: 2.1,
+      note: "capex987 with the JASCO Observer drew about 2.4× its neighbours (20 Wh/dive)." },
+    notes: ["Range 350–13,000 km depending on battery.", "Payload bay takes 3–4 kg."],
+    website: "https://www.teledynemarine.com/en-us/products/Pages/slocum-glider.aspx",
+    bp: "deployment/slocum/"
+  },
+  {
+    id: "slocum-sentinel", glider: "Slocum Sentinel", maker: "Teledyne Marine", photo: "sentinel",
+    deployRecover: 3, deployRecoverNote: "Crane required",
+    affordance: "Two-year class endurance and eight payload bays, at the cost of crane handling.",
+    depth: [0, 1000], endurance: [730, 730], endNote: "Vendor claim: over two years",
+    speedKt: 3.5, speedNote: "0.75 kt glide, 3.5 kt sprint on dual thrusters",
+    massKg: 171, energy: [23000, 23000], battery: "Lithium primary", batteryType: "primary",
+    propeller: "Dual aft thrusters, sprint to 3.5 kt",
+    realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
+    pam: ["observer", "amar"],
+    rodeo: null,
+    notes: ["4 L buoyancy engine, the largest on the market.",
+      "Needs a crane or LARS — not two-person portable."],
+    website: "https://www.teledynemarine.com/slocum-sentinel-glider", bp: "deployment/slocum/"
+  },
+  {
+    id: "seaglider-m1", glider: "Seaglider M1", maker: "APL UW / HII", photo: "seaglider",
+    deployRecover: 2, deployRecoverNote: "2 person job",
+    affordance: "Isopycnal hull — half a knot on half a watt, handled by two people from a small boat.",
+    depth: [50, 1000], endurance: [90, 300], endNote: "Up to 10 months, mission dependent",
+    speedKt: 0.8, speedNote: "0.5 kt typical; can stem 0.8 kt of current",
+    massKg: 52, energy: [4722, 4722], battery: "Lithium primary (24 V + 10 V packs)", batteryType: "primary",
+    propeller: null,
+    realTime: true, acoustic: true, ice: true, edge: false, bathy: true, backseat: false,
+    pam: ["sgPam", "pmar", "wispr3", "amar", "dmon2"],
+    rodeo: { names: "sg607", watts: 2.0, whDive: 9.6, whKm: 2.4,
+      note: "Lowest mean draw of the fleet, at the slowest speed. Energy read once per dive from the fuel gauge." },
+    notes: ["Capacity 4,722 Wh is Kongsberg's '17 MJ' figure.",
+      "Ice capable: IOP reports over-winter under-ice Arctic missions, the longest 22 months."],
+    website: "https://iop.apl.washington.edu/seaglider.php", bp: "piloting/seaglider/"
+  },
+  {
+    id: "seaglider-sgx", glider: "SGX", maker: "APL UW (IOP)", photo: "SGX",
+    deployRecover: null, deployRecoverNote: "Not reported",
+    affordance: "About 60% more battery than SG; year-long and under-ice missions.",
+    depth: [75, 1000], endurance: [365, 365], endNote: "12 months nominal",
+    speedKt: 0.8, speedNote: "0.5 kt typical",
+    massKg: 72.7, energy: [8625, 8625], energyConf: "derived", battery: "Three 15 V lithium primary packs",   batteryType: "primary",
+    propeller: null,
+    realTime: true, acoustic: true, ice: true, edge: false, bathy: true, backseat: false,
+    pam: ["wispr3", "pmar"],
+    rodeo: { names: "sg274", watts: 2.2, whDive: 10.2, whKm: 3.0,
+      note: "Logged as 'University of Washington Seaglider' in the rodeo specs — confirm M1 vs SGX before quoting." },
+    notes: ["8,625 Wh is derived (575 Ah × 15 V), not a vendor figure.",
+      "RAFOS acoustic navigation, plus on-board automatic compass calibration.",
+      "Ice capable, like the M1."],
+    website: "https://iop.apl.washington.edu/iopsg/", bp: "piloting/seaglider/"
+  },
+  {
+    id: "seaexplorer-1000", glider: "SeaExplorer 1000", maker: "Alseamar", photo: "seaexplorer",
+    deployRecover: 2, deployRecoverNote: "2 person job",
+    affordance: "Rechargeable and wingless — back in the water in hours, little to snag.",
+    depth: [0, 1000], endurance: [125, 125], endNote: "125 days / 2,700 km at max depth",
+    speedKt: 1.0, speedNote: "0.5 kt nominal, 1 kt max",
+    massKg: 59, energy: [6700, 6700], battery: "Rechargeable Li-ion", batteryType: "rechargeable",
+    propeller: "Optional wing-mounted propellers",
+    realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
+    pam: ["auris", "porpoise", "observer"],
+    rodeo: { names: "SEA117", watts: null, whDive: null, whKm: null,
+      note: "Reports battery voltage only, with no charge counter, so energy use could not be computed from the rodeo export." },
+    notes: ["Carries the ALSEAMAR AURIS 4-hydrophone payload — this is the acoustic system SEA117 flew at the Rodeo.",
+      "6.7 kWh comes from Alseamar's 2022 brochure via Cauchy et al. 2023 — not on the current web page.",
+      "Backseat driver and wing-mounted propeller options available."],
+    website: "https://www.alseamar-alcen.com/ocean-science-sector/seaexplorer-gliders/seaexplorer-1000/",
+    bp: "mission-planning/"
+  },
+  {
+    id: "seaexplorer-200", glider: "SeaExplorer 200", maker: "Alseamar", photo: "seaexplorer",
+    deployRecover: 2, deployRecoverNote: "2 person job",
+    affordance: "Shallow-water specialist, with a propeller option for very shallow areas.",
+    depth: [20, 200], endurance: [75, 135], endNote: "75 d single battery, 135 d double",
+    speedKt: 1.0, massKg: 65, massNote: "65 kg single battery, 90 kg double",
+    energy: null, battery: "Rechargeable Li-ion", batteryType: "rechargeable",
+    propeller: "Propeller option for very shallow water",
+    realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
+    pam: ["auris", "porpoise"], rodeo: null,
+    notes: ["Ballast volume 1,600 cc; wingspan 650 mm.", "No battery capacity published."],
+    website: "https://www.alseamar-alcen.com/ocean-science-sector/seaexplorer-gliders/seaexplorer-200/",
+    bp: "mission-planning/"
+  },
+  {
+    id: "spray", glider: "Spray", maker: "MRV / General Oceans", photo: "spray",
+    deployRecover: 2, deployRecoverNote: "2 person job",
+    affordance: "Antennas in the wings: rolls at the surface instead of carrying a mast.",
+    depth: [100, 1500], depthNote: "100 m minimum; rated 1500 m, typical operations to 1000 m",
+    endurance: [90, 180], endNote: "Several months (≈815 cycles to 1000 m)",
+    speedKt: 0.68, massKg: 51.8, energy: [3611, 3611], battery: "Lithium primary (52 DD cells)", batteryType: "primary",
+    propeller: null,
+    realTime: true, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
+    pam: [], rodeo: null,
+    notes: ["Range 3,500–4,700 km depending on glide angle.", "Superseded commercially by Spray2."],
+    website: "https://spraydata.ucsd.edu/about/spray-glider", bp: "mission-planning/"
+  },
+  {
+    id: "spray2", glider: "Spray2", maker: "MRV / General Oceans", photo: "spray2",
+    deployRecover: 2, deployRecoverNote: "2 person job",
+    affordance: "The commercial Spray: removable wings and tailfin, eight sensor ports.",
+    depth: [100, 1000], depthNote: "100 m minimum; 1000 m rating",
+    endurance: [100, 100], endNote: "100+ days, 500+ profiles to 1000 m",
+    speedKt: 0.5, massKg: 70, energy: null, battery: "Not published", batteryType: null,
+    propeller: null,
+    realTime: true, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
+    pam: [], rodeo: null,
+    notes: ["No published battery capacity or range.", "No documented PAM integration found."],
+    website: "https://www.mrvsys.com/products/spray2", bp: "mission-planning/"
+  },
+  {
+    id: "oceanscout", glider: "Ocean Scout", maker: "Hefring / General Oceans", photo: "oceanscout",
+    deployRecover: 1, deployRecoverNote: "1 person job",
+    affordance: "22.5 kg — one person deploys it, and several fit on a small boat.",
+    depth: [6, 200], endurance: [30, 30], endNote: "About a month on the standard pack",
+    speedKt: null, massKg: 22.5, energy: [1200, 1200], battery: "Lithium primary (Li-MnO₂)",batteryType: "primary",
+    propeller: null,
+    realTime: true, acoustic: true, ice: false, edge: true, bathy: false, backseat: false,
+    pam: ["osPam"],
+    rodeo: { names: "belladonna", watts: null, whDive: null, whKm: null,
+      note: "No engineering export exists for this platform, so power use could not be computed." },
+    notes: ["Capacity confirmed as 1.2 kWh.", "No published speed."],
+    website: "https://www.hefring.com/oceanscout", bp: "mission-planning/"
+  },
+  {
+    id: "exocetus-mod2", glider: "MOD2 Glider", maker: "Exocetus", photo: "mod2",
+    deployRecover: 3, deployRecoverNote: "Crane required",
+    affordance: "Buoyancy engine about 5× the usual: crosses fresh-to-salt fronts without re-ballasting.",
+    depth: [10, 200], endurance: [10, 30], endNote: "10 d alkaline, 30 d lithium",
+    speedKt: 2.0, speedNote: "User selectable 0.7–2 kt", massKg: 109,
+    energy: [3850, 11000], battery: "Alkaline / lithium / rechargeable", batteryType: "both",
+    propeller: null,
+    realTime: true, acoustic: true, ice: false, edge: true, bathy: false, backseat: true,
+    pam: [], rodeo: null,
+    notes: ["Salinity range 10–37 ppt with no re-ballasting.", "Datasheet dates from 2020.",
+      "No documented PAM integration."],
+    website: "https://www.exocetus.co/products", bp: "ballasting/"
+  },
+  {
+    id: "sg1-fathom", glider: "SG-1 Fathom", maker: "Helsing", photo: "SG1-Lura",
+    deployRecover: 2, deployRecoverNote: "2 person job",
+    affordance: "Swarm-oriented defence platform with the Lura acoustic model running on board.",
+    depth: null, depthNote: "Not published", endurance: [90, 90], endNote: "Up to three months",
+    speedKt: 2.0, massKg: 60, energy: null, battery: "Not published", batteryType: null,
+    propeller: null,
+    realTime: false, acoustic: true, ice: false, edge: true, bathy: false, backseat: false,
+    pam: ["lura"], rodeo: null,
+    notes: ["Depth, navigation, comms and battery are all unpublished.",
+      "Production at Plymouth (UK) from Nov 2025; civilian availability unclear."],
+    website: "https://helsing.ai/lura", bp: null
+  },
+  {
+    id: "petrel-ii", glider: "Petrel-II", maker: "Tianjin University", photo: "petrel",
+    deployRecover: 2, deployRecoverNote: "2 person job",
+    affordance: "Hybrid glider: buoyancy plus propeller, and the shallow sibling of the Petrel-X.",
+    depth: [100, 1500], depthNote: "100 m minimum; up to 1500 m (dived 1,514.2 m in trials)",
+    endurance: [30, 30], endNote: "About 30 days",
+    speedKt: 3.36, speedNote: "1.6 kt gliding, 3.4 kt propelled (sea trial)",
+    massKg: 69, energy: null, battery: "Not published",batteryType: null,
+    propeller: "Hybrid: propeller as well as buoyancy (3.4 kt propelled)",
+    realTime: false, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
+    pam: [], rodeo: null,
+    notes: ["No international sales channel found."],
+    website: "https://en.tju.edu.cn/info/1011/4092.htm", bp: null
+  },
+  {
+    id: "petrel-x", glider: "Petrel-X", maker: "Tianjin University / Laoshan Laboratory", photo: "petrel",
+    deployRecover: 2, deployRecoverNote: "2 person job",
+    affordance: "Rated for full ocean depth, and holder of the 10,619 m glider world record \u2014 seven times deeper than anything else here.",
+    depth: [100, 11000], depthNote: "100 m minimum \u00b7 rated 11,000 m \u00b7 8,213 m (Apr 2018) \u00b7 10,619 m world record, Challenger Deep",
+    endurance: [200, 200], endNote: "200 days in a single mission (design figure)",
+    speedKt: null, speedNote: "Not published",
+    massKg: null, massNote: "Not published",
+    energy: null, battery: "Not published",batteryType: null,
+    propeller: null, conf: "paper",
+    realTime: false, acoustic: false, ice: false, edge: false, bathy: false, backseat: false,
+    pam: [], rodeo: null,
+    notes: ["Range 5,000 km, or 80 dives to 11,000 m, in one mission.",
+      "Three consecutive profiles below 10,000 m in the Challenger Deep, holding station to 2.018 km on average.",
+      "Multi-material \u2018bionic gradient\u2019 pressure housing; a dual-eccentric attitude mechanism widens the pitch range from \u00b145\u00b0 to \u00b190\u00b0.",
+      "Every figure here comes from the Ocean Engineering papers, not a datasheet \u2014 no international sales channel was found."],
+    website: null, paper: "https://doi.org/10.1016/j.oceaneng.2023.114655", bp: null
+  }
+];
+
+const DEPTH_SCALE = 1500, END_SCALE = 760;
+// Depth spans 50 m to full ocean depth, so the slider steps through stops rather
+// than sliding linearly — otherwise the shelf range is one pixel wide.
+// The top stop means "1500 m or deeper", so the travel is spent on the depths missions
+// actually ask for instead of on abyssal stops nobody selects.
+const DEPTH_STOPS = [5, 10, 15, 20, 25, 30, 40, 50, 75, 100, 150, 200, 250, 300,
+                     400, 500, 600, 800, 1000, 1200, 1500];
+const DEPTH_TOP = DEPTH_STOPS.length - 1;
+const depthLabel = i => num(DEPTH_STOPS[i]) + (i === DEPTH_TOP ? "+" : "");
+const el = (t, c, txt) => { const n = document.createElement(t); if (c) n.className = c; if (txt != null) n.textContent = txt; return n; };
+const num = n => n.toLocaleString("en-US");
+// kind -> [badge class, label]. "paper" borrows the derived colour: both mean
+// "someone worked this out", as opposed to a vendor stating it.
+const CONF = { measured: ["measured", "At sea"], vendor: ["vendor", "Vendor"],
+               derived: ["derived", "Derived"], paper: ["derived", "Paper"] };
+
+// ---------- sensors and PAM systems, from the workbook ----------
+// content/data/sensors.json, injected above by code/build_sensor_data.py. The page still
+// works with an empty block: the two pickers simply stay on "Any".
+const SENSORS = (() => {
+  const node = document.getElementById("sensor-data");
+  try { return JSON.parse(node.textContent) || {}; } catch (e) { return {}; }
+})();
+const SENSOR_LIST = SENSORS.sensors || [];
+const PAM_LIST = SENSORS.pam || [];
+const sensorById = id => SENSOR_LIST.find(s => s.id === id) || null;
+const pamByKey = key => PAM_LIST.find(p => p.key === key) || null;
+
+// A glider carries a recorder if its own payload list says so, or if the workbook
+// documents the integration. The two disagree at the edges — the card list is curated
+// per model, the workbook is per family — so the union is the honest answer.
+function gliderHasPam(g, key) {
+  if (g.pam && g.pam.indexOf(key) >= 0) return true;
+  const p = pamByKey(key);
+  return !!(p && p.gliders.indexOf(g.id) >= 0);
+}
+function gliderHasSensor(g, sensor) {
+  return !!(sensor && sensor.gliders && sensor.gliders[g.id]);
+}
+function sensorsFor(g, category) {
+  return SENSOR_LIST.filter(s => (category === "any" || s.category === category) &&
+                                 gliderHasSensor(g, s));
+}
+
+/* Every sensor documented on this glider, grouped by what it measures.
+   A Slocum carries 39, which is far too many to read as one list, so each category
+   is its own collapsed group and the whole block starts closed. The string under a
+   sensor is the workbook's own integration note - the evidence that it is actually
+   flown on this platform, not just compatible in principle. */
+function sensorTree(g) {
+  const all = sensorsFor(g, "any");
+  if (!all.length) return null;
+
+  const wrap = el("details", "sensors");
+  const sum = el("summary");
+  sum.appendChild(document.createTextNode("Sensors "));
+  sum.appendChild(el("span", "count", "(" + all.length + ")"));
+  wrap.appendChild(sum);
+
+  const body = el("div", "sensor-body");
+  (SENSORS.categories || []).forEach(cat => {
+    const inCat = all.filter(s => s.category === cat);
+    if (!inCat.length) return;
+
+    const grp = el("details", "sensor-cat");
+    const gs = el("summary");
+    gs.appendChild(document.createTextNode(cat + " "));
+    gs.appendChild(el("span", "count", "(" + inCat.length + ")"));
+    grp.appendChild(gs);
+
+    const list = el("div", "sensor-list");
+    inCat.forEach(s => {
+      const row = el("div", "sensor");
+      const name = el("div", "s-name");
+      name.appendChild(el("b", null, s.model || s.id));
+      if (s.maker) name.appendChild(el("span", "s-maker", s.maker));
+      row.appendChild(name);
+      if (s.parameter) row.appendChild(el("div", "s-param", s.parameter));
+      const note = s.gliders[g.id];
+      if (note && !/^yes$/i.test(String(note).trim())) row.appendChild(el("div", "s-note", note));
+      if (s.sop) row.appendChild(el("div", "s-sop", s.sop));
+      // A reference for this sensor on this glider, from content/data/sensor-links.csv.
+      const link = s.links && s.links[g.id];
+      if (link) {
+        const a = el("a", "s-link", link.label || "Integration notes");
+        a.href = link.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        row.appendChild(a);
+      }
+      list.appendChild(row);
+    });
+    grp.appendChild(list);
+    body.appendChild(grp);
+  });
+
+  wrap.appendChild(body);
+  return wrap;
+}
+
+// ---------- requirement state ----------
+const REQS = ["duration", "depth", "speed", "mass", "handling", "freq", "duty"];
+// The capability checkboxes were removed; the capability fields stay on each glider
+// because the cards and the sensor/PAM pickers still read them.
+const CAPS = [];
+let applied = null;
+
+function readForm() {
+  const s = { on: {}, val: {}, caps: {} };
+  REQS.forEach(k => {
+    s.on[k] = document.querySelector(`input[data-for="${k}"]`).checked;
+    if (k === "depth") {
+      const minRaw = Number(document.getElementById("r-depth-min").value);
+      const maxRaw = Number(document.getElementById("r-depth-max").value);
+      s.val.depth = [DEPTH_STOPS[minRaw], DEPTH_STOPS[maxRaw]];
+    } else if (k === "handling") {
+      s.val.handling = Number(document.querySelector('input[name="handling"]:checked').value);
+    } else {
+      s.val[k] = Number(document.getElementById("r-" + k).value);
+    }
+  });
+  s.battery = document.querySelector('input[name="battery"]:checked').value;
+  s.sensorCat = document.getElementById("sensor-cat").value;
+  s.sensorModel = document.getElementById("sensor-model").value;
+  s.pamKey = document.getElementById("pam-select").value;
+  return s;
+}
+
+function matches(g, s) {
+  if (s.on.duration && g.endurance[1] < s.val.duration) return false;
+  if (s.on.depth && (!g.depth || g.depth[0] > s.val.depth[0] || g.depth[1] < s.val.depth[1])) return false;
+  if (s.on.speed && (g.speedKt == null || g.speedKt < s.val.speed)) return false;
+  if (s.on.mass && (g.massKg == null || g.massKg > s.val.mass)) return false;
+  if (s.on.handling && (g.deployRecover == null || g.deployRecover > s.val.handling)) return false;
+  if (s.on.freq && !bestPam(g, s.val.freq)) return false;
+  if (s.battery === "rechargeable" && g.batteryType !== "rechargeable" && g.batteryType !== "both") return false;
+  if (s.battery === "primary" && g.batteryType !== "primary" && g.batteryType !== "both") return false;
+  if (s.pamKey && s.pamKey !== "any" && !gliderHasPam(g, s.pamKey)) return false;
+  if (s.sensorModel && s.sensorModel !== "any") {
+    if (!gliderHasSensor(g, sensorById(s.sensorModel))) return false;
+  } else if (s.sensorCat && s.sensorCat !== "any") {
+    // No particular sensor named: anything that measures it will do.
+    if (!sensorsFor(g, s.sensorCat).length) return false;
+  }
+  return true;
+}
+
+// ---------- acoustic fit ----------
+function bestPam(g, freqKhz) {
+  const able = g.pam.map(k => PAM[k]).filter(p => p && p.maxKhz != null && p.maxKhz >= freqKhz);
+  if (!able.length) return null;
+  return able.sort((a, b) => (b.storageGb || 0) - (a.storageGb || 0))[0];
+}
+
+function storageGb(freqKhz, bits, dutyPct, days) {
+  const sr = 2 * freqKhz * 1000;                       // Nyquist
+  const bytesPerSec = sr * (bits / 8) * (dutyPct / 100);
+  return (bytesPerSec * 86400 * days) / 1e9;
+}
+
+const esc = v => String(v == null ? "" : v)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+function fitLines(g, s) {
+  const out = [];
+  const days = s.on.duration ? s.val.duration : 30;
+  const freq = s.on.freq ? s.val.freq : null;
+  const duty = s.on.duty ? s.val.duty : 25;
+
+  // Why this glider survived the payload pickers.
+  if (s.pamKey && s.pamKey !== "any") {
+    const p = pamByKey(s.pamKey);
+    const name = p ? `${p.maker} ${p.model}` : (PAM[s.pamKey] ? PAM[s.pamKey].name : s.pamKey);
+    out.push({ k: "ok", ic: "✓", html: `Carries <b>${esc(name)}</b>` +
+      (p && p.memory ? ` · ${esc(p.memory)}` : "") });
+  }
+  if (s.sensorModel && s.sensorModel !== "any") {
+    const sensor = sensorById(s.sensorModel);
+    if (sensor) {
+      out.push({ k: "ok", ic: "✓",
+        html: `<b>${esc(sensor.model)}</b> — ${esc(sensor.gliders[g.id] || "integrated")}` });
+    }
+  } else if (s.sensorCat && s.sensorCat !== "any") {
+    const list = sensorsFor(g, s.sensorCat);
+    if (list.length) {
+      const names = list.slice(0, 3).map(x => x.model).join(", ");
+      out.push({ k: "ok", ic: "✓",
+        html: `${list.length} ${esc(s.sensorCat.toLowerCase())} option${list.length > 1 ? "s" : ""}: ` +
+              `<b>${esc(names)}</b>${list.length > 3 ? " and more" : ""}` });
+    }
+  }
+
+  if (freq != null) {
+    const p = bestPam(g, freq);
+    if (!p) {
+      out.push({ k: "warn", ic: "✕", html: `No listed payload covers <b>${freq} kHz</b> on this platform` });
+    } else if (p.storageGb) {
+      const need = storageGb(freq, p.bits, duty, days);
+      const ok = need <= p.storageGb;
+      const fmtGb = v => v >= 1000 ? (v / 1000).toFixed(1) + " TB" : Math.round(v) + " GB";
+      out.push({
+        k: ok ? "ok" : "warn", ic: ok ? "✓" : "✕",
+        html: `<b>${p.name}</b> · ${freq} kHz at ${duty}% for ${days} d → ${fmtGb(need)} of ${fmtGb(p.storageGb)}`
+      });
+    } else {
+      out.push({ k: "unknown", ic: "?", html: `<b>${p.name}</b> covers ${freq} kHz; storage not published` });
+    }
+  }
+
+  if (g.rodeo && g.rodeo.watts) {
+    const needWh = g.rodeo.watts * 24 * days;
+    const cap = g.energy ? g.energy[1] : null;
+    if (cap) {
+      const ok = needWh <= cap;
+      out.push({
+        k: ok ? "ok" : "warn", ic: ok ? "✓" : "✕",
+        html: `Energy: <b>${(needWh / 1000).toFixed(1)} kWh</b> for ${days} d at ${g.rodeo.watts} W measured, of ${(cap / 1000).toFixed(1)} kWh`
+      });
+    } else {
+      out.push({ k: "unknown", ic: "?", html: `Measured draw <b>${g.rodeo.watts} W</b>, but no published capacity to compare` });
+    }
+  } else if (g.rodeo) {
+    out.push({ k: "unknown", ic: "?", html: `Flew the Rodeo, but energy use could not be measured` });
+  }
+  return out;
+}
+
+// ---------- rendering ----------
+function meter(label, frac, text, missing) {
+  const row = el("div", "meter");
+  row.appendChild(el("span", "k", label));
+  const t = el("div", "track" + (missing ? " none" : ""));
+  if (!missing) {
+    const f = el("span");
+    if (frac > 1) { f.className = "over"; t.title = "Beyond the full scale of this bar — see the value."; }
+    f.style.width = Math.min(100, frac * 100).toFixed(1) + "%";
+    t.appendChild(f);
+  }
+  row.appendChild(t);
+  row.appendChild(el("span", "v" + (missing ? " dim" : ""), text));
+  return row;
+}
+
+function specRow(k, v) {
+  const r = el("div", "spec");
+  r.appendChild(el("span", "sk", k));
+  r.appendChild(el("span", "sv", v));
+  return r;
+}
+
+function card(g, s) {
+  const c = el("article", "gcard");
+
+  const ph = el("div", "photo");
+  if (PHOTOS[g.photo]) {
+    const img = el("img");
+    img.src = PHOTOS[g.photo];
+    img.alt = g.glider + " glider";
+    img.loading = "lazy";
+    ph.appendChild(img);
+  }
+  if (g.rodeo) {
+    const rib = el("span", "ribbon", "Rodeo 2026 · " + g.rodeo.names.split("·")[0].trim());
+    ph.appendChild(rib);
+  }
+  c.appendChild(ph);
+
+  const b = el("div", "gbody");
+  const nm = el("div", "gname");
+  const nmL = el("div");
+  nmL.appendChild(el("h3", null, g.glider));
+  nmL.appendChild(el("div", "maker", g.maker));
+  nm.appendChild(nmL);
+  const kind = g.rodeo ? "measured" : g.conf || (g.energyConf === "derived" ? "derived" : "vendor");
+  const conf = el("span", "badge " + CONF[kind][0]);
+  conf.appendChild(el("span", "dot"));
+  conf.appendChild(document.createTextNode(CONF[kind][1]));
+  nm.appendChild(conf);
+  b.appendChild(nm);
+
+  b.appendChild(el("p", "affordance", g.affordance));
+
+  const m = el("div");
+  m.appendChild(g.depth
+    ? meter("Depth", g.depth[1] / DEPTH_SCALE, num(g.depth[1]) + " m")
+    : meter("Depth", 0, "not published", true));
+  m.appendChild(meter("Endurance", g.endurance[1] / END_SCALE,
+    g.endurance[0] === g.endurance[1] ? num(g.endurance[1]) + " d" : num(g.endurance[0]) + "–" + num(g.endurance[1]) + " d"));
+  m.appendChild(g.energy
+    ? meter("Energy", g.energy[1] / 23000, (g.energy[1] / 1000).toFixed(1) + " kWh")
+    : meter("Energy", 0, "not published", true));
+  b.appendChild(m);
+
+  const chips = el("div", "chips");
+  chips.appendChild(el("span", "chip", g.massKg ? g.massKg + " kg" : "mass n/p"));
+  chips.appendChild(el("span", "chip", g.speedKt ? g.speedKt + " kt" : "speed n/p"));
+  if (g.propeller) chips.appendChild(el("span", "chip", "thruster"));
+  chips.appendChild(el("span", "chip", g.pam.length ? g.pam.length + " PAM option" + (g.pam.length > 1 ? "s" : "") : "no PAM documented"));
+  if (g.conflicts) {
+    const f = el("span", "badge flag");
+    f.appendChild(el("span", "dot"));
+    f.appendChild(document.createTextNode("check " + g.conflicts.length));
+    chips.appendChild(f);
+  }
+  b.appendChild(chips);
+
+  const lines = fitLines(g, s);
+  if (lines.length) {
+    const fit = el("div", "fit");
+    lines.forEach(l => {
+      const row = el("div", "fit-row " + l.k);
+      row.appendChild(el("span", "ic", l.ic));
+      const span = el("span");
+      span.innerHTML = l.html;
+      row.appendChild(span);
+      fit.appendChild(row);
+    });
+    b.appendChild(fit);
+  }
+
+  // details
+  const d = el("details", "more");
+  d.appendChild(el("summary", null, "Details & sources"));
+  const db = el("div", "more-body");
+  const specs = el("div");
+  specs.appendChild(specRow("Depth", g.depthNote || (g.depth ? num(g.depth[0]) + "–" + num(g.depth[1]) + " m" : "not published")));
+  specs.appendChild(specRow("Deploy / recover", g.deployRecoverNote || "Not reported"));
+  specs.appendChild(specRow("Endurance", g.endNote));
+  specs.appendChild(specRow("Speed", g.speedNote || (g.speedKt ? g.speedKt + " kt" : "not published")));
+  specs.appendChild(specRow("Mass", g.massNote || (g.massKg ? g.massKg + " kg" : "not published")));
+  specs.appendChild(specRow("Capacity", g.energy ? (g.energy[0] === g.energy[1] ? num(g.energy[1]) + " Wh" : num(g.energy[0]) + "–" + num(g.energy[1]) + " Wh") : "not published"));
+  specs.appendChild(specRow("Battery", g.battery));
+  specs.appendChild(specRow("Thruster", g.propeller || "none — buoyancy only"));
+  specs.appendChild(specRow("Ice capable", g.ice ? "yes" : "not stated"));
+  specs.appendChild(specRow("PAM options", g.pam.length ? g.pam.map(k => PAM[k].name).join(", ") : "none documented"));
+  db.appendChild(specs);
+
+  const sensorBlock = sensorTree(g);
+  if (sensorBlock) db.appendChild(sensorBlock);
+
+  if (g.rodeo) {
+    const r = el("div");
+    r.appendChild(el("h4", null, ""));
+    const p = el("p", "affordance");
+    p.innerHTML = "<b>Rodeo 2026 (" + g.rodeo.names + "):</b> " + g.rodeo.note +
+      (g.rodeo.whDive ? " Measured " + g.rodeo.whDive + " Wh/dive, " + g.rodeo.watts + " W, " + g.rodeo.whKm + " Wh/km." : "");
+    r.appendChild(p);
+    db.appendChild(r);
+  }
+
+  if (g.conflicts) {
+    const cf = el("div");
+    const h = el("span", "badge flag");
+    h.appendChild(el("span", "dot"));
+    h.appendChild(document.createTextNode("Conflicts to check"));
+    cf.appendChild(h);
+    const ul = el("ul", "note-list");
+    g.conflicts.forEach(x => ul.appendChild(el("li", null, x)));
+    ul.style.marginTop = "6px";
+    cf.appendChild(ul);
+    db.appendChild(cf);
+  }
+
+  if (g.notes && g.notes.length) {
+    const ul = el("ul", "note-list");
+    g.notes.forEach(x => ul.appendChild(el("li", null, x)));
+    db.appendChild(ul);
+  }
+
+  const links = el("div", "linkrow");
+  const add = (href, label) => { const a = el("a", null, label); a.href = href; a.target = "_blank"; a.rel = "noopener"; links.appendChild(a); };
+  if (g.website) add(g.website, "Manufacturer");
+  if (g.paper) add(g.paper, "Paper");
+  if (!MANUFACTURER_ONLY.has(g.id)) {
+    // Best practices goes to the site's front page: its sections are organised by task,
+    // not by platform, so a per-glider deep link was pointing at the wrong thing.
+    if (BP_GLIDERS.has(g.id)) add(BP, "Best practices");
+    add(WIKI + (WIKI_ANCHOR[g.id] ? "#" + WIKI_ANCHOR[g.id] : ""), "Wiki");
+    if (INTEG_GLIDERS.has(g.id)) add(INTEG, "Sensor integration");
+    if (g.id === "slocum-g3") add(ENDURANCE_CALC, "Endurance calculator");
+  }
+  db.appendChild(links);
+
+  d.appendChild(db);
+  b.appendChild(d);
+
+  c.appendChild(b);
+  return c;
+}
+
+function tableRow(g) {
+  const tr = el("tr");
+  const cells = [
+    [g.maker, false],
+    [g.glider, false],
+    [g.depth ? num(g.depth[1]) : "—", true],
+    [g.endurance[0] === g.endurance[1] ? num(g.endurance[1]) : num(g.endurance[0]) + "–" + num(g.endurance[1]), true],
+    [g.speedKt != null ? g.speedKt.toFixed(1) : "—", true],
+    [g.massKg != null ? num(g.massKg) : "—", true],
+    [g.energy ? (g.energy[0] === g.energy[1] ? num(g.energy[1]) : num(g.energy[0]) + "–" + num(g.energy[1])) : "—", true],
+    [g.propeller ? "yes" : "no", false],
+    [g.realTime ? "yes" : "no", false],
+    [g.pam.length ? "yes" : "no", false],
+    [g.ice ? "yes" : "no", false],
+    [g.rodeo ? "Rodeo" : "vendor", false]
+  ];
+  cells.forEach(([v, isNum], i) => {
+    const td = el("td", isNum ? "num" : null);
+    if (v === "—") { const s = el("span", "muted", "—"); td.appendChild(s); }
+    else td.textContent = v;
+    if (i === 11 && g.rodeo) td.style.color = "var(--measured)";
+    tr.appendChild(td);
+  });
+  return tr;
+}
+
+function charts(list) {
+  const host = document.getElementById("charts");
+  host.textContent = "";
+  const specs = [
+    { title: "Max depth", unit: "m", get: g => g.depth ? g.depth[1] : null, fmt: v => num(v) + " m" },
+    { title: "Endurance", unit: "days", get: g => g.endurance[1], fmt: v => num(v) + " d" },
+    { title: "Energy capacity", unit: "kWh", get: g => g.energy ? g.energy[1] : null, fmt: v => (v / 1000).toFixed(1) + " kWh" }
+  ];
+  specs.forEach(sp => {
+    const box = el("div", "chart");
+    box.appendChild(el("h4", null, sp.title));
+    const vals = list.map(sp.get).filter(v => v != null);
+    const max = vals.length ? Math.max(...vals) : 1;
+    [...list].sort((a, b) => (sp.get(b) ?? -1) - (sp.get(a) ?? -1)).forEach(g => {
+      const v = sp.get(g);
+      const row = el("div", "bar" + (v == null ? " nodata" : ""));
+      row.appendChild(el("span", "n", g.glider));
+      const bar = el("div", "b" + (g.rodeo ? " measured" : ""));
+      if (v != null) { const f = el("span"); f.style.width = ((v / max) * 100).toFixed(1) + "%"; bar.appendChild(f); }
+      row.appendChild(bar);
+      row.appendChild(el("span", "val", v == null ? "no data" : sp.fmt(v)));
+      box.appendChild(row);
+    });
+    box.appendChild(el("p", "foot", "Bars share one scale, longest = " + sp.fmt(max) + "."));
+    host.appendChild(box);
+  });
+}
+
+function render() {
+  const s = applied;
+  const list = GLIDERS.filter(g => matches(g, s));
+  const cards = document.getElementById("cards");
+  const tbody = document.getElementById("tbody");
+  cards.textContent = "";
+  tbody.textContent = "";
+  list.forEach(g => { cards.appendChild(card(g, s)); tbody.appendChild(tableRow(g)); });
+  document.getElementById("empty").hidden = list.length > 0;
+  const any = REQS.some(k => s.on[k]) || CAPS.some(k => s.caps[k]);
+  document.getElementById("count").innerHTML = any
+    ? `<b>${list.length}</b> of ${GLIDERS.length} gliders meet your requirements`
+    : `<b>${GLIDERS.length}</b> gliders — set requirements above to narrow the list`;
+  charts(list);
+}
+
+// ---------- wiring ----------
+REQS.filter(k => k !== "depth" && k !== "handling").forEach(k => {
+  const range = document.getElementById("r-" + k);
+  const check = document.querySelector(`input[data-for="${k}"]`);
+  const row = document.getElementById("sl-" + k);
+  const out = document.getElementById("v-" + k);
+  const sync = () => {
+    out.textContent = k === "speed" ? Number(range.value).toFixed(1) : range.value;
+    row.classList.toggle("off", !check.checked);
+    document.getElementById("dirty").hidden = false;
+  };
+  range.addEventListener("input", () => { if (!check.checked) check.checked = true; sync(); });
+  check.addEventListener("change", sync);
+});
+
+// Depth uses paired controls so users can specify the full operating interval.
+// Deployment/recovery uses an ordered categorical requirement.
+{
+  const check = document.querySelector('input[data-for="handling"]');
+  const row = document.getElementById("sl-handling");
+  const options = document.querySelectorAll('input[name="handling"]');
+
+  const syncHandling = () => {
+    row.classList.toggle("off", !check.checked);
+    document.getElementById("dirty").hidden = false;
+  };
+
+  check.addEventListener("change", syncHandling);
+  options.forEach(option => {
+    option.addEventListener("change", () => {
+      if (option.checked && !check.checked) check.checked = true;
+      syncHandling();
+    });
+  });
+}
+
+{
+  const minRange = document.getElementById("r-depth-min");
+  const maxRange = document.getElementById("r-depth-max");
+  const check = document.querySelector('input[data-for="depth"]');
+  const row = document.getElementById("sl-depth");
+  const out = document.getElementById("v-depth");
+  const fill = document.getElementById("depth-range-fill");
+
+  const syncDepth = changed => {
+    let minIdx = Number(minRange.value);
+    let maxIdx = Number(maxRange.value);
+    if (minIdx > maxIdx) {
+      if (changed === "min") maxRange.value = minRange.value;
+      else minRange.value = maxRange.value;
+      minIdx = Number(minRange.value);
+      maxIdx = Number(maxRange.value);
+    }
+    out.textContent = `${num(DEPTH_STOPS[minIdx])}–${depthLabel(maxIdx)}`;
+    const maxStopIdx = DEPTH_STOPS.length - 1;
+    fill.style.left = `${(minIdx / maxStopIdx) * 100}%`;
+    fill.style.right = `${100 - (maxIdx / maxStopIdx) * 100}%`;
+    minRange.style.zIndex = minIdx >= maxIdx - 1 ? "4" : "3";
+    maxRange.style.zIndex = "3";
+    row.classList.toggle("off", !check.checked);
+    document.getElementById("dirty").hidden = false;
+  };
+
+  minRange.addEventListener("input", () => { if (!check.checked) check.checked = true; syncDepth("min"); });
+  maxRange.addEventListener("input", () => { if (!check.checked) check.checked = true; syncDepth("max"); });
+  check.addEventListener("change", () => syncDepth(null));
+  syncDepth(null);
+}
+
+// ---------- science payload and PAM pickers ----------
+{
+  const catSel = document.getElementById("sensor-cat");
+  const modelSel = document.getElementById("sensor-model");
+  const sensorDetail = document.getElementById("sensor-detail");
+  const pamSel = document.getElementById("pam-select");
+  const pamDetail = document.getElementById("pam-detail");
+  const dirty = () => { document.getElementById("dirty").hidden = false; };
+
+  const option = (value, label) => {
+    const o = document.createElement("option");
+    o.value = value;
+    o.textContent = label;          // workbook text: never innerHTML
+    return o;
+  };
+
+  (SENSORS.categories || []).forEach(c => catSel.appendChild(option(c, c)));
+  PAM_LIST.forEach(p => pamSel.appendChild(option(p.key, `${p.maker} ${p.model}`)));
+
+  // How many of the listed gliders a choice would leave, so a dead end is visible
+  // before Apply rather than after it.
+  const countFor = test => GLIDERS.filter(test).length;
+
+  function fillModels() {
+    const cat = catSel.value;
+    modelSel.textContent = "";
+    modelSel.appendChild(option("any", cat === "any" ? "Any sensor" : "Any in this group"));
+    SENSOR_LIST.filter(s => cat === "any" || s.category === cat)
+      .forEach(s => modelSel.appendChild(option(s.id, `${s.maker} — ${s.model}`)));
+  }
+
+  function row(parent, label, value) {
+    if (!value) return;
+    const d = document.createElement("div");
+    d.className = "pd-row";
+    const b = document.createElement("b");
+    b.textContent = label + ": ";
+    d.appendChild(b);
+    d.appendChild(document.createTextNode(value));
+    parent.appendChild(d);
+  }
+
+  function gliderNames(ids) {
+    return GLIDERS.filter(g => ids.indexOf(g.id) >= 0).map(g => g.glider);
+  }
+
+  function showSensor() {
+    const sensor = sensorById(modelSel.value);
+    sensorDetail.textContent = "";
+    if (!sensor) {
+      const cat = catSel.value;
+      if (cat === "any") { sensorDetail.hidden = true; return; }
+      const n = countFor(g => sensorsFor(g, cat).length);
+      const all = SENSOR_LIST.filter(s => s.category === cat).length;
+      row(sensorDetail, cat, `${all} sensors listed, on ${n} of ${GLIDERS.length} gliders`);
+      sensorDetail.hidden = false;
+      return;
+    }
+    row(sensorDetail, "Measures", sensor.parameter);
+    row(sensorDetail, "Made by", sensor.maker);
+    row(sensorDetail, "Typical usage", sensor.usage);
+    row(sensorDetail, "Notes", sensor.notes);
+    const names = gliderNames(Object.keys(sensor.gliders));
+    const line = document.createElement("div");
+    line.className = "pd-row" + (names.length ? "" : " pd-none");
+    const b = document.createElement("b");
+    b.textContent = "Integrated on: ";
+    line.appendChild(b);
+    line.appendChild(document.createTextNode(
+      names.length ? names.join(", ") : "no glider on this page — the workbook lists no integration"));
+    sensorDetail.appendChild(line);
+    sensorDetail.hidden = false;
+  }
+
+  function showPam() {
+    const p = pamByKey(pamSel.value);
+    pamDetail.textContent = "";
+    if (!p) { pamDetail.hidden = true; return; }
+    row(pamDetail, "Memory", p.memory);
+    row(pamDetail, "Hydrophones", p.channels);
+    row(pamDetail, "Bandwidth", (p.bandwidth || []).join(" · "));
+    row(pamDetail, "Real time", p.realtime);
+    row(pamDetail, "Power", p.power);
+    const carriers = GLIDERS.filter(g => gliderHasPam(g, p.key)).map(g => g.glider);
+    const line = document.createElement("div");
+    line.className = "pd-row" + (carriers.length ? "" : " pd-none");
+    const b = document.createElement("b");
+    b.textContent = "Documented on: ";
+    line.appendChild(b);
+    line.appendChild(document.createTextNode(
+      carriers.length ? carriers.join(", ") : "no glider on this page"));
+    pamDetail.appendChild(line);
+    pamDetail.hidden = false;
+  }
+
+  catSel.addEventListener("change", () => { fillModels(); showSensor(); dirty(); });
+  modelSel.addEventListener("change", () => { showSensor(); dirty(); });
+  pamSel.addEventListener("change", () => { showPam(); dirty(); });
+
+  // Reset puts both pickers back too, so "Reset" means what it says.
+  document.getElementById("reset").addEventListener("click", () => {
+    catSel.value = "any";
+    pamSel.value = "any";
+    fillModels();
+    showSensor();
+    showPam();
+  });
+
+  fillModels();
+  showSensor();
+  showPam();
+}
+
+[].forEach(k => document.getElementById("cap-" + k)
+  .addEventListener("change", () => { document.getElementById("dirty").hidden = false; }));
+document.querySelectorAll('input[name="battery"]').forEach(r =>
+  r.addEventListener("change", () => { document.getElementById("dirty").hidden = false; }));
+  
+document.getElementById("apply").addEventListener("click", () => {
+  applied = readForm();
+  document.getElementById("dirty").hidden = true;
+  render();
+});
+document.getElementById("reset").addEventListener("click", () => {
+  REQS.forEach(k => { document.querySelector(`input[data-for="${k}"]`).checked = false; document.getElementById("sl-" + k).classList.add("off"); });
+  document.getElementById("batt-any").checked = true;
+  applied = readForm();
+  document.getElementById("dirty").hidden = true;
+  render();
+});
+
+const vc = document.getElementById("view-cards"), vt = document.getElementById("view-table");
+vc.addEventListener("click", () => {
+  vc.setAttribute("aria-pressed", "true"); vt.setAttribute("aria-pressed", "false");
+  document.getElementById("cards").hidden = false; document.getElementById("tableview").hidden = true;
+});
+vt.addEventListener("click", () => {
+  vt.setAttribute("aria-pressed", "true"); vc.setAttribute("aria-pressed", "false");
+  document.getElementById("cards").hidden = true; document.getElementById("tableview").hidden = false;
+});
+
+applied = readForm();
+render();
+// The initial syncs above flag the form as dirty; nothing has actually been changed yet.
+document.getElementById("dirty").hidden = true;
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const handlingRow = document.getElementById('sl-handling');
+  const handlingEnable = document.querySelector('input[type="checkbox"][data-for="handling"]');
+  const handlingOptions = document.querySelectorAll('input[type="radio"][name="handling"]');
+
+  function updateHandlingVisualState() {
+    if (!handlingRow || !handlingEnable) return;
+    handlingRow.classList.toggle('handling-enabled', handlingEnable.checked);
+    handlingRow.classList.toggle('off', !handlingEnable.checked);
+  }
+
+  handlingOptions.forEach(function (option) {
+    option.addEventListener('change', function () {
+      if (this.checked && handlingEnable) {
+        handlingEnable.checked = true;
+        handlingEnable.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      updateHandlingVisualState();
+    });
+  });
+
+  if (handlingEnable) {
+    handlingEnable.addEventListener('change', updateHandlingVisualState);
+  }
+
+  updateHandlingVisualState();
+});
+</script>
+
+
+
+ <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/e-abdi\.github\.io\/glider-performance-tool\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation column-page-right">
+  <div class="nav-page nav-page-previous">
+      <a href="../content/project-info.html" class="pagination-link" aria-label="Project Info">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Project Info</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../content/study-design.html" class="pagination-link" aria-label="Study Design Tool">
+        <span class="nav-page-text">Study Design Tool</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+ <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© CC-1.0</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/content/glider-selection.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/content/glider-selection.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

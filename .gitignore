@@ -1,7 +1,6 @@
 # Quarto (the website is rendered by GitHub Actions to the gh-pages branch)
 /.quarto/
 /_site/
-/docs/
 **/*.quarto_ipynb
 
 # Data: keep only the ReadMe files in git

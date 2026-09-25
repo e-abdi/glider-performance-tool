@@ -1,0 +1,214 @@
+[
+  {
+    "objectID": "content/glider-selection.html",
+    "href": "content/glider-selection.html",
+    "title": "Glider Selection Dashboard",
+    "section": "",
+    "text": "Comparing the PAM-equipped gliders of the\n          NOAA Fisheries Glider Rodeo 2026.\n          Same structure Kasey built — set what the mission needs, apply, then your options — with\n          photos, sourcing and the rodeo measurements added.\n      \n\n      Mission Parameters\n      Enter requirements for your mission below. Tick a row to make it a\n        requirement; leave it unticked and it is ignored. Then press Apply.\n\n      \n        Battery type\n        \n           Any\n           Rechargeable\n           Primary   (single-use)\n        \n\n        Mission parameters\n        \n          \n             Deployment duration\n              30 days\n            1\n            \n            730\n          \n          \n             Depth range\n              50–300 m\n            \n              5\n              \n                \n                \n                \n              \n              1,500+\n            \n          \n          \n             Speed needed\n              1.0 kt\n            0.2\n            \n            3.5\n          \n          \n             Maximum weight\n              80 kg\n            20\n            \n            200\n          \n        \n\n        \n          \n             Deployment / recovery capability\n          \n          \n             Single-person handling\n             Two-person handling\n             Crane / LARS available\n          \n          Choose the highest level of handling support available. Higher capability also includes gliders with lower handling requirements.\n        \n\n        Science payload\n        Pick what you need to measure, then a specific sensor if you have\n          one in mind. The list narrows to gliders that sensor is already integrated on. Sensors and\n          their integrations come from the glider/PAM workbook.\n        \n          Measurement\n            Any\n          Sensor\n            Any in this group\n        \n        \n\n        PAM system\n        Choose a recorder to keep only the gliders it is documented on, and\n          to see its memory, channel count and bandwidth.\n        \n          Recorder\n            Any\n        \n        \n\n        Acoustic parameters\n        \n          \n             Highest frequency of interest\n              50 kHz\n            1\n            \n            200\n          \n          \n             Recording duty cycle\n              25 %\n            1\n            \n            100\n          \n        \n\n        \n          Apply\n          Reset\n          Settings changed — press Apply\n        \n      \n\n      Your Options\n      \n        \n        \n          Cards\n          Table\n        \n      \n      \n      \n        \n\n\n\nManufacturer\nGlider\nMax depth (m)\nEndurance (days)\nSpeed (kt)\nMass (kg)\nCapacity (Wh)\nPropeller\nReal-time\nAcoustic\nIce\nEvidence\n\n\n\n\n\n\n      \n      No glider meets every requirement. Untick the one that is\n        least important — depth and duration are usually what rules platforms out.\n\n      \n        Measured at Rodeo\n      \n\n      Glider Comparisons\n      Only the gliders that matched, on one scale each. Green bars are measured\n        at the Rodeo; blue are vendor figures.\n      \n\n      \n        How the data behind this is organised\n        \n          The cards, table and charts all read one row per glider, extending the columns already in\n          gliders_cleaned.csv. Four companion files join on the same id:\n          payloads.csv (PAM and sensors), integrations.csv (which payload runs\n          on which glider, with evidence), rodeo.csv (straight from\n          build_summary.py) and links.csv (so the reference sites appear in the\n          same place on every card).\n        \n          value__sourceWhere the number came from. No source, no publish.\n          value__confidencevendor / measured / derived — what paints the badge.\n          value__checkedDate someone last verified it against the source.\n          conflictsTwo sources disagree: show both, never silently pick.\n        \n      \n\n      \n        Glider photographs from the\n          open-source glider wiki,\n          which credits the manufacturers. Specifications from vendor documentation and manuals;\n          at-sea figures from the Glider Rodeo 2026 summary (build_summary.py). All rodeo\n          data are preliminary.\n        Where to look next:\n          Glider Operation Best Practices ·\n          Open-source glider wiki ·\n          Custom sensor integration",
+    "crumbs": [
+      "Glider Selection Dashboard"
+    ]
+  },
+  {
+    "objectID": "kasey_testDashboard.html",
+    "href": "kasey_testDashboard.html",
+    "title": "GLIDER SELECTION DASHBOARD",
+    "section": "",
+    "text": "Comparing the PAM-equipped gliders of the NOAA Fisheries Glider Rodeo 2026.\ndata = FileAttachment(\"gliders_cleaned.csv\").csv({typed: true})\nduration_min = parseInt(d3.min(data, d =&gt; d.endurance_days))\nduration_max = parseInt(d3.max(data, d =&gt; d.endurance_days))\n\ndepth_min = parseInt(d3.min(data, d =&gt; d.max_depth_m))\ndepth_max = parseInt(d3.max(data, d =&gt; d.max_depth_m))\n\nspeed_min = parseInt(d3.min(data, d =&gt; d.speed_kt))\nspeed_max = parseInt(d3.max(data, d =&gt; d.speed_kt))\n\nmass_min = parseInt(d3.min(data, d =&gt; d.mass_kg))\nmass_max =  parseInt(d3.max(data, d =&gt; d.mass_kg))"
+  },
+  {
+    "objectID": "kasey_testDashboard.html#mission-parameters",
+    "href": "kasey_testDashboard.html#mission-parameters",
+    "title": "GLIDER SELECTION DASHBOARD",
+    "section": "Mission Parameters",
+    "text": "Mission Parameters\n\nEnter requirements for your mission below. Once you click “apply”, you will get a list of matching glider options.\n\n\n\n\n\n\n\n\nCapabilities\n\n\n\n\nReal-Time\n\n\n\nEdge-Compute\n\n\n\nBathy Drive\n\n\n\nIce\n\n\n\nBackseat Drive\n\n\n\n\n\n\n\n\nMission Parameters\n\n\n\nDeployment Duration (Days)\n\n\n1\n\n\n30\n\n660\n\n\n\nMaximum Depth (m)\n\n\n100\n\n\n30\n\n1000\n\n\n\nRange (km)\n\n\n1\n\n\n30\n\n100\n\n\n\nSpeed (kts)\n\n\n1\n\n\n5\n\n20\n\n\n\nMaximum Weight (kg)\n\n\n1\n\n\n30\n\n1000\n\n\n\n\n\n\n\n\nAcoustic Parameters\n\n\n\nRecording Frequency\n\n\n1\n\n\n30\n\n100\n\n\n\nDepth\n\n\n1\n\n\n30\n\n1000\n\n\n\nDuty Cycle\n\n\n1\n\n\n30\n\n100\n\n\n\n\nApply\n\n\n\n\n\n\n\n\n\n[\n  [\"duration_slider\", duration_min, duration_max],\n  [\"depth_slider\", depth_min, depth_max],\n  [\"speed_slider\", speed_min, speed_max],\n  [\"mass_slider\", mass_min, mass_max]\n].forEach(([id, min, max]) =&gt; {\n  const slider = document.getElementById(id)\n  slider.min = min\n  slider.max = max\n  slider.parentElement.parentElement.firstElementChild.textContent = min\n  slider.parentElement.parentElement.lastElementChild.textContent = max\n})"
+  },
+  {
+    "objectID": "kasey_testDashboard.html#your-options",
+    "href": "kasey_testDashboard.html#your-options",
+    "title": "GLIDER SELECTION DASHBOARD",
+    "section": "Your Options",
+    "text": "Your Options\n\n\napply = Generators.input(document.getElementById(\"apply_button\"))\n\n\n\n\n\n\n\nfiltered = { apply;\nif (!data || !Array.isArray(data)) return [];\nreturn data.filter(g =&gt; {\n  if (document.getElementById(\"duration_count\").checked && g.endurance_days != null && g.endurance_days &lt; Number(document.getElementById(\"duration_slider\").value)) return false\n  if (document.getElementById(\"depth_count\").checked && g.max_depth_m != null && g.max_depth_m &lt; Number(document.getElementById(\"depth_slider\").value)) return false\n  if (document.getElementById(\"speed_count\").checked && g.speed_kt != null && g.speed_kt &lt; Number(document.getElementById(\"speed_slider\").value)) return false\n  if (document.getElementById(\"mass_count\").checked && g.mass_kg != null && g.mass_kg &gt; Number(document.getElementById(\"mass_slider\").value)) return false\n  if (document.getElementById(\"ice_checkbox\").checked && g.ice_capable !== true && g.ice_capable !== \"yes\") return false\n  if (document.getElementById(\"rt_checkbox\").checked && g.real_time_comms !== \"yes\") return false\n\n  return true;\n});\n}\n  // Add these back when the spreadsheet has the corresponding columns:\n  // if (document.getElementById(\"range_count\").checked && g.range_km != null && g.range_km &lt; Number(document.getElementById(\"range_slider\").value)) return false\n  // if (document.getElementById(\"edge_checkbox\").checked && g.edge_compute !== true && g.edge_compute !== \"Yes\") return false\n  // if (document.getElementById(\"bathy_checkbox\").checked && g.bathy_drive !== true && g.bathy_drive !== \"Yes\") return false\n  // if (document.getElementById(\"backseat_checkbox\").checked && g.backseat_drive !== true && g.backseat_drive !== \"Yes\") return false\n\n\n\n\n\n\n\nInputs.table(filtered, {\n  columns: [\n    \"manufacturer\", \"glider\", \"max_depth_m\", \"endurance_days\",\n    \"speed_kt\", \"mass_kg\", \"real_time_comms\", \"acoustic_sensor\", \"ice_capable\"\n  ],\n  header: {\n    manufacturer: \"Manufacturer\",\n    glider: \"Glider\",\n    max_depth_m: \"Max depth (m)\",\n    endurance_days: \"Endurance (days, est.)\",\n    speed_kt: \"Speed (kt, est.)\",\n    mass_kg: \"Mass (kg)\",\n    real_time_comms: \"Real-time comms\",\n    acoustic_sensor: \"Acoustic sensor\",\n    ice_capable: \"Ice capable\"\n  }\n})"
+  },
+  {
+    "objectID": "kasey_testDashboard.html#glider-comparisons",
+    "href": "kasey_testDashboard.html#glider-comparisons",
+    "title": "GLIDER SELECTION DASHBOARD",
+    "section": "Glider Comparisons",
+    "text": "Glider Comparisons\nPlease see below for details of your chosen gliders.\n\n\n\n\n\n\n\n\nDeployment Duration\nDepth Range\nBase Weight\nRange\nSpeed\n\n\n\n\n\n\nGlider 1\n\n\n1–20 days\n0-1000m\n85kg\n2 km\n1 kt\n\n\n\n\n\n\nGlider 2\n\n\n1–20 days\n0-1000m\n85kg\n2 km\n1 kt\n\n\n\n\n\n\nGlider 3\n\n\n1–20 days\n0-1000m\n85kg\n2 km\n1 kt\n\n\n\n\n\n\nGlider 4\n\n\n1–20 days\n0-1000m\n85kg\n2 km\n1 kt\n\n\n\n\n\n\n\nEach panel below is a different metric, shown as a percentage of the highest value among the currently matching gliders (so depth in meters, endurance in days, and speed in knots can sit side by side on one chart). Hover a bar to see the raw value.\n\nmetricList = [\n  {key: \"max_depth_m\", label: \"Max depth (m)\"},\n  {key: \"endurance_days\", label: \"Endurance (days)\"},\n  {key: \"speed_kt\", label: \"Speed (kt)\"}\n]\n\nlongData = filtered.flatMap(g =&gt;\n  metricList\n    .map(m =&gt; ({glider: g.glider, metric: m.label, value: g[m.key]}))\n    .filter(d =&gt; d.value != null)\n)\n\nmaxByMetric = d3.rollup(longData, v =&gt; d3.max(v, d =&gt; d.value), d =&gt; d.metric)\n\nnormalizedData = longData.map(d =&gt; ({\n  ...d,\n  pct: maxByMetric.get(d.metric) &gt; 0 ? (d.value / maxByMetric.get(d.metric)) * 100 : 0\n}))\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlot.plot({\n  marginLeft: 100,\n  fx: {label: null},\n  x: {label: \"% of max among matching gliders\", domain: [0, 100]},\n  y: {label: null},\n  color: {legend: false},\n  marks: [\n    Plot.barX(normalizedData, {\n      x: \"pct\",\n      y: \"glider\",\n      fx: \"metric\",\n      fill: \"metric\",\n      sort: {y: \"-x\"},\n      title: d =&gt; `${d.glider}: ${d.value}`\n    }),\n    Plot.ruleX([0])\n  ]\n})"
+  },
+  {
+    "objectID": "content/results.html",
+    "href": "content/results.html",
+    "title": "Results",
+    "section": "",
+    "text": "TODO: figures and tables comparing gliders and mission modes.",
+    "crumbs": [
+      "Results"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html",
+    "href": "content/project-info.html",
+    "title": "Project Info",
+    "section": "",
+    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)\nHéloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center (heloise.frouin-mouy@miami.edu)\nKasey Castello, Scripps Institution of Oceanography, Univeresity of California San Diego (kcastello@ucsd.edu)\nAnne Simonis, Estuary and Ocean Science Center, San Francisco State University (asimonis@sfsu.edu)",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#team-members",
+    "href": "content/project-info.html#team-members",
+    "title": "Project Info",
+    "section": "",
+    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)\nHéloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center (heloise.frouin-mouy@miami.edu)\nKasey Castello, Scripps Institution of Oceanography, Univeresity of California San Diego (kcastello@ucsd.edu)\nAnne Simonis, Estuary and Ocean Science Center, San Francisco State University (asimonis@sfsu.edu)",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#background",
+    "href": "content/project-info.html#background",
+    "title": "Project Info",
+    "section": "Background",
+    "text": "Background\nThe Glider Rodeo field-tested PAM-glider platforms under the same conditions to give data-driven guidance on what each system can do in different operational environments and for different research questions. Each glider was flown through a sequence of mission modes:\n\n\n\n\n\n\n\n\n\nPhase\nMode\nStart (UTC)\nStop (UTC)\n\n\n\n\n1\nshakedown\n2026-01-28 22:00\n2026-01-30 06:00\n\n\n2\nfast\n2026-01-30 06:00\n2026-02-01 18:00\n\n\n3\nslow\n2026-02-01 18:00\n2026-02-04 18:00\n\n\n4\nintermediate\n2026-02-04 18:00\n2026-02-06 18:00\n\n\n5\ndrift (20 min at 800 m)\n2026-02-06 18:00\n2026-02-08 18:00\n\n\n6\nmini-rodeo: slow\n2026-02-08 18:00\n2026-02-09 06:00\n\n\n6\nmini-rodeo: intermediate\n2026-02-09 06:00\n2026-02-09 18:00\n\n\n6\nmini-rodeo: fast\n2026-02-09 18:00\n2026-02-10 06:00\n\n\n7\nrecovery\n2026-02-10 06:00\n\n\n\n\nSource: Glider Rodeo fieldwork plan.",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#goals",
+    "href": "content/project-info.html#goals",
+    "title": "Project Info",
+    "section": "Goals",
+    "text": "Goals\nAnswer, for every glider and mission mode:\n\nPiloting: how do pilots achieve each mission mode (pitch, buoyancy, dive depth, yos per surfacing)?\nNavigation: how well does each glider hold the trackline, and how is that affected by currents?\nEndurance: how does mission mode affect battery use and data storage?\nNoise: how much self-noise (pumping, motors, flow) does each glider make?",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#datasets",
+    "href": "content/project-info.html#datasets",
+    "title": "Project Info",
+    "section": "Datasets",
+    "text": "Datasets\n\nGlider Rodeo deployment data (engineering, science, GPS): on the Glider Rodeo JupyterHub in shared-public/GliderRodeo/, one folder per deployment.\nSoundscape metrics (60 s averaged spectra per glider): shared-public/GliderRodeo/Noise/.\nGlider specifications: shared-public/GliderRodeo/PAM_Glider_Specs.csv.\n\nThe source data are preliminary.",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#references",
+    "href": "content/project-info.html#references",
+    "title": "Project Info",
+    "section": "References",
+    "text": "References\n\nNOAA Fisheries PAM-Glider Rodeo: https://nmfs-pam-glider.github.io/GliderRodeo/",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/project-info.html#links",
+    "href": "content/project-info.html#links",
+    "title": "Project Info",
+    "section": "Links",
+    "text": "Links\n\nHackathon shared repository: https://github.com/NMFS-PAM-Glider/hackathon-shared-repo",
+    "crumbs": [
+      "Project Info"
+    ]
+  },
+  {
+    "objectID": "content/workflow.html",
+    "href": "content/workflow.html",
+    "title": "Workflow",
+    "section": "",
+    "text": "TODO: document the analysis steps as the code in code/ is written.",
+    "crumbs": [
+      "Workflow"
+    ]
+  },
+  {
+    "objectID": "content/workflow.html#run-the-performance-analysis",
+    "href": "content/workflow.html#run-the-performance-analysis",
+    "title": "Workflow",
+    "section": "",
+    "text": "TODO: document the analysis steps as the code in code/ is written.",
+    "crumbs": [
+      "Workflow"
+    ]
+  },
+  {
+    "objectID": "content/study-design.html",
+    "href": "content/study-design.html",
+    "title": "Study Design Tool",
+    "section": "",
+    "text": "Draw a study area, choose a simple transect design, and estimate survey distance and nominal mission duration. This prototype is intended for first-order study design rather than operational mission planning.\n  \n\n  \n    \n      Study requirements\n      Use the polygon tool on the map to define one study area. Edit the polygon at any time; the design will update when you regenerate it.\n\n      Survey geometry\n      \n        Survey pattern\n        \n          Lawnmower (connected transects)\n          Parallel transects only\n        \n      \n\n      \n        Transect spacing10 km\n        \n      \n\n      \n        Track orientation0°\n        \n        0° = north-south transects; 90° = east-west.\n      \n\n      Mission assumptions\n      \n        Nominal horizontal speed0.50 kt\n        \n      \n\n      \n        Glide angle26°\n        \n        Angle from horizontal. Used with target depth to estimate the horizontal distance of one down-and-up dive cycle.\n      \n\n      \n        \n          Target depth\n          \n        \n        \n          Number of gliders\n          \n        \n      \n\n      Study area input\n      \n         Draw polygon\n         Enter GPS points\n      \n\n      \n        \n          Draw study area\n          Finish polygon\n        \n      \n\n      \n        \n          \n            GPS vertices\n            \n            Enter one vertex per line as latitude, longitude. At least three valid points are required; the polygon closes automatically.\n          \n          Use GPS points\n        \n      \n\n      \n        Edit polygon\n        Clear area\n        Generate survey\n        Clear tracks\n        Export GeoJSON\n        Export waypoints CSV\n        Load example\n      \n\n      \n        \n          Edit polygon vertices\n          Close\n        \n        Change coordinates directly, or choose Move on map and click the new location.\n        \n\n\n\n#\nLatitude\nLongitude\n\n\n\n\n\n\n\n      \n    \n\n    \n      \n      Study area: choose either Draw polygon or Enter GPS points. After creating the polygon, use Edit polygon to change coordinates or reposition a vertex with a map click.\n      Map layers: blue lines = survey track; orange dots = estimated surfacing locations.\n      Land mask: shaded land is shown for visual guidance only. Survey tracks are not yet routed around land, so route distance and mission duration should be treated as approximate.\n      Loading land mask…\n    \n  \n\n  \n    Survey estimate\n    Values below are geometric and first-order estimates. Currents, dive behavior, bathymetry, payload power, navigation, launch/recovery, and operational safety margins are not yet included.\n    \n      \n        Idealized dive cycle\n        \n          \n          \n          \n          \n          \n          Surface\n          500 m\n          2.05 km per cycle\n          26°\n        \n      \n      \n        Dive-cycle estimate\n        \n          Cycle distance--\n          Half-cycle--\n          Approx. cycles--\n          Profiles / 100 km--\n          Surfacing markers--\n        \n        Orange dots on the map show estimated surfacing locations along the generated route. Depth and glide-angle changes update this preview immediately.\n      \n    \n    Draw a study polygon and press Generate survey to create an estimate.\n    \n      \n        Study area--polygon area\n        Transects--inside study area\n        Track length--survey route\n        Nominal duration--distance / aggregate speed\n        Target depth--user requirement\n      \n      \n        ~Duration is derived. It assumes constant horizontal speed and an even division of route distance among gliders.\n        !Not an operational plan. Currents, bathymetry, energy use, station keeping, and deployment logistics are not modeled.\n        +Geometry is reproducible. Area, transect count, and route length are calculated directly from the polygon and generated tracks.\n      \n      \n        Calculation assumptions\n        \n          Transects are generated at the selected compass orientation and clipped to the study polygon.\n          For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included.\n          Nominal travel rate is speed in knots × 1.852 km/nmi × 24 h/day.\n          Dive-cycle horizontal distance is approximated as 2 × target depth / tan(glide angle), assuming a symmetric straight-line descent and ascent.\n          Map dots represent estimated surfacing locations, not subsurface profile positions or commanded waypoints.\n          With multiple gliders, route distance is divided evenly among vehicles for the duration estimate only; tracks are not yet spatially assigned to individual gliders.\n        \n      \n    \n  \n\n\n\n\n\n  \n    The mission over the seafloor\n  \n  Draws the planned track as it would actually be flown, against real bathymetry for\n  the study area. Dive depth can follow the seafloor instead of being fixed, which is what a pilot\n  would really do over a shelf break or a canyon.\n\n  \n    \n       Fixed depth\n       Follow the seafloor\n    \n    Clearance above seabed\n       m\n    Build 3D view\n  \n\n  \n    \n    Draw a study area and press Generate survey, then build the 3D view.\n  \n\n  \n    Dives –\n    Deepest –\n    Mean dive –\n    Seabed range –\n    Grid –\n    Too shallow to dive –\n  \n\n  Bathymetry from the\n  GMRT Synthesis (Ryan et al., Geochem. Geophys. Geosyst., 2009),\n  fetched live for the drawn area. The 3D view follows\n  Glider Playground\n  (Orlando Prugel-Bennett, National Oceanography Centre, Apache 2.0).\n\n\n\n  Distance note: route distance and mission duration are first-order estimates. The current planner does not yet remove over-land transect segments or calculate water-only transit paths around coastlines, islands, or other barriers.",
+    "crumbs": [
+      "Study Design Tool"
+    ]
+  },
+  {
+    "objectID": "content/study-design_Orig.html",
+    "href": "content/study-design_Orig.html",
+    "title": "Study Design Tool",
+    "section": "",
+    "text": "Draw a study area, choose a simple transect design, and estimate survey distance and nominal mission duration. This prototype is intended for first-order study design rather than operational mission planning.\n  \n\n  \n    \n      Study requirements\n      Use the polygon tool on the map to define one study area. Edit the polygon at any time; the design will update when you regenerate it.\n\n      Survey geometry\n      \n        Survey pattern\n        \n          Lawnmower (connected transects)\n          Parallel transects only\n        \n      \n\n      \n        Transect spacing10 km\n        \n      \n\n      \n        Track orientation0°\n        \n        0° = north-south transects; 90° = east-west.\n      \n\n      Mission assumptions\n      \n        Nominal horizontal speed0.50 kt\n        \n      \n\n      \n        \n          Target depth\n          \n        \n        \n          Number of gliders\n          \n        \n      \n\n      \n        Generate survey\n        Clear tracks\n        Load example\n      \n    \n\n    \n      \n      Map controls: use the polygon tool at upper left to draw a study area. The edit and delete tools become available after a polygon exists.\n    \n  \n\n  \n    Survey estimate\n    Values below are geometric and first-order estimates. Currents, dive behavior, bathymetry, payload power, navigation, launch/recovery, and operational safety margins are not yet included.\n    Draw a study polygon and press Generate survey to create an estimate.\n    \n      \n        Study area--polygon area\n        Transects--inside study area\n        Track length--survey route\n        Nominal duration--distance / aggregate speed\n        Target depth--user requirement\n      \n      \n        ~Duration is derived. It assumes constant horizontal speed and an even division of route distance among gliders.\n        !Not an operational plan. Currents, bathymetry, dive cycles, energy use, station keeping, and deployment logistics are not modeled.\n        +Geometry is reproducible. Area, transect count, and route length are calculated directly from the polygon and generated tracks.\n      \n      \n        Calculation assumptions\n        \n          Transects are generated at the selected compass orientation and clipped to the study polygon.\n          For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included.\n          Nominal travel rate is speed in knots × 1.852 km/nmi × 24 h/day.\n          With multiple gliders, route distance is divided evenly among vehicles for the duration estimate only; tracks are not yet spatially assigned to individual gliders."
+  },
+  {
+    "objectID": "content/slocum-endurance.html",
+    "href": "content/slocum-endurance.html",
+    "title": "Slocum Endurance Calculation",
+    "section": "",
+    "text": "Predicts how long a Slocum will last on a given mission, from Teledyne Webb\n  Research's Slocum Endurance Tool (revision C, 2012‑10‑19). The workbook's\n  formulas are evaluated here as-is rather than reimplemented, so the numbers are Excel's:\n  all 998 cells the model computes are checked against the workbook's own\n  stored results.\n\n  \n    \n      –Endurance (days)\n      –Approximate distance (km)\n      \n        Glider + standard sensors – Ah/day\n        Total with thruster + extras – Ah/day\n      \n    \n    \n  \n\n  Mission and configuration\n  \n      \n        Mission\n        Maximum profile depthm\n        Minimum profile depthm\n        Horizontal velocitym/s\n        Vertical velocitym/s\n        Surface onProfile countElapsed timeDistance\n        …\n        Surface timemin\n        Average operating temperature°C\n      \n      \n        Glider configuration\n        Buoyancy pump1000 m pump200 m pump\n        Glider typeCoastalOpen Ocean\n        Altimeter\n        Pinger\n        FreeWave\n        PTT / Argos\n      \n      \n        Battery\n        ChemistryLithiumAlkaline\n        TypePrimaryRechargeable\n        Extended energy bay\n      \n      \n        Standard science payload\n        CTD\n        Motherboard\n        Persistor\n        Aanderaa optode\n        Explorer 600 kHz DVL\n        FLBBCD-SLK\n        Biospherical QSP-2150\n      \n      \n        Thruster and extra sensors\n        Thruster*11.2 Ah/d%\n        UVP61.6 Ah/d\n        EK8011.2 Ah/d\n        JASCO OceanObserver (1 channel)*1.6 Ah/d\n        JASCO OceanObserver (5 channel)*6.4 Ah/d\n        eDNA6.4 Ah/d\n        From content/data/extra-sensors.csv — add a row to add a sensor.\n      \n  \n\n  Mission geometry\n  \n        Trajectory angle–\n        Profile duration–\n        Profile distance–\n        Profiles between surfacing–\n        Time between surfacing–\n        Distance between surfacing–\n        Battery capacity (derated)–\n  \n\n  \n    Reset to defaults\n    –\n  \n\n  \n    Endurance is battery capacity by chemistry and bay\n    (550 / 800 Ah primary, 215 / 300 Ah rechargeable) divided by total Ah per day, where the\n    glider-and-standard-sensor load comes from the workbook's component power model and the\n    external payload is added on top. Distance assumes 20 km/day.\n    The external payload is read from content/data/extra-sensors.csv rather than\n    from the workbook, so a sensor can be added, removed or re-costed by editing one line in the\n    repository. The workbook hardcoded the same four inside a single formula; the replacement is\n    checked against it on every build. Figures marked * carry a note\n    — hover the name to read it.\n    The workbook also reports a bare-glider endurance from the same power model. It is not\n    shown here: it excludes the external sensors, so on these defaults it reads about five times\n    longer and answers a different question.",
+    "crumbs": [
+      "Endurance calculation"
+    ]
+  },
+  {
+    "objectID": "content/endurance_plots.html",
+    "href": "content/endurance_plots.html",
+    "title": "Glider Performance",
+    "section": "",
+    "text": "Comparing the PAM-equipped gliders of the\n          NOAA Fisheries Glider Rodeo 2026.\n          Same underlying page styling as the main page, just adding some plots and such here. Code copied from main page.\n      \n    \n      \n\n    \n  \n      Performance filters\n  \n      \n  \n        \n          Glider\n          \n            All gliders\n          \n        \n  \n        \n          Mode\n          \n            All modes\n          \n        \n  \n        \n          Heatmap metric\n          \n            Energy efficiency (Wh/km)\n            Power (W)\n            Energy per dive (Wh)\n            Distance per dive (km)\n            Dive duration (hr)\n            Vertical speed (m/s)\n          \n        \n  \n        \n          View\n          \n            Gliders\n            Modes\n          \n        \n  \n      \n      \n        Press \"ctrl\" to select multiple glider options. \n       \n      \n      \n        Apply\n        Reset\n        \n          Filters changed — click Apply\n        \n      \n  \n      \n    \n  \n    \n  \n    \n  \n      \n        Loading performance data…\n      \n  \n    \n    \n    \n\n    \n    \n      \n        Power vs. vertical speed\n        \n        \n          Each point represents an observed glider/mode combination.\n        \n      \n    \n      \n        Dive duration vs. maximum depth\n        \n        \n          Dive duration and maximum depth for the selected data.\n        \n      \n    \n    \n    \n    \n    \n      \n        Distance vs. energy per dive\n        \n        \n          Each point represents an observed glider/mode combination.\n        \n      \n    \n      \n        Pump moves per hour vs. # of pumped dives\n        \n        Pump activity and the number of dives with counted pump activity.\n      \n    \n    \n    \n    \n    \n    \n    \n      \n        Energy efficiency\n        \n        \n          Lower Wh/km indicates less energy used per kilometer traveled.\n        \n      \n    \n      \n        Power\n        \n        \n          Observed power for each glider/mode combination.\n        \n      \n    \n    \n    \n    \n    \n    \n    \n      \n        Mode comparison\n        \n      \n    \n      \n    \n    \n    \n    \n  \n    \n  \n      \n        Performance data",
+    "crumbs": [
+      "Endurance Results"
+    ]
+  },
+  {
+    "objectID": "content/glider-selection_orig.html",
+    "href": "content/glider-selection_orig.html",
+    "title": "Glider Selection Dashboard",
+    "section": "",
+    "text": "Comparing the PAM-equipped gliders of the\n          NOAA Fisheries Glider Rodeo 2026.\n          Same structure Kasey built — capabilities, mission sliders, apply, then your options — with\n          photos, sourcing and the rodeo measurements added.\n      \n\n      Mission Parameters\n      Enter requirements for your mission below. Tick a row to make it a\n        requirement; leave it unticked and it is ignored. Then press Apply.\n\n      \n        Capabilities\n        \n           Real-time comms\n           Acoustic payload\n           Edge compute\n           Bathy drive\n           Ice capable\n           Backseat drive\n           Thruster / propeller\n           Flew the Rodeo\n        \n        \n        Battery type\n        \n           Any\n           Rechargeable\n           Primary   (single-use)\n        \n\n        Mission parameters\n        \n          \n             Deployment duration\n              30 days\n            1\n            \n            730\n          \n          \n             Maximum depth\n              300 m\n            50\n            \n            11,000\n          \n          \n             Speed needed\n              1.0 kt\n            0.2\n            \n            3.5\n          \n          \n             Maximum weight\n              80 kg\n            20\n            \n            200\n          \n        \n\n        Acoustic parameters\n        \n          \n             Highest frequency of interest\n              50 kHz\n            1\n            \n            200\n          \n          \n             Recording duty cycle\n              25 %\n            1\n            \n            100\n          \n        \n\n        \n          Apply\n          Reset\n          Settings changed — press Apply\n        \n      \n\n      Your Options\n      \n        \n        \n          Cards\n          Table\n        \n      \n      \n      \n        \n\n\n\nManufacturer\nGlider\nMax depth (m)\nEndurance (days)\nSpeed (kt)\nMass (kg)\nCapacity (Wh)\nPropeller\nReal-time\nAcoustic\nIce\nEvidence\n\n\n\n\n\n\n      \n      No glider meets every requirement. Untick the one that is\n        least important — depth and duration are usually what rules platforms out.\n\n      \n        Measured at Rodeo\n      \n\n      Glider Comparisons\n      Only the gliders that matched, on one scale each. Green bars are measured\n        at the Rodeo; blue are vendor figures.\n      \n\n      \n        How the data behind this is organised\n        \n          The cards, table and charts all read one row per glider, extending the columns already in\n          gliders_cleaned.csv. Four companion files join on the same id:\n          payloads.csv (PAM and sensors), integrations.csv (which payload runs\n          on which glider, with evidence), rodeo.csv (straight from\n          build_summary.py) and links.csv (so the reference sites appear in the\n          same place on every card).\n        \n          value__sourceWhere the number came from. No source, no publish.\n          value__confidencevendor / measured / derived — what paints the badge.\n          value__checkedDate someone last verified it against the source.\n          conflictsTwo sources disagree: show both, never silently pick.\n        \n      \n\n      \n        Glider photographs from the\n          open-source glider wiki,\n          which credits the manufacturers. Specifications from vendor documentation and manuals;\n          at-sea figures from the Glider Rodeo 2026 summary (build_summary.py). All rodeo\n          data are preliminary.\n        Where to look next:\n          Glider Operation Best Practices ·\n          Open-source glider wiki ·\n          Custom sensor integration"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Glider Performance Tool",
+    "section": "",
+    "text": "Comparing the PAM-equipped gliders of the NOAA Fisheries Glider Rodeo 2026 across mission modes: how each platform was piloted, how well it navigated, how long its battery and storage last, and how much noise it makes.\nSeven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#approach",
+    "href": "index.html#approach",
+    "title": "Glider Performance Tool",
+    "section": "Approach",
+    "text": "Approach\n\nSplit each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).\nCompute the same performance metrics for every glider.\nCompare platforms and modes.\n\nSee Project Info for goals and datasets, and Glider Performance for what every glider actually did during the rodeo.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "content/performance.html",
+    "href": "content/performance.html",
+    "title": "Glider Performance",
+    "section": "",
+    "text": "Every glider in the rodeo flew the same plan: a shakedown, then fast,\nslow, intermediate and drift blocks, then a short\nrepeat of slow, intermediate and fast at the end (the mini-modes, right of the hairline in each\npanel). Because the modes are shared, the differences below are differences between the\nplatforms, not between missions. Numbers come from\noutput/glider_performance_summary.xlsx; each panel keeps its own y-axis, because a watt\nand a cubic centimetre do not belong on one scale.\n\n\n\n  \n    Gliders\n  \n  \n    Modes\n  \n  \n    Metrics\n  \n\n\n\n\nTradeoff explorer\n\nThe mission modes exist to answer what speed costs. Put one metric on each axis and every\nglider-mode combination becomes a point, so the shape of the tradeoff shows up directly. Connect\nthe modes to follow one glider through the plan.\n\n\n  \n    X\n    Y\n     Connect modes\n  \n  \n    Presets\n  \n\n\n\nRanking\n\nEvery glider-mode combination on one metric, sorted. This is the view for “who used the least\nenergy per kilometre” — and for seeing how much of the spread is the platform and how much\nis the mode it was flying.\n\n\n  \n    Metric\n  \n\n\n\nMode comparison\n\nThe same numbers as a grid: one row per glider, one column per mode. Gaps are combinations with no\ndata rather than zeroes.\n\n\n  \n    Metric\n  \n\n\n\nData recorded\n\nHow much raw data each system actually wrote during the rodeo. The deployments were not the same\nlength, so the per-day figure is the fairer comparison between PAM systems — and the spread is\nmostly channel count and sample rate, not platform.\n\n\n  \n    Total recordedGB\n    \n    \n  \n  \n    Recording rateGB/day\n    \n    Total raw data divided by the length of that glider’s deployment.\n  \n\n\nEfficiency\n\nTwo sections above ask what a kilometre cost and how much each system recorded. This divides\none by the other: how far a glider went, and how much it wrote, for every kilowatt‑hour it\nspent. Up and to the right is more of both for the same energy. Neither axis is the\nanswer — a platform can buy data with distance, and the fastest way to look efficient on\nthe vertical axis is to record at a high bit rate.\n\n\n\n\nThe numbers\n\nEvery value on this page, for the gliders, modes and metrics selected above. Hover is a\nconvenience; this table is the source.\n\n\n\nPlatforms\nOne row per glider: what it is, how long it flew, what it recorded, and how its energy use was measured.\n\n\n\n  Data caveats and column definitions",
+    "crumbs": [
+      "Glider Performance"
+    ]
+  }
+]

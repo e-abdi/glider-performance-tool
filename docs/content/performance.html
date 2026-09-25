@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Glider Performance – Glider Performance Tool</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../content/slocum-endurance.html" rel="prev">
+<link href="../content/images/GliderRodeo.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d9a3b1d5427c00bf2a6c708c2a700a09.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-5c441ac52919a6e8136589e9d5787bd9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-d9a3b1d5427c00bf2a6c708c2a700a09.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/performance.html">Glider Performance</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../content/images/GliderRodeo.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../content/images/GliderRodeo.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main tools-wide">
+    <a href="https://nmfs-pam-glider.github.io/GliderRodeo/" title="NOAA Fisheries PAM-Glider Rodeo" class="quarto-navigation-tool px-1" aria-label="NOAA Fisheries PAM-Glider Rodeo"><i class="bi bi-globe"></i></a>
+    <a href="https://github.com/e-abdi/glider-performance-tool" title="Source code" class="quarto-navigation-tool px-1" aria-label="Source code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/project-info.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Project Info</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/glider-selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glider Selection Dashboard</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/study-design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Study Design Tool</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/slocum-endurance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Endurance calculation</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../content/performance.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Glider Performance</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page-right" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Glider Performance</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-right">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+This page is hand-maintained. Only the block between the PERF-DATA markers near the
+bottom is generated — `python3 code/build_performance_data.py` rewrites it in place from
+output/glider_performance_summary.xlsx and touches nothing else. Edit the rest freely.
+
+It merges two earlier pages: the mission-mode panels from content/performance.qmd and
+the ranking bars, mode heatmap and mode filter from content/endurance_plots.qmd.
+-->
+<style>
+  #perf {
+    --surface: #FFFFFF; --surface-2: #F1F6F7; --line: #DAE3E5; --line-strong: #BCCBCE;
+    --ink: #1F2C31; --ink-2: #536268; --ink-3: #78888E;
+    --accent: #2780E3; --accent-ink: #1B62B0; --accent-soft: #E3EEFB;
+    --warn: #A33227; --warn-soft: #F8E4E1;
+    --sans: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    /* Categorical slots 1-7 of the validated palette, in fixed order. A glider keeps
+       its hue and its marker shape for life: filtering never repaints the survivors. */
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+    --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7;
+    max-width: 1280px; color: var(--ink); font-family: var(--sans); line-height: 1.55;
+  }
+  body.quarto-dark #perf, :root[data-bs-theme="dark"] #perf {
+    --surface: #212121; --surface-2: #2A2A2A; --line: #3A3A3A; --line-strong: #4E4E4E;
+    --ink: #F2F2F2; --ink-2: #BFC6C8; --ink-3: #939A9D;
+    --accent: #75AADB; --accent-ink: #9CC6EC; --accent-soft: #23323F;
+    --warn: #E08278; --warn-soft: #3A211E;
+    /* The same seven hues re-stepped for the dark surface, not an automatic flip. */
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --s5: #d55181; --s6: #008300; --s7: #9085e9;
+  }
+  #perf * { box-sizing: border-box; }
+  #perf .lede { color: var(--ink-2); max-width: 78ch; }
+  #perf h2 { font-size: 19px; margin: 36px 0 6px; }
+  #perf h2:first-of-type { margin-top: 26px; }
+  #perf .sub { color: var(--ink-2); font-size: 14px; margin: 0 0 14px; max-width: 78ch; }
+
+  /* ---- controls: one row above everything they scope ---- */
+  #perf .controls {
+    border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2);
+    padding: 12px 14px; margin: 22px 0 20px;
+  }
+  #perf .ctrl-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  #perf .ctrl-row + .ctrl-row { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+  #perf .ctrl-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--ink-3); margin-right: 4px; flex: 0 0 auto;
+  }
+  #perf .chip {
+    display: inline-flex; align-items: center; gap: 7px; font: inherit; font-size: 13px;
+    padding: 5px 11px 5px 8px; border: 1px solid var(--line-strong); border-radius: 999px;
+    background: var(--surface); color: var(--ink); cursor: pointer; min-height: 32px;
+  }
+  #perf .chip.mode { padding: 5px 12px; }
+  #perf .chip:hover { border-color: var(--accent); }
+  #perf .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #perf .chip[aria-pressed="false"] { color: var(--ink-3); background: transparent; }
+  #perf .chip[aria-pressed="false"] .swatch { opacity: .25; }
+  #perf .chip.mode[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  #perf .chip .name { font-variant-numeric: tabular-nums; }
+  #perf .swatch { flex: 0 0 auto; }
+  #perf .plain, #perf .preset {
+    font: inherit; font-size: 13px; padding: 5px 11px; min-height: 32px;
+    border: 1px solid var(--line-strong); border-radius: 7px;
+    background: var(--surface); color: var(--ink-2); cursor: pointer;
+  }
+  #perf .plain:hover, #perf .preset:hover { border-color: var(--accent); color: var(--ink); }
+  #perf .plain:focus-visible, #perf .preset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #perf .pick {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 13px;
+    padding: 5px 11px; border: 1px solid var(--line-strong); border-radius: 7px;
+    background: var(--surface); cursor: pointer; min-height: 32px;
+  }
+  #perf .pick:hover { border-color: var(--accent); }
+  #perf .pick input { accent-color: var(--accent); margin: 0; cursor: pointer; }
+  #perf .pick .u { color: var(--ink-3); font-size: 12px; }
+  #perf select {
+    font: inherit; font-size: 13px; padding: 5px 8px; min-height: 32px;
+    border: 1px solid var(--line-strong); border-radius: 7px;
+    background: var(--surface); color: var(--ink);
+  }
+
+  /* ---- the panel grid ---- */
+  #perf .grid {
+    display: grid; gap: 16px;
+    /* min() so the 430px panel floor never widens the page on a narrow phone. */
+    grid-template-columns: repeat(auto-fit, minmax(min(430px, 100%), 1fr));
+  }
+  #perf .panel, #perf .box {
+    border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
+    padding: 12px 8px 8px 8px; min-width: 0;
+  }
+  #perf .panel .head, #perf .box .head { padding: 0 6px; display: flex; gap: 8px; align-items: baseline; }
+  #perf .panel .title, #perf .box .title { font-size: 14px; font-weight: 700; }
+  #perf .panel .unit, #perf .box .unit { font-size: 12px; color: var(--ink-3); font-family: var(--mono); }
+  #perf .panel .plot { width: 100%; height: 252px; }
+  #perf .panel .foot, #perf .box .foot {
+    font-size: 11.5px; color: var(--ink-3); padding: 2px 6px 0; line-height: 1.4;
+  }
+  #perf .empty {
+    border: 1px dashed var(--line-strong); border-radius: 10px; padding: 26px 18px;
+    color: var(--ink-3); font-size: 14px; text-align: center;
+  }
+
+  /* ---- single-chart sections ---- */
+  #perf .wide {
+    border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 10px 8px 8px;
+  }
+  #perf #perf-scatter { width: 100%; height: 440px; }
+  #perf #perf-rank, #perf #perf-heat { width: 100%; }
+  #perf .volume-grid {
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+  }
+  #perf .volume-plot { width: 100%; }
+
+  /* ---- tables ---- */
+  #perf .tablescroll { max-height: 480px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; }
+  #perf table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  #perf th, #perf td {
+    text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap;
+  }
+  #perf thead th {
+    position: sticky; top: 0; background: var(--surface-2); z-index: 1;
+    font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2);
+  }
+  #perf td.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+  #perf td.miss { color: var(--ink-3); }
+  #perf td.wrap, #perf th.wrap { white-space: normal; min-width: 22ch; }
+  #perf tbody tr:hover { background: var(--surface-2); }
+  #perf td .keyline { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: 2px; margin-right: 7px; }
+  #perf .flagmark { color: var(--warn); font-weight: 700; }
+
+  #perf details.notes { margin-top: 30px; border-top: 1px solid var(--line); padding-top: 14px; }
+  #perf details.notes summary { cursor: pointer; font-weight: 700; font-size: 14px; }
+  #perf details.notes dl { margin: 12px 0 0; font-size: 13.5px; }
+  #perf details.notes dt { font-weight: 700; color: var(--ink); margin-top: 10px; }
+  #perf details.notes dd { margin: 2px 0 0; color: var(--ink-2); max-width: 90ch; }
+  #perf .stamp { margin-top: 18px; font-size: 12px; color: var(--ink-3); }
+  #perf .stamp a { color: var(--accent-ink); }
+
+  @media (max-width: 540px) {
+    #perf .panel .plot { height: 210px; }
+    #perf #perf-scatter { height: 360px; }
+  }
+</style>
+
+<div id="perf">
+
+<p class="lede">
+Every glider in the rodeo flew the same plan: a shakedown, then <strong>fast</strong>,
+<strong>slow</strong>, <strong>intermediate</strong> and <strong>drift</strong> blocks, then a short
+repeat of slow, intermediate and fast at the end (the mini-modes, right of the hairline in each
+panel). Because the modes are shared, the differences below are differences between the
+<em>platforms</em>, not between missions. Numbers come from
+<code>output/glider_performance_summary.xlsx</code>; each panel keeps its own y-axis, because a watt
+and a cubic centimetre do not belong on one scale.
+</p>
+
+<div class="controls">
+  <div class="ctrl-row" id="perf-gliders">
+    <span class="ctrl-label">Gliders</span>
+  </div>
+  <div class="ctrl-row" id="perf-modes">
+    <span class="ctrl-label">Modes</span>
+  </div>
+  <div class="ctrl-row" id="perf-metrics">
+    <span class="ctrl-label">Metrics</span>
+  </div>
+</div>
+
+<div class="grid" id="perf-grid"></div>
+
+<h2 class="anchored">Tradeoff explorer</h2>
+<p class="sub">
+The mission modes exist to answer what speed costs. Put one metric on each axis and every
+glider-mode combination becomes a point, so the shape of the tradeoff shows up directly. Connect
+the modes to follow one glider through the plan.
+</p>
+<div class="controls">
+  <div class="ctrl-row">
+    <span class="ctrl-label">X</span><select id="perf-x" aria-label="X axis metric"></select>
+    <span class="ctrl-label" style="margin-left:10px">Y</span><select id="perf-y" aria-label="Y axis metric"></select>
+    <label class="pick" style="margin-left:10px"><input type="checkbox" id="perf-connect" checked=""> Connect modes</label>
+  </div>
+  <div class="ctrl-row" id="perf-presets">
+    <span class="ctrl-label">Presets</span>
+  </div>
+</div>
+<div class="wide"><div id="perf-scatter"></div></div>
+
+<h2 class="anchored">Ranking</h2>
+<p class="sub">
+Every glider-mode combination on one metric, sorted. This is the view for “who used the least
+energy per kilometre” — and for seeing how much of the spread is the platform and how much
+is the mode it was flying.
+</p>
+<div class="controls">
+  <div class="ctrl-row">
+    <span class="ctrl-label">Metric</span><select id="perf-rank-metric" aria-label="Ranking metric"></select>
+  </div>
+</div>
+<div class="wide"><div id="perf-rank"></div></div>
+
+<h2 class="anchored">Mode comparison</h2>
+<p class="sub">
+The same numbers as a grid: one row per glider, one column per mode. Gaps are combinations with no
+data rather than zeroes.
+</p>
+<div class="controls">
+  <div class="ctrl-row">
+    <span class="ctrl-label">Metric</span><select id="perf-heat-metric" aria-label="Heatmap metric"></select>
+  </div>
+</div>
+<div class="wide"><div id="perf-heat"></div></div>
+
+<h2 class="anchored">Data recorded</h2>
+<p class="sub">
+How much raw data each system actually wrote during the rodeo. The deployments were not the same
+length, so the per-day figure is the fairer comparison between PAM systems — and the spread is
+mostly channel count and sample rate, not platform.
+</p>
+<div class="volume-grid">
+  <div class="box">
+    <div class="head"><span class="title">Total recorded</span><span class="unit">GB</span></div>
+    <div class="volume-plot" id="perf-vol-total"></div>
+    <div class="foot" id="perf-vol-foot"></div>
+  </div>
+  <div class="box">
+    <div class="head"><span class="title">Recording rate</span><span class="unit">GB/day</span></div>
+    <div class="volume-plot" id="perf-vol-rate"></div>
+    <div class="foot">Total raw data divided by the length of that glider’s deployment.</div>
+  </div>
+</div>
+
+<h2 class="anchored">Efficiency</h2>
+<p class="sub">
+Two sections above ask what a kilometre cost and how much each system recorded. This divides
+one by the other: how far a glider went, and how much it wrote, for every kilowatt‑hour it
+spent. Up and to the right is more of both for the same energy. Neither axis is <em>the</em>
+answer — a platform can buy data with distance, and the fastest way to look efficient on
+the vertical axis is to record at a high bit rate.
+</p>
+<div class="wide"><div id="perf-eff"></div></div>
+<p class="sub" id="perf-eff-foot"></p>
+
+<h2 class="anchored">The numbers</h2>
+<p class="sub">
+Every value on this page, for the gliders, modes and metrics selected above. Hover is a
+convenience; this table is the source.
+</p>
+<div class="tablescroll"><table id="perf-table"></table></div>
+
+<h2 class="anchored">Platforms</h2>
+<p class="sub">One row per glider: what it is, how long it flew, what it recorded, and how its energy use was measured.</p>
+<div class="tablescroll"><table id="perf-summary"></table></div>
+
+<details class="notes">
+  <summary>Data caveats and column definitions</summary>
+  <dl id="perf-notes"></dl>
+</details>
+
+<p class="stamp" id="perf-stamp"></p>
+
+</div>
+
+<!-- PERF-DATA:BEGIN -->
+<script id="perf-data" type="application/json">
+{"generated":"2026-09-18","source":"glider_performance_summary.xlsx","modes":[{"name":"shakedown","short":"shake"},{"name":"fast","short":"fast"},{"name":"slow","short":"slow"},{"name":"intermediate","short":"inter"},{"name":"drift","short":"drift"},{"name":"mini-slow","short":"m-slow"},{"name":"mini-intermediate","short":"m-inter"},{"name":"mini-fast","short":"m-fast"}],"miniSplit":4.5,"gliders":["sg607","sg274","risso","stenella","capex987","SEA117","belladonna"],"metrics":[{"key":"watts","label":"Mean power draw","unit":"W","kind":"energy","default":true},{"key":"whPerDive","label":"Energy per dive","unit":"W h","kind":"energy","default":true},{"key":"whPerKm","label":"Energy per km travelled","unit":"W h/km","kind":"energy","default":false},{"key":"vertSpeed","label":"Vertical speed","unit":"m/s","kind":"speed","default":true},{"key":"kmPerHour","label":"Speed over ground","unit":"km/h","kind":"speed","default":true},{"key":"kmPerDive","label":"Distance per dive","unit":"km","kind":"distance","default":false},{"key":"diveHours","label":"Dive duration","unit":"h","kind":"time","default":false},{"key":"maxDepth","label":"Dive depth","unit":"m","kind":"depth","default":false},{"key":"ccPerHour","label":"Buoyancy pump volume","unit":"cc/h","kind":"pump","default":true},{"key":"ccPerDive","label":"Pump volume per dive","unit":"cc","kind":"pump","default":false},{"key":"pumpMoves","label":"Pump adjustments","unit":"per hour","kind":"pump","default":false},{"key":"dives","label":"Dives completed in mode","unit":"count","kind":"count","default":false}],"series":{"sg607":{"watts":[2.81,2.77,1.71,1.86,1.97,1.61,1.95,2.47],"whPerDive":[7.1,11.7,9.7,9.7,8.8,9.1,10,11.9],"whPerKm":[2.6,2.2,2.4,2.2,3,3,2.6,2.2],"vertSpeed":[0.113,0.129,0.099,0.105,0.109,0.097,0.102,0.109],"kmPerHour":[0.986,1.264,0.718,0.85,0.657,0.537,0.771,1.114],"kmPerDive":[3.06,5,4.09,4.25,2.96,3.03,3.97,5.35],"diveHours":[2.99,4.42,5.69,5.17,4.57,5.62,5.14,4.8],"maxDepth":[641,999,992,992,842,991,992,997],"ccPerHour":[432,330,151,176,193,156,160,223],"ccPerDive":[1226,1355,901,943,933,839,1005,1262],"pumpMoves":[31,21,9,10,9,10,9,15],"dives":[10,15,12,9,10,2,2,2]},"sg274":{"watts":[2.47,3.03,1.91,2.17,2.24,2.02,2.14,2.69],"whPerDive":[6.3,10.9,10.4,10.7,9.8,10.5,10.2,11.1],"whPerKm":[3.4,3,3.1,2.7,3.1,3.3,2.9,2.6],"vertSpeed":[0.103,0.129,0.099,0.107,0.111,0.097,0.11,0.126],"kmPerHour":[0.75,1.027,0.603,0.854,0.766,0.622,0.778,1.029],"kmPerDive":[1.79,3.8,3.34,3.96,3.43,3.22,3.73,4.26],"diveHours":[3,3.89,5.43,4.97,4.39,5.19,4.78,4.14],"maxDepth":[544,995,991,991,828,991,991,994],"ccPerHour":[453,415,192,242,269,209,211,327],"ccPerDive":[1199,1434,1066,1171,1221,1151,1131,1327],"pumpMoves":[31,30,14,16,20,16,15,24],"dives":[11,17,13,10,11,2,2,3]},"risso":{"watts":[2.45,1.88,1.73,2.26,2.23,2.04,2.38,2.9],"whPerDive":[6.9,7.6,8,6.7,6.9,7.8,6.8,7.2],"whPerKm":[3.2,2.1,2.6,2.4,2.8,3.9,1.8,3.1],"vertSpeed":[0.151,0.139,0.119,0.185,0.173,0.132,0.199,0.192],"kmPerHour":[0.875,0.904,0.674,0.974,0.774,0.767,1.305,0.896],"kmPerDive":[2.62,3.73,3.24,2.94,2.52,1.82,3.69,2.29],"diveHours":[2.79,4,4.63,2.96,3.34,3.85,2.85,2.51],"maxDepth":[804,972,972,973,743,971,973,976],"ccPerHour":[544,272,189,301,372,346,357,508],"ccPerDive":[1005,849,755,936,1169,1007,974,1370],"pumpMoves":[16,9,7,9,13,11,11,15],"dives":[12,15,15,15,15,3,4,5]},"stenella":{"watts":[2.67,2.13,2,2.45,2.33,2.68,2.78,3.26],"whPerDive":[7,8.2,7.7,6.5,8.2,6.5,6.6,7.8],"whPerKm":[2.9,2.5,3,3,3.6,2.1,3.8,5],"vertSpeed":[0.162,0.142,0.133,0.213,0.168,0.208,0.233,0.197],"kmPerHour":[0.8,0.88,0.631,0.851,0.674,0.946,0.872,0.648],"kmPerDive":[2.38,3.16,2.57,2.29,2.39,2.92,1.99,1.55],"diveHours":[3.05,3.94,4.03,2.66,3.55,2.42,2.36,2.4],"maxDepth":[804,504,972,974,785,974,975,979],"ccPerHour":[659,331,189,344,334,435,359,591],"ccPerDive":[1203,1044,726,895,1189,1021,998,1405],"pumpMoves":[25,13,8,15,14,18,16,25],"dives":[13,16,17,18,13,5,5,4]},"capex987":{"watts":[5.13,5.71,4.73,4.92,4.96,4.88,5.15,5.7],"whPerDive":[12.8,17.8,25.1,21.3,19.3,23.8,20.3,17.7],"whPerKm":[6.8,6.4,8.2,9.4,8.1,13.5,13.3,6.8],"vertSpeed":[0.134,0.176,0.1,0.127,0.12,0.115,0.13,0.179],"kmPerHour":[0.672,0.881,0.546,0.522,0.588,0.358,0.383,0.843],"kmPerDive":[2.19,2.58,2.9,2.23,2.08,1.79,1.54,2.57],"diveHours":[2.59,3.37,5.28,4.36,3.95,4.75,4,3.11],"maxDepth":[603,673,951,951,767,951,952,957],"ccPerHour":[621,628,212,245,262,211,183,510],"ccPerDive":[1224,1638,779,873,826,848,946,1571],"pumpMoves":[19,19,7,8,9,6,7,18],"dives":[10,17,17,11,13,3,3,3]},"SEA117":{"watts":[null,null,null,null,null,null,null,null],"whPerDive":[null,null,null,null,null,null,null,null],"whPerKm":[null,null,null,null,null,null,null,null],"vertSpeed":[0.225,0.156,0.099,0.098,0.123,0.09,0.123,0.296],"kmPerHour":[null,null,null,null,null,null,null,null],"kmPerDive":[null,null,null,null,null,null,null,null],"diveHours":[null,null,null,null,null,null,null,null],"maxDepth":[null,null,null,null,null,null,null,null],"ccPerHour":[1022,949,512,486,501,380,435,1164],"ccPerDive":[2245,2163,2278,2260,2196,2418,2299,2284],"pumpMoves":[75,81,73,70,69,68,71,81],"dives":[null,null,null,null,null,null,null,null]},"belladonna":{"watts":[2.18,2.14,1.92,2.24,1.98,2.32,2.25,2.23],"whPerDive":[1.4,3.1,3.1,3,1.9,2.9,2.6,4.9],"whPerKm":[2,2,3.8,2.9,4.4,9.4,3.5,2.7],"vertSpeed":[0.724,0.762,0.59,0.713,0.811,0.847,0.765,0.773],"kmPerHour":[1.086,1.09,0.504,0.78,0.433,0.248,0.649,0.814],"kmPerDive":[0.68,1.82,0.86,0.99,0.54,0.32,0.74,1.8],"diveHours":[0.61,1.48,1.58,1.31,1.05,1.27,1.14,2.2],"maxDepth":[191,200,200,200,152,152,202,202],"ccPerHour":[null,null,null,null,null,null,null,null],"ccPerDive":[null,null,null,null,null,null,null,null],"pumpMoves":[null,null,null,null,null,null,null,null],"dives":[33,31,37,28,34,8,10,6]}},"flags":[{"glider":"belladonna","metric":"vertSpeed","reason":"CTD timestamps arrive in bursts (samples under 1 ms apart), so rates computed between samples are far too high. Shown for completeness only."}],"summaryCols":[{"col":"platform","header":"Platform"},{"col":"owner","header":"Owner"},{"col":"PAM system","header":"PAM system"},{"col":"deployment days","header":"Days"},{"col":"profiles","header":"Profiles"},{"col":"max depth m","header":"Max depth (m)"},{"col":"Raw Data size (GB)","header":"Data (GB)"},{"col":"dives","header":"Dives"},{"col":"W h/dive","header":"W h/dive"},{"col":"Watts","header":"Watts"},{"col":"energy source","header":"Energy measured by"}],"summary":[{"glider":"sg607","platform":"Kongsberg Maritime Seaglider M1","owner":"OSU","PAM system":"WISPR 3.0","deployment days":12.4,"profiles":130,"max depth m":1007,"Raw Data size (GB)":561.6,"dives":63,"W h/dive":9.6,"Watts":2.01,"energy source":"fuel gauge, 24 V + 10 V packs","hydrophone":"HTI-92WB (653007)","battery":"Lithium primary"},{"glider":"sg274","platform":"University of Washington Seaglider SGX","owner":"PIFSC","PAM system":"WISPR 3.0","deployment days":12.3,"profiles":139,"max depth m":995,"Raw Data size (GB)":555.3,"dives":69,"W h/dive":10.2,"Watts":2.24,"energy source":"fuel gauge, 24 V + 10 V packs","hydrophone":"HTI-92WB (635054)","battery":"Lithium primary"},{"glider":"risso","platform":"Teledyne Webb Research Slocum G3S","owner":"SWFSC","PAM system":"DMON2","deployment days":14.2,"profiles":203,"max depth m":978,"Raw Data size (GB)":41.3,"dives":85,"W h/dive":7.2,"Watts":2.17,"energy source":"coulomb counter at 16.1 V","hydrophone":"DMON2 hydrophone (65)","battery":"Lithium rechargable standard , 215 Amp Hours"},{"glider":"stenella","platform":"Teledyne Webb Research Slocum G3S","owner":"SWFSC","PAM system":"WISPR 3.0","deployment days":12.4,"profiles":230,"max depth m":980,"Raw Data size (GB)":534.2,"dives":92,"W h/dive":7.4,"Watts":2.4,"energy source":"coulomb counter at 16.3 V","hydrophone":"HTI-99HF (856196)","battery":"Lithium rechargable standard , 215 Amp Hours"},{"glider":"capex987","platform":"Teledyne Webb Research Slocum G3S","owner":"Teledyne","PAM system":"JASCO Observer","deployment days":14.8,"profiles":235,"max depth m":959,"Raw Data size (GB)":1436.6,"dives":78,"W h/dive":20,"Watts":5.1,"energy source":"coulomb counter at 15.3 V","hydrophone":"M36-V35-100 (H001202); M36-V35-100 (H001203); M36-V35-100 (H001305); M36-V35-EXBH-100 (H001896)","battery":"Lithium rechargable standard , 215 Amp Hours"},{"glider":"SEA117","platform":"Alseamar SeaExplorer","owner":"Alseamar","PAM system":"Auris","deployment days":12.4,"profiles":179,"max depth m":1003,"Raw Data size (GB)":547.9,"dives":null,"W h/dive":null,"Watts":null,"energy source":"voltage only, no charge counter","hydrophone":"ALSEAMAR Auris Acoustic Antenna (666)","battery":"Lithium rechargeable, Unknown"},{"glider":"belladonna","platform":"Hefring Oceanscout","owner":"Cornell","PAM system":"WISPR 6.1","deployment days":14,"profiles":254,"max depth m":203,"Raw Data size (GB)":586.4,"dives":256,"W h/dive":2.6,"Watts":2.17,"energy source":"power log (current, voltage, energy)","hydrophone":"HTI-92WB","battery":"Lithium Primary MnO2, 1.2 kW-hours"}],"volume":[{"glider":"sg607","pam":"WISPR 3.0","platform":"Kongsberg Maritime Seaglider M1","gb":561.6,"days":12.4,"gbPerDay":45.3},{"glider":"sg274","pam":"WISPR 3.0","platform":"University of Washington Seaglider SGX","gb":555.3,"days":12.3,"gbPerDay":45.1},{"glider":"risso","pam":"DMON2","platform":"Teledyne Webb Research Slocum G3S","gb":41.3,"days":14.2,"gbPerDay":2.9},{"glider":"stenella","pam":"WISPR 3.0","platform":"Teledyne Webb Research Slocum G3S","gb":534.2,"days":12.4,"gbPerDay":43.1},{"glider":"capex987","pam":"JASCO Observer","platform":"Teledyne Webb Research Slocum G3S","gb":1436.6,"days":14.8,"gbPerDay":97.1},{"glider":"SEA117","pam":"Auris","platform":"Alseamar SeaExplorer","gb":547.9,"days":12.4,"gbPerDay":44.2},{"glider":"belladonna","pam":"WISPR 6.1","platform":"Hefring Oceanscout","gb":586.4,"days":14,"gbPerDay":41.9}],"notes":[{"item":"Source","note":"Per-glider NetCDF files converted from the Glider Rodeo CSV exports; glider specifications from PAM_Glider_Specs.csv."},{"item":"W h/dive","note":"Amp-hours x pack voltage. Seagliders: nominal 24 V and 10 V packs. Slocums: each glider's own median measured voltage."},{"item":"Watts","note":"Mean power draw over a dive: watt-hours used divided by dive duration in hours."},{"item":"Period measured","note":"Span of the energy record against the span of the whole deployment. risso and capex987 engineering data stop on 10 Feb while their CTDs keep recording."},{"item":"Dives","note":"Seagliders: dives in the GPS file. belladonna: dives in dives_with_status.csv. Slocums: intervals between surfacings, keeping those deeper than 100 m and longer than 30 min."},{"item":"SEA117","note":"Reports battery voltage only, with no charge counter, so energy use cannot be derived."},{"item":"belladonna","note":"No flight/engineering export (no pitch, roll or buoyancy), but since 16 Sep it has a power log: current, voltage, power and cumulative energy every 25 s, plus per-dive battery percentage and free disk space."},{"item":"capex987","note":"Energy use is about 2.4x its sister Slocums; its JASCO OceanObserver records 5 channels from 4 hydrophones (one at 512 kHz) against a single channel on the others."},{"item":"Preliminary","note":"All rodeo data are marked PRELIMINARY and need further QA/QC."},{"item":"Mission modes","note":"Rodeo fieldwork plan (UTC). A dive belongs to the mode its start time falls in; rows are labelled by their own timestamp."},{"item":"belladonna vert speed","note":"Not trustworthy: its CTD timestamps arrive in bursts (samples under 1 ms apart), so rates computed between samples are far too high."},{"item":"km per hour","note":"Straight-line distance over ground between the start and end of a dive, divided by dive duration. It is not speed through water and ignores what the glider did in between."},{"item":"cc pumped per dive","note":"Same measure summed over one dive, then the median across the dives of that mode. Counts travel in both directions: a dive that pumps 400 cc down and 400 cc back up counts as 800 cc."},{"item":"cc pumped per hour","note":"Total volume the buoyancy pump moved per hour, summing |change| between samples (Seaglider VBD, Slocum oil volume, SeaExplorer ballast). Changes under 1 cc are treated as sensor noise. A proxy for pump work; the gliders do not report pump energy."}]}
+</script>
+<!-- PERF-DATA:END -->
+
+<!-- The cartesian bundle, not plotly-basic: basic has no heatmap trace, and the mode
+     comparison silently renders nothing without it. -->
+<script src="https://cdn.plot.ly/plotly-cartesian-2.35.2.min.js" integrity="sha384-gKF7EaMDoWW1zLWkouldmVWF5jqEKrAswAciW73iNzqlomabVVPO60XkJvL5q/Ie" crossorigin="anonymous"></script>
+<script>
+(function () {
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("perf-data").textContent);
+  if (!DATA.gliders) { return; }
+
+  var root = document.getElementById("perf");
+  var SLOTS = ["--s1", "--s2", "--s3", "--s4", "--s5", "--s6", "--s7"];
+  // Hue x shape: seven series is the token ceiling, so identity carries a second
+  // channel. The shape also does the work colour cannot in the scatter, where every
+  // pair of series can end up side by side.
+  var SYMBOLS = ["circle", "square", "diamond", "triangle-up", "x", "star", "hexagon"];
+  // Sequential blue, light->dark for magnitude. On the dark surface it runs the other
+  // way, so "near zero" always recedes toward the page rather than glowing.
+  var HEAT_LIGHT = [[0, "#eaf2fd"], [0.25, "#9ec5f4"], [0.5, "#5598e7"], [0.75, "#256abf"], [1, "#0d366b"]];
+  var HEAT_DARK = [[0, "#16233a"], [0.25, "#1c5cab"], [0.5, "#3987e5"], [0.75, "#86b6ef"], [1, "#cde2fb"]];
+  var MODES = DATA.modes.map(function (m) { return m.name; });
+  var SHORT = DATA.modes.map(function (m) { return m.short; });
+  // Index of the first mini-mode: the mini-repeat block at the end of the plan.
+  var FIRST_MINI = MODES.reduce(function (acc, m, i) {
+    return acc < 0 && m.indexOf("mini") === 0 ? i : acc;
+  }, -1);
+  var METRIC = {};
+  DATA.metrics.forEach(function (m) { METRIC[m.key] = m; });
+
+  // The fixed scatters the endurance-results page shipped, kept as one click each.
+  var PRESETS = [
+    ["Power vs vertical speed", "vertSpeed", "watts"],
+    ["Duration vs depth", "diveHours", "maxDepth"],
+    ["Distance vs energy", "kmPerDive", "whPerDive"],
+    ["Pump vs power", "pumpMoves", "watts"],
+    ["Speed vs energy per km", "kmPerHour", "whPerKm"]
+  ];
+
+  var state = {
+    hidden: {},                                     // glider name -> true
+    hiddenModes: {},                                // mode name -> true
+    shown: DATA.metrics.filter(function (m) { return m["default"]; })
+                       .map(function (m) { return m.key; }),
+    flagged: false,
+    x: "kmPerHour",
+    y: "watts",
+    connect: true,
+    rank: "whPerKm",
+    heat: "watts"
+  };
+
+  function css(name) { return getComputedStyle(root).getPropertyValue(name).trim(); }
+  function isDark() {
+    return document.body.classList.contains("quarto-dark") ||
+           document.documentElement.getAttribute("data-bs-theme") === "dark";
+  }
+  function colorOf(g) { return css(SLOTS[DATA.gliders.indexOf(g) % SLOTS.length]); }
+  function symbolOf(g) { return SYMBOLS[DATA.gliders.indexOf(g) % SYMBOLS.length]; }
+  function visible() {
+    return DATA.gliders.filter(function (g) { return !state.hidden[g]; });
+  }
+  // Mode indices that survive the mode filter, in flight order.
+  function modeIdx() {
+    return MODES.map(function (_, i) { return i; })
+                .filter(function (i) { return !state.hiddenModes[MODES[i]]; });
+  }
+  function flagFor(g, key) {
+    for (var i = 0; i < DATA.flags.length; i++) {
+      if (DATA.flags[i].glider === g && DATA.flags[i].metric === key) { return DATA.flags[i]; }
+    }
+    return null;
+  }
+  function values(g, key) {
+    return (DATA.series[g] && DATA.series[g][key]) || MODES.map(function () { return null; });
+  }
+  function hasData(g, key) {
+    var v = values(g, key);
+    return modeIdx().some(function (i) { return v[i] !== null; });
+  }
+  function usable(g, key) {
+    // A flagged value is only in play when the reader has asked to see it.
+    return hasData(g, key) && (state.flagged || !flagFor(g, key));
+  }
+
+  /* ---------------- chrome shared by every plot ---------------- */
+
+  var CONFIG = {
+    displaylogo: false, responsive: true,
+    modeBarButtonsToRemove: ["lasso2d", "select2d", "autoScale2d", "toggleSpikelines"],
+    toImageButtonOptions: { format: "png", scale: 2 }
+  };
+  var PANEL_CONFIG = { displaylogo: false, responsive: true, displayModeBar: false };
+
+  function baseLayout() {
+    var ink2 = css("--ink-2"), ink3 = css("--ink-3"), line = css("--line");
+    var shorts = modeIdx().map(function (i) { return SHORT[i]; });
+    return {
+      margin: { l: 52, r: 14, t: 6, b: 62 },
+      paper_bgcolor: "rgba(0,0,0,0)",
+      plot_bgcolor: "rgba(0,0,0,0)",
+      font: { family: css("--sans"), size: 12, color: ink2 },
+      showlegend: false,
+      hoverlabel: {
+        bgcolor: css("--surface"), bordercolor: css("--line-strong"),
+        font: { family: css("--sans"), size: 12.5, color: css("--ink") }
+      },
+      xaxis: {
+        type: "category", categoryorder: "array", categoryarray: shorts,
+        tickmode: "array", tickvals: shorts, ticktext: shorts,
+        showgrid: false, zeroline: false, ticks: "outside", ticklen: 4,
+        tickcolor: line, linecolor: line, tickangle: -45,
+        tickfont: { size: 10.5, color: ink3 }
+      },
+      yaxis: {
+        gridcolor: line, griddash: "solid", zeroline: false, showline: false,
+        ticks: "", rangemode: "tozero", tickfont: { size: 11, color: ink3 }
+      }
+    };
+  }
+
+  // The hairline between the main plan and the mini-repeat, placed by how many of the
+  // main-plan modes are actually on screen.
+  function miniSplit() {
+    var idx = modeIdx();
+    var main = idx.filter(function (i) { return i < FIRST_MINI; }).length;
+    if (!main || main === idx.length) { return []; }
+    return [{
+      type: "line", xref: "x", yref: "paper",
+      x0: main - 0.5, x1: main - 0.5, y0: 0, y1: 1,
+      line: { color: css("--line-strong"), width: 1 }, layer: "below"
+    }];
+  }
+
+  function markerFor(g, flagged) {
+    var c = colorOf(g);
+    return {
+      size: 8, symbol: symbolOf(g) + (flagged ? "-open" : ""),
+      color: flagged ? "rgba(0,0,0,0)" : c,
+      line: { width: 2, color: flagged ? c : css("--surface") }
+    };
+  }
+
+  function emptyInto(id, message) {
+    var el = document.getElementById(id);
+    Plotly.purge(el);
+    el.textContent = "";
+    var e = document.createElement("div");
+    e.className = "empty";
+    e.textContent = message;
+    el.appendChild(e);
+  }
+
+  /* ---------------- the metric panels ---------------- */
+
+  function panelTraces(key) {
+    var unit = METRIC[key].unit, idx = modeIdx();
+    var traces = [];
+    visible().forEach(function (g) {
+      var flag = flagFor(g, key);
+      if ((flag && !state.flagged) || !hasData(g, key)) { return; }
+      var v = values(g, key);
+      traces.push({
+        type: "scatter", mode: "lines+markers", name: g,
+        x: idx.map(function (i) { return SHORT[i]; }),
+        y: idx.map(function (i) { return v[i]; }),
+        connectgaps: false,
+        line: { color: colorOf(g), width: 2, dash: flag ? "dot" : "solid", shape: "linear" },
+        marker: markerFor(g, !!flag),
+        hovertemplate: "%{y} " + unit + "<extra>%{fullData.name}</extra>"
+      });
+    });
+    return traces;
+  }
+
+  function panelNote(key) {
+    var notes = DATA.flags.filter(function (f) { return f.metric === key; }).map(function (f) {
+      return f.glider + (state.flagged ? " (dotted): " : " is not plotted: ") + f.reason;
+    });
+    var missing = visible().filter(function (g) {
+      return !hasData(g, key) && !flagFor(g, key);
+    });
+    if (missing.length) { notes.push("No data: " + missing.join(", ") + "."); }
+    return notes.join(" ");
+  }
+
+  function drawGrid() {
+    var grid = document.getElementById("perf-grid");
+    if (!state.shown.length || !modeIdx().length) {
+      Array.prototype.slice.call(grid.querySelectorAll(".plot")).forEach(function (p) { Plotly.purge(p); });
+      grid.textContent = "";
+      var e = document.createElement("div");
+      e.className = "empty";
+      e.textContent = state.shown.length
+        ? "No modes selected — pick at least one above."
+        : "No metrics selected — tick one above to draw a panel.";
+      grid.appendChild(e);
+      return;
+    }
+    if (grid.querySelector(".empty")) { grid.textContent = ""; }
+
+    // Keep the panels in the metric order the picker shows, adding and removing
+    // rather than rebuilding, so Plotly can react instead of re-creating plots.
+    var wanted = DATA.metrics.filter(function (m) { return state.shown.indexOf(m.key) >= 0; });
+    Array.prototype.slice.call(grid.children).forEach(function (el) {
+      if (state.shown.indexOf(el.dataset.metric) < 0) {
+        Plotly.purge(el.querySelector(".plot"));
+        el.remove();
+      }
+    });
+
+    // Two passes on purpose. Every panel has to be in the grid before any plot is
+    // drawn: draw as you go and the first panel is measured at full width, then the
+    // grid reflows to two columns under it and its axis labels are left stale.
+    wanted.forEach(function (m, i) {
+      var el = grid.querySelector('[data-metric="' + m.key + '"]');
+      if (!el) {
+        el = document.createElement("div");
+        el.className = "panel";
+        el.dataset.metric = m.key;
+        var head = document.createElement("div");
+        head.className = "head";
+        var title = document.createElement("span");
+        title.className = "title";
+        title.textContent = m.label;
+        var unit = document.createElement("span");
+        unit.className = "unit";
+        unit.textContent = m.unit;
+        head.appendChild(title);
+        head.appendChild(unit);
+        var plot = document.createElement("div");
+        plot.className = "plot";
+        var foot = document.createElement("div");
+        foot.className = "foot";
+        el.appendChild(head);
+        el.appendChild(plot);
+        el.appendChild(foot);
+      }
+      if (grid.children[i] !== el) { grid.insertBefore(el, grid.children[i] || null); }
+      el.querySelector(".foot").textContent = panelNote(m.key);
+    });
+
+    wanted.forEach(function (m) {
+      var el = grid.querySelector('[data-metric="' + m.key + '"]');
+      var layout = baseLayout();
+      layout.shapes = miniSplit();
+      layout.hovermode = "x unified";
+      Plotly.react(el.querySelector(".plot"), panelTraces(m.key), layout, PANEL_CONFIG);
+    });
+  }
+
+  /* ---------------- tradeoff scatter ---------------- */
+
+  function drawScatter() {
+    var mx = METRIC[state.x], my = METRIC[state.y], idx = modeIdx();
+    var traces = [];
+    visible().forEach(function (g) {
+      var xf = flagFor(g, state.x), yf = flagFor(g, state.y);
+      if ((xf || yf) && !state.flagged) { return; }
+      var xs = values(g, state.x), ys = values(g, state.y);
+      var keep = idx.filter(function (i) { return xs[i] !== null && ys[i] !== null; });
+      if (!keep.length) { return; }
+      traces.push({
+        type: "scatter",
+        mode: state.connect ? "lines+markers" : "markers",
+        name: g,
+        x: keep.map(function (i) { return xs[i]; }),
+        y: keep.map(function (i) { return ys[i]; }),
+        text: keep.map(function (i) { return MODES[i]; }),
+        line: { color: colorOf(g), width: 1.5, dash: (xf || yf) ? "dot" : "solid" },
+        opacity: state.connect ? 0.9 : 1,
+        marker: markerFor(g, !!(xf || yf)),
+        hovertemplate: "<b>%{text}</b><br>" + mx.label + ": %{x} " + mx.unit +
+                       "<br>" + my.label + ": %{y} " + my.unit + "<extra>%{fullData.name}</extra>"
+      });
+    });
+
+    if (!traces.length) {
+      emptyInto("perf-scatter", "No glider has both of those metrics for the selected modes.");
+      return;
+    }
+    var layout = baseLayout();
+    layout.margin = { l: 64, r: 16, t: 34, b: 54 };
+    layout.hovermode = "closest";
+    layout.hoverdistance = 24;
+    layout.showlegend = true;
+    layout.legend = {
+      orientation: "h", y: 1.06, x: 0, yanchor: "bottom",
+      itemclick: false, itemdoubleclick: false,
+      font: { size: 12, color: css("--ink-2") },
+      bgcolor: "rgba(0,0,0,0)"
+    };
+    layout.xaxis = {
+      gridcolor: css("--line"), zeroline: false, showline: false, ticks: "",
+      rangemode: "tozero", tickfont: { size: 11, color: css("--ink-3") },
+      title: { text: mx.label + "  (" + mx.unit + ")", font: { size: 12.5, color: css("--ink-2") } }
+    };
+    layout.yaxis.title = {
+      text: my.label + "  (" + my.unit + ")", font: { size: 12.5, color: css("--ink-2") }
+    };
+    Plotly.react(document.getElementById("perf-scatter"), traces, layout, CONFIG);
+  }
+
+  /* ---------------- ranking bars ---------------- */
+
+  function drawRank() {
+    var m = METRIC[state.rank], idx = modeIdx();
+    var rows = [];
+    visible().forEach(function (g) {
+      if (!usable(g, state.rank)) { return; }
+      var v = values(g, state.rank);
+      idx.forEach(function (i) {
+        if (v[i] !== null) { rows.push({ g: g, mode: MODES[i], v: v[i] }); }
+      });
+    });
+    if (!rows.length) {
+      emptyInto("perf-rank", "No " + m.label.toLowerCase() + " data for the current selection.");
+      return;
+    }
+    rows.sort(function (a, b) { return a.v - b.v; });
+
+    var layout = baseLayout();
+    layout.height = Math.max(300, rows.length * 22 + 70);
+    layout.margin = { l: 178, r: 64, t: 6, b: 46 };
+    layout.hovermode = "closest";
+    layout.xaxis = {
+      gridcolor: css("--line"), zeroline: false, showline: false, ticks: "",
+      rangemode: "tozero", tickfont: { size: 11, color: css("--ink-3") },
+      title: { text: m.label + "  (" + m.unit + ")", font: { size: 12.5, color: css("--ink-2") } }
+    };
+    layout.yaxis = {
+      type: "category", automargin: true, showgrid: false, zeroline: false,
+      ticks: "", tickfont: { size: 11, color: css("--ink-2") }
+    };
+    Plotly.react(document.getElementById("perf-rank"), [{
+      type: "bar", orientation: "h",
+      x: rows.map(function (r) { return r.v; }),
+      y: rows.map(function (r) { return r.g + " · " + r.mode; }),
+      text: rows.map(function (r) { return String(r.v); }),
+      textposition: "outside",
+      textfont: { size: 11, color: css("--ink-2") },
+      cliponaxis: false,
+      marker: {
+        color: rows.map(function (r) { return colorOf(r.g); }),
+        line: { width: 2, color: css("--surface") }
+      },
+      hovertemplate: "%{x} " + m.unit + "<extra>%{y}</extra>"
+    }], layout, PANEL_CONFIG);
+  }
+
+  /* ---------------- mode heatmap ---------------- */
+
+  function drawHeat() {
+    var m = METRIC[state.heat], idx = modeIdx();
+    var gl = visible().filter(function (g) { return usable(g, m.key); });
+    if (!gl.length || !idx.length) {
+      emptyInto("perf-heat", "No " + m.label.toLowerCase() + " data for the current selection.");
+      return;
+    }
+    // Plotly stacks the first row at the bottom; reverse so the reading order matches
+    // the chip row and every other view on this page.
+    var rowsG = gl.slice().reverse();
+    var z = rowsG.map(function (g) {
+      var v = values(g, m.key);
+      return idx.map(function (i) { return v[i]; });
+    });
+
+    var layout = baseLayout();
+    layout.height = Math.max(260, rowsG.length * 44 + 110);
+    layout.margin = { l: 96, r: 14, t: 6, b: 62 };
+    layout.yaxis = {
+      type: "category", automargin: true, showgrid: false, zeroline: false,
+      ticks: "", tickfont: { size: 11.5, color: css("--ink-2") }
+    };
+    Plotly.react(document.getElementById("perf-heat"), [{
+      type: "heatmap",
+      z: z,
+      x: idx.map(function (i) { return SHORT[i]; }),
+      y: rowsG,
+      colorscale: isDark() ? HEAT_DARK : HEAT_LIGHT,
+      hoverongaps: false,
+      xgap: 2, ygap: 2,
+      colorbar: {
+        title: { text: m.unit, font: { size: 11, color: css("--ink-3") }, side: "right" },
+        thickness: 12, outlinewidth: 0, tickfont: { size: 10.5, color: css("--ink-3") }
+      },
+      hovertemplate: "%{z} " + m.unit + "<extra>%{y} · %{x}</extra>"
+    }], layout, PANEL_CONFIG);
+  }
+
+  /* ---------------- data recorded ---------------- */
+
+  function volumeBars(id, field, unit) {
+    var rows = DATA.volume.filter(function (r) {
+      return !state.hidden[r.glider] && r[field] !== null;
+    }).sort(function (a, b) { return a[field] - b[field]; });
+    if (!rows.length) {
+      emptyInto(id, "No recorded-data figures for the selected gliders.");
+      return;
+    }
+    var layout = baseLayout();
+    layout.height = Math.max(240, rows.length * 34 + 70);
+    layout.margin = { l: 92, r: 76, t: 6, b: 44 };
+    layout.hovermode = "closest";
+    layout.xaxis = {
+      gridcolor: css("--line"), zeroline: false, showline: false, ticks: "",
+      rangemode: "tozero", tickfont: { size: 11, color: css("--ink-3") },
+      title: { text: unit, font: { size: 12, color: css("--ink-2") } }
+    };
+    layout.yaxis = {
+      type: "category", automargin: true, showgrid: false, zeroline: false,
+      ticks: "", tickfont: { size: 11.5, color: css("--ink-2") }
+    };
+    Plotly.react(document.getElementById(id), [{
+      type: "bar", orientation: "h",
+      x: rows.map(function (r) { return r[field]; }),
+      y: rows.map(function (r) { return r.glider; }),
+      text: rows.map(function (r) { return String(r[field]); }),
+      textposition: "outside",
+      textfont: { size: 11, color: css("--ink-2") },
+      cliponaxis: false,
+      customdata: rows.map(function (r) { return r.pam; }),
+      marker: {
+        color: rows.map(function (r) { return colorOf(r.glider); }),
+        line: { width: 2, color: css("--surface") }
+      },
+      hovertemplate: "%{x} " + unit + "<br>%{customdata}<extra>%{y}</extra>"
+    }], layout, PANEL_CONFIG);
+  }
+
+
+  /* ---------------- efficiency ---------------- */
+  /* Distance and recorded volume per kilowatt-hour. Energy is mean draw over the whole
+     deployment; distance is summed from the measured per-mode km/dive rather than from a
+     mean, which agreed with the energy-derived figure to within 8% on every glider. */
+  function efficiencyRows() {
+    var vol = {}, summ = {};
+    (DATA.volume || []).forEach(function (v) { vol[v.glider] = v; });
+    (DATA.summary || []).forEach(function (s) { summ[s.glider] = s; });
+    return DATA.gliders.map(function (g) {
+      var s = summ[g] || {}, v = vol[g] || {}, ser = DATA.series[g] || {};
+      var W = s["Watts"], days = v.days, gb = v.gb;
+      var km = 0, haveKm = false;
+      (ser.kmPerDive || []).forEach(function (d, i) {
+        var n = (ser.dives || [])[i];
+        if (d != null && n != null) { km += d * n; haveKm = true; }
+      });
+      var kwh = (W != null && days != null) ? (W * days * 24) / 1000 : null;
+      return {
+        g: g, watts: W, days: days, gb: gb, kwh: kwh, km: haveKm ? km : null,
+        kmPerKwh: (kwh && haveKm) ? km / kwh : null,
+        gbPerKwh: (kwh && gb != null) ? gb / kwh : null,
+        pam: v.pam || s["PAM system"] || ""
+      };
+    });
+  }
+
+  function drawEfficiency() {
+    var rows = efficiencyRows();
+    var plotted = rows.filter(function (r) { return r.kmPerKwh != null && r.gbPerKwh != null; });
+    var missing = rows.filter(function (r) { return r.kmPerKwh == null || r.gbPerKwh == null; });
+
+    var el = document.getElementById("perf-eff");
+    if (!plotted.length) { emptyInto("perf-eff", "No glider has both energy and volume data."); return; }
+
+    var traces = plotted.map(function (r) {
+      return {
+        type: "scatter", mode: "markers+text", name: r.g,
+        x: [r.kmPerKwh], y: [r.gbPerKwh], text: [r.g], textposition: "top center",
+        textfont: { size: 11.5, color: css("--ink-2") },
+        marker: { size: 13, symbol: symbolOf(r.g), color: colorOf(r.g),
+                  line: { width: 1, color: css("--surface") } },
+        customdata: [[r.km, r.gb, r.kwh, r.watts, r.days, r.pam]],
+        hovertemplate:
+          "<b>%{text}</b><br>" +
+          "%{x:,.0f} km per kWh<br>%{y:,.0f} GB per kWh<br>" +
+          "%{customdata[0]:,.0f} km \u00b7 %{customdata[1]:,.0f} GB<br>" +
+          "%{customdata[2]:,.2f} kWh (%{customdata[3]:,.2f} W over %{customdata[4]} d)<br>" +
+          "%{customdata[5]}<extra></extra>"
+      };
+    });
+
+    var layout = baseLayout();
+    layout.margin = { l: 68, r: 22, t: 26, b: 56 };
+    layout.hovermode = "closest";
+    layout.showlegend = false;
+    layout.xaxis = {
+      gridcolor: css("--line"), zeroline: false, showline: false, ticks: "",
+      rangemode: "tozero", tickfont: { size: 11, color: css("--ink-3") },
+      title: { text: "Distance per energy  (km/kWh)", font: { size: 12.5, color: css("--ink-2") } }
+    };
+    layout.yaxis = {
+      gridcolor: css("--line"), zeroline: false, showline: false, ticks: "",
+      rangemode: "tozero", tickfont: { size: 11, color: css("--ink-3") },
+      title: { text: "Recorded data per energy  (GB/kWh)", font: { size: 12.5, color: css("--ink-2") } }
+    };
+    Plotly.react(el, traces, layout, CONFIG);
+
+    /* Say plainly what the plot cannot: who is missing and why, and that the vertical
+       axis compares recorders with very different sample rates. */
+    var parts = [];
+    var best = plotted.slice().sort(function (a, b) { return b.kmPerKwh - a.kmPerKwh; })[0];
+    parts.push("<b>" + best.g + "</b> travelled furthest per kilowatt-hour (" +
+               Math.round(best.kmPerKwh).toLocaleString() + " km/kWh).");
+    var heavy = plotted.slice().sort(function (a, b) { return b.kwh - a.kwh; })[0];
+    if (heavy.g !== best.g) {
+      parts.push("<b>" + heavy.g + "</b> spent the most energy (" + heavy.kwh.toFixed(2) +
+                 " kWh) and sits lowest on distance, but its data per kilowatt-hour is mid-field: " +
+                 "the payload bought volume rather than wasting it.");
+    }
+    /* Name the low outlier from the data rather than leaving a reader to wonder: a
+       recorder that writes far less is usually doing a different job, not doing it badly. */
+    var lean = plotted.slice().sort(function (a, b) { return a.gbPerKwh - b.gbPerKwh; })[0];
+    var median = plotted.map(function (r) { return r.gbPerKwh; }).sort(function (a, b) { return a - b; })[Math.floor(plotted.length / 2)];
+    if (lean.gbPerKwh < median / 3) {
+      var others = plotted.filter(function (r) { return r.g !== lean.g; })
+        .map(function (r) { return r.gb / r.days; }).sort(function (a, b) { return a - b; });
+      parts.push("<b>" + lean.g + "</b> sits far lower because its " + (lean.pam || "recorder") +
+                 " wrote only " + (lean.gb / lean.days).toFixed(1) + " GB/day, against " +
+                 others[0].toFixed(0) + "\u2013" + others[others.length - 1].toFixed(0) +
+                 " GB/day for the rest \u2014 a narrower-band system, not a less efficient glider.");
+    }
+    parts.push("Recorded volume is raw PAM audio, so the vertical axis rewards a high sample rate " +
+               "and penalises a detector that writes little \u2014 it measures bytes, not science.");
+    if (missing.length) {
+      parts.push("Not plotted: " + missing.map(function (r) {
+        return "<b>" + r.g + "</b> (" + (r.kwh == null ? "no energy record" : "no distance") + ")";
+      }).join(", ") + ".");
+    }
+    document.getElementById("perf-eff-foot").innerHTML = parts.join(" ");
+  }
+
+  function drawVolume() {
+    volumeBars("perf-vol-total", "gb", "GB");
+    volumeBars("perf-vol-rate", "gbPerDay", "GB/day");
+    var shown = DATA.volume.filter(function (r) { return !state.hidden[r.glider] && r.gb !== null; });
+    var total = shown.reduce(function (a, r) { return a + r.gb; }, 0);
+    document.getElementById("perf-vol-foot").textContent = shown.length
+      ? shown.length + " gliders, " + (total / 1000).toFixed(1) + " TB in total."
+      : "";
+  }
+
+  /* ---------------- tables ---------------- */
+
+  function cell(row, text, cls) {
+    var td = document.createElement("td");
+    if (cls) { td.className = cls; }
+    td.textContent = text;
+    row.appendChild(td);
+    return td;
+  }
+
+  function drawTable() {
+    var table = document.getElementById("perf-table");
+    var cols = DATA.metrics.filter(function (m) { return state.shown.indexOf(m.key) >= 0; });
+    var idx = modeIdx();
+    table.textContent = "";
+
+    var thead = document.createElement("thead");
+    var hr = document.createElement("tr");
+    ["Glider", "Mode"].concat(cols.map(function (m) { return m.label + " (" + m.unit + ")"; }))
+      .forEach(function (h) {
+        var th = document.createElement("th");
+        th.textContent = h;
+        hr.appendChild(th);
+      });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = document.createElement("tbody");
+    visible().forEach(function (g) {
+      idx.forEach(function (mi) {
+        var tr = document.createElement("tr");
+        var first = cell(tr, "");
+        var key = document.createElement("span");
+        key.className = "keyline";
+        key.style.background = colorOf(g);
+        first.appendChild(key);
+        first.appendChild(document.createTextNode(g));
+        cell(tr, MODES[mi]);
+        cols.forEach(function (m) {
+          var v = values(g, m.key)[mi];
+          var td = cell(tr, v === null ? "—" : String(v), v === null ? "num miss" : "num");
+          if (flagFor(g, m.key)) {
+            var mark = document.createElement("span");
+            mark.className = "flagmark";
+            mark.textContent = " †";
+            mark.title = flagFor(g, m.key).reason;
+            td.appendChild(mark);
+          }
+        });
+        tbody.appendChild(tr);
+      });
+    });
+    table.appendChild(tbody);
+  }
+
+  function drawSummary() {
+    var table = document.getElementById("perf-summary");
+    table.textContent = "";
+    var wrapCols = { "energy source": true, "hydrophone": true };
+    var thead = document.createElement("thead");
+    var hr = document.createElement("tr");
+    ["Glider"].concat(DATA.summaryCols.map(function (c) { return c.header; }))
+      .forEach(function (h, i) {
+        var th = document.createElement("th");
+        th.textContent = h;
+        if (i > 0 && wrapCols[DATA.summaryCols[i - 1].col]) { th.className = "wrap"; }
+        hr.appendChild(th);
+      });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = document.createElement("tbody");
+    DATA.summary.forEach(function (row) {
+      var tr = document.createElement("tr");
+      var first = cell(tr, "");
+      var key = document.createElement("span");
+      key.className = "keyline";
+      key.style.background = colorOf(row.glider);
+      first.appendChild(key);
+      first.appendChild(document.createTextNode(row.glider));
+      DATA.summaryCols.forEach(function (c) {
+        var v = row[c.col];
+        var numeric = typeof v === "number";
+        cell(tr, v === null || v === undefined ? "—" : String(v),
+             numeric ? "num" : (wrapCols[c.col] ? "wrap" : ""));
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+  }
+
+  /* ---------------- controls ---------------- */
+
+  function swatch(g) {
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "swatch");
+    svg.setAttribute("width", "16");
+    svg.setAttribute("height", "16");
+    svg.setAttribute("viewBox", "0 0 16 16");
+    svg.setAttribute("aria-hidden", "true");
+    var i = DATA.gliders.indexOf(g);
+    var line = document.createElementNS(ns, "line");
+    line.setAttribute("x1", "1"); line.setAttribute("x2", "15");
+    line.setAttribute("y1", "8"); line.setAttribute("y2", "8");
+    line.setAttribute("stroke", "currentColor");
+    line.setAttribute("stroke-width", "2");
+    line.setAttribute("stroke-linecap", "round");
+    // A miniature of the mark itself, so the chip reads as the series it stands for.
+    var shapes = [
+      '<circle cx="8" cy="8" r="4"/>',
+      '<rect x="4.5" y="4.5" width="7" height="7"/>',
+      '<path d="M8 3.5 12.5 8 8 12.5 3.5 8Z"/>',
+      '<path d="M8 3.8 12.6 12H3.4Z"/>',
+      '<path d="M4.6 4.6 11.4 11.4M11.4 4.6 4.6 11.4" stroke="currentColor" stroke-width="2.4" fill="none"/>',
+      '<path d="M8 3 9.5 6.7 13.4 6.9 10.4 9.4 11.4 13.1 8 11 4.6 13.1 5.6 9.4 2.6 6.9 6.5 6.7Z"/>',
+      '<path d="M8 3.4 12 5.7v4.6L8 12.6 4 10.3V5.7Z"/>'
+    ];
+    var g2 = document.createElementNS(ns, "g");
+    g2.innerHTML = shapes[i % shapes.length];
+    svg.appendChild(line);
+    svg.appendChild(g2);
+    svg.style.color = "var(" + SLOTS[i % SLOTS.length] + ")";
+    return svg;
+  }
+
+  function buildGliderChips() {
+    var row = document.getElementById("perf-gliders");
+    DATA.gliders.forEach(function (g) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.setAttribute("aria-pressed", "true");
+      b.appendChild(swatch(g));
+      var n = document.createElement("span");
+      n.className = "name";
+      n.textContent = g;
+      b.appendChild(n);
+      b.addEventListener("click", function () {
+        state.hidden[g] = !state.hidden[g];
+        b.setAttribute("aria-pressed", state.hidden[g] ? "false" : "true");
+        draw();
+      });
+      row.appendChild(b);
+    });
+
+    var all = document.createElement("button");
+    all.type = "button";
+    all.className = "plain";
+    all.textContent = "All";
+    all.addEventListener("click", function () {
+      state.hidden = {};
+      row.querySelectorAll(".chip").forEach(function (c) { c.setAttribute("aria-pressed", "true"); });
+      draw();
+    });
+    row.appendChild(all);
+
+    var only = document.createElement("label");
+    only.className = "pick";
+    var box = document.createElement("input");
+    box.type = "checkbox";
+    box.addEventListener("change", function () { state.flagged = box.checked; draw(); });
+    only.appendChild(box);
+    only.appendChild(document.createTextNode("Show flagged values"));
+    only.title = DATA.flags.map(function (f) {
+      return f.glider + " " + (METRIC[f.metric] ? METRIC[f.metric].label : f.metric) + ": " + f.reason;
+    }).join("\n");
+    row.appendChild(only);
+  }
+
+  function buildModeChips() {
+    var row = document.getElementById("perf-modes");
+    var chips = [];
+    DATA.modes.forEach(function (m) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip mode";
+      b.dataset.mode = m.name;
+      b.setAttribute("aria-pressed", "true");
+      b.textContent = m.name;
+      b.addEventListener("click", function () {
+        state.hiddenModes[m.name] = !state.hiddenModes[m.name];
+        b.setAttribute("aria-pressed", state.hiddenModes[m.name] ? "false" : "true");
+        draw();
+      });
+      chips.push(b);
+      row.appendChild(b);
+    });
+
+    function pick(test) {
+      DATA.modes.forEach(function (m) { state.hiddenModes[m.name] = !test(m.name); });
+      chips.forEach(function (c) {
+        c.setAttribute("aria-pressed", state.hiddenModes[c.dataset.mode] ? "false" : "true");
+      });
+      draw();
+    }
+    var isMini = function (name) { return name.indexOf("mini") === 0; };
+    [["All", function () { return true; }],
+     ["Main plan", function (n) { return !isMini(n); }],
+     ["Mini repeat", isMini]].forEach(function (pair) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "plain";
+      b.textContent = pair[0];
+      b.addEventListener("click", function () { pick(pair[1]); });
+      row.appendChild(b);
+    });
+  }
+
+  function buildMetricPicks() {
+    var row = document.getElementById("perf-metrics");
+    DATA.metrics.forEach(function (m) {
+      var l = document.createElement("label");
+      l.className = "pick";
+      var box = document.createElement("input");
+      box.type = "checkbox";
+      box.checked = state.shown.indexOf(m.key) >= 0;
+      box.addEventListener("change", function () {
+        state.shown = DATA.metrics.filter(function (x) {
+          return x.key === m.key ? box.checked : state.shown.indexOf(x.key) >= 0;
+        }).map(function (x) { return x.key; });
+        draw();
+      });
+      l.appendChild(box);
+      l.appendChild(document.createTextNode(m.label));
+      var u = document.createElement("span");
+      u.className = "u";
+      u.textContent = m.unit;
+      l.appendChild(u);
+      row.appendChild(l);
+    });
+  }
+
+  function fillMetricSelect(sel, chosen) {
+    DATA.metrics.forEach(function (m) {
+      var o = document.createElement("option");
+      o.value = m.key;
+      o.textContent = m.label + " (" + m.unit + ")";
+      o.selected = chosen === m.key;
+      sel.appendChild(o);
+    });
+  }
+
+  function buildAxisPickers() {
+    var xs = document.getElementById("perf-x"), ys = document.getElementById("perf-y");
+    fillMetricSelect(xs, state.x);
+    fillMetricSelect(ys, state.y);
+    xs.addEventListener("change", function () { state.x = xs.value; drawScatter(); });
+    ys.addEventListener("change", function () { state.y = ys.value; drawScatter(); });
+    document.getElementById("perf-connect").addEventListener("change", function () {
+      state.connect = this.checked;
+      drawScatter();
+    });
+
+    var presets = document.getElementById("perf-presets");
+    PRESETS.forEach(function (p) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "preset";
+      b.textContent = p[0];
+      b.addEventListener("click", function () {
+        state.x = p[1];
+        state.y = p[2];
+        xs.value = p[1];
+        ys.value = p[2];
+        drawScatter();
+      });
+      presets.appendChild(b);
+    });
+
+    var rank = document.getElementById("perf-rank-metric");
+    fillMetricSelect(rank, state.rank);
+    rank.addEventListener("change", function () { state.rank = rank.value; drawRank(); });
+
+    var heat = document.getElementById("perf-heat-metric");
+    fillMetricSelect(heat, state.heat);
+    heat.addEventListener("change", function () { state.heat = heat.value; drawHeat(); });
+  }
+
+  function buildNotes() {
+    var dl = document.getElementById("perf-notes");
+    DATA.notes.forEach(function (n) {
+      var dt = document.createElement("dt");
+      dt.textContent = n.item;
+      var dd = document.createElement("dd");
+      dd.textContent = n.note;
+      dl.appendChild(dt);
+      dl.appendChild(dd);
+    });
+    var stamp = document.getElementById("perf-stamp");
+    stamp.textContent = "Built from " + DATA.source + " on " + DATA.generated +
+      ". All rodeo data are preliminary. ";
+    var a = document.createElement("a");
+    a.href = "data/glider_performance_summary.csv";
+    a.textContent = "Download the mission-mode table (CSV)";
+    stamp.appendChild(a);
+  }
+
+  function resizeAll() {
+    root.querySelectorAll(".js-plotly-plot").forEach(function (d) { Plotly.Plots.resize(d); });
+  }
+
+  function draw() {
+    drawGrid();
+    drawScatter();
+    drawRank();
+    drawHeat();
+    drawVolume();
+    drawEfficiency();
+    drawTable();
+    drawSummary();
+    resizeAll();
+  }
+
+  window.addEventListener("load", resizeAll);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(resizeAll); }
+
+  buildGliderChips();
+  buildModeChips();
+  buildMetricPicks();
+  buildAxisPickers();
+  buildNotes();
+  draw();
+
+  // Quarto drives its own light/dark switch, so the plots have to be told. Watching the
+  // class it flips is more reliable than hooking its toggle button.
+  var was = isDark();
+  var onThemeChange = new MutationObserver(function () {
+    if (isDark() !== was) { was = isDark(); draw(); }
+  });
+  onThemeChange.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  onThemeChange.observe(document.documentElement, {
+    attributes: true, attributeFilter: ["class", "data-bs-theme"]
+  });
+}());
+</script>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/e-abdi\.github\.io\/glider-performance-tool\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation column-page-right">
+  <div class="nav-page nav-page-previous">
+      <a href="../content/slocum-endurance.html" class="pagination-link" aria-label="Endurance calculation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Endurance calculation</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© CC-1.0</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/content/performance.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/content/performance.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

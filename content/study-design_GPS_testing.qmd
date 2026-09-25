@@ -1,0 +1,1511 @@
+---
+title: "Study Design Tool"
+page-layout: full
+toc: false
+format:
+  html:
+    include-in-header:
+      text: |
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3qFnAtFP7Htu6jo9tMZrA2ykXH0g=" crossorigin="">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+        <!-- gl3d-only Plotly bundle (surface + scatter3d): 1.7 MB rather than 4.8 MB. -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.3/plotly-gl3d.min.js"></script>
+---
+
+```{=html}
+<style>
+  :root {
+    --page: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-2: #F1F6F7;
+    --line: #DAE3E5;
+    --line-strong: #BCCBCE;
+    --ink: #1F2C31;
+    --ink-2: #536268;
+    --ink-3: #78888E;
+    --accent: #2780E3;
+    --accent-ink: #1B62B0;
+    --accent-soft: #E3EEFB;
+    --measured: #1A6B4E;
+    --measured-soft: #DCEDE4;
+    --derived: #86570A;
+    --derived-soft: #F6E9CF;
+    --flag: #A33227;
+    --flag-soft: #F8E4E1;
+    --shadow: 0 1px 2px rgba(31, 44, 49, .05), 0 6px 18px rgba(31, 44, 49, .07);
+    --sans: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+  body.quarto-dark, :root[data-bs-theme="dark"] {
+    --page: #181818;
+    --surface: #212121;
+    --surface-2: #2A2A2A;
+    --line: #3A3A3A;
+    --line-strong: #4E4E4E;
+    --ink: #F2F2F2;
+    --ink-2: #BFC6C8;
+    --ink-3: #939A9D;
+    --accent: #75AADB;
+    --accent-ink: #9CC6EC;
+    --accent-soft: #23323F;
+    --measured: #6DC49B;
+    --measured-soft: #1B2F27;
+    --derived: #DCA847;
+    --derived-soft: #342A12;
+    --flag: #E08278;
+    --flag-soft: #3A211E;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 22px rgba(0,0,0,.4);
+  }
+
+  #study-design * { box-sizing: border-box; }
+  #study-design {
+    max-width: 1280px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  #study-design h1, #study-design h2, #study-design h3, #study-design h4 { margin: 0; font-weight: 700; }
+  #study-design .page-head { border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 20px; }
+  #study-design .page-head p { margin: 8px 0 0; color: var(--ink-2); max-width: 78ch; }
+  #study-design .layout { display: grid; grid-template-columns: minmax(280px, 340px) minmax(0, 1fr); gap: 18px; align-items: start; }
+  #study-design .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
+  #study-design .panel h2 { font-size: 17px; margin-bottom: 4px; }
+  #study-design .panel h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin: 18px 0 8px; }
+  #study-design .note { color: var(--ink-2); font-size: 13px; margin: 0 0 10px; }
+  #study-design .field { margin: 10px 0 14px; }
+  #study-design .field label { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; color: var(--ink-2); font-size: 13.5px; margin-bottom: 5px; }
+  #study-design .field label b { color: var(--ink); }
+  #study-design .val { font-family: var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+  #study-design input[type="range"] { width: 100%; accent-color: var(--accent); }
+  #study-design select, #study-design input[type="number"] {
+    width: 100%; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong);
+    border-radius: 7px; padding: 7px 9px;
+  }
+  #study-design .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  #study-design .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+  #study-design .btn {
+    font: inherit; font-weight: 700; cursor: pointer; border-radius: 7px; padding: 8px 14px;
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+  }
+  #study-design .btn.ghost { background: transparent; color: var(--accent-ink); }
+  #study-design .btn:disabled { opacity: .45; cursor: not-allowed; }
+  #study-design .map-panel { padding: 0; overflow: hidden; min-width: 0; }
+  #study-map { height: min(68vh, 720px); min-height: 520px; width: 100%; min-width: 0; background: var(--surface-2); position: relative; }
+
+  /* Keep Quarto/Bootstrap's global image rules from altering Leaflet tiles. */
+  #study-map .leaflet-tile {
+    position: absolute !important;
+    max-width: none !important;
+    max-height: none !important;
+    width: 256px;
+    height: 256px;
+  }
+  #study-map .leaflet-pane img {
+    max-width: none !important;
+  }
+  #study-design .map-help { padding: 10px 14px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); }
+  #study-design .summary { margin-top: 18px; }
+  #study-design .summary h2 { font-size: 19px; margin-bottom: 4px; }
+  #study-design .metrics { display: grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
+  #study-design .metric { background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 12px; }
+  #study-design .metric .k { text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-size: 10.5px; }
+  #study-design .metric .v { font-family: var(--mono); font-weight: 700; font-size: 18px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  #study-design .metric .sub { color: var(--ink-2); font-size: 11.5px; margin-top: 2px; }
+  #study-design .status { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; margin-top: 12px; }
+  #study-design .status-row { display: flex; gap: 8px; align-items: flex-start; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-size: 12.5px; color: var(--ink-2); }
+  #study-design .status-row .ic { font-family: var(--mono); font-weight: 700; }
+  #study-design .status-row.ok .ic { color: var(--measured); }
+  #study-design .status-row.warn .ic { color: var(--derived); }
+  #study-design .status-row b { color: var(--ink); }
+  #study-design .empty { margin-top: 12px; background: var(--surface-2); border: 1px dashed var(--line-strong); border-radius: 9px; padding: 15px; color: var(--ink-2); }
+  #study-design .badge { display:inline-flex; align-items:center; font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:4px; padding:3px 7px; }
+  #study-design .badge.derived { color:var(--derived); background:var(--derived-soft); }
+  #study-design .dive-card { margin-top: 12px; display: grid; grid-template-columns: minmax(280px, 1.2fr) minmax(220px, .8fr); gap: 12px; }
+  #study-design .dive-visual, #study-design .dive-stats { background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 12px; }
+  #study-design .dive-visual h3, #study-design .dive-stats h3 { margin: 0 0 8px; font-size: 13px; text-transform: none; letter-spacing: 0; color: var(--ink); }
+  #study-design .dive-visual svg { width: 100%; height: 180px; display: block; overflow: visible; }
+  #study-design .dive-grid { stroke: var(--line); stroke-width: 1; }
+  #study-design .dive-path { fill: none; stroke: var(--accent); stroke-width: 3; }
+  #study-design .dive-surface { stroke: var(--ink-2); stroke-width: 1.5; }
+  #study-design .dive-label { fill: var(--ink-2); font-family: var(--sans); font-size: 11px; }
+  #study-design .dive-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  #study-design .dive-kpi { background: var(--surface-2); border-radius: 7px; padding: 9px; }
+  #study-design .dive-kpi .k { text-transform: uppercase; letter-spacing: .04em; color: var(--ink-3); font-size: 10px; }
+  #study-design .dive-kpi .v { font-family: var(--mono); font-weight: 700; margin-top: 2px; }
+  #study-design .profile-marker { stroke: #fff; stroke-width: 1.5; }
+  #study-design .assumptions { margin-top: 14px; font-size: 12.5px; color: var(--ink-2); }
+  #study-design .assumptions summary { cursor: pointer; font-weight: 700; color: var(--accent-ink); }
+  #study-design .assumptions ul { margin-bottom: 0; }
+
+  /* ---- 3D seafloor view ---- */
+  #dive3d { margin-top: 26px; }
+  #dive3d .d3-head { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: baseline; }
+  #dive3d h2 { margin: 0; }
+  #dive3d .d3-controls {
+    display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 8px; padding: 12px 14px; margin: 12px 0;
+  }
+  #dive3d .d3-controls label { font-size: 13.5px; color: var(--ink-2); display: flex; align-items: center; gap: 7px; }
+  #dive3d .d3-controls input[type="number"] { width: 82px; }
+  #dive3d .d3-controls .mode { display: flex; gap: 6px; align-items: center; }
+  #dive3d #d3-build { margin-left: auto; }
+  #dive3d .plotwrap {
+    position: relative; border: 1px solid var(--line); border-radius: 8px;
+    overflow: hidden; background: var(--surface); min-height: 200px;
+  }
+  #dive3d #d3-plot { width: 100%; height: 560px; }
+  #dive3d .d3-status {
+    padding: 22px 16px; font-size: 13.5px; color: var(--ink-3); text-align: center;
+  }
+  #dive3d .d3-status.err { color: var(--warn); }
+  #dive3d .d3-stats {
+    display: flex; flex-wrap: wrap; gap: 6px 26px; margin-top: 10px;
+    font-size: 13px; color: var(--ink-2);
+  }
+  #dive3d .d3-stats b { color: var(--ink); font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  #dive3d .d3-credit { margin-top: 10px; font-size: 12px; color: var(--ink-3); }
+  @media (max-width: 700px) { #dive3d #d3-plot { height: 420px; } }
+
+  .leaflet-container { font-family: var(--sans); }
+  #study-map .leaflet-top, #study-map .leaflet-bottom { z-index: 1000; pointer-events: none; }
+  #study-map .leaflet-control { pointer-events: auto; }
+  .leaflet-draw-toolbar a { background-color: #fff; }
+  .leaflet-draw { display: block !important; visibility: visible !important; }
+  .leaflet-draw-toolbar { display: block !important; visibility: visible !important; }
+  .leaflet-draw-toolbar a {
+    display: block !important;
+    visibility: visible !important;
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  @media (max-width: 980px) {
+    #study-design .layout { grid-template-columns: 1fr; }
+    #study-map { height: 560px; min-height: 460px; }
+    #study-design .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #study-design .dive-card { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    #study-design .metrics, #study-design .two { grid-template-columns: 1fr; }
+  }
+
+.dev-subtitle {
+  margin: 0.25rem 0 1.25rem 0;
+  padding: 0.7rem 0.9rem;
+  border-left: 5px solid #D97706;
+  background: rgba(217, 119, 6, 0.10);
+  border-radius: 6px;
+  font-size: 1.05rem;
+}
+
+.approx-badge {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.08rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(217, 119, 6, 0.14);
+  color: #A35400;
+  font-weight: 800;
+  font-size: 0.78rem;
+  vertical-align: middle;
+}
+
+.land-note {
+  margin-top: 0.45rem;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: var(--bs-secondary-color, #5f6b72);
+}
+
+.land-mask-status {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.leaflet-pane.leaflet-land-pane {
+  pointer-events: none;
+}
+
+
+  #study-design .gps-box {
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);
+  }
+  #study-design .gps-box textarea {
+    width: 100%; min-height: 105px; resize: vertical;
+    font-family: var(--mono); font-size: 12px; line-height: 1.4;
+    color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line-strong); border-radius: 7px; padding: 8px 9px;
+  }
+  #study-design .gps-help { color: var(--ink-3); font-size: 12px; margin: 5px 0 0; }
+  #study-design .export-actions { margin-top: 10px; }
+  #study-design .surface-marker { pointer-events: none; }
+
+
+  #study-design .area-mode {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0 12px;
+  }
+  #study-design .area-mode label {
+    display: flex; align-items: center; gap: 7px;
+    border: 1px solid var(--line-strong); border-radius: 8px;
+    padding: 9px 10px; cursor: pointer; background: var(--surface);
+    color: var(--ink-2); font-size: 13px;
+  }
+  #study-design .area-mode input { accent-color: var(--accent); }
+  #study-design .area-method {
+    transition: opacity .15s ease, filter .15s ease;
+  }
+  #study-design .area-method.inactive {
+    opacity: .38;
+    filter: grayscale(.15);
+    pointer-events: none;
+  }
+  #study-design .area-method.active {
+    opacity: 1;
+  }
+
+
+  #study-design .vertex-editor {
+    margin-top: 10px; padding: 10px; border: 1px solid var(--line);
+    border-radius: 8px; background: var(--surface-2);
+  }
+  #study-design .vertex-editor[hidden] { display: none !important; }
+  #study-design .vertex-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  #study-design .vertex-table th, #study-design .vertex-table td { padding: 4px; vertical-align: middle; }
+  #study-design .vertex-table th { text-align: left; color: var(--ink-3); font-weight: 700; }
+  #study-design .vertex-table input {
+    width: 100%; min-width: 0; font-family: var(--mono); font-size: 12px;
+    padding: 5px 6px; border: 1px solid var(--line-strong); border-radius: 5px;
+    background: var(--surface); color: var(--ink);
+  }
+  #study-design .vertex-table button {
+    white-space: nowrap; font-size: 11px; padding: 5px 7px;
+  }
+
+</style>
+
+<div id="study-design">
+  <header class="page-head">
+    <p>Draw a study area, choose a simple transect design, and estimate survey distance and nominal mission duration. This prototype is intended for first-order study design rather than operational mission planning.</p>
+  </header>
+
+  <div class="layout">
+    <section class="panel controls">
+      <h2>Study requirements</h2>
+      <p class="note">Use the polygon tool on the map to define one study area. Edit the polygon at any time; the design will update when you regenerate it.</p>
+
+      <h3>Survey geometry</h3>
+      <div class="field">
+        <label for="pattern"><b>Survey pattern</b></label>
+        <select id="pattern">
+          <option value="lawnmower" selected>Lawnmower (connected transects)</option>
+          <option value="parallel">Parallel transects only</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="spacing"><b>Transect spacing</b><span class="val"><span id="spacing-val">10</span> km</span></label>
+        <input id="spacing" type="range" min="1" max="50" step="1" value="10">
+      </div>
+
+      <div class="field">
+        <label for="bearing"><b>Track orientation</b><span class="val"><span id="bearing-val">0</span>&deg;</span></label>
+        <input id="bearing" type="range" min="0" max="179" step="1" value="0">
+        <p class="note">0&deg; = north-south transects; 90&deg; = east-west.</p>
+      </div>
+
+      <h3>Mission assumptions</h3>
+      <div class="field">
+        <label for="speed"><b>Nominal horizontal speed</b><span class="val"><span id="speed-val">0.50</span> kt</span></label>
+        <input id="speed" type="range" min="0.1" max="2.0" step="0.05" value="0.5">
+      </div>
+
+      <div class="field">
+        <label for="glide-angle"><b>Glide angle</b><span class="val"><span id="glide-angle-val">26</span>&deg;</span></label>
+        <input id="glide-angle" type="range" min="10" max="45" step="1" value="26">
+        <p class="note">Angle from horizontal. Used with target depth to estimate the horizontal distance of one down-and-up dive cycle.</p>
+      </div>
+
+      <div class="two">
+        <div class="field">
+          <label for="depth"><b>Target depth</b></label>
+          <input id="depth" type="number" min="1" max="6000" step="10" value="500">
+        </div>
+        <div class="field">
+          <label for="gliders"><b>Number of gliders</b></label>
+          <input id="gliders" type="number" min="1" max="20" step="1" value="1">
+        </div>
+      </div>
+
+      <h3>Study area input</h3>
+      <div class="area-mode" role="radiogroup" aria-label="Study area input method">
+        <label><input type="radio" name="area-mode" value="draw" checked> Draw polygon</label>
+        <label><input type="radio" name="area-mode" value="gps"> Enter GPS points</label>
+      </div>
+
+      <div class="area-method active" id="area-method-draw">
+        <div class="actions" style="margin-top:0;padding-top:0;border-top:0;">
+          <button class="btn" id="draw-area">Draw study area</button>
+          <button class="btn" id="finish-area" disabled>Finish polygon</button>
+        </div>
+      </div>
+
+      <div class="area-method inactive" id="area-method-gps">
+        <div class="gps-box" style="margin-top:0;padding-top:0;border-top:0;">
+          <div class="field" style="margin-bottom:8px;">
+            <label for="gps-points"><b>GPS vertices</b></label>
+            <textarea id="gps-points" placeholder="36.95, -122.35&#10;36.95, -121.85&#10;36.55, -121.78&#10;36.48, -122.25"></textarea>
+            <p class="gps-help">Enter one vertex per line as <b>latitude, longitude</b>. At least three valid points are required; the polygon closes automatically.</p>
+          </div>
+          <button class="btn ghost" id="load-gps" type="button">Use GPS points</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn ghost" id="edit-area" disabled>Edit polygon</button>
+        <button class="btn" id="clear-area">Clear area</button>
+        <button class="btn" id="generate" disabled>Generate survey</button>
+        <button class="btn ghost" id="clear-tracks" disabled>Clear tracks</button>
+        <button class="btn ghost" id="export-geojson" disabled>Export GeoJSON</button>
+        <button class="btn ghost" id="export-csv" disabled>Export waypoints CSV</button>
+        <button class="btn ghost" id="example-area">Load example</button>
+      </div>
+
+      <div class="vertex-editor" id="vertex-editor" hidden>
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px;">
+          <b>Edit polygon vertices</b>
+          <button class="btn ghost" id="close-vertex-editor" type="button">Close</button>
+        </div>
+        <p class="gps-help" id="vertex-edit-status">Change coordinates directly, or choose <b>Move on map</b> and click the new location.</p>
+        <table class="vertex-table">
+          <thead><tr><th>#</th><th>Latitude</th><th>Longitude</th><th></th></tr></thead>
+          <tbody id="vertex-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel map-panel">
+      <div id="study-map" aria-label="Interactive map for drawing the study area"></div>
+      <div class="map-help"><b>Study area:</b> choose either <b>Draw polygon</b> or <b>Enter GPS points</b>. After creating the polygon, use <b>Edit polygon</b> to change coordinates or reposition a vertex with a map click.</div>
+      <div class="map-help"><b>Map layers:</b> <span style="color:#0057B8;font-weight:800;">blue lines</span> = survey track; <span style="color:#F28E2B;font-weight:800;">orange dots</span> = estimated surfacing locations.</div>
+      <div class="map-help"><b>Land mask:</b> shaded land is shown for visual guidance only. Survey tracks are not yet routed around land, so route distance and mission duration should be treated as approximate.</div>
+      <div id="land-mask-status" class="land-mask-status">Loading land mask…</div>
+    </section>
+  </div>
+
+  <section class="summary">
+    <h2>Survey estimate</h2>
+    <p class="note">Values below are geometric and first-order estimates. Currents, dive behavior, bathymetry, payload power, navigation, launch/recovery, and operational safety margins are not yet included.</p>
+    <div class="dive-card" id="dive-preview">
+      <div class="dive-visual">
+        <h3>Idealized dive cycle</h3>
+        <svg id="dive-svg" viewBox="0 0 620 180" role="img" aria-label="Idealized glider sawtooth dive cycle">
+          <line class="dive-surface" x1="52" y1="32" x2="590" y2="32"></line>
+          <line class="dive-grid" x1="52" y1="150" x2="590" y2="150"></line>
+          <polyline id="dive-path" class="dive-path" points="80,32 320,150 560,32"></polyline>
+          <circle cx="80" cy="32" r="5" fill="#86570A"></circle>
+          <circle cx="560" cy="32" r="5" fill="#86570A"></circle>
+          <text class="dive-label" x="6" y="36">Surface</text>
+          <text id="dive-depth-label" class="dive-label" x="6" y="154">500 m</text>
+          <text id="dive-distance-label" class="dive-label" x="320" y="174" text-anchor="middle">2.05 km per cycle</text>
+          <text id="dive-angle-label" class="dive-label" x="174" y="78">26&deg;</text>
+        </svg>
+      </div>
+      <div class="dive-stats">
+        <h3>Dive-cycle estimate</h3>
+        <div class="dive-kpis">
+          <div class="dive-kpi"><div class="k">Cycle distance</div><div class="v" id="m-cycle-distance">--</div></div>
+          <div class="dive-kpi"><div class="k">Half-cycle</div><div class="v" id="m-half-cycle">--</div></div>
+          <div class="dive-kpi"><div class="k">Approx. cycles</div><div class="v" id="m-cycles">--</div></div>
+          <div class="dive-kpi"><div class="k">Profiles / 100 km</div><div class="v" id="m-profile-density">--</div></div>
+          <div class="dive-kpi"><div class="k">Surfacing markers</div><div class="v" id="m-surface-markers">--</div></div>
+        </div>
+        <p class="note" style="margin-top:9px;">Orange dots on the map show estimated surfacing locations along the generated route. Depth and glide-angle changes update this preview immediately.</p>
+      </div>
+    </div>
+    <div id="summary-empty" class="empty">Draw a study polygon and press <b>Generate survey</b> to create an estimate.</div>
+    <div id="summary-results" hidden>
+      <div class="metrics">
+        <div class="metric"><div class="k">Study area</div><div class="v" id="m-area">--</div><div class="sub">polygon area</div></div>
+        <div class="metric"><div class="k">Transects</div><div class="v" id="m-transects">--</div><div class="sub">inside study area</div></div>
+        <div class="metric"><div class="k">Track length</div><div class="v" id="m-distance">--</div><div class="sub">survey route</div></div>
+        <div class="metric"><div class="k">Nominal duration</div><div class="v" id="m-duration">--</div><div class="sub">distance / aggregate speed</div></div>
+        <div class="metric"><div class="k">Target depth</div><div class="v" id="m-depth">--</div><div class="sub">user requirement</div></div>
+      </div>
+      <div class="status">
+        <div class="status-row warn"><span class="ic">~</span><span><b>Duration is derived.</b> It assumes constant horizontal speed and an even division of route distance among gliders.</span></div>
+        <div class="status-row warn"><span class="ic">!</span><span><b>Not an operational plan.</b> Currents, bathymetry, energy use, station keeping, and deployment logistics are not modeled.</span></div>
+        <div class="status-row ok"><span class="ic">+</span><span><b>Geometry is reproducible.</b> Area, transect count, and route length are calculated directly from the polygon and generated tracks.</span></div>
+      </div>
+      <details class="assumptions">
+        <summary>Calculation assumptions</summary>
+        <ul>
+          <li>Transects are generated at the selected compass orientation and clipped to the study polygon.</li>
+          <li>For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included.</li>
+          <li>Nominal travel rate is speed in knots &times; 1.852 km/nmi &times; 24 h/day.</li>
+          <li>Dive-cycle horizontal distance is approximated as 2 &times; target depth / tan(glide angle), assuming a symmetric straight-line descent and ascent.</li>
+          <li>Map dots represent estimated surfacing locations, not subsurface profile positions or commanded waypoints.</li>
+          <li>With multiple gliders, route distance is divided evenly among vehicles for the duration estimate only; tracks are not yet spatially assigned to individual gliders.</li>
+        </ul>
+      </details>
+    </div>
+  </section>
+</div>
+
+
+
+<section id="dive3d">
+  <div class="d3-head">
+    <h2>The mission over the seafloor</h2>
+  </div>
+  <p class="note">Draws the planned track as it would actually be flown, against real bathymetry for
+  the study area. Dive depth can follow the seafloor instead of being fixed, which is what a pilot
+  would really do over a shelf break or a canyon.</p>
+
+  <div class="d3-controls">
+    <div class="mode">
+      <label><input type="radio" name="d3-mode" value="fixed" checked> Fixed depth</label>
+      <label><input type="radio" name="d3-mode" value="bathy"> Follow the seafloor</label>
+    </div>
+    <label>Clearance above seabed
+      <input type="number" id="d3-margin" value="50" min="5" max="500" step="5"> m</label>
+    <button id="d3-build" class="btn" type="button" disabled>Build 3D view</button>
+  </div>
+
+  <div class="plotwrap">
+    <div id="d3-plot" hidden></div>
+    <div class="d3-status" id="d3-status">Draw a study area and press Generate survey, then build the 3D view.</div>
+  </div>
+
+  <div class="d3-stats" id="d3-stats" hidden>
+    <div>Dives <b id="d3-n">&ndash;</b></div>
+    <div>Deepest <b id="d3-max">&ndash;</b></div>
+    <div>Mean dive <b id="d3-mean">&ndash;</b></div>
+    <div>Seabed range <b id="d3-bed">&ndash;</b></div>
+    <div>Grid <b id="d3-grid">&ndash;</b></div>
+    <div>Too shallow to dive <b id="d3-shallow">&ndash;</b></div>
+  </div>
+
+  <p class="d3-credit">Bathymetry from the
+  <a href="https://www.gmrt.org/">GMRT Synthesis</a> (Ryan et al., <i>Geochem. Geophys. Geosyst.</i>, 2009),
+  fetched live for the drawn area. The 3D view follows
+  <a href="https://github.com/Orlando-PB/glider-playground">Glider Playground</a>
+  (Orlando Prugel-Bennett, National Oceanography Centre, Apache&nbsp;2.0).</p>
+</section>
+
+<div class="land-note">
+  <strong>Distance note:</strong> route distance and mission duration are first-order estimates. The current planner does not yet remove over-land transect segments or calculate water-only transit paths around coastlines, islands, or other barriers.
+</div>
+
+<script>
+/* 3D seafloor + dive view. Reads the planned route from window.studyDesign, fetches
+   bathymetry for the study area, and walks a saw-tooth dive profile along the track.
+
+   Bathymetry: GMRT GridServer, which sends Access-Control-Allow-Origin, so the browser
+   can fetch an arbitrary area directly. NOAA's ERDDAP (what Glider Playground uses
+   server-side) does not, so it cannot be called from a published page. */
+(function () {
+  'use strict';
+
+  const GMRT = 'https://www.gmrt.org/services/GridServer';
+  const MAX_SURFACE = 110;     // grid columns/rows sent to Plotly; the full grid is kept for depth lookup
+  const MAX_POINTS = 6000;     // guard against a huge area generating an unbounded track
+  const MIN_DIVE = 15;         // below this a dive is not worth planning; water this shallow is flagged
+
+  const statusEl = document.getElementById('d3-status');
+  const plotEl = document.getElementById('d3-plot');
+  const statsEl = document.getElementById('d3-stats');
+  const buildBtn = document.getElementById('d3-build');
+  const marginEl = document.getElementById('d3-margin');
+  const modeEls = Array.from(document.querySelectorAll('input[name="d3-mode"]'));
+
+  const mode = () => (modeEls.find((r) => r.checked) || {}).value || 'fixed';
+  const say = (msg, isErr) => {
+    statusEl.textContent = msg;
+    statusEl.classList.toggle('err', !!isErr);
+    statusEl.hidden = false;
+    plotEl.hidden = true;
+  };
+
+  window.addEventListener('studydesign:generated', () => {
+    buildBtn.disabled = false;
+    say('Survey generated. Press "Build 3D view" to fetch bathymetry for this area.');
+  });
+
+  // ---------------------------------------------------------------- bathymetry
+  /* GMRT returns an ESRI ASCII grid: six header lines, then rows north to south. */
+  function parseEsriAscii(text) {
+    const lines = text.split('\n');
+    const head = {};
+    let i = 0;
+    for (; i < lines.length; i++) {
+      const m = lines[i].trim().match(/^([A-Za-z_]+)\s+(-?[\d.eE+]+)$/);
+      if (!m) break;
+      head[m[1].toLowerCase()] = parseFloat(m[2]);
+    }
+    const ncols = head.ncols, nrows = head.nrows, cell = head.cellsize;
+    const nodata = head.nodata_value;
+    const z = [];
+    for (let r = 0; r < nrows; r++) {
+      const row = (lines[i + r] || '').trim();
+      if (!row) break;
+      const vals = row.split(/\s+/).map(Number);
+      z.push(vals.map((v) => (v === nodata || !isFinite(v) ? null : v)));
+    }
+    // Flip to south-to-north so the row index increases with latitude, as Plotly expects.
+    z.reverse();
+    const lons = Array.from({ length: ncols }, (_, c) => head.xllcorner + (c + 0.5) * cell);
+    const lats = Array.from({ length: z.length }, (_, r) => head.yllcorner + (r + 0.5) * cell);
+    return { lons, lats, z, cell };
+  }
+
+  async function fetchBathy(bbox) {
+    const [w, s, e, n] = bbox;
+    const pad = Math.max(0.01, Math.max(e - w, n - s) * 0.05);
+    const url = `${GMRT}?minlongitude=${(w - pad).toFixed(4)}&maxlongitude=${(e + pad).toFixed(4)}` +
+                `&minlatitude=${(s - pad).toFixed(4)}&maxlatitude=${(n + pad).toFixed(4)}` +
+                `&format=esriascii&resolution=low&layer=topo`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`GMRT returned HTTP ${resp.status}`);
+    const grid = parseEsriAscii(await resp.text());
+    if (!grid.z.length || !grid.z[0].length) throw new Error('GMRT returned an empty grid');
+    return grid;
+  }
+
+  /* Nearest-cell depth, in metres below sea level (positive down). null over land or gaps. */
+  function seabedAt(grid, lon, lat) {
+    const c = Math.round((lon - grid.lons[0]) / grid.cell);
+    const r = Math.round((lat - grid.lats[0]) / grid.cell);
+    if (r < 0 || r >= grid.z.length || c < 0 || c >= grid.z[0].length) return null;
+    const v = grid.z[r][c];
+    if (v === null || v >= 0) return null;          // land, or above sea level
+    return -v;
+  }
+
+  function subsample(grid) {
+    const stepC = Math.max(1, Math.ceil(grid.z[0].length / MAX_SURFACE));
+    const stepR = Math.max(1, Math.ceil(grid.z.length / MAX_SURFACE));
+    const lons = grid.lons.filter((_, i) => i % stepC === 0);
+    const lats = grid.lats.filter((_, i) => i % stepR === 0);
+    const z = grid.z.filter((_, r) => r % stepR === 0).map((row) => row.filter((_, c) => c % stepC === 0));
+    return { lons, lats, z };
+  }
+
+  // ---------------------------------------------------------------- dive profile
+  /* Walk the planned line, alternating surface and apex. Each half cycle runs
+     depth / tan(glide angle) horizontally, so when the depth follows the seabed the
+     dives genuinely lengthen in deep water and shorten over a bank. */
+  function diveProfile(line, grid, opts) {
+    const tan = Math.tan(opts.glideAngleDeg * Math.PI / 180);
+    const totalKm = turf.length(line, { units: 'kilometers' });
+    const pts = [];
+    let dist = 0, down = true, guard = 0, tooShallow = 0;
+    const bedRange = { min: Infinity, max: -Infinity };
+    const depths = [];
+
+    while (dist <= totalKm && guard++ < MAX_POINTS) {
+      const p = turf.along(line, dist, { units: 'kilometers' });
+      const [lon, lat] = p.geometry.coordinates;
+      const bed = seabedAt(grid, lon, lat);
+      if (bed !== null) {
+        bedRange.min = Math.min(bedRange.min, bed);
+        bedRange.max = Math.max(bedRange.max, bed);
+      }
+
+      // Fixed mode means fixed: the track is NOT clipped to the seabed, so a plan that
+      // would fly into the shelf shows itself by passing under the surface in the plot.
+      // Only "follow the seabed" trades depth for clearance.
+      let target = opts.fixedDepth;
+      if (opts.mode === 'bathy' && bed !== null) {
+        target = Math.min(opts.fixedDepth, bed - opts.margin);
+      }
+      target = Math.max(MIN_DIVE, target);
+      if (opts.mode === 'bathy' && bed !== null && bed - opts.margin < MIN_DIVE) tooShallow++;
+
+      pts.push([lon, lat, down ? -target : 0]);
+      if (down) depths.push(target);
+
+      const halfKm = target / tan / 1000;
+      if (!isFinite(halfKm) || halfKm <= 0.001) break;
+      dist += halfKm;
+      down = !down;
+    }
+    return { pts, depths, bedRange, tooShallow, truncated: guard >= MAX_POINTS };
+  }
+
+  function routeLine(geom) {
+    if (!geom) return null;
+    if (geom.type === 'route') return geom.line;
+    // Parallel transects: stitch them into one path so the profile runs continuously.
+    const coords = [];
+    geom.lines.forEach((seg) => {
+      const c = seg.geometry.coordinates;
+      (coords.length && c.length ? c : c).forEach((xy) => coords.push(xy));
+    });
+    return coords.length > 1 ? turf.lineString(coords) : null;
+  }
+
+  // ---------------------------------------------------------------- render
+  async function build() {
+    const sd = window.studyDesign;
+    if (!sd || !sd.geometry) { say('Generate a survey first.', true); return; }
+    const line = routeLine(sd.geometry);
+    if (!line) { say('No usable track in the generated survey.', true); return; }
+
+    buildBtn.disabled = true;
+    say('Fetching bathymetry for the study area…');
+    let grid;
+    try {
+      grid = await fetchBathy(turf.bbox(sd.polygon));
+    } catch (err) {
+      say('Could not load bathymetry: ' + err.message + '. The GMRT service may be busy — try again.', true);
+      buildBtn.disabled = false;
+      return;
+    }
+
+    const opts = {
+      mode: mode(),
+      margin: Math.max(5, Number(marginEl.value) || 50),
+      fixedDepth: Math.max(10, Number(sd.els.depth.value) || 200),
+      glideAngleDeg: sd.glideAngleDeg
+    };
+    const prof = diveProfile(line, grid, opts);
+    if (!prof.pts.length) { say('The track produced no dives.', true); buildBtn.disabled = false; return; }
+
+    const surf = subsample(grid);
+    const midLat = (surf.lats[0] + surf.lats[surf.lats.length - 1]) / 2;
+    const dx = (surf.lons[surf.lons.length - 1] - surf.lons[0]) * Math.cos(midLat * Math.PI / 180);
+    const dy = surf.lats[surf.lats.length - 1] - surf.lats[0];
+    const span = Math.max(dx, dy) || 1;
+
+    const dark = document.body.classList.contains('quarto-dark');
+    const ink = dark ? '#E8EEF0' : '#1F2C31';
+    const gridc = dark ? '#3A3A3A' : '#DAE3E5';
+
+    const traces = [{
+      type: 'surface', x: surf.lons, y: surf.lats, z: surf.z,
+      // Plotly's Earth scale already runs blue (deep) -> green -> brown (high);
+      // reversing it painted the abyss pale and the land blue.
+      colorscale: 'Earth', showscale: true,
+      colorbar: { title: { text: 'Seabed (m)', font: { color: ink } }, tickfont: { color: ink }, len: 0.55, thickness: 12 },
+      contours: { z: { show: true, usecolormap: true, width: 1, highlightcolor: '#ffffff' } },
+      hovertemplate: 'lon %{x:.3f}<br>lat %{y:.3f}<br>seabed %{z:.0f} m<extra></extra>',
+      name: 'Seafloor'
+    }, {
+      type: 'scatter3d', mode: 'lines',
+      x: prof.pts.map((p) => p[0]), y: prof.pts.map((p) => p[1]), z: prof.pts.map((p) => p[2]),
+      line: { width: 4, color: '#2780E3' },
+      hovertemplate: 'lon %{x:.3f}<br>lat %{y:.3f}<br>depth %{z:.0f} m<extra></extra>',
+      name: 'Planned dives'
+    }];
+
+    const layout = {
+      margin: { l: 0, r: 0, t: 0, b: 0 },
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      showlegend: true,
+      legend: { x: 0, y: 1, font: { color: ink } },
+      scene: {
+        xaxis: { title: { text: 'Longitude', font: { color: ink } }, color: ink, gridcolor: gridc },
+        yaxis: { title: { text: 'Latitude', font: { color: ink } }, color: ink, gridcolor: gridc },
+        zaxis: { title: { text: 'Depth (m)', font: { color: ink } }, color: ink, gridcolor: gridc },
+        aspectmode: 'manual',
+        aspectratio: { x: dx / span, y: dy / span, z: 0.45 },
+        camera: { eye: { x: 1.5, y: -1.5, z: 0.9 } }
+      }
+    };
+
+    plotEl.hidden = false;
+    statusEl.hidden = true;
+    await Plotly.newPlot(plotEl, traces, layout, { responsive: true, displaylogo: false });
+
+    const d = prof.depths;
+    const mean = d.reduce((a, b) => a + b, 0) / (d.length || 1);
+    document.getElementById('d3-n').textContent = d.length + (prof.truncated ? '+' : '');
+    document.getElementById('d3-max').textContent = Math.round(Math.max.apply(null, d)) + ' m';
+    document.getElementById('d3-mean').textContent = Math.round(mean) + ' m';
+    document.getElementById('d3-bed').textContent = isFinite(prof.bedRange.min)
+      ? Math.round(prof.bedRange.min) + '–' + Math.round(prof.bedRange.max) + ' m' : 'no data';
+    document.getElementById('d3-grid').textContent = surf.z[0].length + '×' + surf.z.length;
+    document.getElementById('d3-shallow').textContent = opts.mode === 'bathy'
+      ? prof.tooShallow + ' points' : 'n/a (fixed depth)';
+    statsEl.hidden = false;
+    buildBtn.disabled = false;
+
+    if (prof.truncated) {
+      say('Track truncated at ' + MAX_POINTS + ' points — the area is very large for this dive depth.', true);
+      statusEl.hidden = false;
+      plotEl.hidden = false;
+    }
+  }
+
+  buildBtn.addEventListener('click', build);
+  modeEls.forEach((r) => r.addEventListener('change', () => {
+    marginEl.disabled = mode() !== 'bathy';
+  }));
+  marginEl.disabled = true;
+})();
+</script>
+
+<script>
+(function () {
+  const els = {
+    spacing: document.getElementById('spacing'),
+    spacingVal: document.getElementById('spacing-val'),
+    bearing: document.getElementById('bearing'),
+    bearingVal: document.getElementById('bearing-val'),
+    speed: document.getElementById('speed'),
+    speedVal: document.getElementById('speed-val'),
+    glideAngle: document.getElementById('glide-angle'),
+    glideAngleVal: document.getElementById('glide-angle-val'),
+    depth: document.getElementById('depth'),
+    gliders: document.getElementById('gliders'),
+    pattern: document.getElementById('pattern'),
+    drawArea: document.getElementById('draw-area'),
+    finishArea: document.getElementById('finish-area'),
+    areaModeDraw: document.getElementById('area-method-draw'),
+    areaModeGps: document.getElementById('area-method-gps'),
+    editArea: document.getElementById('edit-area'),
+    vertexEditor: document.getElementById('vertex-editor'),
+    vertexTableBody: document.getElementById('vertex-table-body'),
+    vertexEditStatus: document.getElementById('vertex-edit-status'),
+    closeVertexEditor: document.getElementById('close-vertex-editor'),
+    clearArea: document.getElementById('clear-area'),
+    generate: document.getElementById('generate'),
+    clearTracks: document.getElementById('clear-tracks'),
+    gpsPoints: document.getElementById('gps-points'),
+    loadGps: document.getElementById('load-gps'),
+    exportGeojson: document.getElementById('export-geojson'),
+    exportCsv: document.getElementById('export-csv'),
+    exampleArea: document.getElementById('example-area')
+  };
+
+  els.spacing.addEventListener('input', () => els.spacingVal.textContent = els.spacing.value);
+  els.bearing.addEventListener('input', () => els.bearingVal.textContent = els.bearing.value);
+  els.speed.addEventListener('input', () => els.speedVal.textContent = Number(els.speed.value).toFixed(2));
+  els.glideAngle.addEventListener('input', () => els.glideAngleVal.textContent = els.glideAngle.value);
+
+  const map = L.map('study-map', { zoomControl: true }).setView([36.75, -122.0], 7);
+  // Esri World Ocean Base, the same basemap Glider Playground uses
+  // (github.com/Orlando-PB/glider-playground). It shades bathymetry, which a street
+  // map does not, so a study area reads against the shelf and canyons it sits on.
+  // Note the {z}/{y}/{x} order: ArcGIS puts row before column.
+  const baseTiles = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    maxNativeZoom: 13,   // the service stops here; beyond it Leaflet upscales rather than blanking
+    tileSize: 256,
+    updateWhenIdle: true,
+    keepBuffer: 4,
+    attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, National Geographic, ' +
+                 'Garmin, HERE, Geonames.org and other contributors'
+  }).addTo(map);
+
+  // Log true network failures separately from layout/CSS problems.
+  baseTiles.on('tileerror', (e) => {
+    console.warn('Basemap tile failed to load:', e.tile?.src || e);
+  });
+
+  const drawnItems = new L.FeatureGroup().addTo(map);
+  const trackLayer = new L.FeatureGroup().addTo(map);
+
+  // Estimated surfacing locations use Leaflet's standard vector pane.
+  // This is more stable across zoom levels than a custom SVG pane.
+  const surfaceLayer = new L.FeatureGroup().addTo(map);
+
+  const drawControl = new L.Control.Draw({
+    position: 'topleft',
+    draw: {
+      polygon: {
+        allowIntersection: false,
+        showArea: true,
+        shapeOptions: { color: '#2780E3', weight: 2, fillOpacity: 0.12 }
+      },
+      polyline: false,
+      rectangle: false,
+      circle: false,
+      circlemarker: false,
+      marker: false
+    },
+    edit: { featureGroup: drawnItems, remove: true }
+  });
+  // Leaflet.draw toolbar is not used for polygon creation; custom click-to-add controls are more reliable in Quarto.
+  // map.addControl(drawControl);
+
+  // Prominent alternative to the small Leaflet.draw toolbar icon.
+  // This also makes polygon drawing usable if Quarto/theme CSS makes the toolbar icon hard to notice.
+  let manualDrawing = false;
+  let manualVertices = [];
+  let manualGuide = null;
+  let manualVertexLayer = L.layerGroup().addTo(map);
+  let movingVertexIndex = null;
+
+
+  function resetManualGuide() {
+    if (manualGuide) {
+      map.removeLayer(manualGuide);
+      manualGuide = null;
+    }
+    manualVertexLayer.clearLayers();
+  }
+
+  function updateManualGuide() {
+    if (manualGuide) map.removeLayer(manualGuide);
+    if (manualVertices.length >= 2) {
+      manualGuide = L.polyline(manualVertices, {
+        color: '#0057B8',
+        weight: 3,
+        opacity: 1,
+        dashArray: '6,6'
+      }).addTo(map);
+    }
+    manualVertexLayer.clearLayers();
+    manualVertices.forEach((latlng, i) => {
+      L.circleMarker(latlng, {
+        radius: 5,
+        color: '#0057B8',
+        weight: 2,
+        fillColor: '#ffffff',
+        fillOpacity: 1
+      }).bindTooltip(`Vertex ${i + 1}`, {permanent: false}).addTo(manualVertexLayer);
+    });
+    els.finishArea.disabled = manualVertices.length < 3;
+  }
+
+
+  function setAreaMode(mode) {
+    const drawMode = mode === 'draw';
+    els.areaModeDraw.classList.toggle('active', drawMode);
+    els.areaModeDraw.classList.toggle('inactive', !drawMode);
+    els.areaModeGps.classList.toggle('active', !drawMode);
+    els.areaModeGps.classList.toggle('inactive', drawMode);
+
+    if (!drawMode) {
+      manualDrawing = false;
+      resetManualGuide();
+      els.drawArea.textContent = 'Draw study area';
+      els.finishArea.disabled = true;
+      map.getContainer().style.cursor = '';
+    }
+  }
+
+  document.querySelectorAll('input[name="area-mode"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+      if (this.checked) setAreaMode(this.value);
+    });
+  });
+
+  setAreaMode(document.querySelector('input[name="area-mode"]:checked')?.value || 'draw');
+
+  els.drawArea.addEventListener('click', function () {
+    const drawRadio = document.querySelector('input[name="area-mode"][value="draw"]');
+    if (drawRadio) drawRadio.checked = true;
+    setAreaMode('draw');
+    manualDrawing = true;
+    manualVertices = [];
+    resetManualGuide();
+    els.finishArea.disabled = true;
+    els.drawArea.textContent = 'Click map to add vertices';
+    map.getContainer().style.cursor = 'crosshair';
+  });
+
+  els.finishArea.addEventListener('click', function () {
+    if (manualVertices.length < 3) return;
+    installStudyPolygon(manualVertices.slice());
+  });
+
+  els.clearArea.addEventListener('click', function () {
+    closeVertexEditor();
+    manualDrawing = false;
+    manualVertices = [];
+    resetManualGuide();
+    drawnItems.clearLayers();
+    if (typeof clearSurvey === 'function') clearSurvey();
+    els.drawArea.textContent = 'Draw study area';
+    els.finishArea.disabled = true;
+    els.generate.disabled = true;
+    map.getContainer().style.cursor = '';
+  });
+
+  map.on('click', function (e) {
+    if (movingVertexIndex !== null) {
+      const idx = movingVertexIndex;
+      movingVertexIndex = null;
+      updatePolygonVertex(idx, e.latlng.lat, e.latlng.lng);
+      els.vertexEditStatus.innerHTML = 'Change coordinates directly, or choose <b>Move on map</b> and click the new location.';
+      map.getContainer().style.cursor = '';
+      return;
+    }
+    if (!manualDrawing) return;
+    manualVertices.push(e.latlng);
+    updateManualGuide();
+  });
+
+
+  function parseGpsVertices(raw) {
+    const points = [];
+    const errors = [];
+    raw.split(/\r?\n/).forEach((line, index) => {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+      const parts = trimmed.split(/[,\t ]+/).filter(Boolean);
+      if (parts.length < 2) {
+        errors.push(`line ${index + 1}`);
+        return;
+      }
+      const lat = Number(parts[0]);
+      const lng = Number(parts[1]);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng) ||
+          lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+        errors.push(`line ${index + 1}`);
+        return;
+      }
+      points.push(L.latLng(lat, lng));
+    });
+    return { points, errors };
+  }
+
+  function installStudyPolygon(latlngs) {
+    if (latlngs.length < 3) return null;
+    closeVertexEditor();
+    manualDrawing = false;
+    manualVertices = [];
+    resetManualGuide();
+    drawnItems.clearLayers();
+    clearTracksAndSummary();
+    const poly = L.polygon(latlngs, {
+      color: '#0057B8', weight: 3, opacity: 1, fillOpacity: 0.12
+    }).addTo(drawnItems);
+    els.drawArea.textContent = 'Draw study area';
+    els.finishArea.disabled = true;
+    map.getContainer().style.cursor = '';
+    map.fitBounds(poly.getBounds(), { padding: [20, 20] });
+    setTimeout(() => map.invalidateSize({ pan: false }), 50);
+    setButtons();
+    return poly;
+  }
+
+  els.loadGps.addEventListener('click', function () {
+    const gpsRadio = document.querySelector('input[name="area-mode"][value="gps"]');
+    if (gpsRadio) gpsRadio.checked = true;
+    setAreaMode('gps');
+    const parsed = parseGpsVertices(els.gpsPoints.value);
+    if (parsed.errors.length) {
+      alert(`Could not read GPS coordinates on ${parsed.errors.join(', ')}. Use one latitude, longitude pair per line.`);
+      return;
+    }
+    if (parsed.points.length < 3) {
+      alert('Please enter at least three valid GPS points.');
+      return;
+    }
+    installStudyPolygon(parsed.points);
+  });
+
+  function getPolygonVertices(layer) {
+    if (!layer) return [];
+    const latlngs = layer.getLatLngs();
+    if (!Array.isArray(latlngs) || !latlngs.length) return [];
+    return Array.isArray(latlngs[0]) ? latlngs[0] : latlngs;
+  }
+
+  function updatePolygonVertex(index, lat, lng) {
+    const poly = currentPolygonLayer();
+    if (!poly) return;
+    const vertices = getPolygonVertices(poly).map(ll => L.latLng(ll.lat, ll.lng));
+    if (index < 0 || index >= vertices.length) return;
+    vertices[index] = L.latLng(lat, lng);
+    poly.setLatLngs(vertices);
+    poly.redraw();
+    clearTracksAndSummary();
+    renderVertexEditor();
+    setButtons();
+  }
+
+  function renderVertexEditor() {
+    const poly = currentPolygonLayer();
+    if (!poly || !els.vertexTableBody) return;
+    const vertices = getPolygonVertices(poly);
+    els.vertexTableBody.innerHTML = '';
+
+    vertices.forEach((ll, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td><input type="number" step="0.000001" value="${ll.lat.toFixed(6)}" data-vertex-lat="${index}"></td>
+        <td><input type="number" step="0.000001" value="${ll.lng.toFixed(6)}" data-vertex-lng="${index}"></td>
+        <td><button type="button" class="btn ghost" data-move-vertex="${index}">Move on map</button></td>`;
+      els.vertexTableBody.appendChild(tr);
+    });
+
+    els.vertexTableBody.querySelectorAll('input[data-vertex-lat], input[data-vertex-lng]').forEach(input => {
+      input.addEventListener('change', function () {
+        const idx = Number(this.dataset.vertexLat ?? this.dataset.vertexLng);
+        const latInput = els.vertexTableBody.querySelector(`input[data-vertex-lat="${idx}"]`);
+        const lngInput = els.vertexTableBody.querySelector(`input[data-vertex-lng="${idx}"]`);
+        const lat = Number(latInput.value);
+        const lng = Number(lngInput.value);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+          alert('Please enter valid latitude and longitude values.');
+          renderVertexEditor();
+          return;
+        }
+        updatePolygonVertex(idx, lat, lng);
+      });
+    });
+
+    els.vertexTableBody.querySelectorAll('button[data-move-vertex]').forEach(button => {
+      button.addEventListener('click', function () {
+        movingVertexIndex = Number(this.dataset.moveVertex);
+        els.vertexEditStatus.textContent = `Click the map to move vertex ${movingVertexIndex + 1}.`;
+        map.getContainer().style.cursor = 'crosshair';
+      });
+    });
+  }
+
+  function closeVertexEditor() {
+    movingVertexIndex = null;
+    map.getContainer().style.cursor = manualDrawing ? 'crosshair' : '';
+    if (els.vertexEditor) els.vertexEditor.hidden = true;
+    if (els.editArea) els.editArea.textContent = 'Edit polygon';
+    if (els.vertexEditStatus) els.vertexEditStatus.innerHTML = 'Change coordinates directly, or choose <b>Move on map</b> and click the new location.';
+  }
+
+  els.editArea.addEventListener('click', function () {
+    if (!currentPolygonLayer()) return;
+    renderVertexEditor();
+    els.vertexEditor.hidden = false;
+    els.editArea.textContent = 'Editing polygon';
+  });
+
+  els.closeVertexEditor.addEventListener('click', closeVertexEditor);
+
+  function currentPolygonLayer() {
+    let result = null;
+    drawnItems.eachLayer(layer => { result = layer; });
+    return result;
+  }
+
+  function setButtons() {
+    const hasPolygon = !!currentPolygonLayer();
+    els.generate.disabled = !hasPolygon;
+    els.editArea.disabled = !hasPolygon;
+    const hasTracks = !!lastSurveyGeometry && trackLayer.getLayers().length > 0;
+    els.clearTracks.disabled = trackLayer.getLayers().length === 0;
+    els.exportGeojson.disabled = !hasTracks;
+    els.exportCsv.disabled = !hasTracks;
+  }
+
+  function clearTracksAndSummary() {
+    trackLayer.clearLayers();
+    surfaceLayer.clearLayers();
+    lastSurveyGeometry = null;
+    document.getElementById('summary-empty').hidden = false;
+    document.getElementById('summary-results').hidden = true;
+    setButtons();
+  }
+
+  map.on(L.Draw.Event.CREATED, function (e) {
+    drawnItems.clearLayers();
+    drawnItems.addLayer(e.layer);
+    clearTracksAndSummary();
+    map.invalidateSize(false);
+    map.fitBounds(e.layer.getBounds(), { padding: [20, 20] });
+    setTimeout(() => map.invalidateSize(false), 100);
+    setButtons();
+  });
+  map.on(L.Draw.Event.EDITED, clearTracksAndSummary);
+  map.on(L.Draw.Event.DELETED, clearTracksAndSummary);
+
+  els.clearTracks.addEventListener('click', clearTracksAndSummary);
+
+  els.exampleArea.addEventListener('click', function () {
+    drawnItems.clearLayers();
+    clearTracksAndSummary();
+    const example = L.polygon([
+      [36.95, -122.35],
+      [36.95, -121.85],
+      [36.55, -121.78],
+      [36.48, -122.25]
+    ], { color: '#2780E3', weight: 2, fillOpacity: 0.12 });
+    drawnItems.addLayer(example);
+    map.invalidateSize(false);
+    map.fitBounds(example.getBounds(), { padding: [20, 20] });
+    setTimeout(() => map.invalidateSize(false), 100);
+    setButtons();
+  });
+
+  function leafletPolygonToTurf(layer) {
+    const gj = layer.toGeoJSON();
+    if (gj.geometry.type === 'Polygon') return gj;
+    throw new Error('Study area must be a polygon.');
+  }
+
+  function rotatePointKm(x, y, degrees) {
+    const r = degrees * Math.PI / 180;
+    return [x * Math.cos(r) - y * Math.sin(r), x * Math.sin(r) + y * Math.cos(r)];
+  }
+
+  function localKmToLngLat(center, xKm, yKm) {
+    const distance = Math.sqrt(xKm * xKm + yKm * yKm);
+    if (distance === 0) return center.geometry.coordinates;
+    const bearing = Math.atan2(xKm, yKm) * 180 / Math.PI;
+    return turf.destination(center, distance, bearing, { units: 'kilometers' }).geometry.coordinates;
+  }
+
+  function buildCandidateLines(polygon, spacingKm, bearingDeg) {
+    const center = turf.centroid(polygon);
+    const bbox = turf.bbox(polygon);
+    const corners = [
+      turf.point([bbox[0], bbox[1]]), turf.point([bbox[0], bbox[3]]),
+      turf.point([bbox[2], bbox[1]]), turf.point([bbox[2], bbox[3]])
+    ];
+    const radiusKm = Math.max(...corners.map(p => turf.distance(center, p, { units: 'kilometers' }))) * 1.6 + spacingKm * 2;
+    const count = Math.ceil((radiusKm * 2) / spacingKm) + 2;
+    const lines = [];
+
+    for (let i = -count; i <= count; i++) {
+      const offset = i * spacingKm;
+      // In a local x=east, y=north frame, the transect direction is the selected bearing.
+      // A line is created along local north-south, offset east-west, then rotated by bearing.
+      const a0 = [-offset, -radiusKm * 1.8];
+      const b0 = [-offset,  radiusKm * 1.8];
+      const aRot = rotatePointKm(a0[0], a0[1], -bearingDeg);
+      const bRot = rotatePointKm(b0[0], b0[1], -bearingDeg);
+      lines.push(turf.lineString([
+        localKmToLngLat(center, aRot[0], aRot[1]),
+        localKmToLngLat(center, bRot[0], bRot[1])
+      ]));
+    }
+    return lines;
+  }
+
+  function clipLineToPolygon(line, polygon) {
+    const boundary = turf.polygonToLine(polygon);
+    let pieces;
+    try {
+      pieces = turf.lineSplit(line, boundary);
+    } catch (err) {
+      pieces = turf.featureCollection([line]);
+    }
+    const inside = [];
+    pieces.features.forEach(seg => {
+      if (!seg.geometry || seg.geometry.coordinates.length < 2) return;
+      const mid = turf.along(seg, turf.length(seg, { units: 'kilometers' }) / 2, { units: 'kilometers' });
+      if (turf.booleanPointInPolygon(mid, polygon, { ignoreBoundary: false })) inside.push(seg);
+    });
+    return inside;
+  }
+
+  function segmentCenter(seg) {
+    return turf.centroid(seg).geometry.coordinates;
+  }
+
+  function orderSegments(segments, bearingDeg) {
+    // Order by position along the normal to the transect bearing.
+    const normal = (bearingDeg + 90) * Math.PI / 180;
+    return segments.slice().sort((a, b) => {
+      const ca = segmentCenter(a), cb = segmentCenter(b);
+      const lat0 = (ca[1] + cb[1]) / 2 * Math.PI / 180;
+      const ax = ca[0] * Math.cos(lat0), ay = ca[1];
+      const bx = cb[0] * Math.cos(lat0), by = cb[1];
+      return (ax * Math.sin(normal) + ay * Math.cos(normal)) - (bx * Math.sin(normal) + by * Math.cos(normal));
+    });
+  }
+
+  function orientSegment(seg, reverse) {
+    const c = seg.geometry.coordinates.slice();
+    return reverse ? c.reverse() : c;
+  }
+
+  function buildLawnmowerRoute(segments) {
+    if (!segments.length) return null;
+    const coords = [];
+    segments.forEach((seg, i) => {
+      const part = orientSegment(seg, i % 2 === 1);
+      if (coords.length === 0) coords.push(...part);
+      else coords.push(...part);
+    });
+    return turf.lineString(coords);
+  }
+
+  function drawFeature(feature, style) {
+    return L.geoJSON(feature, { style }).addTo(trackLayer);
+  }
+
+  function fmt(value, digits = 0) {
+    return Number(value).toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: digits });
+  }
+
+  function diveCycleDistanceKm(depthM, glideAngleDeg) {
+    if (!(depthM > 0) || !(glideAngleDeg > 0 && glideAngleDeg < 90)) return NaN;
+    const halfCycleM = depthM / Math.tan(glideAngleDeg * Math.PI / 180);
+    return (2 * halfCycleM) / 1000;
+  }
+
+  function updateDiveGraphic(depthM, glideAngleDeg, cycleKm) {
+    document.getElementById('dive-depth-label').textContent = `${fmt(depthM, 0)} m`;
+    document.getElementById('dive-distance-label').textContent = `${fmt(cycleKm, cycleKm < 10 ? 2 : 1)} km per cycle`;
+    document.getElementById('dive-angle-label').textContent = `${fmt(glideAngleDeg, 0)}°`;
+  }
+
+  function addSurfaceMarkersToLine(line, cycleKm) {
+    if (!line || !(cycleKm > 0)) return 0;
+    const lenKm = turf.length(line, { units: 'kilometers' });
+    let count = 0;
+    for (let d = cycleKm; d < lenKm; d += cycleKm) {
+      const p = turf.along(line, d, { units: 'kilometers' });
+      const [lng, lat] = p.geometry.coordinates;
+      L.circleMarker([lat, lng], {
+        radius: 5,
+        color: '#5A3300',
+        weight: 1.5,
+        fillColor: '#F59E0B',
+        fillOpacity: 0.95,
+        interactive: false,
+        pane: 'overlayPane',
+        className: 'surface-marker'
+      }).addTo(surfaceLayer);
+      count += 1;
+    }
+    return count;
+  }
+
+
+  let lastSurveyGeometry = null;
+
+  function updateDivePreviewOnly() {
+    const depthM = Math.max(0, Number(els.depth.value) || 0);
+    const glideAngleDeg = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
+    const cycleKm = diveCycleDistanceKm(depthM, glideAngleDeg);
+    if (!Number.isFinite(cycleKm) || cycleKm <= 0) return;
+    updateDiveGraphic(depthM, glideAngleDeg, cycleKm);
+    document.getElementById('m-cycle-distance').textContent = `${fmt(cycleKm, cycleKm < 10 ? 2 : 1)} km`;
+    document.getElementById('m-half-cycle').textContent = `${fmt(cycleKm / 2, cycleKm < 10 ? 2 : 1)} km`;
+    document.getElementById('m-profile-density').textContent = fmt(100 / cycleKm, 1);
+
+    if (lastSurveyGeometry) {
+      surfaceLayer.clearLayers();
+      let cycles = 0;
+      if (lastSurveyGeometry.type === 'route') {
+        const markerCount = addSurfaceMarkersToLine(lastSurveyGeometry.line, cycleKm);
+        document.getElementById('m-surface-markers').textContent = fmt(markerCount, 0);
+        cycles = lastSurveyGeometry.distanceKm / cycleKm;
+      } else {
+        let markerCount = 0;
+        lastSurveyGeometry.lines.forEach(line => { markerCount += addSurfaceMarkersToLine(line, cycleKm); });
+        document.getElementById('m-surface-markers').textContent = fmt(markerCount, 0);
+        cycles = lastSurveyGeometry.distanceKm / cycleKm;
+      }
+      document.getElementById('m-cycles').textContent = fmt(cycles, 0);
+    } else {
+      document.getElementById('m-cycles').textContent = '--';
+      document.getElementById('m-surface-markers').textContent = '--';
+    }
+  }
+
+  function surveyTrackFeatures() {
+    if (!lastSurveyGeometry) return [];
+    if (lastSurveyGeometry.type === 'route') {
+      return [turf.feature(lastSurveyGeometry.line.geometry, {
+        feature_type: 'survey_route',
+        distance_km: lastSurveyGeometry.distanceKm
+      })];
+    }
+    return lastSurveyGeometry.lines.map((line, i) =>
+      turf.feature(line.geometry, { feature_type: 'transect', transect_id: i + 1 })
+    );
+  }
+
+  function currentSurfacePoints() {
+    const depthM = Math.max(0, Number(els.depth.value) || 0);
+    const angle = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
+    const cycleKm = diveCycleDistanceKm(depthM, angle);
+    const points = [];
+    let id = 1;
+
+    function collect(line, lineId) {
+      const lenKm = turf.length(line, { units: 'kilometers' });
+      for (let d = cycleKm; d < lenKm; d += cycleKm) {
+        const p = turf.along(line, d, { units: 'kilometers' });
+        p.properties = {
+          feature_type: 'estimated_surfacing',
+          waypoint_id: id++,
+          line_id: lineId,
+          distance_along_line_km: Number(d.toFixed(3)),
+          target_depth_m: depthM,
+          glide_angle_deg: angle
+        };
+        points.push(p);
+      }
+    }
+
+    if (!lastSurveyGeometry || !(cycleKm > 0)) return points;
+    if (lastSurveyGeometry.type === 'route') collect(lastSurveyGeometry.line, 1);
+    else lastSurveyGeometry.lines.forEach((line, i) => collect(line, i + 1));
+    return points;
+  }
+
+  function downloadText(filename, mime, content) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  els.exportGeojson.addEventListener('click', function () {
+    if (!lastSurveyGeometry) return;
+    const polygonLayer = currentPolygonLayer();
+    const features = [];
+    if (polygonLayer) {
+      const study = polygonLayer.toGeoJSON();
+      study.properties = { ...(study.properties || {}), feature_type: 'study_area' };
+      features.push(study);
+    }
+    features.push(...surveyTrackFeatures(), ...currentSurfacePoints());
+    downloadText(
+      'glider-study-design.geojson',
+      'application/geo+json;charset=utf-8',
+      JSON.stringify(turf.featureCollection(features), null, 2)
+    );
+  });
+
+  els.exportCsv.addEventListener('click', function () {
+    const points = currentSurfacePoints();
+    if (!points.length) {
+      alert('No estimated surfacing waypoints are available to export.');
+      return;
+    }
+    const rows = [
+      ['waypoint_id','latitude','longitude','line_id','distance_along_line_km','target_depth_m','glide_angle_deg']
+    ];
+    points.forEach(p => {
+      const [lng, lat] = p.geometry.coordinates;
+      rows.push([
+        p.properties.waypoint_id,
+        lat.toFixed(7),
+        lng.toFixed(7),
+        p.properties.line_id,
+        p.properties.distance_along_line_km,
+        p.properties.target_depth_m,
+        p.properties.glide_angle_deg
+      ]);
+    });
+    downloadText(
+      'glider-estimated-surfacing-waypoints.csv',
+      'text/csv;charset=utf-8',
+      rows.map(r => r.join(',')).join('\n')
+    );
+  });
+
+  function generateSurvey() {
+    const layer = currentPolygonLayer();
+    if (!layer) return;
+
+    clearTracksAndSummary();
+
+    const polygon = leafletPolygonToTurf(layer);
+    const spacingKm = Number(els.spacing.value);
+    const bearing = Number(els.bearing.value);
+    const speedKt = Math.max(0.01, Number(els.speed.value));
+    const glideAngleDeg = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
+    const gliders = Math.max(1, Math.round(Number(els.gliders.value) || 1));
+    const depthM = Math.max(0, Number(els.depth.value) || 0);
+    const cycleKm = diveCycleDistanceKm(depthM, glideAngleDeg);
+
+    const candidates = buildCandidateLines(polygon, spacingKm, bearing);
+    let segments = [];
+    candidates.forEach(line => { segments.push(...clipLineToPolygon(line, polygon)); });
+    segments = orderSegments(segments, bearing);
+
+    if (!segments.length) {
+      document.getElementById('summary-empty').innerHTML = 'No transects were generated. Try a smaller spacing value or redraw the study area.';
+      document.getElementById('summary-empty').hidden = false;
+      setButtons();
+      return;
+    }
+
+    let distanceKm = 0;
+    let estimatedCycles = 0;
+    let surfaceMarkerCount = 0;
+    if (els.pattern.value === 'parallel') {
+      segments.forEach(seg => {
+        const segKm = turf.length(seg, { units: 'kilometers' });
+        distanceKm += segKm;
+        drawFeature(seg, { color: '#0057B8', weight: 4, opacity: 1.0 });
+        if (Number.isFinite(cycleKm) && cycleKm > 0) {
+          surfaceMarkerCount += addSurfaceMarkersToLine(seg, cycleKm);
+          estimatedCycles += segKm / cycleKm;
+        }
+      });
+      lastSurveyGeometry = { type: 'segments', lines: segments, distanceKm };
+    } else {
+      const route = buildLawnmowerRoute(segments);
+      distanceKm = turf.length(route, { units: 'kilometers' });
+      drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
+      segments.forEach(seg => drawFeature(seg, { color: '#1A6B4E', weight: 5, opacity: 0.35 }));
+      if (Number.isFinite(cycleKm) && cycleKm > 0) {
+        surfaceMarkerCount += addSurfaceMarkersToLine(route, cycleKm);
+        estimatedCycles = distanceKm / cycleKm;
+      }
+      lastSurveyGeometry = { type: 'route', line: route, distanceKm };
+    }
+
+    const areaKm2 = turf.area(polygon) / 1e6;
+    const kmPerDayPerGlider = speedKt * 1.852 * 24;
+    const days = distanceKm / (kmPerDayPerGlider * gliders);
+
+    document.getElementById('m-area').textContent = `${fmt(areaKm2, areaKm2 < 100 ? 1 : 0)} km²`;
+    document.getElementById('m-transects').textContent = fmt(segments.length, 0);
+    document.getElementById('m-distance').textContent = `${fmt(distanceKm, distanceKm < 100 ? 1 : 0)} km`;
+    document.getElementById('m-duration').textContent = days < 1 ? `${fmt(days * 24, 1)} h` : `${fmt(days, 1)} d`;
+    document.getElementById('m-depth').textContent = `${fmt(depthM, 0)} m`;
+    if (Number.isFinite(cycleKm) && cycleKm > 0) {
+      document.getElementById('m-cycle-distance').textContent = `${fmt(cycleKm, cycleKm < 10 ? 2 : 1)} km`;
+      document.getElementById('m-half-cycle').textContent = `${fmt(cycleKm / 2, cycleKm < 10 ? 2 : 1)} km`;
+      document.getElementById('m-cycles').textContent = fmt(estimatedCycles, 0);
+      document.getElementById('m-profile-density').textContent = fmt(100 / cycleKm, 1);
+      document.getElementById('m-surface-markers').textContent = fmt(surfaceMarkerCount, 0);
+      updateDiveGraphic(depthM, glideAngleDeg, cycleKm);
+    }
+    document.getElementById('summary-empty').hidden = true;
+    document.getElementById('summary-results').hidden = false;
+    setButtons();
+
+    // Hook for the 3D seafloor view below; it reads the route rather than rebuilding it.
+    window.studyDesign = { geometry: lastSurveyGeometry, polygon, els, cycleKm, depthM, glideAngleDeg };
+    window.dispatchEvent(new CustomEvent('studydesign:generated'));
+  }
+
+  els.generate.addEventListener('click', generateSurvey);
+  els.depth.addEventListener('input', updateDivePreviewOnly);
+  els.glideAngle.addEventListener('input', updateDivePreviewOnly);
+  updateDivePreviewOnly();
+  setButtons();
+
+  // Refresh only after genuine page/window layout changes. Avoid continuously
+  // invalidating during normal map interaction, which can cause unnecessary tile churn.
+  let resizeTimer = null;
+  function refreshMapSize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      map.invalidateSize({ pan: false, debounceMoveend: true });
+    }, 150);
+  }
+
+  window.addEventListener('resize', refreshMapSize);
+  window.addEventListener('load', refreshMapSize);
+  setTimeout(refreshMapSize, 300);
+  setTimeout(refreshMapSize, 1000);
+})();
+</script>
+```
