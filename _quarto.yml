@@ -43,6 +43,8 @@ website:
         text: Project Info
       - href: content/glider-selection.qmd
         text: Glider Selection Dashboard
+      - href: content/direct-comparison.qmd
+        text: Direct Comparison
       - href: content/study-design.qmd
         text: Study Design Tool
       - section: Endurance calculation

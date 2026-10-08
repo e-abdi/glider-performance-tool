@@ -1,0 +1,377 @@
+---
+title: "Direct Comparison"
+page-layout: full
+toc: false
+format:
+  html:
+    include-in-header:
+      text: |
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+---
+
+<!--
+  Hand-maintained page. Only the block between the COMPARISON-DATA markers near the end is
+  generated, by code/build_comparison_data.py, from:
+    output/direct comparison.ods          the words: factor, Slocum, Seaglider, comments
+    content/data/comparison-tags.csv      which glider has the edge, and which topics a factor
+                                          belongs to (topic ids are the TOPICS list below)
+  Change either, then run:  python3 code/build_comparison_data.py
+-->
+
+```{=html}
+<style>
+  #dcp {
+    --surface: #FFFFFF; --surface-2: #F1F6F7; --line: #DAE3E5; --line-strong: #BCCBCE;
+    --ink: #1F2C31; --ink-2: #536268; --ink-3: #78888E;
+    --accent: #2780E3; --accent-ink: #1B62B0; --accent-soft: #E3EEFB;
+    --sl: #2a78d6; --sg: #eb6834; --mix: #78888E;
+    --sl-soft: #EAF2FC; --sg-soft: #FDEEE7;
+    --mark: #FFF1B8;
+    --sans: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    max-width: 1250px; color: var(--ink); font-family: var(--sans); line-height: 1.5;
+  }
+  body.quarto-dark #dcp, :root[data-bs-theme="dark"] #dcp {
+    --surface: #212121; --surface-2: #2A2A2A; --line: #3A3A3A; --line-strong: #4E4E4E;
+    --ink: #F2F2F2; --ink-2: #BFC6C8; --ink-3: #939A9D;
+    --accent: #75AADB; --accent-ink: #9CC6EC; --accent-soft: #23323F;
+    --sl: #3987e5; --sg: #d95926; --mix: #939A9D;
+    --sl-soft: #1D2836; --sg-soft: #33231C;
+    --mark: #5A4A12;
+  }
+  #dcp * { box-sizing: border-box; }
+  #dcp .lede { color: var(--ink-2); max-width: 80ch; }
+
+  /* ---- focus bar ---- */
+  #dcp .bar {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px 0; margin: 16px 0 14px; box-shadow: 0 6px 18px rgba(31,44,49,.07);
+  }
+  @media (min-width: 900px) { #dcp .bar { position: sticky; top: 0; z-index: 5; } }
+  #dcp .k { font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
+  #dcp .topics { display: flex; flex-wrap: wrap; gap: 7px; margin: 7px 0 10px; }
+  #dcp button { font: inherit; cursor: pointer; color: inherit; }
+  #dcp button:focus-visible, #dcp input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #dcp .chip {
+    font-size: 13.5px; padding: 5px 12px; border-radius: 999px;
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-2);
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  #dcp .chip:hover { border-color: var(--accent); color: var(--ink); }
+  #dcp .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+  #dcp .chip .n { font-size: 11.5px; color: var(--ink-3); margin-left: 5px; font-weight: 400; }
+  #dcp .chip.clear { border-style: dashed; }
+  #dcp .tools { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; padding-bottom: 10px; }
+  #dcp input[type="search"] {
+    font: inherit; font-size: 13.5px; padding: 5px 10px; width: 220px; max-width: 100%;
+    border: 1px solid var(--line-strong); border-radius: 7px; background: var(--surface); color: var(--ink);
+  }
+  #dcp .edges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  #dcp .edgebtn {
+    font-size: 12.5px; padding: 3px 10px 3px 8px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px;
+  }
+  #dcp .edgebtn[aria-pressed="true"] { border-color: var(--ink-3); color: var(--ink); font-weight: 700; background: var(--surface-2); }
+  #dcp .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  #dcp .sw.slocum { background: var(--sl); }
+  #dcp .sw.seaglider { background: var(--sg); }
+  #dcp .sw.depends { background: repeating-linear-gradient(135deg, var(--sl) 0 3px, var(--sg) 3px 6px); }
+
+  #dcp .summary { border-top: 1px solid var(--line); padding: 9px 0 10px; font-size: 13.5px; color: var(--ink-2);
+    display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; }
+  #dcp .summary b { color: var(--ink); }
+  #dcp .tally { display: flex; height: 8px; width: 180px; border-radius: 4px; overflow: hidden; background: var(--surface-2); gap: 2px; }
+  #dcp .tally span { display: block; height: 100%; transition: flex-grow .3s; }
+  #dcp .tally .slocum { background: var(--sl); }
+  #dcp .tally .seaglider { background: var(--sg); }
+  #dcp .tally .depends { background: var(--mix); opacity: .55; }
+  #dcp .summary .caveat { color: var(--ink-3); font-size: 12px; }
+
+  #dcp .colhead { display: grid; grid-template-columns: var(--cols); gap: 0 14px; border-top: 1px solid var(--line); padding: 7px 0 8px; }
+  #dcp .colhead div { font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 7px; }
+  #dcp { --cols: minmax(170px, 0.8fr) 1.3fr 1.3fr; }
+
+  /* ---- rows ---- */
+  #dcp .group { margin: 22px 0 6px; display: flex; align-items: baseline; gap: 12px; }
+  #dcp .group h2 { font-size: 17px; font-weight: 700; margin: 0; border: 0; padding: 0; }
+  #dcp .group .gn { font-size: 12.5px; color: var(--ink-3); }
+  #dcp .group button { font-size: 12.5px; border: 0; background: none; color: var(--accent-ink); padding: 0; }
+  #dcp .group button:hover { text-decoration: underline; }
+  #dcp .row {
+    display: grid; grid-template-columns: var(--cols); gap: 8px 14px; align-items: start;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 8px; transition: opacity .25s, border-color .2s, box-shadow .2s;
+  }
+  #dcp .row.hit { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  #dcp .row.dim { opacity: .5; }
+  #dcp .row.dim:hover { opacity: 1; }
+  #dcp .row[hidden], #dcp .group[hidden] { display: none; }
+  #dcp .fac h3 { font-size: 15px; font-weight: 700; margin: 0 0 2px; line-height: 1.3; }
+  #dcp .fac .sec { font-size: 11.5px; color: var(--ink-3); display: none; }
+  #dcp.focused .fac .sec { display: block; }
+  #dcp .verdict { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; margin-top: 6px; color: var(--ink-2); }
+  #dcp .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+  #dcp .tag { font-size: 11px; color: var(--ink-3); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; }
+  #dcp .tag.on { color: var(--accent-ink); border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+  #dcp .cell { font-size: 14px; color: var(--ink-2); border-radius: 7px; padding: 6px 9px; border-left: 3px solid transparent; min-width: 0; overflow-wrap: anywhere; }
+  #dcp .cell .who { display: none; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: var(--ink-3); margin-bottom: 2px; }
+  #dcp .cell.win { color: var(--ink); }
+  #dcp .cell.sl.win { background: var(--sl-soft); border-left-color: var(--sl); }
+  #dcp .cell.sg.win { background: var(--sg-soft); border-left-color: var(--sg); }
+  #dcp .row.depends .cell { border-left-color: var(--line-strong); }
+  #dcp .note { grid-column: 2 / -1; font-size: 13px; color: var(--ink-2); background: var(--surface-2); border-radius: 7px; padding: 7px 10px; overflow-wrap: anywhere; }
+  #dcp .note .nk { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: var(--ink-3); margin-right: 6px; }
+  #dcp .note.on { background: var(--accent-soft); color: var(--ink); box-shadow: 0 0 0 1px var(--accent) inset; }
+  #dcp .note.on .nk { color: var(--accent-ink); }
+  #dcp mark { background: var(--mark); color: inherit; padding: 0 1px; border-radius: 2px; }
+  #dcp a { color: var(--accent-ink); }
+  #dcp .empty { color: var(--ink-3); padding: 18px 2px; }
+  #dcp .foot { font-size: 12px; color: var(--ink-3); margin-top: 18px; }
+
+  @media (max-width: 760px) {
+    #dcp .colhead { display: none; }
+    #dcp .row { grid-template-columns: 1fr; }
+    #dcp .note { grid-column: 1; }
+    #dcp .cell .who { display: block; }
+    #dcp .cell { border-left-color: var(--line); }
+  }
+  @media (prefers-reduced-motion: reduce) { #dcp * { transition: none !important; } }
+</style>
+
+<div id="dcp">
+
+  <p class="lede">A side-by-side look at the gliders we fly, from pilots' notes. Pick what
+  matters for your mission and the factors that bear on it move to the top. Pilot notes that speak
+  to your pick are highlighted, and everything else stays on the page, dimmed, below them. The shaded cell in each row is the glider with the edge; rows
+  marked trade-off are the ones where the answer depends on the mission.</p>
+
+  <div class="bar">
+    <div class="k" id="topics_lbl">What matters for your mission?</div>
+    <div class="topics" id="topics" role="group" aria-labelledby="topics_lbl"></div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="Search factors and notes" aria-label="Search factors and notes">
+      <div class="edges" role="group" aria-label="Show only rows where">
+        <span class="k">Show</span>
+        <button class="edgebtn" data-edge="slocum" aria-pressed="false"><i class="sw slocum"></i>Slocum edge</button>
+        <button class="edgebtn" data-edge="seaglider" aria-pressed="false"><i class="sw seaglider"></i>Seaglider edge</button>
+        <button class="edgebtn" data-edge="depends" aria-pressed="false"><i class="sw depends"></i>Trade-off</button>
+      </div>
+    </div>
+    <div class="summary" id="summary" aria-live="polite"></div>
+    <div class="colhead" aria-hidden="true">
+      <div>Factor</div>
+      <div><i class="sw slocum"></i>Slocum</div>
+      <div><i class="sw seaglider"></i>Seaglider</div>
+    </div>
+  </div>
+
+  <div id="list"></div>
+  <p class="foot" id="foot"></p>
+</div>
+```
+
+```{=html}
+<!-- COMPARISON-DATA:BEGIN -->
+<script>
+window.COMPARISON = {"source": "direct comparison.ods", "built": "2026-10-08", "rows": [{"section": "Vehicle design & hardware", "factor": "Pump options", "slocum": "Shallow piston pump (30/50/100/150/200 m, moves seawater) OR deep hydraulic oil/bladder pump (350/1000 m), the modules are easily swappable since the rest of glider has 1000m depth rating", "seaglider": "1000m rated oil/bladder pump", "note": "Slocum modular design gives you flexibility here if you want to use the same glider for both deep and shallow operation.", "edge": "slocum", "topics": ["shallow", "deep"], "note_topics": ["shallow", "deep"]}, {"section": "Vehicle design & hardware", "factor": "Deep-water performance", "slocum": "Less efficient", "seaglider": "Very efficient", "note": "", "edge": "seaglider", "topics": ["deep", "endurance"], "note_topics": []}, {"section": "Vehicle design & hardware", "factor": "Shallow-water performance", "slocum": "Good: the shallow piston pump gives fast inflections.", "seaglider": "Weak: the main pump is optimised for ~1000 m and has low flow rates for efficient shallow dives", "note": "Shallow coastal operations favors shallow slocum especially with the optional thruster", "edge": "slocum", "topics": ["shallow"], "note_topics": ["shallow"]}, {"section": "Vehicle design & hardware", "factor": "Buoyancy change", "slocum": "~900–960 cc", "seaglider": "~800–860 cc usable", "note": "Seaglider's budget is tighter when the mission has a large density range. Especially since Seaglider needs some buoyancy to get the antenna out of the water but Slocum has a air bladder at surface to help with this.", "edge": "slocum", "topics": ["shallow", "deep"], "note_topics": ["deep"]}, {"section": "Vehicle design & hardware", "factor": "Steering", "slocum": "Rudder", "seaglider": "Roll", "note": "An advantage of rudder is that it allows tighter turn radius which is especially important for shallow dives, a disadvantage is that although it is a controlled using a magnetically coupled motor housed inside the pressure hull, it still counts as an external moving part and therefore more prone to failure", "edge": "depends", "topics": ["shallow", "risk"], "note_topics": ["shallow", "risk"]}, {"section": "Vehicle design & hardware", "factor": "Thruster", "slocum": "Available", "seaglider": "Not Available", "note": "~10 W optional unit. Daily energy rises ~3–5 → ~10–15 Ah/day but transit time roughly halves. Used for thruster-assisted yos, holding horizontal flight at depth, and pushing through the surface lens.", "edge": "slocum", "topics": ["shallow", "endurance"], "note_topics": ["endurance", "shallow"]}, {"section": "Vehicle design & hardware", "factor": "Air bladder", "slocum": "Yes", "seaglider": "No", "note": "It’s a nice help for getting the antenna out of the water but it also introduces another point of failure", "edge": "depends", "topics": ["risk", "fieldops"], "note_topics": ["risk"]}, {"section": "Vehicle design & hardware", "factor": "Ejection weight", "slocum": "Yes", "seaglider": "No", "note": "Nice to have as the last resort if something catastrophic happens but important to remember that glider can not dive again once the weight is dropped and it turns into a simple float until recovered", "edge": "slocum", "topics": ["risk", "fieldops"], "note_topics": ["risk"]}, {"section": "Vehicle design & hardware", "factor": "Strobe", "slocum": "Yes", "seaglider": "No, can be added separately", "note": "", "edge": "slocum", "topics": ["fieldops"], "note_topics": []}, {"section": "Power & batteries", "factor": "Battery options", "slocum": "Alkaline, 3S lithium primary, 4S lithium primary (standard or extended energy bay), TWR rechargeable Li-ion (standard or extended)", "seaglider": "Lithium primary only (legacy 24 V + 10 V, or univolt 15 V)", "note": "", "edge": "slocum", "topics": ["endurance"], "note_topics": []}, {"section": "Power & batteries", "factor": "Battery pack cost", "slocum": "$$$", "seaglider": "$", "note": "Seaglider packs can be purchased directly from Electrochem while Slocum packs need to be purchased from Teledyne", "edge": "seaglider", "topics": ["cost"], "note_topics": ["cost"]}, {"section": "Navigation, bottom & surface detection", "factor": "Altimeter", "slocum": "~170KHz", "seaglider": "~12KHz", "note": "Seaglider has longer range the advantage in deeper waters, Slocum has higher resolution and best for tighter control within 100m depth, Both can be set to trigger below a certain depth", "edge": "depends", "topics": ["shallow", "deep", "science"], "note_topics": ["shallow", "deep"]}, {"section": "Navigation, bottom & surface detection", "factor": "Bathymaps", "slocum": "Not available", "seaglider": "You can fly based on a pre-loaded bathymap of the area", "note": "many advantages such as saving power, being acoustically quiet and a safe backup if there is a problem with altimeter", "edge": "seaglider", "topics": ["deep", "endurance", "science", "risk"], "note_topics": ["endurance", "science", "risk"]}, {"section": "Navigation, bottom & surface detection", "factor": "Compass calibration", "slocum": "Shore cal (recommended), in-situ at-sea cal possible but results may not be reliable", "seaglider": "In-situ cal easy and accurate, shore cal possible but almost never needed", "note": "", "edge": "seaglider", "topics": ["piloting", "fieldops"], "note_topics": []}, {"section": "Piloting & control", "factor": "Pilot interface", "slocum": "Live: Connect directly to GliderDOS at the surface, possible to run scripts on dockserver to automatize communication. Less efficient", "seaglider": "Indirect: no live terminal. Pilot stages control files (cmdfile, targets, science) that the glider collects at its next call. More efficient", "note": "By having no direct shell connection, Seagliders save time and data", "edge": "seaglider", "topics": ["piloting", "cost"], "note_topics": ["piloting", "cost"]}, {"section": "Piloting & control", "factor": "Shore software", "slocum": "SFMC (Teledyne Proprietry), subscription", "seaglider": "Basestation3 (APL-UW, free, open source, Linux/macOS) or seaglider.pub; you run your own basestation", "note": "", "edge": "seaglider", "topics": ["piloting", "cost"], "note_topics": []}, {"section": "Piloting & control", "factor": "Buoyancy / trim tuning", "slocum": "Tank ballast + onboard autoballast (centres dive/climb drive automatically)", "seaglider": "Tank ballast + trim sheet, then manual pitch/VBD/roll trimming from basestation regressions and the Flight Model System", "note": "Trimming takes much of a Seaglider pilot's early-mission effort. Seaglider provide more options to tune things while Slocum tuning is simpler and more hands-off.", "edge": "depends", "topics": ["piloting"], "note_topics": ["piloting"]}, {"section": "Piloting & control", "factor": "Fault handling", "slocum": "More complex for new users to troubleshoot especially since the full dive engineering files are extremely large to transmit over iridium", "seaglider": "Easier to troubleshoot, full dataset is automatically transmitted at the end of each dive", "note": "", "edge": "seaglider", "topics": ["piloting", "risk", "cost"], "note_topics": []}, {"section": "Piloting & control", "factor": "Surfacing at a specific time", "slocum": "Possible", "seaglider": "Not Available", "note": "", "edge": "slocum", "topics": ["piloting", "fieldops"], "note_topics": []}, {"section": "Communications", "factor": "Data download", "slocum": "Usually a small subset of data only on each dive, you can choose to download a larger subset if you want to troubleshoot something specific, the whole dataset is usually too large to be able to download using satellite communication without comms dropping", "seaglider": "Full dataset is downloaded at each dive", "note": "", "edge": "seaglider", "topics": ["science", "piloting", "cost"], "note_topics": []}, {"section": "Communications", "factor": "Comms", "slocum": "Iridium (RUDICS primary + dial-up/alternate), Freewave 900 MHz RF modem: for line-of-sight operation and lab work without a cable and for recovery boats, Serial cable for faster data transfer in the lab", "seaglider": "Iridium (RUDICS primary + dial-up/alternate). Serial cable for Deck/lab comms", "note": "Slocum iridium costs usually are much higher than Seaglider’s because of the inefficiencies in their file structure and communication methodologies", "edge": "depends", "topics": ["cost", "fieldops"], "note_topics": ["cost"]}, {"section": "Communications", "factor": "Argos", "slocum": "Built-in Argos, powered by the emergency circuit, so it keeps transmitting after the main battery fails", "seaglider": "Optional external tag", "note": "", "edge": "slocum", "topics": ["risk", "fieldops"], "note_topics": []}, {"section": "Science payload", "factor": "Custom sensor integration", "slocum": "Sensors are integrated by Teledyne, Custom sensor integration possible on G3S with the purchase of Backseat Driver which is a specific version of the Slocum firmware. You can always strap the sensor around the glider. Otherwise it will be a big job.", "seaglider": "Users have access to all user config files and can easily write their own to integrate complex sensors, Sensor configs can be fixed remotely. There is a large wet payload area with removable hatches for mechanical integration.", "note": "For more info: https://github.com/e-abdi/custom-glider-sensor-integration", "edge": "seaglider", "topics": ["science", "cost"], "note_topics": ["science"]}, {"section": "Deployment, recovery & logistics", "factor": "Deployment", "slocum": "Ships assembled (wings on). Freewave checks on deck, then test dives", "seaglider": "Seaglider launch needs a laptop and cable on deck plus a satellite link to pilots.", "note": "More info: https://e-abdi.github.io/Glider-Operation-Best-Practices/deployment/", "edge": "slocum", "topics": ["fieldops"], "note_topics": ["fieldops"]}, {"section": "Deployment, recovery & logistics", "factor": "Recovery", "slocum": "Optional nose recovery system (line deployed by pilot), strobe make it easier to spot", "seaglider": "Small-boat cradle or large-vessel lift by the rudder only. Low profile at the surface", "note": "More info: https://e-abdi.github.io/Glider-Operation-Best-Practices/recovery/", "edge": "slocum", "topics": ["fieldops"], "note_topics": ["fieldops"]}]};
+</script>
+<!-- COMPARISON-DATA:END -->
+```
+
+```{=html}
+<script>
+(function () {
+  var D = window.COMPARISON, root = document.getElementById("dcp");
+  if (!D || !root) return;
+
+  // Topic ids are what content/data/comparison-tags.csv uses in its `topics` column.
+  var TOPICS = [
+    { id: "cost",      label: "Operating cost" },
+    { id: "endurance", label: "Endurance & energy" },
+    { id: "shallow",   label: "Shallow / coastal" },
+    { id: "deep",      label: "Deep / open ocean" },
+    { id: "risk",      label: "Failure points & safety nets" },
+    { id: "piloting",  label: "Piloting & learning curve" },
+    { id: "science",   label: "Science payload & acoustics" },
+    { id: "fieldops",  label: "Deployment & field logistics" }
+  ];
+  var TOPIC = {}; TOPICS.forEach(function (t) { TOPIC[t.id] = t; });
+  var VERDICT = { slocum: "Edge: Slocum", seaglider: "Edge: Seaglider", depends: "Trade-off" };
+
+  var state = { focus: [], edges: [], q: "" };
+  var rows = D.rows.map(function (r, i) { r.i = i; return r; });
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });
+  }
+  // Escape, mark search hits, and turn bare URLs into links (never marking inside a URL).
+  function rich(s) {
+    var out = "", re = /https?:\/\/[^\s<>()]+[^\s<>().,;:]/g, last = 0, m;
+    while ((m = re.exec(s))) {
+      out += hilite(s.slice(last, m.index)) +
+        '<a href="' + esc(m[0]) + '" target="_blank" rel="noopener">' + esc(m[0].replace(/^https?:\/\//, "")) + "</a>";
+      last = m.index + m[0].length;
+    }
+    return (out + hilite(s.slice(last))).replace(/\n/g, "<br>");
+  }
+  function hilite(s) {
+    if (!state.q) return esc(s);
+    var q = state.q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return s.split(new RegExp("(" + q + ")", "ig")).map(function (p, i) {
+      return i % 2 ? "<mark>" + esc(p) + "</mark>" : esc(p);
+    }).join("");
+  }
+
+  // ---- static parts ----
+  var topicsEl = document.getElementById("topics");
+  topicsEl.innerHTML = TOPICS.map(function (t) {
+    var n = rows.filter(function (r) { return r.topics.indexOf(t.id) >= 0; }).length;
+    return '<button class="chip" data-topic="' + t.id + '" aria-pressed="false">' + esc(t.label) + '<span class="n">' + n + "</span></button>";
+  }).join("") + '<button class="chip clear" id="clear" hidden>Clear</button>';
+
+  // One element per factor, built once and moved around, so the reorder can animate.
+  var list = document.getElementById("list");
+  rows.forEach(function (r) {
+    var el = document.createElement("article");
+    el.className = "row " + (r.edge || "none");
+    r.el = el;
+  });
+  function paint(r) {
+    var sl = r.edge === "slocum", sg = r.edge === "seaglider";
+    var noteHit = (r.note_topics || []).some(function (t) { return state.focus.indexOf(t) >= 0; });
+    r.el.innerHTML =
+      '<div class="fac"><h3>' + hilite(r.factor) + "</h3>" +
+        '<div class="sec">' + esc(r.section) + "</div>" +
+        (r.edge ? '<div class="verdict"><i class="sw ' + r.edge + '"></i>' + VERDICT[r.edge] + "</div>" : "") +
+        '<div class="tags">' + r.topics.map(function (t) {
+          return '<span class="tag' + (state.focus.indexOf(t) >= 0 ? " on" : "") + '">' + esc(TOPIC[t] ? TOPIC[t].label : t) + "</span>";
+        }).join("") + "</div></div>" +
+      '<div class="cell sl' + (sl ? " win" : "") + '"><span class="who">Slocum</span>' + rich(r.slocum) + "</div>" +
+      '<div class="cell sg' + (sg ? " win" : "") + '"><span class="who">Seaglider</span>' + rich(r.seaglider) + "</div>" +
+      (r.note ? '<div class="note' + (noteHit ? " on" : "") + '"><span class="nk">Note</span>' + rich(r.note) + "</div>" : "");
+  }
+
+  function group(title, n, extra) {
+    var g = document.createElement("div");
+    g.className = "group";
+    g.innerHTML = "<h2>" + esc(title) + '</h2><span class="gn">' + n + (n === 1 ? " factor" : " factors") + "</span>" + (extra || "");
+    return g;
+  }
+
+  var restOpen = true;
+
+  function render() {
+    var q = state.q.toLowerCase();
+    var visible = rows.filter(function (r) {
+      if (state.edges.length && state.edges.indexOf(r.edge) < 0) return false;
+      if (q && [r.factor, r.slocum, r.seaglider, r.note, r.section].join(" ").toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    rows.forEach(function (r) {
+      r.score = r.topics.filter(function (t) { return state.focus.indexOf(t) >= 0; }).length;
+      paint(r);
+    });
+
+    // FLIP: remember where every row was, rebuild the order, then slide from old to new.
+    var before = {};
+    rows.forEach(function (r) { if (r.el.isConnected) before[r.i] = r.el.getBoundingClientRect().top; });
+
+    var frag = document.createDocumentFragment();
+    root.classList.toggle("focused", state.focus.length > 0);
+    if (!state.focus.length) {
+      var sec = null, inSec = [];
+      var flush = function () {
+        if (!inSec.length) return;
+        frag.appendChild(group(sec, inSec.length));
+        inSec.forEach(function (r) { r.el.classList.remove("hit", "dim"); r.el.hidden = false; frag.appendChild(r.el); });
+      };
+      visible.forEach(function (r) { if (r.section !== sec) { flush(); sec = r.section; inSec = []; } inSec.push(r); });
+      flush();
+    } else {
+      var hits = visible.filter(function (r) { return r.score > 0; })
+        .sort(function (a, b) { return b.score - a.score || a.i - b.i; });
+      var rest = visible.filter(function (r) { return r.score === 0; });
+      var names = state.focus.map(function (t) { return TOPIC[t].label; }).join(" + ");
+      frag.appendChild(group("Bears on " + names, hits.length));
+      hits.forEach(function (r) { r.el.classList.add("hit"); r.el.classList.remove("dim"); r.el.hidden = false; frag.appendChild(r.el); });
+      if (rest.length) {
+        frag.appendChild(group("Everything else", rest.length,
+          '<button id="rest_tog" aria-expanded="' + restOpen + '">' + (restOpen ? "Hide" : "Show") + "</button>"));
+        rest.forEach(function (r) { r.el.classList.remove("hit"); r.el.classList.add("dim"); r.el.hidden = !restOpen; frag.appendChild(r.el); });
+      }
+    }
+    list.innerHTML = "";
+    list.appendChild(frag);
+    if (!visible.length) list.innerHTML = '<p class="empty">No factor matches. Clear the search or the filters above.</p>';
+
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce) rows.forEach(function (r) {
+      if (!(r.i in before) || r.el.hidden || !r.el.isConnected) return;
+      var dy = before[r.i] - r.el.getBoundingClientRect().top;
+      if (Math.abs(dy) < 2) return;
+      r.el.style.transition = "none";
+      r.el.style.transform = "translateY(" + dy + "px)";
+      requestAnimationFrame(function () {
+        r.el.style.transition = "transform .35s cubic-bezier(.2,.7,.2,1), opacity .25s";
+        r.el.style.transform = "";
+      });
+    });
+
+    summarize(visible);
+    syncControls();
+    var h = state.focus.length ? "#focus=" + state.focus.join(",") : " ";
+    try { history.replaceState(null, "", h === " " ? location.pathname + location.search : h); } catch (e) {}
+  }
+
+  function summarize(visible) {
+    var set = state.focus.length ? visible.filter(function (r) { return r.score > 0; }) : visible;
+    var c = { slocum: 0, seaglider: 0, depends: 0 };
+    set.forEach(function (r) { if (c[r.edge] != null) c[r.edge]++; });
+    var lead = state.focus.length
+      ? "<span><b>" + set.length + "</b> of " + rows.length + " factors bear on what you picked.</span>"
+      : "<span>All <b>" + set.length + "</b> factors" + (set.length < rows.length ? " shown" : "") + ".</span>";
+    document.getElementById("summary").innerHTML = set.length ? lead +
+      '<span class="tally" role="img" aria-label="Slocum edge ' + c.slocum + ", Seaglider edge " + c.seaglider + ", trade-off " + c.depends + '">' +
+        '<span class="slocum" style="flex-grow:' + c.slocum + '"></span>' +
+        '<span class="seaglider" style="flex-grow:' + c.seaglider + '"></span>' +
+        '<span class="depends" style="flex-grow:' + c.depends + '"></span></span>' +
+      "<span>Slocum edge <b>" + c.slocum + "</b> · Seaglider edge <b>" + c.seaglider + "</b> · Trade-off <b>" + c.depends + "</b></span>" +
+      '<span class="caveat">A count, not a score: one factor can outweigh the rest for your mission.</span>'
+      : lead;
+  }
+
+  function syncControls() {
+    topicsEl.querySelectorAll("[data-topic]").forEach(function (b) {
+      b.setAttribute("aria-pressed", state.focus.indexOf(b.dataset.topic) >= 0);
+    });
+    document.getElementById("clear").hidden = !state.focus.length;
+    root.querySelectorAll("[data-edge]").forEach(function (b) {
+      b.setAttribute("aria-pressed", state.edges.indexOf(b.dataset.edge) >= 0);
+    });
+  }
+
+  function toggle(arr, v) { var i = arr.indexOf(v); if (i >= 0) arr.splice(i, 1); else arr.push(v); }
+
+  topicsEl.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    if (b.id === "clear") state.focus = []; else toggle(state.focus, b.dataset.topic);
+    render();
+  });
+  root.querySelector(".edges").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-edge]"); if (!b) return;
+    toggle(state.edges, b.dataset.edge); render();
+  });
+  var qt;
+  document.getElementById("q").addEventListener("input", function (e) {
+    clearTimeout(qt); qt = setTimeout(function () { state.q = e.target.value.trim(); render(); }, 120);
+  });
+  list.addEventListener("click", function (e) {
+    if (e.target.id === "rest_tog") { restOpen = !restOpen; render(); }
+  });
+
+  var m = /focus=([\w,]+)/.exec(location.hash);
+  if (m) state.focus = m[1].split(",").filter(function (t) { return TOPIC[t]; });
+  document.getElementById("foot").textContent = "Source: " + D.source + ", built " + D.built + ".";
+  render();
+})();
+</script>
+```

@@ -1,0 +1,26 @@
+factor,edge,topics,note_topics
+Pump options,slocum,shallow;deep,shallow;deep
+Deep-water performance,seaglider,deep;endurance,
+Shallow-water performance,slocum,shallow,shallow
+Buoyancy change,slocum,shallow;deep,deep
+Steering,depends,shallow;risk,shallow;risk
+Thruster,slocum,shallow;endurance,endurance;shallow
+Air bladder,depends,risk;fieldops,risk
+Ejection weight,slocum,risk;fieldops,risk
+Strobe,slocum,fieldops,
+Battery options,slocum,endurance,
+Battery pack cost,seaglider,cost,cost
+Altimeter,depends,shallow;deep;science,shallow;deep
+Bathymaps,seaglider,deep;endurance;science;risk,endurance;science;risk
+Compass calibration,seaglider,piloting;fieldops,
+Pilot interface,seaglider,piloting;cost,piloting;cost
+Shore software,seaglider,piloting;cost,
+Buoyancy / trim tuning,depends,piloting,piloting
+Fault handling,seaglider,piloting;risk;cost,
+Surfacing at a specific time,slocum,piloting;fieldops,
+Data download,seaglider,science;piloting;cost,
+Comms,depends,cost;fieldops,cost
+Argos,slocum,risk;fieldops,
+Custom sensor integration,seaglider,science;cost,science
+Deployment,slocum,fieldops,fieldops
+Recovery,slocum,fieldops,fieldops

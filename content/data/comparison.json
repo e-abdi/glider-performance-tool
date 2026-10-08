@@ -1,0 +1,368 @@
+{
+ "source": "direct comparison.ods",
+ "built": "2026-10-08",
+ "rows": [
+  {
+   "section": "Vehicle design & hardware",
+   "factor": "Pump options",
+   "slocum": "Shallow piston pump (30/50/100/150/200 m, moves seawater) OR deep hydraulic oil/bladder pump (350/1000 m), the modules are easily swappable since the rest of glider has 1000m depth rating",
+   "seaglider": "1000m rated oil/bladder pump",
+   "note": "Slocum modular design gives you flexibility here if you want to use the same glider for both deep and shallow operation.",
+   "edge": "slocum",
+   "topics": [
+    "shallow",
+    "deep"
+   ],
+   "note_topics": [
+    "shallow",
+    "deep"
+   ]
+  },
+  {
+   "section": "Vehicle design & hardware",
+   "factor": "Deep-water performance",
+   "slocum": "Less efficient",
+   "seaglider": "Very efficient",
+   "note": "",
+   "edge": "seaglider",
+   "topics": [
+    "deep",
+    "endurance"
+   ],
+   "note_topics": []
+  },
+  {
+   "section": "Vehicle design & hardware",
+   "factor": "Shallow-water performance",
+   "slocum": "Good: the shallow piston pump gives fast inflections.",
+   "seaglider": "Weak: the main pump is optimised for ~1000 m and has low flow rates for efficient shallow dives",
+   "note": "Shallow coastal operations favors shallow slocum especially with the optional thruster",
+   "edge": "slocum",
+   "topics": [
+    "shallow"
+   ],
+   "note_topics": [
+    "shallow"
+   ]
+  },
+  {
+   "section": "Vehicle design & hardware",
+   "factor": "Buoyancy change",
+   "slocum": "~900–960 cc",
+   "seaglider": "~800–860 cc usable",
+   "note": "Seaglider's budget is tighter when the mission has a large density range. Especially since Seaglider needs some buoyancy to get the antenna out of the water but Slocum has a air bladder at surface to help with this.",
+   "edge": "slocum",
+   "topics": [
+    "shallow",
+    "deep"
+   ],
+   "note_topics": [
+    "deep"
+   ]
+  },
+  {
+   "section": "Vehicle design & hardware",
+   "factor": "Steering",
+   "slocum": "Rudder",
+   "seaglider": "Roll",
+   "note": "An advantage of rudder is that it allows tighter turn radius which is especially important for shallow dives, a disadvantage is that although it is a controlled using a magnetically coupled motor housed inside the pressure hull, it still counts as an external moving part and therefore more prone to failure",
+   "edge": "depends",
+   "topics": [
+    "shallow",
+    "risk"
+   ],
+   "note_topics": [
+    "shallow",
+    "risk"
+   ]
+  },
+  {
+   "section": "Vehicle design & hardware",
+   "factor": "Thruster",
+   "slocum": "Available",
+   "seaglider": "Not Available",
+   "note": "~10 W optional unit. Daily energy rises ~3–5 → ~10–15 Ah/day but transit time roughly halves. Used for thruster-assisted yos, holding horizontal flight at depth, and pushing through the surface lens.",
+   "edge": "slocum",
+   "topics": [
+    "shallow",
+    "endurance"
+   ],
+   "note_topics": [
+    "endurance",
+    "shallow"
+   ]
+  },
+  {
+   "section": "Vehicle design & hardware",
+   "factor": "Air bladder",
+   "slocum": "Yes",
+   "seaglider": "No",
+   "note": "It’s a nice help for getting the antenna out of the water but it also introduces another point of failure",
+   "edge": "depends",
+   "topics": [
+    "risk",
+    "fieldops"
+   ],
+   "note_topics": [
+    "risk"
+   ]
+  },
+  {
+   "section": "Vehicle design & hardware",
+   "factor": "Ejection weight",
+   "slocum": "Yes",
+   "seaglider": "No",
+   "note": "Nice to have as the last resort if something catastrophic happens but important to remember that glider can not dive again once the weight is dropped and it turns into a simple float until recovered",
+   "edge": "slocum",
+   "topics": [
+    "risk",
+    "fieldops"
+   ],
+   "note_topics": [
+    "risk"
+   ]
+  },
+  {
+   "section": "Vehicle design & hardware",
+   "factor": "Strobe",
+   "slocum": "Yes",
+   "seaglider": "No, can be added separately",
+   "note": "",
+   "edge": "slocum",
+   "topics": [
+    "fieldops"
+   ],
+   "note_topics": []
+  },
+  {
+   "section": "Power & batteries",
+   "factor": "Battery options",
+   "slocum": "Alkaline, 3S lithium primary, 4S lithium primary (standard or extended energy bay), TWR rechargeable Li-ion (standard or extended)",
+   "seaglider": "Lithium primary only (legacy 24 V + 10 V, or univolt 15 V)",
+   "note": "",
+   "edge": "slocum",
+   "topics": [
+    "endurance"
+   ],
+   "note_topics": []
+  },
+  {
+   "section": "Power & batteries",
+   "factor": "Battery pack cost",
+   "slocum": "$$$",
+   "seaglider": "$",
+   "note": "Seaglider packs can be purchased directly from Electrochem while Slocum packs need to be purchased from Teledyne",
+   "edge": "seaglider",
+   "topics": [
+    "cost"
+   ],
+   "note_topics": [
+    "cost"
+   ]
+  },
+  {
+   "section": "Navigation, bottom & surface detection",
+   "factor": "Altimeter",
+   "slocum": "~170KHz",
+   "seaglider": "~12KHz",
+   "note": "Seaglider has longer range the advantage in deeper waters, Slocum has higher resolution and best for tighter control within 100m depth, Both can be set to trigger below a certain depth",
+   "edge": "depends",
+   "topics": [
+    "shallow",
+    "deep",
+    "science"
+   ],
+   "note_topics": [
+    "shallow",
+    "deep"
+   ]
+  },
+  {
+   "section": "Navigation, bottom & surface detection",
+   "factor": "Bathymaps",
+   "slocum": "Not available",
+   "seaglider": "You can fly based on a pre-loaded bathymap of the area",
+   "note": "many advantages such as saving power, being acoustically quiet and a safe backup if there is a problem with altimeter",
+   "edge": "seaglider",
+   "topics": [
+    "deep",
+    "endurance",
+    "science",
+    "risk"
+   ],
+   "note_topics": [
+    "endurance",
+    "science",
+    "risk"
+   ]
+  },
+  {
+   "section": "Navigation, bottom & surface detection",
+   "factor": "Compass calibration",
+   "slocum": "Shore cal (recommended), in-situ at-sea cal possible but results may not be reliable",
+   "seaglider": "In-situ cal easy and accurate, shore cal possible but almost never needed",
+   "note": "",
+   "edge": "seaglider",
+   "topics": [
+    "piloting",
+    "fieldops"
+   ],
+   "note_topics": []
+  },
+  {
+   "section": "Piloting & control",
+   "factor": "Pilot interface",
+   "slocum": "Live: Connect directly to GliderDOS at the surface, possible to run scripts on dockserver to automatize communication. Less efficient",
+   "seaglider": "Indirect: no live terminal. Pilot stages control files (cmdfile, targets, science) that the glider collects at its next call. More efficient",
+   "note": "By having no direct shell connection, Seagliders save time and data",
+   "edge": "seaglider",
+   "topics": [
+    "piloting",
+    "cost"
+   ],
+   "note_topics": [
+    "piloting",
+    "cost"
+   ]
+  },
+  {
+   "section": "Piloting & control",
+   "factor": "Shore software",
+   "slocum": "SFMC (Teledyne Proprietry), subscription",
+   "seaglider": "Basestation3 (APL-UW, free, open source, Linux/macOS) or seaglider.pub; you run your own basestation",
+   "note": "",
+   "edge": "seaglider",
+   "topics": [
+    "piloting",
+    "cost"
+   ],
+   "note_topics": []
+  },
+  {
+   "section": "Piloting & control",
+   "factor": "Buoyancy / trim tuning",
+   "slocum": "Tank ballast + onboard autoballast (centres dive/climb drive automatically)",
+   "seaglider": "Tank ballast + trim sheet, then manual pitch/VBD/roll trimming from basestation regressions and the Flight Model System",
+   "note": "Trimming takes much of a Seaglider pilot's early-mission effort. Seaglider provide more options to tune things while Slocum tuning is simpler and more hands-off.",
+   "edge": "depends",
+   "topics": [
+    "piloting"
+   ],
+   "note_topics": [
+    "piloting"
+   ]
+  },
+  {
+   "section": "Piloting & control",
+   "factor": "Fault handling",
+   "slocum": "More complex for new users to troubleshoot especially since the full dive engineering files are extremely large to transmit over iridium",
+   "seaglider": "Easier to troubleshoot, full dataset is automatically transmitted at the end of each dive",
+   "note": "",
+   "edge": "seaglider",
+   "topics": [
+    "piloting",
+    "risk",
+    "cost"
+   ],
+   "note_topics": []
+  },
+  {
+   "section": "Piloting & control",
+   "factor": "Surfacing at a specific time",
+   "slocum": "Possible",
+   "seaglider": "Not Available",
+   "note": "",
+   "edge": "slocum",
+   "topics": [
+    "piloting",
+    "fieldops"
+   ],
+   "note_topics": []
+  },
+  {
+   "section": "Communications",
+   "factor": "Data download",
+   "slocum": "Usually a small subset of data only on each dive, you can choose to download a larger subset if you want to troubleshoot something specific, the whole dataset is usually too large to be able to download using satellite communication without comms dropping",
+   "seaglider": "Full dataset is downloaded at each dive",
+   "note": "",
+   "edge": "seaglider",
+   "topics": [
+    "science",
+    "piloting",
+    "cost"
+   ],
+   "note_topics": []
+  },
+  {
+   "section": "Communications",
+   "factor": "Comms",
+   "slocum": "Iridium (RUDICS primary + dial-up/alternate), Freewave 900 MHz RF modem: for line-of-sight operation and lab work without a cable and for recovery boats, Serial cable for faster data transfer in the lab",
+   "seaglider": "Iridium (RUDICS primary + dial-up/alternate). Serial cable for Deck/lab comms",
+   "note": "Slocum iridium costs usually are much higher than Seaglider’s because of the inefficiencies in their file structure and communication methodologies",
+   "edge": "depends",
+   "topics": [
+    "cost",
+    "fieldops"
+   ],
+   "note_topics": [
+    "cost"
+   ]
+  },
+  {
+   "section": "Communications",
+   "factor": "Argos",
+   "slocum": "Built-in Argos, powered by the emergency circuit, so it keeps transmitting after the main battery fails",
+   "seaglider": "Optional external tag",
+   "note": "",
+   "edge": "slocum",
+   "topics": [
+    "risk",
+    "fieldops"
+   ],
+   "note_topics": []
+  },
+  {
+   "section": "Science payload",
+   "factor": "Custom sensor integration",
+   "slocum": "Sensors are integrated by Teledyne, Custom sensor integration possible on G3S with the purchase of Backseat Driver which is a specific version of the Slocum firmware. You can always strap the sensor around the glider. Otherwise it will be a big job.",
+   "seaglider": "Users have access to all user config files and can easily write their own to integrate complex sensors, Sensor configs can be fixed remotely. There is a large wet payload area with removable hatches for mechanical integration.",
+   "note": "For more info: https://github.com/e-abdi/custom-glider-sensor-integration",
+   "edge": "seaglider",
+   "topics": [
+    "science",
+    "cost"
+   ],
+   "note_topics": [
+    "science"
+   ]
+  },
+  {
+   "section": "Deployment, recovery & logistics",
+   "factor": "Deployment",
+   "slocum": "Ships assembled (wings on). Freewave checks on deck, then test dives",
+   "seaglider": "Seaglider launch needs a laptop and cable on deck plus a satellite link to pilots.",
+   "note": "More info: https://e-abdi.github.io/Glider-Operation-Best-Practices/deployment/",
+   "edge": "slocum",
+   "topics": [
+    "fieldops"
+   ],
+   "note_topics": [
+    "fieldops"
+   ]
+  },
+  {
+   "section": "Deployment, recovery & logistics",
+   "factor": "Recovery",
+   "slocum": "Optional nose recovery system (line deployed by pilot), strobe make it easier to spot",
+   "seaglider": "Small-boat cradle or large-vessel lift by the rudder only. Low profile at the surface",
+   "note": "More info: https://e-abdi.github.io/Glider-Operation-Best-Practices/recovery/",
+   "edge": "slocum",
+   "topics": [
+    "fieldops"
+   ],
+   "note_topics": [
+    "fieldops"
+   ]
+  }
+ ]
+}
