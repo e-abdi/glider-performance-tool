@@ -611,8 +611,8 @@ const GLIDERS = [
     massKg: 70, massNote: "55–70 kg by configuration",
     energy: [2520, 12500], battery: "Alkaline / rechargeable / lithium", batteryType: "both",
     propeller: "Optional hybrid thruster, >1000 cc extra drive (up to 2 kt)",
-    realTime: true, acoustic: true, ice: true, edge: true, bathy: true, backseat: true,
-    pam: ["dmon2", "wispr3", "observer", "amar"],
+    realTime: true, acoustic: true, ice: "dev", edge: true, bathy: true, backseat: true,
+    pam: ["dmon2", "wispr3", "observer", "amar"], towedArray: true,
     rodeo: { names: "risso · stenella · capex987", watts: 2.2, whDive: 7.2, whKm: 2.1,
       note: "capex987 with the JASCO Observer drew about 2.4× its neighbours (20 Wh/dive)." },
     notes: ["Range 350–13,000 km depending on battery.", "Payload bay takes 3–4 kg."],
@@ -623,12 +623,29 @@ const GLIDERS = [
     id: "slocum-sentinel", glider: "Slocum Sentinel", maker: "Teledyne Marine", photo: "sentinel",
     deployRecover: 3, deployRecoverNote: "Crane required",
     affordance: "Two-year class endurance and eight payload bays, at the cost of crane handling.",
-    depth: [0, 1000], endurance: [730, 730], endNote: "Vendor claim: over two years",
+    depth: [5, 1000], endurance: [730, 730], endNote: "Vendor claim: over two years",
     speedKt: 3.5, speedNote: "0.75 kt glide, 3.5 kt sprint on dual thrusters",
     massKg: 171, energy: [23000, 23000], battery: "Lithium primary", batteryType: "primary",
     propeller: "Dual aft thrusters, sprint to 3.5 kt",
     realTime: true, acoustic: true, ice: false, edge: true, bathy: true, backseat: true,
-    pam: ["observer", "amar"],
+    pam: ["observer", "amar"], towedArray: true,
+    // Teledyne lists sensor options for the Sentinel without naming models, so its card
+    // does the same instead of inheriting the workbook's Slocum-family sensor list.
+    sensorOptions: {
+      "CTD": ["CTD, pumped or unpumped"],
+      "Oxygen": ["Oxygen options"],
+      "Bio-optics": ["Optical fluorometry options", "Optical backscatter options"],
+      "Optics": ["Optical transmission / beam attenuation", "Optical attenuation options", "Turbidity"],
+      "Light": ["PAR", "Radiometer"],
+      "Nutrients": ["Nitrate"],
+      "Currents": ["Acoustic Doppler current profiler (ADCP)"],
+      "Turbulence": ["Turbulence"],
+      "Active acoustics": ["Echosounder options"],
+      "Passive acoustics": ["Passive acoustic monitoring", "Hydrophones"],
+      "Animal telemetry": ["Fish tag detection"],
+      "Communications": ["Acoustic modem"]
+    },
+    sensorOptionsNote: "As listed by Teledyne, which does not name specific models. Custom solutions available.",
     rodeo: null,
     notes: ["4 L buoyancy engine, the largest on the market.",
       "Needs a crane or LARS — not two-person portable."],
@@ -671,7 +688,7 @@ const GLIDERS = [
     id: "seaexplorer-1000", glider: "SeaExplorer 1000", maker: "Alseamar", photo: "seaexplorer",
     deployRecover: 2, deployRecoverNote: "2 person job",
     affordance: "Rechargeable and wingless — back in the water in hours, little to snag.",
-    depth: [0, 1000], endurance: [125, 125], endNote: "125 days / 2,700 km at max depth",
+    depth: [75, 1000], endurance: [125, 125], endNote: "125 days / 2,700 km at max depth",
     speedKt: 1.0, speedNote: "0.5 kt nominal, 1 kt max",
     massKg: 59, energy: [6700, 6700], battery: "Rechargeable Li-ion", batteryType: "rechargeable",
     propeller: "Optional wing-mounted propellers",
@@ -832,16 +849,52 @@ const pamByKey = key => PAM_LIST.find(p => p.key === key) || null;
 // documents the integration. The two disagree at the edges — the card list is curated
 // per model, the workbook is per family — so the union is the honest answer.
 function gliderHasPam(g, key) {
+  if (g.sensorOptions) return false;  // vendor names no models (Sentinel)
   if (g.pam && g.pam.indexOf(key) >= 0) return true;
   const p = pamByKey(key);
   return !!(p && p.gliders.indexOf(g.id) >= 0);
 }
 function gliderHasSensor(g, sensor) {
+  if (g.sensorOptions) return false;  // vendor names no models (Sentinel)
   return !!(sensor && sensor.gliders && sensor.gliders[g.id]);
 }
 function sensorsFor(g, category) {
-  return SENSOR_LIST.filter(s => (category === "any" || s.category === category) &&
-                                 gliderHasSensor(g, s));
+  const want = c => category === "any" || c === category;
+  if (g.sensorOptions) {
+    return Object.keys(g.sensorOptions).filter(want)
+      .flatMap(c => g.sensorOptions[c].map(name => ({ model: name, category: c })))
+      .concat(want(PASSIVE) && g.towedArray ? [{ model: "Towed array", category: PASSIVE }] : []);
+  }
+  return SENSOR_LIST.filter(s => want(s.category) && gliderHasSensor(g, s))
+    .concat(want(PASSIVE) ? passiveFor(g) : []);
+}
+
+// Passive acoustics sits in the sensor tree like any other category. Its entries are the
+// PAM recorders (the card's curated list plus the workbook's integrations) and a towed
+// array where one is flown.
+const PASSIVE = "Passive acoustics";
+const TREE_CATS = (() => {
+  const cats = (SENSORS.categories || []).slice();
+  const at = cats.indexOf("Active acoustics");
+  cats.splice(at >= 0 ? at + 1 : cats.length, 0, PASSIVE);
+  return cats;
+})();
+function pamKeys(g) {
+  const keys = (g.pam || []).slice();
+  PAM_LIST.forEach(p => { if (p.gliders.indexOf(g.id) >= 0 && keys.indexOf(p.key) < 0) keys.push(p.key); });
+  return keys;
+}
+function passiveFor(g) {
+  const out = pamKeys(g).map(k => {
+    const p = pamByKey(k);
+    return p ? { model: p.model, maker: p.maker, parameter: p.bandwidth, category: PASSIVE }
+             : { model: PAM[k] ? PAM[k].name : k, category: PASSIVE };
+  });
+  if (g.towedArray) out.push({ model: "Towed array", category: PASSIVE });
+  return out;
+}
+function iceLabel(g) {
+  return g.ice === "dev" ? "under development" : g.ice ? "yes" : null;
 }
 
 /* Every sensor documented on this glider, grouped by what it measures.
@@ -860,7 +913,8 @@ function sensorTree(g) {
   wrap.appendChild(sum);
 
   const body = el("div", "sensor-body");
-  (SENSORS.categories || []).forEach(cat => {
+  if (g.sensorOptionsNote) body.appendChild(el("div", "s-note", g.sensorOptionsNote));
+  TREE_CATS.forEach(cat => {
     const inCat = all.filter(s => s.category === cat);
     if (!inCat.length) return;
 
@@ -878,7 +932,7 @@ function sensorTree(g) {
       if (s.maker) name.appendChild(el("span", "s-maker", s.maker));
       row.appendChild(name);
       if (s.parameter) row.appendChild(el("div", "s-param", s.parameter));
-      const note = s.gliders[g.id];
+      const note = s.gliders && s.gliders[g.id];
       if (note && !/^yes$/i.test(String(note).trim())) row.appendChild(el("div", "s-note", note));
       if (s.sop) row.appendChild(el("div", "s-sop", s.sop));
       // A reference for this sensor on this glider, from content/data/sensor-links.csv.
@@ -1097,7 +1151,9 @@ function card(g, s) {
   chips.appendChild(el("span", "chip", g.massKg ? g.massKg + " kg" : "mass n/p"));
   chips.appendChild(el("span", "chip", g.speedKt ? g.speedKt + " kt" : "speed n/p"));
   if (g.propeller) chips.appendChild(el("span", "chip", "thruster"));
-  chips.appendChild(el("span", "chip", g.pam.length ? g.pam.length + " PAM option" + (g.pam.length > 1 ? "s" : "") : "no PAM documented"));
+  const nPassive = sensorsFor(g, PASSIVE).length;
+  chips.appendChild(el("span", "chip", g.sensorOptions ? (nPassive ? "PAM available" : "no PAM documented")
+    : nPassive ? nPassive + " passive acoustic option" + (nPassive > 1 ? "s" : "") : "no PAM documented"));
   if (g.conflicts) {
     const f = el("span", "badge flag");
     f.appendChild(el("span", "dot"));
@@ -1133,8 +1189,7 @@ function card(g, s) {
   specs.appendChild(specRow("Capacity", g.energy ? (g.energy[0] === g.energy[1] ? num(g.energy[1]) + " Wh" : num(g.energy[0]) + "–" + num(g.energy[1]) + " Wh") : "not published"));
   specs.appendChild(specRow("Battery", g.battery));
   specs.appendChild(specRow("Thruster", g.propeller || "none — buoyancy only"));
-  specs.appendChild(specRow("Ice capable", g.ice ? "yes" : "not stated"));
-  specs.appendChild(specRow("PAM options", g.pam.length ? g.pam.map(k => PAM[k].name).join(", ") : "none documented"));
+  specs.appendChild(specRow("Ice capable", iceLabel(g) || "not stated"));
   db.appendChild(specs);
 
   const sensorBlock = sensorTree(g);
@@ -1204,7 +1259,7 @@ function tableRow(g) {
     [g.propeller ? "yes" : "no", false],
     [g.realTime ? "yes" : "no", false],
     [g.pam.length ? "yes" : "no", false],
-    [g.ice ? "yes" : "no", false],
+    [iceLabel(g) || "no", false],
     [g.rodeo ? "Rodeo" : "vendor", false]
   ];
   cells.forEach(([v, isNum], i) => {
