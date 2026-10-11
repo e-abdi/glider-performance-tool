@@ -1,18 +1,12 @@
 # Glider Performance Tool
 
-Research compendium for comparing how the PAM-equipped gliders of the NOAA Fisheries Glider Rodeo 2026 performed across mission modes (fast, slow, intermediate, drift): piloting, navigation, endurance and self-noise.
+Tools for comparing PAM-equipped ocean gliders, choosing the right one for a study, and planning its mission.
+
+The project started at the NOAA Fisheries Glider Rodeo 2026 hackathon as a comparison of how the rodeo's gliders performed across mission modes (fast, slow, intermediate, drift): piloting, navigation, endurance and self-noise. It has since grown into a more general glider comparison tool and a mission planning aid, to help pick the right platform and sensors for a study. The Glider Performance page still holds the rodeo results; the other pages (selection dashboard, direct comparison, study design, endurance calculators) go beyond the rodeo.
 
 ## Project website
 
 <https://e-abdi.github.io/glider-performance-tool/>
-
-## How to Cite
-
-**TODO: recommended citation**
-
-## Research Compendium
-
-This repository contains the code, documentation and small derived outputs for the Glider Performance Tool. It follows the [Glider Rodeo Hackweek Projects research compendium template](https://github.com/NMFS-PAM-Glider/GliderRodeo-HackweekProjects).
 
 ## Contents
 
@@ -39,12 +33,8 @@ Input data: the Glider Rodeo deployment data, on the Glider Rodeo JupyterHub in 
 
 - Ehsan Abdi, Akvaplan-niva ([eab\@akvaplan.niva.no](mailto:eab@akvaplan.niva.no))
 - Héloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center ([heloise.frouin-mouy\@miami.edu](mailto:heloise.frouin-mouy@miami.edu))
-- Kasey Costello, Scripps Institution of Oceanography, University of California San Diego ([kcastello\@ucsd.edu](mailto:kcastello@ucsd.edu))
+- Kasey Castello, Scripps Institution of Oceanography, University of California San Diego ([kcastello\@ucsd.edu](mailto:kcastello@ucsd.edu))
 - Anne Simonis, Estuary and Ocean Science Center, San Francisco State University ([asimonis\@sfsu.edu](mailto:asimonis@sfsu.edu))
-
-## Funding
-
-**TODO: statement of funding**
 
 ## Acknowledgements
 

@@ -1,13 +1,46 @@
 ---
 title: "Glider Performance Tool"
-page-layout: full
 ---
 
-Comparing the PAM-equipped gliders of the **NOAA Fisheries Glider Rodeo 2026** across mission
-modes: how each platform was piloted, how well it navigated, how long its battery and storage
-last, and how much noise it makes.
+Tools for choosing the right PAM glider for a study and planning its mission: what each
+platform can carry, how the platforms compare, how long a glider will last on a given
+mission, and where it can fly.
 
-Seven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:
+## How the project started
+
+The project began at the **NOAA Fisheries Glider Rodeo 2026** hackathon as a way to compare
+the PAM-equipped gliders that flew in the rodeo: how each platform was piloted, how well it
+navigated, how long its battery and storage lasted, and how much noise it made. While building
+that comparison it became clear that the same knowledge answers a bigger question that comes
+before any deployment: *which glider, sensors and mission set-up suit this study?* The tool
+has grown from a rodeo comparison into a general glider comparison and mission planning tool.
+
+## The pages
+
+**From the rodeo**
+
+- [Glider Performance](content/performance.qmd): what every glider actually did during the
+  rodeo, split by mission mode. This is the only page built directly on rodeo data.
+
+**For choosing a glider and planning a mission**
+
+- [Glider Selection Dashboard](content/glider-selection.qmd): enter what the mission needs
+  (depth, duration, sensors, PAM recorder) and see which gliders match.
+- [Direct Comparison](content/direct-comparison.qmd): Slocum and Seaglider factor by factor,
+  from the pilots' experience.
+- [Study Design Tool](content/study-design.qmd): draw a study area, lay out
+  transects, estimate survey distance and mission duration, check the bathymetry, and export
+  waypoint files.
+- Endurance calculation for [Slocum](content/slocum-endurance.qmd) and
+  [Seaglider](content/seaglider-endurance.qmd): how long a mission lasts with a given set of
+  sensors and dive settings.
+
+## The Glider Rodeo
+
+The Glider Rodeo field-tested PAM-glider platforms under the same conditions to give
+data-driven guidance on what each system can do in different operational environments and for
+different research questions. Seven gliders from four platform types flew the same trackline
+off the coast of Hawaii in January–February 2026:
 
 | Glider | Platform | PAM system |
 |---|---|---|
@@ -16,12 +49,39 @@ Seven gliders from four platform types flew the same trackline off the coast of 
 | SEA117 | ALSEAMAR SeaExplorer | Auris |
 | belladonna | Hefring Oceanscout | WISPR 6.1 |
 
-## Approach
+Each glider was flown through a sequence of mission modes:
 
-1. Split each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).
-2. Compute the same performance metrics for every glider.
-3. Compare platforms and modes.
+| Phase | Mode                     | Start (UTC)      | Stop (UTC)       |
+|-------|--------------------------|------------------|------------------|
+| 1     | shakedown                | 2026-01-28 22:00 | 2026-01-30 06:00 |
+| 2     | fast                     | 2026-01-30 06:00 | 2026-02-01 18:00 |
+| 3     | slow                     | 2026-02-01 18:00 | 2026-02-04 18:00 |
+| 4     | intermediate             | 2026-02-04 18:00 | 2026-02-06 18:00 |
+| 5     | drift (20 min at 800 m)  | 2026-02-06 18:00 | 2026-02-08 18:00 |
+| 6     | mini-rodeo: slow         | 2026-02-08 18:00 | 2026-02-09 06:00 |
+| 6     | mini-rodeo: intermediate | 2026-02-09 06:00 | 2026-02-09 18:00 |
+| 6     | mini-rodeo: fast         | 2026-02-09 18:00 | 2026-02-10 06:00 |
+| 7     | recovery                 | 2026-02-10 06:00 |                  |
 
-See [Project Info](content/project-info.qmd) for goals and datasets, and
-[Glider Performance](content/performance.qmd) for what every glider actually did during
-the rodeo.
+Source: [Glider Rodeo fieldwork plan](https://nmfs-pam-glider.github.io/GliderRodeo/content/fieldwork.html).
+
+### Rodeo datasets
+
+- **Glider Rodeo deployment data** (engineering, science, GPS): on the Glider Rodeo JupyterHub
+  in `shared-public/GliderRodeo/`, one folder per deployment.
+- **Soundscape metrics** (60 s averaged spectra per glider): `shared-public/GliderRodeo/Noise/`.
+- **Glider specifications:** `shared-public/GliderRodeo/PAM_Glider_Specs.csv`.
+
+The source data are preliminary.
+
+## Team
+
+- Ehsan Abdi, Akvaplan-niva ([eab\@akvaplan.niva.no](mailto:eab@akvaplan.niva.no))
+- Héloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center ([heloise.frouin-mouy\@miami.edu](mailto:heloise.frouin-mouy@miami.edu))
+- Kasey Castello, Scripps Institution of Oceanography, University of California San Diego ([kcastello\@ucsd.edu](mailto:kcastello@ucsd.edu))
+- Anne Simonis, Estuary and Ocean Science Center, San Francisco State University ([asimonis\@sfsu.edu](mailto:asimonis@sfsu.edu))
+
+## Links
+
+- NOAA Fisheries PAM-Glider Rodeo: <https://nmfs-pam-glider.github.io/GliderRodeo/>
+- Hackathon shared repository: <https://github.com/NMFS-PAM-Glider/hackathon-shared-repo>
