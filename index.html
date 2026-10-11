@@ -35,7 +35,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./content/project-info.html" rel="next">
+<link href="./content/glider-selection.html" rel="next">
 <link href="./content/images/GliderRodeo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -263,7 +263,7 @@ ul.task-list li input[type="checkbox"] {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
@@ -288,12 +288,6 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Home</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./content/project-info.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project Info</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -353,12 +347,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#approach" id="toc-approach" class="nav-link active" data-scroll-target="#approach">Approach</a></li>
+  <li><a href="#how-the-project-started" id="toc-how-the-project-started" class="nav-link active" data-scroll-target="#how-the-project-started">How the project started</a></li>
+  <li><a href="#the-pages" id="toc-the-pages" class="nav-link" data-scroll-target="#the-pages">The pages</a></li>
+  <li><a href="#the-glider-rodeo" id="toc-the-glider-rodeo" class="nav-link" data-scroll-target="#the-glider-rodeo">The Glider Rodeo</a>
+  <ul class="collapse">
+  <li><a href="#rodeo-datasets" id="toc-rodeo-datasets" class="nav-link" data-scroll-target="#rodeo-datasets">Rodeo datasets</a></li>
+  </ul></li>
+  <li><a href="#team" id="toc-team" class="nav-link" data-scroll-target="#team">Team</a></li>
+  <li><a href="#links" id="toc-links" class="nav-link" data-scroll-target="#links">Links</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/e-abdi/glider-performance-tool/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/blob/main/index.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/e-abdi/glider-performance-tool/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -368,7 +369,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta">
 
     
   
@@ -380,8 +381,28 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Comparing the PAM-equipped gliders of the <strong>NOAA Fisheries Glider Rodeo 2026</strong> across mission modes: how each platform was piloted, how well it navigated, how long its battery and storage last, and how much noise it makes.</p>
-<p>Seven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:</p>
+<p>Tools for choosing the right PAM glider for a study and planning its mission: what each platform can carry, how the platforms compare, how long a glider will last on a given mission, and where it can fly.</p>
+<section id="how-the-project-started" class="level2">
+<h2 class="anchored" data-anchor-id="how-the-project-started">How the project started</h2>
+<p>The project began at the <strong>NOAA Fisheries Glider Rodeo 2026</strong> hackathon as a way to compare the PAM-equipped gliders that flew in the rodeo: how each platform was piloted, how well it navigated, how long its battery and storage lasted, and how much noise it made. While building that comparison it became clear that the same knowledge answers a bigger question that comes before any deployment: <em>which glider, sensors and mission set-up suit this study?</em> The tool has grown from a rodeo comparison into a general glider comparison and mission planning tool.</p>
+</section>
+<section id="the-pages" class="level2">
+<h2 class="anchored" data-anchor-id="the-pages">The pages</h2>
+<p><strong>From the rodeo</strong></p>
+<ul>
+<li><a href="./content/performance.html">Glider Performance</a>: what every glider actually did during the rodeo, split by mission mode. This is the only page built directly on rodeo data.</li>
+</ul>
+<p><strong>For choosing a glider and planning a mission</strong></p>
+<ul>
+<li><a href="./content/glider-selection.html">Glider Selection Dashboard</a>: enter what the mission needs (depth, duration, sensors, PAM recorder) and see which gliders match.</li>
+<li><a href="./content/direct-comparison.html">Direct Comparison</a>: Slocum and Seaglider factor by factor, from the pilots’ experience.</li>
+<li><a href="./content/study-design.html">Study Design Tool</a>: draw a study area, lay out transects, estimate survey distance and mission duration, check the bathymetry, and export waypoint files.</li>
+<li>Endurance calculation for <a href="./content/slocum-endurance.html">Slocum</a> and <a href="./content/seaglider-endurance.html">Seaglider</a>: how long a mission lasts with a given set of sensors and dive settings.</li>
+</ul>
+</section>
+<section id="the-glider-rodeo" class="level2">
+<h2 class="anchored" data-anchor-id="the-glider-rodeo">The Glider Rodeo</h2>
+<p>The Glider Rodeo field-tested PAM-glider platforms under the same conditions to give data-driven guidance on what each system can do in different operational environments and for different research questions. Seven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -418,14 +439,105 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<section id="approach" class="level2">
-<h2 class="anchored" data-anchor-id="approach">Approach</h2>
-<ol type="1">
-<li>Split each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).</li>
-<li>Compute the same performance metrics for every glider.</li>
-<li>Compare platforms and modes.</li>
-</ol>
-<p>See <a href="./content/project-info.html">Project Info</a> for goals and datasets, and <a href="./content/performance.html">Glider Performance</a> for what every glider actually did during the rodeo.</p>
+<p>Each glider was flown through a sequence of mission modes:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 37%">
+<col style="width: 26%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Phase</th>
+<th>Mode</th>
+<th>Start (UTC)</th>
+<th>Stop (UTC)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>shakedown</td>
+<td>2026-01-28 22:00</td>
+<td>2026-01-30 06:00</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>fast</td>
+<td>2026-01-30 06:00</td>
+<td>2026-02-01 18:00</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>slow</td>
+<td>2026-02-01 18:00</td>
+<td>2026-02-04 18:00</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>intermediate</td>
+<td>2026-02-04 18:00</td>
+<td>2026-02-06 18:00</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>drift (20 min at 800 m)</td>
+<td>2026-02-06 18:00</td>
+<td>2026-02-08 18:00</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>mini-rodeo: slow</td>
+<td>2026-02-08 18:00</td>
+<td>2026-02-09 06:00</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>mini-rodeo: intermediate</td>
+<td>2026-02-09 06:00</td>
+<td>2026-02-09 18:00</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>mini-rodeo: fast</td>
+<td>2026-02-09 18:00</td>
+<td>2026-02-10 06:00</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>recovery</td>
+<td>2026-02-10 06:00</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Source: <a href="https://nmfs-pam-glider.github.io/GliderRodeo/content/fieldwork.html">Glider Rodeo fieldwork plan</a>.</p>
+<section id="rodeo-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="rodeo-datasets">Rodeo datasets</h3>
+<ul>
+<li><strong>Glider Rodeo deployment data</strong> (engineering, science, GPS): on the Glider Rodeo JupyterHub in <code>shared-public/GliderRodeo/</code>, one folder per deployment.</li>
+<li><strong>Soundscape metrics</strong> (60 s averaged spectra per glider): <code>shared-public/GliderRodeo/Noise/</code>.</li>
+<li><strong>Glider specifications:</strong> <code>shared-public/GliderRodeo/PAM_Glider_Specs.csv</code>.</li>
+</ul>
+<p>The source data are preliminary.</p>
+</section>
+</section>
+<section id="team" class="level2">
+<h2 class="anchored" data-anchor-id="team">Team</h2>
+<ul>
+<li>Ehsan Abdi, Akvaplan-niva (<a href="mailto:eab@akvaplan.niva.no">eab@akvaplan.niva.no</a>)</li>
+<li>Héloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center (<a href="mailto:heloise.frouin-mouy@miami.edu">heloise.frouin-mouy@miami.edu</a>)</li>
+<li>Kasey Castello, Scripps Institution of Oceanography, University of California San Diego (<a href="mailto:kcastello@ucsd.edu">kcastello@ucsd.edu</a>)</li>
+<li>Anne Simonis, Estuary and Ocean Science Center, San Francisco State University (<a href="mailto:asimonis@sfsu.edu">asimonis@sfsu.edu</a>)</li>
+</ul>
+</section>
+<section id="links" class="level2">
+<h2 class="anchored" data-anchor-id="links">Links</h2>
+<ul>
+<li>NOAA Fisheries PAM-Glider Rodeo: <a href="https://nmfs-pam-glider.github.io/GliderRodeo/" class="uri">https://nmfs-pam-glider.github.io/GliderRodeo/</a></li>
+<li>Hackathon shared repository: <a href="https://github.com/NMFS-PAM-Glider/hackathon-shared-repo" class="uri">https://github.com/NMFS-PAM-Glider/hackathon-shared-repo</a></li>
+</ul>
 
 
 </section>
@@ -844,12 +956,12 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
-<nav class="page-navigation column-body">
+<nav class="page-navigation">
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./content/project-info.html" class="pagination-link" aria-label="Project Info">
-        <span class="nav-page-text">Project Info</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./content/glider-selection.html" class="pagination-link" aria-label="Glider Selection Dashboard">
+        <span class="nav-page-text">Glider Selection Dashboard</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

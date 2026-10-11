@@ -4,17 +4,57 @@
     "href": "index.html",
     "title": "Glider Performance Tool",
     "section": "",
-    "text": "Comparing the PAM-equipped gliders of the NOAA Fisheries Glider Rodeo 2026 across mission modes: how each platform was piloted, how well it navigated, how long its battery and storage last, and how much noise it makes.\nSeven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:",
+    "text": "Tools for choosing the right PAM glider for a study and planning its mission: what each platform can carry, how the platforms compare, how long a glider will last on a given mission, and where it can fly.",
     "crumbs": [
       "Home"
     ]
   },
   {
-    "objectID": "index.html#approach",
-    "href": "index.html#approach",
+    "objectID": "index.html#how-the-project-started",
+    "href": "index.html#how-the-project-started",
     "title": "Glider Performance Tool",
-    "section": "Approach",
-    "text": "Approach\n\nSplit each deployment by rodeo mission mode (fast, slow, intermediate, drift, mini-rodeo).\nCompute the same performance metrics for every glider.\nCompare platforms and modes.\n\nSee Project Info for goals and datasets, and Glider Performance for what every glider actually did during the rodeo.",
+    "section": "How the project started",
+    "text": "How the project started\nThe project began at the NOAA Fisheries Glider Rodeo 2026 hackathon as a way to compare the PAM-equipped gliders that flew in the rodeo: how each platform was piloted, how well it navigated, how long its battery and storage lasted, and how much noise it made. While building that comparison it became clear that the same knowledge answers a bigger question that comes before any deployment: which glider, sensors and mission set-up suit this study? The tool has grown from a rodeo comparison into a general glider comparison and mission planning tool.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#the-pages",
+    "href": "index.html#the-pages",
+    "title": "Glider Performance Tool",
+    "section": "The pages",
+    "text": "The pages\nFrom the rodeo\n\nGlider Performance: what every glider actually did during the rodeo, split by mission mode. This is the only page built directly on rodeo data.\n\nFor choosing a glider and planning a mission\n\nGlider Selection Dashboard: enter what the mission needs (depth, duration, sensors, PAM recorder) and see which gliders match.\nDirect Comparison: Slocum and Seaglider factor by factor, from the pilots’ experience.\nStudy Design Tool: draw a study area, lay out transects, estimate survey distance and mission duration, check the bathymetry, and export waypoint files.\nEndurance calculation for Slocum and Seaglider: how long a mission lasts with a given set of sensors and dive settings.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#the-glider-rodeo",
+    "href": "index.html#the-glider-rodeo",
+    "title": "Glider Performance Tool",
+    "section": "The Glider Rodeo",
+    "text": "The Glider Rodeo\nThe Glider Rodeo field-tested PAM-glider platforms under the same conditions to give data-driven guidance on what each system can do in different operational environments and for different research questions. Seven gliders from four platform types flew the same trackline off the coast of Hawaii in January–February 2026:\n\n\n\n\n\n\n\n\nGlider\nPlatform\nPAM system\n\n\n\n\nrisso, stenella, capex987\nTeledyne Webb Slocum G3S\nDMON2, WISPR 3.0, JASCO OceanObserver\n\n\nsg607, sg274\nSeaglider M1 / SGX\nWISPR 3.0\n\n\nSEA117\nALSEAMAR SeaExplorer\nAuris\n\n\nbelladonna\nHefring Oceanscout\nWISPR 6.1\n\n\n\nEach glider was flown through a sequence of mission modes:\n\n\n\n\n\n\n\n\n\nPhase\nMode\nStart (UTC)\nStop (UTC)\n\n\n\n\n1\nshakedown\n2026-01-28 22:00\n2026-01-30 06:00\n\n\n2\nfast\n2026-01-30 06:00\n2026-02-01 18:00\n\n\n3\nslow\n2026-02-01 18:00\n2026-02-04 18:00\n\n\n4\nintermediate\n2026-02-04 18:00\n2026-02-06 18:00\n\n\n5\ndrift (20 min at 800 m)\n2026-02-06 18:00\n2026-02-08 18:00\n\n\n6\nmini-rodeo: slow\n2026-02-08 18:00\n2026-02-09 06:00\n\n\n6\nmini-rodeo: intermediate\n2026-02-09 06:00\n2026-02-09 18:00\n\n\n6\nmini-rodeo: fast\n2026-02-09 18:00\n2026-02-10 06:00\n\n\n7\nrecovery\n2026-02-10 06:00\n\n\n\n\nSource: Glider Rodeo fieldwork plan.\n\nRodeo datasets\n\nGlider Rodeo deployment data (engineering, science, GPS): on the Glider Rodeo JupyterHub in shared-public/GliderRodeo/, one folder per deployment.\nSoundscape metrics (60 s averaged spectra per glider): shared-public/GliderRodeo/Noise/.\nGlider specifications: shared-public/GliderRodeo/PAM_Glider_Specs.csv.\n\nThe source data are preliminary.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#team",
+    "href": "index.html#team",
+    "title": "Glider Performance Tool",
+    "section": "Team",
+    "text": "Team\n\nEhsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)\nHéloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center (heloise.frouin-mouy@miami.edu)\nKasey Castello, Scripps Institution of Oceanography, University of California San Diego (kcastello@ucsd.edu)\nAnne Simonis, Estuary and Ocean Science Center, San Francisco State University (asimonis@sfsu.edu)",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#links",
+    "href": "index.html#links",
+    "title": "Glider Performance Tool",
+    "section": "Links",
+    "text": "Links\n\nNOAA Fisheries PAM-Glider Rodeo: https://nmfs-pam-glider.github.io/GliderRodeo/\nHackathon shared repository: https://github.com/NMFS-PAM-Glider/hackathon-shared-repo",
     "crumbs": [
       "Home"
     ]
@@ -41,13 +81,13 @@
     ]
   },
   {
-    "objectID": "content/performance.html",
-    "href": "content/performance.html",
-    "title": "Glider Performance",
+    "objectID": "content/glider-selection.html",
+    "href": "content/glider-selection.html",
+    "title": "Glider Selection Dashboard",
     "section": "",
-    "text": "Every glider in the rodeo flew the same plan: a shakedown, then fast,\nslow, intermediate and drift blocks, then a short\nrepeat of slow, intermediate and fast at the end (the mini-modes, right of the hairline in each\npanel). Because the modes are shared, the differences below are differences between the\nplatforms, not between missions. Numbers come from\noutput/glider_performance_summary.xlsx; each panel keeps its own y-axis, because a watt\nand a cubic centimetre do not belong on one scale.\n\n\n\n  \n    Gliders\n  \n  \n    Modes\n  \n  \n    Metrics\n  \n\n\n\n\nTradeoff explorer\n\nThe mission modes exist to answer what speed costs. Put one metric on each axis and every\nglider-mode combination becomes a point, so the shape of the tradeoff shows up directly. Connect\nthe modes to follow one glider through the plan.\n\n\n  \n    X\n    Y\n     Connect modes\n  \n  \n    Presets\n  \n\n\n\nRanking\n\nEvery glider-mode combination on one metric, sorted. This is the view for “who used the least\nenergy per kilometre” — and for seeing how much of the spread is the platform and how much\nis the mode it was flying.\n\n\n  \n    Metric\n  \n\n\n\nMode comparison\n\nThe same numbers as a grid: one row per glider, one column per mode. Gaps are combinations with no\ndata rather than zeroes.\n\n\n  \n    Metric\n  \n\n\n\nData recorded\n\nHow much raw data each system actually wrote during the rodeo. The deployments were not the same\nlength, so the per-day figure is the fairer comparison between PAM systems — and the spread is\nmostly channel count and sample rate, not platform.\n\n\n  \n    Total recordedGB\n    \n    \n  \n  \n    Recording rateGB/day\n    \n    Total raw data divided by the length of that glider’s deployment.\n  \n\n\nEfficiency\n\nTwo sections above ask what a kilometre cost and how much each system recorded. This divides\none by the other: how far a glider went, and how much it wrote, for every kilowatt‑hour it\nspent. Up and to the right is more of both for the same energy. Neither axis is the\nanswer — a platform can buy data with distance, and the fastest way to look efficient on\nthe vertical axis is to record at a high bit rate.\n\n\n\n\nThe numbers\n\nEvery value on this page, for the gliders, modes and metrics selected above. Hover is a\nconvenience; this table is the source.\n\n\n\nPlatforms\nOne row per glider: what it is, how long it flew, what it recorded, and how its energy use was measured.\n\n\n\n  Data caveats and column definitions",
+    "text": "Comparing the PAM-equipped gliders of the\n          NOAA Fisheries Glider Rodeo 2026.\n          Same structure Kasey built — set what the mission needs, apply, then your options — with\n          photos, sourcing and the rodeo measurements added.\n      \n\n      Mission Parameters\n      Enter requirements for your mission below. Tick a row to make it a\n        requirement; leave it unticked and it is ignored. Then press Apply.\n\n      \n        Battery type\n        \n           Any\n           Rechargeable\n           Primary   (single-use)\n        \n\n        Mission parameters\n        \n          \n             Deployment duration\n              30 days\n            1\n            \n            730\n          \n          \n             Depth range\n              50–300 m\n            \n              5\n              \n                \n                \n                \n              \n              1,500+\n            \n          \n          \n             Speed needed\n              1.0 kt\n            0.2\n            \n            3.5\n          \n          \n             Maximum weight\n              80 kg\n            20\n            \n            200\n          \n        \n\n        \n          \n             Deployment / recovery capability\n          \n          \n             Single-person handling\n             Two-person handling\n             Crane / LARS available\n          \n          Choose the highest level of handling support available. Higher capability also includes gliders with lower handling requirements.\n        \n\n        Science payload\n        Pick what you need to measure, then a specific sensor if you have\n          one in mind. The list narrows to gliders that sensor is already integrated on. Sensors and\n          their integrations come from the glider/PAM workbook.\n        \n          Measurement\n            Any\n          Sensor\n            Any in this group\n        \n        \n\n        PAM system\n        Choose a recorder to keep only the gliders it is documented on, and\n          to see its memory, channel count and bandwidth.\n        \n          Recorder\n            Any\n        \n        \n\n        Acoustic parameters\n        \n          \n             Highest frequency of interest\n              50 kHz\n            1\n            \n            200\n          \n          \n             Recording duty cycle\n              25 %\n            1\n            \n            100\n          \n        \n\n        \n          Apply\n          Reset\n          Settings changed — press Apply\n        \n      \n\n      Your Options\n      \n        \n        \n          Cards\n          Table\n        \n      \n      \n      \n        \n\n\n\nManufacturer\nGlider\nMax depth (m)\nEndurance (days)\nSpeed (kt)\nMass (kg)\nCapacity (Wh)\nPropeller\nReal-time\nAcoustic\nIce\nEvidence\n\n\n\n\n\n\n      \n      No glider meets every requirement. Untick the one that is\n        least important — depth and duration are usually what rules platforms out.\n\n      \n        Measured at Rodeo\n      \n\n      Glider Comparisons\n      Only the gliders that matched, on one scale each. Green bars are measured\n        at the Rodeo; blue are vendor figures.\n      \n\n      \n        How the data behind this is organised\n        \n          The cards, table and charts all read one row per glider, extending the columns already in\n          gliders_cleaned.csv. Four companion files join on the same id:\n          payloads.csv (PAM and sensors), integrations.csv (which payload runs\n          on which glider, with evidence), rodeo.csv (straight from\n          build_summary.py) and links.csv (so the reference sites appear in the\n          same place on every card).\n        \n          value__sourceWhere the number came from. No source, no publish.\n          value__confidencevendor / measured / derived — what paints the badge.\n          value__checkedDate someone last verified it against the source.\n          conflictsTwo sources disagree: show both, never silently pick.\n        \n      \n\n      \n        Glider photographs from the\n          open-source glider wiki,\n          which credits the manufacturers. Specifications from vendor documentation and manuals;\n          at-sea figures from the Glider Rodeo 2026 summary (build_summary.py). All rodeo\n          data are preliminary.\n        Where to look next:\n          Glider Operation Best Practices ·\n          Open-source glider wiki ·\n          Custom sensor integration",
     "crumbs": [
-      "Glider Performance"
+      "Glider Selection Dashboard"
     ]
   },
   {
@@ -61,83 +101,13 @@
     ]
   },
   {
-    "objectID": "content/glider-selection.html",
-    "href": "content/glider-selection.html",
-    "title": "Glider Selection Dashboard",
+    "objectID": "content/performance.html",
+    "href": "content/performance.html",
+    "title": "Glider Performance",
     "section": "",
-    "text": "Comparing the PAM-equipped gliders of the\n          NOAA Fisheries Glider Rodeo 2026.\n          Same structure Kasey built — set what the mission needs, apply, then your options — with\n          photos, sourcing and the rodeo measurements added.\n      \n\n      Mission Parameters\n      Enter requirements for your mission below. Tick a row to make it a\n        requirement; leave it unticked and it is ignored. Then press Apply.\n\n      \n        Battery type\n        \n           Any\n           Rechargeable\n           Primary   (single-use)\n        \n\n        Mission parameters\n        \n          \n             Deployment duration\n              30 days\n            1\n            \n            730\n          \n          \n             Depth range\n              50–300 m\n            \n              5\n              \n                \n                \n                \n              \n              1,500+\n            \n          \n          \n             Speed needed\n              1.0 kt\n            0.2\n            \n            3.5\n          \n          \n             Maximum weight\n              80 kg\n            20\n            \n            200\n          \n        \n\n        \n          \n             Deployment / recovery capability\n          \n          \n             Single-person handling\n             Two-person handling\n             Crane / LARS available\n          \n          Choose the highest level of handling support available. Higher capability also includes gliders with lower handling requirements.\n        \n\n        Science payload\n        Pick what you need to measure, then a specific sensor if you have\n          one in mind. The list narrows to gliders that sensor is already integrated on. Sensors and\n          their integrations come from the glider/PAM workbook.\n        \n          Measurement\n            Any\n          Sensor\n            Any in this group\n        \n        \n\n        PAM system\n        Choose a recorder to keep only the gliders it is documented on, and\n          to see its memory, channel count and bandwidth.\n        \n          Recorder\n            Any\n        \n        \n\n        Acoustic parameters\n        \n          \n             Highest frequency of interest\n              50 kHz\n            1\n            \n            200\n          \n          \n             Recording duty cycle\n              25 %\n            1\n            \n            100\n          \n        \n\n        \n          Apply\n          Reset\n          Settings changed — press Apply\n        \n      \n\n      Your Options\n      \n        \n        \n          Cards\n          Table\n        \n      \n      \n      \n        \n\n\n\nManufacturer\nGlider\nMax depth (m)\nEndurance (days)\nSpeed (kt)\nMass (kg)\nCapacity (Wh)\nPropeller\nReal-time\nAcoustic\nIce\nEvidence\n\n\n\n\n\n\n      \n      No glider meets every requirement. Untick the one that is\n        least important — depth and duration are usually what rules platforms out.\n\n      \n        Measured at Rodeo\n      \n\n      Glider Comparisons\n      Only the gliders that matched, on one scale each. Green bars are measured\n        at the Rodeo; blue are vendor figures.\n      \n\n      \n        How the data behind this is organised\n        \n          The cards, table and charts all read one row per glider, extending the columns already in\n          gliders_cleaned.csv. Four companion files join on the same id:\n          payloads.csv (PAM and sensors), integrations.csv (which payload runs\n          on which glider, with evidence), rodeo.csv (straight from\n          build_summary.py) and links.csv (so the reference sites appear in the\n          same place on every card).\n        \n          value__sourceWhere the number came from. No source, no publish.\n          value__confidencevendor / measured / derived — what paints the badge.\n          value__checkedDate someone last verified it against the source.\n          conflictsTwo sources disagree: show both, never silently pick.\n        \n      \n\n      \n        Glider photographs from the\n          open-source glider wiki,\n          which credits the manufacturers. Specifications from vendor documentation and manuals;\n          at-sea figures from the Glider Rodeo 2026 summary (build_summary.py). All rodeo\n          data are preliminary.\n        Where to look next:\n          Glider Operation Best Practices ·\n          Open-source glider wiki ·\n          Custom sensor integration",
+    "text": "Every glider in the rodeo flew the same plan: a shakedown, then fast,\nslow, intermediate and drift blocks, then a short\nrepeat of slow, intermediate and fast at the end (the mini-modes, right of the hairline in each\npanel). Because the modes are shared, the differences below are differences between the\nplatforms, not between missions. Numbers come from\noutput/glider_performance_summary.xlsx; each panel keeps its own y-axis, because a watt\nand a cubic centimetre do not belong on one scale.\n\n\n\n  \n    Gliders\n  \n  \n    Modes\n  \n  \n    Metrics\n  \n\n\n\n\nTradeoff explorer\n\nThe mission modes exist to answer what speed costs. Put one metric on each axis and every\nglider-mode combination becomes a point, so the shape of the tradeoff shows up directly. Connect\nthe modes to follow one glider through the plan.\n\n\n  \n    X\n    Y\n     Connect modes\n  \n  \n    Presets\n  \n\n\n\nRanking\n\nEvery glider-mode combination on one metric, sorted. This is the view for “who used the least\nenergy per kilometre” — and for seeing how much of the spread is the platform and how much\nis the mode it was flying.\n\n\n  \n    Metric\n  \n\n\n\nMode comparison\n\nThe same numbers as a grid: one row per glider, one column per mode. Gaps are combinations with no\ndata rather than zeroes.\n\n\n  \n    Metric\n  \n\n\n\nData recorded\n\nHow much raw data each system actually wrote during the rodeo. The deployments were not the same\nlength, so the per-day figure is the fairer comparison between PAM systems — and the spread is\nmostly channel count and sample rate, not platform.\n\n\n  \n    Total recordedGB\n    \n    \n  \n  \n    Recording rateGB/day\n    \n    Total raw data divided by the length of that glider’s deployment.\n  \n\n\nEfficiency\n\nTwo sections above ask what a kilometre cost and how much each system recorded. This divides\none by the other: how far a glider went, and how much it wrote, for every kilowatt‑hour it\nspent. Up and to the right is more of both for the same energy. Neither axis is the\nanswer — a platform can buy data with distance, and the fastest way to look efficient on\nthe vertical axis is to record at a high bit rate.\n\n\n\n\nThe numbers\n\nEvery value on this page, for the gliders, modes and metrics selected above. Hover is a\nconvenience; this table is the source.\n\n\n\nPlatforms\nOne row per glider: what it is, how long it flew, what it recorded, and how its energy use was measured.\n\n\n\n  Data caveats and column definitions",
     "crumbs": [
-      "Glider Selection Dashboard"
-    ]
-  },
-  {
-    "objectID": "content/project-info.html",
-    "href": "content/project-info.html",
-    "title": "Project Info",
-    "section": "",
-    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)\nHéloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center (heloise.frouin-mouy@miami.edu)\nKasey Castello, Scripps Institution of Oceanography, Univeresity of California San Diego (kcastello@ucsd.edu)\nAnne Simonis, Estuary and Ocean Science Center, San Francisco State University (asimonis@sfsu.edu)",
-    "crumbs": [
-      "Project Info"
-    ]
-  },
-  {
-    "objectID": "content/project-info.html#team-members",
-    "href": "content/project-info.html#team-members",
-    "title": "Project Info",
-    "section": "",
-    "text": "Ehsan Abdi, Akvaplan-niva (eab@akvaplan.niva.no)\nHéloïse Frouin-Mouy, University of Miami, NOAA Southeast Fisheries Science Center (heloise.frouin-mouy@miami.edu)\nKasey Castello, Scripps Institution of Oceanography, Univeresity of California San Diego (kcastello@ucsd.edu)\nAnne Simonis, Estuary and Ocean Science Center, San Francisco State University (asimonis@sfsu.edu)",
-    "crumbs": [
-      "Project Info"
-    ]
-  },
-  {
-    "objectID": "content/project-info.html#background",
-    "href": "content/project-info.html#background",
-    "title": "Project Info",
-    "section": "Background",
-    "text": "Background\nThe Glider Rodeo field-tested PAM-glider platforms under the same conditions to give data-driven guidance on what each system can do in different operational environments and for different research questions. Each glider was flown through a sequence of mission modes:\n\n\n\n\n\n\n\n\n\nPhase\nMode\nStart (UTC)\nStop (UTC)\n\n\n\n\n1\nshakedown\n2026-01-28 22:00\n2026-01-30 06:00\n\n\n2\nfast\n2026-01-30 06:00\n2026-02-01 18:00\n\n\n3\nslow\n2026-02-01 18:00\n2026-02-04 18:00\n\n\n4\nintermediate\n2026-02-04 18:00\n2026-02-06 18:00\n\n\n5\ndrift (20 min at 800 m)\n2026-02-06 18:00\n2026-02-08 18:00\n\n\n6\nmini-rodeo: slow\n2026-02-08 18:00\n2026-02-09 06:00\n\n\n6\nmini-rodeo: intermediate\n2026-02-09 06:00\n2026-02-09 18:00\n\n\n6\nmini-rodeo: fast\n2026-02-09 18:00\n2026-02-10 06:00\n\n\n7\nrecovery\n2026-02-10 06:00\n\n\n\n\nSource: Glider Rodeo fieldwork plan.",
-    "crumbs": [
-      "Project Info"
-    ]
-  },
-  {
-    "objectID": "content/project-info.html#goals",
-    "href": "content/project-info.html#goals",
-    "title": "Project Info",
-    "section": "Goals",
-    "text": "Goals\nAnswer, for every glider and mission mode:\n\nPiloting: how do pilots achieve each mission mode (pitch, buoyancy, dive depth, yos per surfacing)?\nNavigation: how well does each glider hold the trackline, and how is that affected by currents?\nEndurance: how does mission mode affect battery use and data storage?\nNoise: how much self-noise (pumping, motors, flow) does each glider make?",
-    "crumbs": [
-      "Project Info"
-    ]
-  },
-  {
-    "objectID": "content/project-info.html#datasets",
-    "href": "content/project-info.html#datasets",
-    "title": "Project Info",
-    "section": "Datasets",
-    "text": "Datasets\n\nGlider Rodeo deployment data (engineering, science, GPS): on the Glider Rodeo JupyterHub in shared-public/GliderRodeo/, one folder per deployment.\nSoundscape metrics (60 s averaged spectra per glider): shared-public/GliderRodeo/Noise/.\nGlider specifications: shared-public/GliderRodeo/PAM_Glider_Specs.csv.\n\nThe source data are preliminary.",
-    "crumbs": [
-      "Project Info"
-    ]
-  },
-  {
-    "objectID": "content/project-info.html#references",
-    "href": "content/project-info.html#references",
-    "title": "Project Info",
-    "section": "References",
-    "text": "References\n\nNOAA Fisheries PAM-Glider Rodeo: https://nmfs-pam-glider.github.io/GliderRodeo/",
-    "crumbs": [
-      "Project Info"
-    ]
-  },
-  {
-    "objectID": "content/project-info.html#links",
-    "href": "content/project-info.html#links",
-    "title": "Project Info",
-    "section": "Links",
-    "text": "Links\n\nHackathon shared repository: https://github.com/NMFS-PAM-Glider/hackathon-shared-repo",
-    "crumbs": [
-      "Project Info"
+      "Glider Performance"
     ]
   },
   {
