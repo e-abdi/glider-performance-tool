@@ -36,6 +36,8 @@ format:
     --derived-soft: #F6E9CF;
     --flag: #A33227;
     --flag-soft: #F8E4E1;
+    --dac-win: #2780E3;
+    --dac-off: #9FAEB3;
     --shadow: 0 1px 2px rgba(31, 44, 49, .05), 0 6px 18px rgba(31, 44, 49, .07);
     --sans: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
     --mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas, monospace;
@@ -58,6 +60,8 @@ format:
     --derived-soft: #342A12;
     --flag: #E08278;
     --flag-soft: #3A211E;
+    --dac-win: #75AADB;
+    --dac-off: #6A7377;
     --shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 22px rgba(0,0,0,.4);
   }
 
@@ -154,7 +158,7 @@ format:
   #dive3d .d3-controls label { font-size: 13.5px; color: var(--ink-2); display: flex; align-items: center; gap: 7px; }
   #dive3d .d3-controls input[type="number"] { width: 82px; }
   #dive3d .d3-controls .mode { display: flex; gap: 6px; align-items: center; }
-  #dive3d #d3-build { margin-left: auto; }
+  #dive3d #d3-top { margin-left: auto; }
   #dive3d .plotwrap {
     position: relative; border: 1px solid var(--line); border-radius: 8px;
     overflow: hidden; background: var(--surface); min-height: 200px;
@@ -262,6 +266,34 @@ format:
   #study-design .wpt-table th:first-child, #study-design .wpt-table td:first-child { text-align: left; }
   #study-design .wpt-label { background: transparent; border: none; box-shadow: none; color: #4a3aa7; font-weight: 700; font-size: 11px; padding: 0; }
   #study-design .wpt-label::before { display: none; }
+
+  #study-design .dac { margin-top: 18px; }
+  #study-design .dac h2 { font-size: 19px; margin-bottom: 4px; }
+  #study-design .dac-controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin-top: 10px; font-size: 13.5px; color: var(--ink-2); }
+  #study-design .dac-controls label { display: flex; align-items: center; gap: 7px; }
+  #study-design .dac-controls b { color: var(--ink); }
+  #study-design #dac-build { margin-left: auto; }
+  #study-design .dac-status { margin-top: 10px; font-size: 13.5px; color: var(--ink-2); }
+  #study-design .dac-status.err { color: var(--flag); }
+  #study-design .dac-chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-top: 12px; }
+  #study-design .dac-chart h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin: 0 0 6px; }
+  #study-design .dac-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12.5px; color: var(--ink-2); }
+  #study-design .dac-legend .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  #study-design .dac-legend .sw.win { background: var(--dac-win); }
+  #study-design .dac-legend .sw.off { background: var(--dac-off); }
+  #study-design .dac-legend .sw.p90 { height: 3px; border-radius: 2px; background: var(--ink); vertical-align: 3px; }
+  #study-design .dac-legend .sw.spd { height: 0; border-top: 2px dashed var(--flag); border-radius: 0; vertical-align: 3px; }
+  #study-design .dac-svg-wrap { position: relative; }
+  #study-design #dac-svg { display: block; width: 100%; height: 230px; margin-top: 6px; }
+  #study-design #dac-svg text { fill: var(--ink-3); font-size: 11px; font-family: var(--mono); }
+  #study-design #dac-svg .grid { stroke: var(--line); stroke-width: 1; }
+  #study-design #dac-svg .hit { fill: transparent; cursor: default; }
+  #study-design #dac-svg .hit:hover + .bar, #study-design #dac-svg .bar.hl { opacity: .8; }
+  #study-design .dac-tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 7px; padding: 6px 9px; font-size: 12px; color: var(--ink); box-shadow: 0 4px 14px rgba(0,0,0,.12); white-space: nowrap; }
+  #study-design .dac-tip b { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  #study-design .dac .metric .v.flag { color: var(--flag); }
+  .dac-arrow-key { background: var(--surface, #fff); color: var(--ink, #1F2C31); border: 1px solid var(--line, #DAE3E5); border-radius: 7px; padding: 6px 9px; font: 12px/1.4 "Atkinson Hyperlegible", sans-serif; }
+  .dac-arrow-key i { display: inline-block; width: 18px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; }
 </style>
 
 <div id="study-design">
@@ -316,6 +348,23 @@ format:
           <input id="gliders" type="number" min="1" max="20" step="1" value="1">
         </div>
       </div>
+
+      <div class="two">
+        <div class="field">
+          <label for="op-start"><b>Start month</b></label>
+          <select id="op-start">
+            <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+            <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+            <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+            <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="op-days"><b>Deployment (days)</b></label>
+          <input id="op-days" type="number" min="1" max="730" step="1" value="30">
+        </div>
+      </div>
+      <p class="note">Time of operation. The current estimate uses historical currents for these months. Shared with the Glider Selection Dashboard.</p>
 
       <div class="actions">
         <button class="btn" id="draw-area">Draw study area</button>
@@ -377,7 +426,7 @@ format:
       </div>
       <div class="status">
         <div class="status-row warn"><span class="ic">~</span><span><b>Duration is derived.</b> It assumes constant horizontal speed and an even division of route distance among gliders.</span></div>
-        <div class="status-row warn"><span class="ic">!</span><span><b>Not an operational plan.</b> Currents, bathymetry, energy use, station keeping, and deployment logistics are not modeled.</span></div>
+        <div class="status-row warn"><span class="ic">!</span><span><b>Not an operational plan.</b> Bathymetry, energy use, station keeping, and deployment logistics are not modeled; currents are estimated separately under <a href="#dac">Depth-averaged currents</a>.</span></div>
         <div class="status-row ok"><span class="ic">+</span><span><b>Geometry is reproducible.</b> Area, transect count, and route length are calculated directly from the polygon and generated tracks.</span></div>
       </div>
       <details class="assumptions">
@@ -392,6 +441,63 @@ format:
         </ul>
       </details>
     </div>
+  </section>
+
+  <section class="dac" id="dac">
+    <h2>Depth-averaged currents</h2>
+    <p class="note">What a glider would measure as its depth-averaged current (DAC) over the study area,
+    from 0 m to the target depth (or the seabed, if shallower), for the months of the deployment. Taken from
+    the Copernicus GLORYS12 reanalysis monthly climatology (1993&ndash;2016 mean), then flown along the
+    generated route to see what the currents do to the survey duration.</p>
+    <div class="dac-controls">
+      <span class="dac-window">Deployment window <b id="dac-window">--</b></span>
+      <label for="dac-month">Arrows on map
+        <select id="dac-month"><option value="window">Window average</option></select></label>
+      <button class="btn" id="dac-build" type="button" disabled>Estimate currents</button>
+    </div>
+    <div class="dac-status" id="dac-status">Generate a survey, then estimate the currents for its area.</div>
+
+    <div id="dac-results" hidden>
+      <div class="metrics">
+        <div class="metric"><div class="k">Mean DAC</div><div class="v" id="dac-mean">--</div><div class="sub" id="dac-mean-sub">over area and window</div></div>
+        <div class="metric"><div class="k">90th percentile</div><div class="v" id="dac-p90">--</div><div class="sub" id="dac-p90-sub">of grid cells &times; months</div></div>
+        <div class="metric"><div class="k">Strongest</div><div class="v" id="dac-max">--</div><div class="sub">any cell, any window month</div></div>
+        <div class="metric"><div class="k">Duration with currents</div><div class="v" id="dac-dur">--</div><div class="sub" id="dac-dur-sub">--</div></div>
+        <div class="metric"><div class="k">Current &gt; glider speed</div><div class="v" id="dac-over">--</div><div class="sub" id="dac-over-sub">of the track</div></div>
+      </div>
+
+      <div class="dac-chart">
+        <h3>Mean depth-averaged current by month, over the study area</h3>
+        <div class="dac-legend">
+          <span><i class="sw win"></i>Deployment months</span>
+          <span><i class="sw off"></i>Other months</span>
+          <span><i class="sw p90"></i>90th percentile</span>
+          <span><i class="sw spd"></i>Glider speed</span>
+        </div>
+        <div class="dac-svg-wrap"><svg id="dac-svg" role="img" aria-label="Monthly depth-averaged current over the study area"></svg>
+          <div class="dac-tip" id="dac-tip" hidden></div></div>
+        <details class="assumptions"><summary>Monthly values as a table</summary>
+          <div class="wpt-table-wrap"><table class="wpt-table"><thead><tr><th>Month</th><th>Mean (m/s)</th><th>90th pct (m/s)</th><th>Max (m/s)</th><th>Mean direction (to)</th><th>Duration (d)</th></tr></thead>
+          <tbody id="dac-rows"></tbody></table></div></details>
+      </div>
+
+      <div class="status" id="dac-flags"></div>
+
+      <details class="assumptions">
+        <summary>How the current estimate is made</summary>
+        <ul>
+          <li>Eastward and northward velocity (<code>uo</code>, <code>vo</code>) on GLORYS12's 1/12&deg; grid and 50 depth levels, monthly climatology over 1993&ndash;2016, read directly from Copernicus Marine's public ARCO store for the grid cells around the study area.</li>
+          <li>DAC in each grid cell is the thickness-weighted mean velocity from the surface to the target depth; where the model seabed is shallower, it is averaged to the seabed instead.</li>
+          <li>Area statistics use the grid cells inside the study polygon (all cells in its bounding box if the polygon is smaller than one cell), pooled across the deployment months.</li>
+          <li>Along the route, the glider is assumed to crab into the current to hold its track: ground speed = along-track current + &radic;(speed&sup2; &minus; cross-track current&sup2;). Where the cross-track current is stronger than the glider, or the result is not forward progress, the track cannot be held; that distance is left out of the duration and reported instead.</li>
+          <li>If more than 5&nbsp;% of the track cannot be held, the duration is shown as not feasible rather than as a number.</li>
+          <li>Duration with currents is the average over the deployment months of the duration flown in each month's currents; the worst month is shown beside it.</li>
+          <li>Monthly climatological means smooth out tides, eddies, storms and inter-annual variability. Currents on a given day can be considerably stronger than these values &mdash; treat them as a typical background, not a bound.</li>
+        </ul>
+      </details>
+    </div>
+    <p class="d3-credit">Currents: E.U. Copernicus Marine Service Information, Global Ocean Physics Reanalysis
+    (GLOBAL_MULTIYEAR_PHY_001_030, monthly climatology), <a href="https://doi.org/10.48670/moi-00021">doi:10.48670/moi-00021</a>.</p>
   </section>
 
   <section class="wpt" id="waypoints">
@@ -444,7 +550,8 @@ format:
   </div>
   <p class="note">Draws the planned track as it would actually be flown, against real bathymetry for
   the study area. Dive depth can follow the seafloor instead of being fixed, which is what a pilot
-  would really do over a shelf break or a canyon.</p>
+  would really do over a shelf break or a canyon. Once currents are estimated above, the depth-averaged
+  current is drawn as arrows on the sea surface over the dives: longer for stronger, red where it is faster than the glider.</p>
 
   <div class="d3-controls">
     <div class="mode">
@@ -453,6 +560,7 @@ format:
     </div>
     <label>Clearance above seabed
       <input type="number" id="d3-margin" value="50" min="5" max="500" step="5"> m</label>
+    <button id="d3-top" class="btn ghost" type="button" disabled>View from above</button>
     <button id="d3-build" class="btn" type="button" disabled>Build 3D view</button>
   </div>
 
@@ -468,6 +576,7 @@ format:
     <div>Seabed range <b id="d3-bed">&ndash;</b></div>
     <div>Grid <b id="d3-grid">&ndash;</b></div>
     <div>Too shallow to dive <b id="d3-shallow">&ndash;</b></div>
+    <div>Current arrows <b id="d3-cur">&ndash;</b></div>
   </div>
 
   <p class="d3-credit">Bathymetry from the
@@ -513,6 +622,7 @@ format:
 
   window.addEventListener('studydesign:generated', () => {
     buildBtn.disabled = false;
+    document.getElementById('d3-top').disabled = true;
     say('Survey generated. Press "Build 3D view" to fetch bathymetry for this area.');
   });
 
@@ -682,10 +792,13 @@ format:
       hovertemplate: 'lon %{x:.3f}<br>lat %{y:.3f}<br>depth %{z:.0f} m<extra></extra>',
       name: 'Planned dives'
     }];
+    baseTraces = traces.slice();
+    traces.push(...currentTraces(ink));
 
     const layout = {
       margin: { l: 0, r: 0, t: 0, b: 0 },
       paper_bgcolor: 'rgba(0,0,0,0)',
+      uirevision: 'd3',      // keep the viewer's camera when the current arrows are redrawn
       showlegend: true,
       legend: { x: 0, y: 1, font: { color: ink } },
       scene: {
@@ -701,6 +814,8 @@ format:
     plotEl.hidden = false;
     statusEl.hidden = true;
     await Plotly.newPlot(plotEl, traces, layout, { responsive: true, displaylogo: false });
+    baseLayout = layout; baseInk = ink;
+    topBtn.disabled = false; topBtn.textContent = 'View from above';
 
     const d = prof.depths;
     const mean = d.reduce((a, b) => a + b, 0) / (d.length || 1);
@@ -712,6 +827,7 @@ format:
     document.getElementById('d3-grid').textContent = surf.z[0].length + '×' + surf.z.length;
     document.getElementById('d3-shallow').textContent = opts.mode === 'bathy'
       ? prof.tooShallow + ' points' : 'n/a (fixed depth)';
+    currentNote();
     statsEl.hidden = false;
     buildBtn.disabled = false;
 
@@ -720,6 +836,66 @@ format:
       statusEl.hidden = false;
       plotEl.hidden = false;
     }
+  }
+
+  // ---------------------------------------------------------------- currents
+  /* Depth-averaged current vectors from the currents section, as arrows on the sea-surface plane
+     (z = 0) above the dives: length for strength (the longest spans one arrow spacing, as on the
+     2D map), colour for whether the glider can make headway against it. */
+  let baseTraces = null, baseLayout = null, baseInk = null;
+
+  /* Current direction is hard to read at an oblique angle, so offer a straight-down view and back. */
+  const topBtn = document.getElementById('d3-top');
+  const OBLIQUE = { x: 1.5, y: -1.5, z: 0.9 }, ABOVE = { x: 0, y: -0.01, z: 1.7 };
+  topBtn.addEventListener('click', () => {
+    if (plotEl.hidden || !plotEl.data) return;
+    const above = topBtn.textContent === 'View from above';
+    Plotly.relayout(plotEl, { 'scene.camera.eye': above ? ABOVE : OBLIQUE, 'scene.camera.up': { x: 0, y: 0, z: 1 } });
+    topBtn.textContent = above ? 'Back to 3D' : 'View from above';
+  });
+
+  function currentTraces(ink) {
+    const cur = window.studyCurrents && window.studyCurrents.vectors;
+    if (!cur || !cur.vecs.length) return [];
+    const groups = { calm: { x: [], y: [], z: [] }, fast: { x: [], y: [], z: [] } };
+    const hover = { x: [], y: [], z: [], text: [] };
+    cur.vecs.forEach(({ lon, lat, u, v, sp }) => {
+      if (!(sp > 0)) return;
+      const g = groups[sp > cur.speedMs ? 'fast' : 'calm'];
+      const k = cur.lenDeg * sp / cur.vmax, cosl = Math.cos(lat * Math.PI / 180);
+      const tip = [lon + k * u / sp / cosl, lat + k * v / sp];
+      const ang = Math.atan2(v, u), h = k * 0.45;
+      const head = (da) => [tip[0] - h * Math.cos(ang + da) / cosl, tip[1] - h * Math.sin(ang + da)];
+      // shaft, then both barbs, each piece separated by a null so Plotly lifts the pen
+      [[[lon, lat], tip], [head(0.5), tip, head(-0.5)]].forEach((piece) => {
+        piece.forEach((p) => { g.x.push(p[0]); g.y.push(p[1]); g.z.push(0); });
+        g.x.push(null); g.y.push(null); g.z.push(null);
+      });
+      const dir = (Math.atan2(u, v) * 180 / Math.PI + 360) % 360;
+      hover.x.push((lon + tip[0]) / 2); hover.y.push((lat + tip[1]) / 2); hover.z.push(0);
+      hover.text.push(sp.toFixed(2) + ' m/s (' + (sp / 0.514444).toFixed(2) + ' kt)<br>flowing to ' + dir.toFixed(0) + '°');
+    });
+    const kt = (x) => x.toFixed(2) + ' m/s';
+    // Black or white reads over every colour of the Earth scale; pick the one the legend can show.
+    const calm = document.body.classList.contains('quarto-dark') ? '#FFFFFF' : '#111111';
+    const out = [];
+    if (groups.calm.x.length) out.push({ type: 'scatter3d', mode: 'lines', ...groups.calm, hoverinfo: 'skip',
+      line: { width: 6, color: calm }, name: 'Current < glider ' + kt(cur.speedMs) });
+    if (groups.fast.x.length) out.push({ type: 'scatter3d', mode: 'lines', ...groups.fast, hoverinfo: 'skip',
+      line: { width: 6, color: '#FF3B30' }, name: 'Current > glider ' + kt(cur.speedMs) });
+    out.push({ type: 'scatter3d', mode: 'markers', ...hover, marker: { size: 6, opacity: 0 }, showlegend: false,
+      hovertemplate: 'DAC %{text}<br>lon %{x:.3f}, lat %{y:.3f}<extra>' + cur.label + '</extra>', name: 'Current' });
+    return out;
+  }
+
+  window.addEventListener('studycurrents:updated', () => {
+    if (!baseTraces || plotEl.hidden || !plotEl.data) return;
+    Plotly.react(plotEl, baseTraces.concat(currentTraces(baseInk)), baseLayout);
+    currentNote();
+  });
+  function currentNote() {
+    const cur = window.studyCurrents && window.studyCurrents.vectors;
+    document.getElementById('d3-cur').textContent = cur ? cur.label + ', longest ' + cur.vmax.toFixed(2) + ' m/s' : 'press Estimate currents above';
   }
 
   buildBtn.addEventListener('click', build);
@@ -1474,6 +1650,515 @@ format:
   // For the check in the repository; not used by the page itself.
   window.studyWaypoints = { toDdmm, fromDdmm, parse, writeSlocum, writeSeaglider };
   render();
+})();
+</script>
+```
+
+```{=html}
+<script>
+/* Depth-averaged currents for the study area, from the Copernicus GLORYS12 monthly climatology.
+ *
+ * Copernicus Marine publishes its products as "ARCO" Zarr stores on a public S3 bucket that sends
+ * Access-Control-Allow-Origin: *, so the browser reads the chunks it needs directly; no account,
+ * no server. The geo-chunked layout holds all 12 months x 4 depth levels x 128 x 128 cells in one
+ * chunk (about 0.8 MB compressed), so the months of the deployment cost nothing extra and a change
+ * of month or speed never refetches. Chunks are Blosc + LZ4 + byte shuffle; the decoder below was
+ * checked byte-for-byte against numcodecs on real chunks.
+ *
+ * Reads the route from window.studyDesign and draws on window.studyMap. The time of operation
+ * (start month + days) is shared with the Glider Selection Dashboard through localStorage.
+ */
+(function () {
+  'use strict';
+
+  const ARCO = 'https://s3.waw3-1.cloudferro.com/mdl-arco-geo-026/arco/GLOBAL_MULTIYEAR_PHY_001_030/' +
+               'cmems_mod_glo_phy_my_0.083deg-climatology_P1M-m_202311/geoChunked.zarr';
+  const OP_KEY = 'glider-tool.operation';      // { startMonth: 1-12, days }
+  const CUR_KEY = 'glider-tool.currents';      // last area summary, read by the dashboard
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const KT = 0.514444;                         // m/s per knot
+  const MAX_ARROWS = 400;
+  const PARALLEL = 6;                          // simultaneous chunk requests
+
+  const $ = (id) => document.getElementById(id);
+  const opStart = $('op-start'), opDays = $('op-days');
+  const buildBtn = $('dac-build'), statusEl = $('dac-status'), resultsEl = $('dac-results');
+  const monthSel = $('dac-month');
+
+  // ------------------------------------------------------------ time of operation
+  function store(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* private mode */ } }
+  function recall(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
+
+  const saved = recall(OP_KEY);
+  if (saved && saved.startMonth >= 1 && saved.startMonth <= 12) opStart.value = String(saved.startMonth);
+  if (saved && saved.days > 0) opDays.value = String(saved.days);
+
+  function operation() {
+    return { startMonth: Number(opStart.value) || 1, days: Math.max(1, Math.min(730, Math.round(Number(opDays.value) || 30))) };
+  }
+  /* Months of the year (0-11) the deployment touches, assuming it starts on the 1st. */
+  function windowMonths(op) {
+    const n = Math.min(12, Math.max(1, Math.ceil(op.days / 30.44)));
+    return Array.from({ length: n }, (_, i) => (op.startMonth - 1 + i) % 12);
+  }
+  function windowLabel(ms) {
+    if (ms.length === 12) return 'all year';
+    return ms.length === 1 ? MONTHS[ms[0]] : MONTHS[ms[0]] + '–' + MONTHS[ms[ms.length - 1]];
+  }
+  function showWindow() {
+    const op = operation();
+    $('dac-window').textContent = windowLabel(windowMonths(op)) + ' (' + op.days + ' d)';
+  }
+  MONTHS.forEach((m, i) => monthSel.add(new Option(m, String(i))));
+  showWindow();
+
+  // ------------------------------------------------------------ Blosc / LZ4
+  function lz4Block(src, dst, dpos, dend) {
+    let s = 0;
+    const send = src.length;
+    while (s < send) {
+      const token = src[s++];
+      let lit = token >> 4;
+      if (lit === 15) { let b; do { b = src[s++]; lit += b; } while (b === 255); }
+      for (let i = 0; i < lit; i++) dst[dpos++] = src[s++];
+      if (s >= send) break;
+      const off = src[s] | (src[s + 1] << 8); s += 2;
+      let mlen = token & 15;
+      if (mlen === 15) { let b; do { b = src[s++]; mlen += b; } while (b === 255); }
+      mlen += 4;
+      let m = dpos - off;
+      for (let i = 0; i < mlen; i++) dst[dpos++] = dst[m++];
+    }
+    if (dpos !== dend) throw new Error('LZ4 block decoded to the wrong size');
+  }
+  function bloscDecode(buf) {
+    const u8 = new Uint8Array(buf), dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+    const flags = u8[2], typesize = u8[3];
+    const nbytes = dv.getUint32(4, true), blocksize = dv.getUint32(8, true);
+    const out = new Uint8Array(nbytes);
+    if (flags & 0x02) { out.set(u8.subarray(16, 16 + nbytes)); return out; }       // stored uncompressed
+    if ((flags >> 5) !== 1) throw new Error('Blosc chunk is not LZ4-compressed');
+    const shuffled = flags & 0x01, dontSplit = flags & 0x10;
+    const tmp = new Uint8Array(blocksize);
+    for (let b = 0, nblocks = Math.ceil(nbytes / blocksize); b < nblocks; b++) {
+      const bsize = Math.min(blocksize, nbytes - b * blocksize);
+      const nsplits = (!dontSplit && bsize === blocksize) ? typesize : 1;
+      const neblock = bsize / nsplits;
+      let s = dv.getUint32(16 + 4 * b, true);
+      const dst = shuffled ? tmp : out.subarray(b * blocksize, b * blocksize + bsize);
+      for (let k = 0; k < nsplits; k++) {
+        const cb = dv.getInt32(s, true); s += 4;
+        if (cb === neblock) dst.set(u8.subarray(s, s + cb), k * neblock);
+        else lz4Block(u8.subarray(s, s + cb), dst, k * neblock, (k + 1) * neblock);
+        s += cb;
+      }
+      if (shuffled) {
+        const o = b * blocksize, n = Math.floor(bsize / typesize);
+        for (let i = 0; i < n; i++) for (let t = 0; t < typesize; t++) out[o + i * typesize + t] = tmp[t * n + i];
+        for (let i = n * typesize; i < bsize; i++) out[o + i] = tmp[i];
+      }
+    }
+    return out;
+  }
+
+  // ------------------------------------------------------------ Zarr access
+  let meta = null;                 // { u, v: {chunks, shape, scale, fill}, lat, lon, depth (positive down) }
+  const chunkCache = new Map();    // "uo/0.12.10.5" -> Int16Array | null (absent chunk = all fill)
+
+  async function getBytes(path) {
+    const r = await fetch(ARCO + '/' + path);
+    // An absent chunk is all fill (Zarr's rule); this bucket answers 403 rather than 404 for it.
+    if (r.status === 403 || r.status === 404) return null;
+    if (!r.ok) throw new Error('Copernicus Marine returned HTTP ' + r.status);
+    return new Uint8Array(await r.arrayBuffer());
+  }
+  async function loadMeta() {
+    if (meta) return meta;
+    const r = await fetch(ARCO + '/.zmetadata');
+    if (!r.ok) throw new Error('Copernicus Marine returned HTTP ' + r.status);
+    const m = (await r.json()).metadata;
+    const arr = (v) => ({
+      chunks: m[v + '/.zarray'].chunks, shape: m[v + '/.zarray'].shape,
+      scale: m[v + '/.zattrs'].scale_factor || 1, offset: m[v + '/.zattrs'].add_offset || 0,
+      fill: m[v + '/.zarray'].fill_value
+    });
+    const f32 = async (v) => {
+      const raw = await getBytes(v + '/0');
+      const d = bloscDecode(raw);
+      return new Float32Array(d.buffer, 0, d.length / 4);
+    };
+    const [lat, lon, elev] = await Promise.all([f32('latitude'), f32('longitude'), f32('elevation')]);
+    meta = { u: arr('uo'), v: arr('vo'), lat, lon, depth: Array.from(elev, (e) => -e) };
+    return meta;
+  }
+  function chunkKey(v, zc, yc, xc) { return v + '/0.' + zc + '.' + yc + '.' + xc; }
+
+  async function fetchChunks(keys, onProgress) {
+    const todo = keys.filter((k) => !chunkCache.has(k));
+    let done = 0, bytes = 0, next = 0;
+    async function worker() {
+      while (next < todo.length) {
+        const k = todo[next++];
+        const raw = await getBytes(k);
+        bytes += raw ? raw.length : 0;
+        chunkCache.set(k, raw ? new Int16Array(bloscDecode(raw).buffer) : null);
+        onProgress(++done, todo.length, bytes);
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(PARALLEL, todo.length) }, worker));
+    return todo.length;
+  }
+
+  /* Velocity (m/s) at month t, level k, row j, column i; NaN for land / below the seabed. */
+  function value(name, t, k, j, i) {
+    const a = meta[name === 'uo' ? 'u' : 'v'], [ct, cz, cy, cx] = a.chunks;
+    const c = chunkCache.get(chunkKey(name, Math.floor(k / cz), Math.floor(j / cy), Math.floor(i / cx)));
+    if (!c) return NaN;
+    const raw = c[(((t % ct) * cz + k % cz) * cy + j % cy) * cx + i % cx];
+    return raw === a.fill ? NaN : raw * a.scale + a.offset;
+  }
+
+  // ------------------------------------------------------------ depth averaging
+  /* Levels shallow to deep, each with the slab of water it represents (bounds halfway between
+     level centres, top at the surface), cut at the target depth. */
+  function layers(targetM) {
+    const order = meta.depth.map((d, k) => [d, k]).sort((a, b) => a[0] - b[0]);
+    const out = [];
+    for (let n = 0; n < order.length; n++) {
+      const top = n === 0 ? 0 : (order[n - 1][0] + order[n][0]) / 2;
+      if (top >= targetM) break;
+      const bot = n === order.length - 1 ? Infinity : (order[n][0] + order[n + 1][0]) / 2;
+      out.push({ k: order[n][1], w: Math.min(bot, targetM) - top });
+    }
+    return out;
+  }
+  /* DAC for one cell and month: thickness-weighted mean down to the target depth or the model seabed. */
+  function dacAt(lay, t, j, i) {
+    let su = 0, sv = 0, sw = 0;
+    for (const L of lay) {
+      const u = value('uo', t, L.k, j, i), v = value('vo', t, L.k, j, i);
+      if (!isFinite(u) || !isFinite(v)) break;          // reached the seabed
+      su += L.w * u; sv += L.w * v; sw += L.w;
+    }
+    return sw > 0 ? { u: su / sw, v: sv / sw, z: sw } : null;
+  }
+
+  function indexRange(axis, lo, hi) {
+    let a = 0, b = axis.length - 1;
+    while (a < axis.length - 1 && axis[a + 1] < lo) a++;
+    while (b > 0 && axis[b - 1] > hi) b--;
+    return [a, b];
+  }
+
+  // ------------------------------------------------------------ estimate
+  let model = null;      // { cells, j0, i0, nj, ni, grid: Float32Array per month (u,v interleaved), targetM }
+  let published = null;  // the vectors last drawn, for the 3D view
+  let lastChart = null;  // redrawn on resize, since the chart is laid out in pixels
+  let stale = null;      // the result just cleared, reused if the survey is regenerated over the same area and depth
+  let arrowLayer = null;
+
+  const say = (msg, err) => { statusEl.textContent = msg; statusEl.classList.toggle('err', !!err); statusEl.hidden = false; };
+
+  async function estimate() {
+    const sd = window.studyDesign;
+    if (!sd || !sd.polygon) { say('Generate a survey first.', true); return; }
+    const targetM = Math.max(1, Number(sd.els.depth.value) || 200);
+    buildBtn.disabled = true;
+    try {
+      say('Reading the Copernicus Marine catalogue…');
+      await loadMeta();
+      const [w, s, e, n] = turf.bbox(sd.polygon);
+      const pad = 1 / 12;
+      const [j0, j1] = indexRange(meta.lat, s - pad, n + pad);
+      const [i0, i1] = indexRange(meta.lon, w - pad, e + pad);
+      const lay = layers(targetM);
+      const [, cz, cy, cx] = meta.u.chunks;
+      const keys = new Set();
+      ['uo', 'vo'].forEach((name) => lay.forEach((L) => {
+        for (let yc = Math.floor(j0 / cy); yc <= Math.floor(j1 / cy); yc++)
+          for (let xc = Math.floor(i0 / cx); xc <= Math.floor(i1 / cx); xc++)
+            keys.add(chunkKey(name, Math.floor(L.k / cz), yc, xc));
+      }));
+      const fetched = await fetchChunks([...keys], (d, t, b) =>
+        say('Fetching currents: ' + d + ' of ' + t + ' chunks, ' + (b / 1e6).toFixed(1) + ' MB…'));
+
+      // Every cell in the padded box, every month: DAC (u, v), NaN on land.
+      const nj = j1 - j0 + 1, ni = i1 - i0 + 1;
+      const grid = Array.from({ length: 12 }, () => new Float32Array(nj * ni * 2).fill(NaN));
+      for (let t = 0; t < 12; t++)
+        for (let j = 0; j < nj; j++)
+          for (let i = 0; i < ni; i++) {
+            const d = dacAt(lay, t, j0 + j, i0 + i);
+            if (d) { grid[t][(j * ni + i) * 2] = d.u; grid[t][(j * ni + i) * 2 + 1] = d.v; }
+          }
+      // Cells for the area statistics: inside the polygon, or the whole box for a tiny polygon.
+      const all = [], inside = [];
+      for (let j = 0; j < nj; j++)
+        for (let i = 0; i < ni; i++) {
+          if (!isFinite(grid[0][(j * ni + i) * 2])) continue;
+          const c = { j, i, lat: meta.lat[j0 + j], lon: meta.lon[i0 + i] };
+          all.push(c);
+          if (turf.booleanPointInPolygon([c.lon, c.lat], sd.polygon)) inside.push(c);
+        }
+      if (!all.length) { say('The model has no ocean in this area — it may be entirely land at 1/12° resolution.', true); return; }
+      model = { cells: inside.length ? inside : all, wholeBox: !inside.length, j0, i0, nj, ni, grid, targetM,
+                polygon: JSON.stringify(sd.polygon.geometry) };
+      render();
+      say(fetched ? '' : 'Using currents already loaded for this area.');
+      statusEl.hidden = !statusEl.textContent;
+    } catch (err) {
+      say('Could not load currents: ' + err.message + '. The Copernicus Marine store may be busy — try again.', true);
+    } finally {
+      buildBtn.disabled = false;
+    }
+  }
+
+  function cellUV(t, j, i) {
+    const g = model.grid[t], p = (j * model.ni + i) * 2;
+    return [g[p], g[p + 1]];
+  }
+  /* Nearest ocean cell to a position, searching outwards a few cells past the coast. */
+  function uvNear(t, lon, lat) {
+    const j = Math.round((lat - meta.lat[model.j0]) * 12), i = Math.round((lon - meta.lon[model.i0]) * 12);
+    for (let r = 0; r <= 3; r++)
+      for (let dj = -r; dj <= r; dj++)
+        for (let di = -r; di <= r; di++) {
+          if (Math.max(Math.abs(dj), Math.abs(di)) !== r) continue;
+          const jj = j + dj, ii = i + di;
+          if (jj < 0 || ii < 0 || jj >= model.nj || ii >= model.ni) continue;
+          const uv = cellUV(t, jj, ii);
+          if (isFinite(uv[0])) return uv;
+        }
+    return [0, 0];
+  }
+  function quantile(sorted, q) {
+    if (!sorted.length) return NaN;
+    const x = (sorted.length - 1) * q, a = Math.floor(x);
+    return sorted[a] + (sorted[Math.min(a + 1, sorted.length - 1)] - sorted[a]) * (x - a);
+  }
+  function monthStats(t) {
+    let su = 0, sv = 0;
+    const sp = model.cells.map((c) => { const [u, v] = cellUV(t, c.j, c.i); su += u; sv += v; return Math.hypot(u, v); }).sort((a, b) => a - b);
+    const mean = sp.reduce((a, b) => a + b, 0) / sp.length;
+    const dir = (Math.atan2(su, sv) * 180 / Math.PI + 360) % 360;   // direction the water flows to
+    return { mean, p90: quantile(sp, 0.9), max: sp[sp.length - 1], dir, speeds: sp };
+  }
+
+  /* Fly the route through month t's currents. Returns seconds of flight, km that can be held,
+     km where the current beats the glider, and km where the track cannot be held at all. */
+  function flyMonth(t, lines, speedMs) {
+    let sec = 0, heldKm = 0, overKm = 0, lostKm = 0;
+    lines.forEach((line) => {
+      const len = turf.length(line, { units: 'kilometers' });
+      const step = Math.max(0.25, len / 1500);
+      let prev = turf.along(line, 0, { units: 'kilometers' }).geometry.coordinates;
+      for (let d = step; d < len + step - 1e-9; d += step) {
+        const here = turf.along(line, Math.min(d, len), { units: 'kilometers' }).geometry.coordinates;
+        const ds = turf.distance(prev, here, { units: 'kilometers' });
+        if (ds <= 0) { prev = here; continue; }
+        const brg = turf.bearing(prev, here) * Math.PI / 180;
+        const mid = [(prev[0] + here[0]) / 2, (prev[1] + here[1]) / 2];
+        const [u, v] = uvNear(t, mid[0], mid[1]);
+        const along = u * Math.sin(brg) + v * Math.cos(brg);
+        const cross = u * Math.cos(brg) - v * Math.sin(brg);
+        if (Math.hypot(u, v) > speedMs) overKm += ds;
+        const vg = Math.abs(cross) < speedMs ? along + Math.sqrt(speedMs * speedMs - cross * cross) : -1;
+        if (vg > 0.01) { sec += ds * 1000 / vg; heldKm += ds; } else lostKm += ds;
+        prev = here;
+      }
+    });
+    return { sec, heldKm, overKm, lostKm };
+  }
+  function flownLines(geom) {
+    if (!geom) return [];
+    return geom.type === 'route' ? [geom.line] : geom.lines;
+  }
+
+  const fmt = (x, d) => Number(x).toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const ms = (x) => fmt(x, 2) + ' m/s';
+  const dur = (days) => days < 1 ? fmt(days * 24, 1) + ' h' : fmt(days, 1) + ' d';
+  const compass = (deg) => ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(deg / 45) % 8];
+
+  function render() {
+    if (!model) return;
+    const sd = window.studyDesign;
+    const op = operation(), win = windowMonths(op);
+    const speedMs = Math.max(0.01, Number(sd.els.speed.value)) * KT;
+    const gliders = Math.max(1, Math.round(Number(sd.els.gliders.value) || 1));
+    const lines = flownLines(sd.geometry);
+    const nominalDays = sd.geometry.distanceKm / (speedMs * 86.4) / gliders;
+
+    const stats = MONTHS.map((_, t) => monthStats(t));
+    const flights = MONTHS.map((_, t) => flyMonth(t, lines, speedMs));
+    const pooled = win.flatMap((t) => stats[t].speeds).sort((a, b) => a - b);
+    const mean = pooled.reduce((a, b) => a + b, 0) / pooled.length;
+    const p90 = quantile(pooled, 0.9), max = pooled[pooled.length - 1];
+    const days = (t) => flights[t].sec / 86400 / gliders;
+    const winDays = win.reduce((a, t) => a + days(t), 0) / win.length;
+    const worst = win.reduce((a, t) => (days(t) > days(a) ? t : a), win[0]);
+    const totalKm = sd.geometry.distanceKm || 1;
+    const over = win.reduce((a, t) => a + flights[t].overKm, 0) / win.length / totalKm;
+    const lost = win.reduce((a, t) => a + flights[t].lostKm, 0) / win.length / totalKm;
+
+    $('dac-mean').textContent = ms(mean);
+    $('dac-mean-sub').textContent = (model.wholeBox ? 'nearby cells, ' : '') + windowLabel(win) + ', 0–' + fmt(model.targetM, 0) + ' m';
+    $('dac-p90').textContent = ms(p90);
+    $('dac-max').textContent = ms(max);
+    // Past a few percent of unflyable track, a duration that skips it is more misleading than none.
+    const infeasible = lost > 0.05;
+    $('dac-dur').textContent = infeasible ? 'Not feasible' : dur(winDays) + (lost > 0.001 ? '+' : '');
+    $('dac-dur').classList.toggle('flag', infeasible);
+    $('dac-dur-sub').textContent = 'nominal ' + dur(nominalDays) + (infeasible ? '; track not holdable on ' + fmt(lost * 100, 0) + ' %'
+      : win.length > 1 ? '; worst ' + MONTHS[worst] + ' ' + dur(days(worst)) : '');
+    $('dac-over').textContent = fmt(over * 100, 0) + ' %';
+    $('dac-over').classList.toggle('flag', over > 0.1);
+    $('dac-over-sub').textContent = 'of the track, glider ' + fmt(speedMs, 2) + ' m/s';
+
+    const flags = [];
+    const pct = (f) => fmt(f * 100, f < 0.1 ? 1 : 0) + ' %';
+    if (lost > 0.001) flags.push(['warn', '!', '<b>Track cannot be held on ' + pct(lost) + ' of the route.</b> The cross-current there is stronger than the glider; ' + (infeasible ? 'no duration is given.' : 'that distance is left out of the duration, so the true figure is longer.')]);
+    if (p90 > speedMs) flags.push(['warn', '!', '<b>Currents often exceed the glider\'s speed.</b> The 90th-percentile DAC (' + ms(p90) + ') is above ' + ms(speedMs) + '. Consider a faster glider, an extended-energy option or orienting transects with the current.']);
+    else if (p90 > 0.6 * speedMs) flags.push(['warn', '~', '<b>Currents are a large fraction of the glider\'s speed.</b> The 90th-percentile DAC is ' + fmt(p90 / speedMs * 100, 0) + ' % of it; expect slow legs into the current.']);
+    else flags.push(['ok', '+', '<b>Currents are well below the glider\'s speed</b> for these months (90th percentile ' + fmt(p90 / speedMs * 100, 0) + ' % of it).']);
+    flags.push(['warn', '~', '<b>Climatology, not a forecast.</b> Monthly means over 1993–2016 hide tides, eddies and storms; on any given day the current can be much stronger.']);
+    $('dac-flags').innerHTML = flags.map(([c, ic, t]) => '<div class="status-row ' + c + '"><span class="ic">' + ic + '</span><span>' + t + '</span></div>').join('');
+
+    $('dac-rows').innerHTML = stats.map((s, t) => '<tr><td>' + (win.includes(t) ? '<b>' + MONTHS[t] + '</b>' : MONTHS[t]) + '</td><td>' + fmt(s.mean, 3) +
+      '</td><td>' + fmt(s.p90, 3) + '</td><td>' + fmt(s.max, 3) + '</td><td>' + fmt(s.dir, 0) + '° ' + compass(s.dir) +
+      '</td><td>' + (flights[t].lostKm > 0.05 * totalKm ? 'not feasible' : fmt(days(t), 1) + (flights[t].lostKm > 0 ? '+' : '')) + '</td></tr>').join('');
+
+    resultsEl.hidden = false;            // before the chart, which sizes itself to its container
+    lastChart = [stats, win, speedMs];
+    chart(stats, win, speedMs);
+    drawArrows(win, speedMs);
+
+    store(CUR_KEY, {
+      savedAt: new Date().toISOString(), months: win.map((t) => MONTHS[t]), depthM: model.targetM,
+      center: turf.centroid(sd.polygon).geometry.coordinates, meanMs: mean, p90Ms: p90, maxMs: max,
+      speedMs, nominalDays, currentDays: winDays, lostFraction: lost
+    });
+  }
+
+  // ------------------------------------------------------------ monthly chart
+  function chart(stats, win, speedMs) {
+    const svg = $('dac-svg'), tip = $('dac-tip');
+    const W = Math.max(320, svg.clientWidth || 640), H = 230, L = 46, R = 8, T = 22, B = 24;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    const top = Math.max(speedMs, ...stats.map((s) => s.p90)) * 1.1;
+    const nice = [0.05, 0.1, 0.2, 0.25, 0.5, 1].find((s) => top / s <= 5) || 1;
+    const ymax = Math.ceil(top / nice) * nice;
+    const y = (x) => T + (H - T - B) * (1 - x / ymax);
+    const bw = (W - L - R) / 12;
+    let s = '';
+    for (let g = 0; g <= ymax + 1e-9; g += nice)
+      s += '<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(g) + '" y2="' + y(g) + '"/><text x="' + (L - 6) + '" y="' + (y(g) + 4) + '" text-anchor="end">' + fmt(g, 2) + '</text>';
+    stats.forEach((st, t) => {
+      const x = L + t * bw + bw * 0.2, w = bw * 0.6, inW = win.includes(t);
+      const y0 = y(0), y1 = y(st.mean), r = Math.min(4, w / 2, y0 - y1);
+      s += '<rect class="hit" data-t="' + t + '" x="' + (L + t * bw) + '" y="' + T + '" width="' + bw + '" height="' + (H - T - B) + '"/>';
+      s += '<path class="bar" fill="var(' + (inW ? '--dac-win' : '--dac-off') + ')" d="M' + x + ',' + y0 + 'V' + (y1 + r) +
+           'Q' + x + ',' + y1 + ' ' + (x + r) + ',' + y1 + 'H' + (x + w - r) + 'Q' + (x + w) + ',' + y1 + ' ' + (x + w) + ',' + (y1 + r) + 'V' + y0 + 'Z"/>';
+      s += '<line x1="' + (x - 2) + '" x2="' + (x + w + 2) + '" y1="' + y(st.p90) + '" y2="' + y(st.p90) + '" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" pointer-events="none"/>';
+      s += '<text x="' + (x + w / 2) + '" y="' + (H - 6) + '" text-anchor="middle"' + (inW ? ' style="fill:var(--ink);font-weight:700"' : '') + '>' + MONTHS[t][0] + (W > 520 ? MONTHS[t].slice(1) : '') + '</text>';
+    });
+    s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(speedMs) + '" y2="' + y(speedMs) + '" stroke="var(--flag)" stroke-width="2" stroke-dasharray="6 4" pointer-events="none"/>';
+    s += '<text x="' + (W - R) + '" y="' + (y(speedMs) - 5) + '" text-anchor="end" style="fill:var(--flag)">glider ' + fmt(speedMs, 2) + '</text>';
+    s += '<text x="' + (L - 6) + '" y="11" text-anchor="end">m/s</text>';
+    svg.innerHTML = s;
+    svg.querySelectorAll('.hit').forEach((h) => {
+      h.addEventListener('mousemove', (ev) => {
+        const t = Number(h.dataset.t), st = stats[t], box = svg.getBoundingClientRect();
+        tip.innerHTML = MONTHS[t] + (win.includes(t) ? ' · deployment' : '') + '<br>mean <b>' + fmt(st.mean, 3) + '</b> · p90 <b>' + fmt(st.p90, 3) +
+          '</b> m/s<br>flows to ' + fmt(st.dir, 0) + '° ' + compass(st.dir);
+        tip.hidden = false;
+        const x = ev.clientX - box.left;
+        tip.style.left = Math.min(Math.max(0, x - tip.offsetWidth / 2), box.width - tip.offsetWidth) + 'px';
+        tip.style.top = Math.max(0, ev.clientY - box.top - tip.offsetHeight - 12) + 'px';
+      });
+      h.addEventListener('mouseleave', () => { tip.hidden = true; });
+    });
+  }
+
+  // ------------------------------------------------------------ map arrows
+  const mapKey = L.control({ position: 'bottomright' });
+  mapKey.onAdd = function () { const d = L.DomUtil.create('div', 'dac-arrow-key'); d.id = 'dac-arrow-key'; return d; };
+
+  function drawArrows(win, speedMs) {
+    const map = window.studyMap;
+    if (!map) return;
+    if (!map.getPane('currentPane')) { map.createPane('currentPane'); map.getPane('currentPane').style.zIndex = 640; map.getPane('currentPane').style.pointerEvents = 'none'; }
+    if (arrowLayer) arrowLayer.clearLayers(); else arrowLayer = L.layerGroup().addTo(map);
+    const pick = monthSel.value === 'window' ? win : [Number(monthSel.value)];
+    const stride = Math.max(1, Math.ceil(Math.sqrt(model.cells.length / MAX_ARROWS)));
+    const cells = model.cells.filter((c) => c.j % stride === 0 && c.i % stride === 0);
+    const vecs = cells.map((c) => {
+      let u = 0, v = 0;
+      pick.forEach((t) => { const uv = cellUV(t, c.j, c.i); u += uv[0] / pick.length; v += uv[1] / pick.length; });
+      return { c, u, v, sp: Math.hypot(u, v) };
+    });
+    const vmax = Math.max(1e-3, ...vecs.map((a) => a.sp));
+    const lenDeg = 0.9 * stride / 12;                              // the strongest arrow spans one arrow spacing
+    const label = (pick.length > 1 ? windowLabel(pick) + ' mean' : MONTHS[pick[0]]) + ', 0–' + fmt(model.targetM, 0) + ' m';
+    // The 3D seafloor view draws the same vectors over the dive path.
+    published = { vecs: vecs.map(({ c, u, v, sp }) => ({ lon: c.lon, lat: c.lat, u, v, sp })), vmax, lenDeg, speedMs, label };
+    window.dispatchEvent(new CustomEvent('studycurrents:updated'));
+    // The basemap is the same light ocean in both themes, so the arrows keep one pair of colours.
+    const fast = '#B3261E', calm = '#123A5C';
+    vecs.forEach(({ c, u, v, sp }) => {
+      const k = lenDeg * sp / vmax, cosl = Math.cos(c.lat * Math.PI / 180);
+      const tip = [c.lat + k * v / sp, c.lon + k * u / sp / cosl];
+      const ang = Math.atan2(v, u), h = k * 0.35;
+      const head = (da) => [tip[0] - h * Math.sin(ang + da), tip[1] - h * Math.cos(ang + da) / cosl];
+      const col = sp > speedMs ? fast : calm;
+      L.polyline([[c.lat, c.lon], tip], { pane: 'currentPane', color: col, weight: 1.6, opacity: 0.9, interactive: false }).addTo(arrowLayer);
+      L.polyline([head(0.45), tip, head(-0.45)], { pane: 'currentPane', color: col, weight: 1.6, opacity: 0.9, interactive: false }).addTo(arrowLayer);
+    });
+    if (!$('dac-arrow-key')) mapKey.addTo(map);
+    $('dac-arrow-key').innerHTML = '<b>DAC ' + label.replace(', ', '</b>, ') + '<br>' +
+      '<i style="background:' + calm + '"></i>slower than glider<br><i style="background:' + fast + '"></i>faster than glider (' + fmt(speedMs, 2) + ' m/s)<br>longest arrow ' + fmt(vmax, 2) + ' m/s';
+  }
+  function clearArrows() {
+    if (arrowLayer) arrowLayer.clearLayers();
+    const k = $('dac-arrow-key'); if (k) mapKey.remove();
+    if (published) { published = null; window.dispatchEvent(new CustomEvent('studycurrents:updated')); }
+  }
+
+  // ------------------------------------------------------------ wiring
+  function onOperationChange() {
+    store(OP_KEY, operation());
+    showWindow();
+    if (model && !resultsEl.hidden) render();
+  }
+  opStart.addEventListener('change', onOperationChange);
+  opDays.addEventListener('change', onOperationChange);
+  monthSel.addEventListener('change', () => { if (model) drawArrows(windowMonths(operation()), Math.max(0.01, Number(window.studyDesign.els.speed.value)) * KT); });
+  $('speed').addEventListener('change', () => { if (model && !resultsEl.hidden) render(); });
+  $('gliders').addEventListener('change', () => { if (model && !resultsEl.hidden) render(); });
+  buildBtn.addEventListener('click', estimate);
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { if (lastChart && !resultsEl.hidden) chart.apply(null, lastChart); }, 150);
+  });
+
+  window.addEventListener('studydesign:generated', () => {
+    buildBtn.disabled = false;
+    const sd = window.studyDesign;
+    // Same area and depth: recompute from what is already loaded (no network); otherwise ask.
+    // (Generate clears the old survey first, so the last result waits in `stale`.)
+    if (stale && sd && stale.targetM === Math.max(1, Number(sd.els.depth.value) || 200) && stale.polygon === JSON.stringify(sd.polygon.geometry)) {
+      model = stale; stale = null; render(); return;
+    }
+    model = null; stale = null; resultsEl.hidden = true; clearArrows();
+    say('Survey generated. Press "Estimate currents" to fetch historical currents for this area (roughly 5–20 MB, once per area).');
+  });
+  window.addEventListener('studydesign:cleared', () => {
+    if (model) stale = model;
+    model = null; resultsEl.hidden = true; clearArrows(); buildBtn.disabled = true;
+    say('Generate a survey, then estimate the currents for its area.');
+  });
+
+  window.studyCurrents = { bloscDecode, layers, windowMonths, get model() { return model; }, get vectors() { return published; } };
 })();
 </script>
 ```
