@@ -713,6 +713,8 @@ ul.task-list li input[type="checkbox"] {
 #gsd .payload-detail .pd-row { margin-top: 5px; }
 #gsd .payload-detail .pd-row:first-child { margin-top: 0; }
 #gsd .payload-detail .pd-none { color: var(--flag); }
+#gsd .op-window { font-family: var(--mono); font-size: 13.5px; color: var(--ink); padding: 8px 0; }
+#gsd .payload-detail a { color: var(--accent-ink); }
 
 </style>
 
@@ -786,6 +788,23 @@ ul.task-list li input[type="checkbox"] {
           </div>
           <div class="handling-note">Choose the highest level of handling support available. Higher capability also includes gliders with lower handling requirements.</div>
         </div>
+
+        <h3 style="margin-top:20px;" class="anchored">Time of operation</h3>
+        <p class="section-note">When the glider will be in the water. This does not filter the list: with the
+          deployment duration above, it tells the <a href="study-design.html">Study Design Tool</a> which months of
+          historical currents to use for your study area.</p>
+        <div class="payload-grid">
+          <label class="payload-field"><span>Start month</span>
+            <select id="op-start">
+              <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+              <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+              <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+              <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+            </select></label>
+          <label class="payload-field"><span>Deployment window</span>
+            <div class="op-window" id="op-window">--</div></label>
+        </div>
+        <div class="payload-detail" id="op-currents" hidden=""></div>
 
         <h3 style="margin-top:20px;" class="anchored">Science payload</h3>
         <p class="section-note">Pick what you need to measure, then a specific sensor if you have
@@ -1895,6 +1914,50 @@ vt.addEventListener("click", () => {
   vt.setAttribute("aria-pressed", "true"); vc.setAttribute("aria-pressed", "false");
   document.getElementById("cards").hidden = true; document.getElementById("tableview").hidden = false;
 });
+
+// ---------- time of operation ----------
+// Shared with the Study Design Tool through localStorage: start month + days in, and the last
+// depth-averaged current estimate it made back out. Neither one filters the list here.
+{
+  const OP_KEY = "glider-tool.operation", CUR_KEY = "glider-tool.currents";
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const recall = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
+  const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode */ } };
+  const start = document.getElementById("op-start"), days = document.getElementById("r-duration");
+
+  const saved = recall(OP_KEY);
+  if (saved && saved.startMonth >= 1 && saved.startMonth <= 12) start.value = String(saved.startMonth);
+  if (saved && saved.days >= 1 && saved.days <= 730) {
+    // Set quietly: moving the slider by hand ticks the duration requirement, this should not.
+    days.value = String(saved.days);
+    document.getElementById("v-duration").textContent = days.value;
+  }
+
+  const op = () => ({ startMonth: Number(start.value), days: Number(days.value) });
+  const showWindow = () => {
+    const o = op(), n = Math.min(12, Math.ceil(o.days / 30.44));
+    const first = MONTHS[o.startMonth - 1], last = MONTHS[(o.startMonth - 2 + n) % 12];
+    document.getElementById("op-window").textContent =
+      (n >= 12 ? "all year" : n === 1 ? first : first + "–" + last) + " · " + o.days + " days";
+  };
+  const save = () => { store(OP_KEY, op()); showWindow(); };
+  start.addEventListener("change", save);
+  days.addEventListener("change", save);
+  showWindow();
+
+  const cur = recall(CUR_KEY);
+  if (cur && isFinite(cur.p90Ms)) {
+    const f = (x, d) => Number(x).toFixed(d);
+    const [lon, lat] = cur.center || [NaN, NaN];
+    const where = isFinite(lat) ? ` near ${f(Math.abs(lat), 2)}°${lat >= 0 ? "N" : "S"} ${f(Math.abs(lon), 2)}°${lon >= 0 ? "E" : "W"}` : "";
+    const el = document.getElementById("op-currents");
+    el.innerHTML = `<div class="pd-row"><b>Last current estimate</b> from the <a href="study-design.html">Study Design Tool</a>` +
+      `${where}, ${cur.months.length > 1 ? cur.months[0] + "–" + cur.months[cur.months.length - 1] : cur.months[0]}, 0–${Math.round(cur.depthM)} m:</div>` +
+      `<div class="pd-row">depth-averaged current mean <b>${f(cur.meanMs, 2)} m/s</b>, 90th percentile <b>${f(cur.p90Ms, 2)} m/s</b>` +
+      ` (${f(cur.p90Ms / 0.514444, 2)} kt), strongest <b>${f(cur.maxMs, 2)} m/s</b>. A glider slower than the 90th percentile will struggle to hold its track there.</div>`;
+    el.hidden = false;
+  }
+}
 
 applied = readForm();
 render();
