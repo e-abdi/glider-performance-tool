@@ -85,6 +85,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.3/plotly-gl3d.min.js"></script>
 
@@ -473,7 +474,7 @@ ul.task-list li input[type="checkbox"] {
   #study-design .map-help { padding: 10px 14px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); }
   #study-design .summary { margin-top: 18px; }
   #study-design .summary h2 { font-size: 19px; margin-bottom: 4px; }
-  #study-design .metrics { display: grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
+  #study-design .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
   #study-design .metric { background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 12px; }
   #study-design .metric .k { text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-size: 10.5px; }
   #study-design .metric .v { font-family: var(--mono); font-weight: 700; font-size: 18px; margin-top: 2px; font-variant-numeric: tabular-nums; }
@@ -590,6 +591,7 @@ ul.task-list li input[type="checkbox"] {
   font-size: 0.8rem;
   font-weight: 700;
 }
+.land-mask-status.err { color: var(--flag); }
 
 .leaflet-pane.leaflet-land-pane {
   pointer-events: none;
@@ -649,7 +651,7 @@ ul.task-list li input[type="checkbox"] {
   #study-design #dac-svg .hit:hover + .bar, #study-design #dac-svg .bar.hl { opacity: .8; }
   #study-design .dac-tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 7px; padding: 6px 9px; font-size: 12px; color: var(--ink); box-shadow: 0 4px 14px rgba(0,0,0,.12); white-space: nowrap; }
   #study-design .dac-tip b { font-family: var(--mono); font-variant-numeric: tabular-nums; }
-  #study-design .dac .metric .v.flag { color: var(--flag); }
+  #study-design .metric .v.flag { color: var(--flag); }
   .dac-arrow-key { background: var(--surface, #fff); color: var(--ink, #1F2C31); border: 1px solid var(--line, #DAE3E5); border-radius: 7px; padding: 6px 9px; font: 12px/1.4 "Atkinson Hyperlegible", sans-serif; }
   .dac-arrow-key i { display: inline-block; width: 18px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; }
 </style>
@@ -670,10 +672,12 @@ ul.task-list li input[type="checkbox"] {
         <select id="pattern">
           <option value="lawnmower" selected="">Lawnmower (connected transects)</option>
           <option value="parallel">Parallel transects only</option>
+          <option value="butterfly">Butterfly (figure-8 loop)</option>
         </select>
+        <p class="note" id="pattern-note" hidden="">A butterfly flies two diagonals that cross near the middle of the area, joined at each end into a figure 8, and repeats the loop. It is sized to fit inside the study area, so transect spacing does not apply.</p>
       </div>
 
-      <div class="field">
+      <div class="field" id="spacing-field">
         <label for="spacing"><b>Transect spacing</b><span class="val"><span id="spacing-val">10</span> km</span></label>
         <input id="spacing" type="range" min="1" max="50" step="1" value="10">
       </div>
@@ -681,7 +685,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="field">
         <label for="bearing"><b>Track orientation</b><span class="val"><span id="bearing-val">0</span>°</span></label>
         <input id="bearing" type="range" min="0" max="179" step="1" value="0">
-        <p class="note">0° = north-south transects; 90° = east-west.</p>
+        <p class="note" id="bearing-note">0° = north-south transects; 90° = east-west.</p>
       </div>
 
       <h3 class="anchored">Mission assumptions</h3>
@@ -696,15 +700,9 @@ ul.task-list li input[type="checkbox"] {
         <p class="note">Angle from horizontal. Used with target depth to estimate the horizontal distance of one down-and-up dive cycle.</p>
       </div>
 
-      <div class="two">
-        <div class="field">
-          <label for="depth"><b>Target depth</b></label>
-          <input id="depth" type="number" min="1" max="6000" step="10" value="500">
-        </div>
-        <div class="field">
-          <label for="gliders"><b>Number of gliders</b></label>
-          <input id="gliders" type="number" min="1" max="20" step="1" value="1">
-        </div>
+      <div class="field">
+        <label for="depth"><b>Target depth (m)</b></label>
+        <input id="depth" type="number" min="1" max="6000" step="10" value="500">
       </div>
 
       <div class="two">
@@ -738,89 +736,32 @@ ul.task-list li input[type="checkbox"] {
       <div id="study-map" aria-label="Interactive map for drawing the study area"></div>
       <div class="map-help"><b>Map controls:</b> click <b>Draw study area</b>, then click successive points on the map to add vertices. When you have at least three vertices, click <b>Finish polygon</b>. Use <b>Clear area</b> to start over. Then click <b>Generate survey</b>. While drawing, the rest of the map should remain fully clickable.</div>
       <div class="map-help"><b>Map layers:</b> <span style="color:#0057B8;font-weight:800;">blue lines</span> = survey track; <span style="color:#F28E2B;font-weight:800;">orange dots</span> = estimated surfacing locations.</div>
-      <div class="map-help"><b>Land mask:</b> shaded land is shown for visual guidance only. Survey tracks are not yet routed around land, so route distance and mission duration should be treated as approximate.</div>
+      <div class="map-help"><b>Land:</b> the study area has to be at sea. A vertex on land, or an edge that crosses it, is refused while drawing, and an area that overlaps land cannot be surveyed; the overlap is shown in red. Coastline from Natural Earth (1:10m), so it is accurate to roughly a kilometre — keep a margin from the shore.</div>
       <div id="land-mask-status" class="land-mask-status">Loading land mask…</div>
     </section>
   </div>
 
-  <section class="summary">
-    <h2 class="anchored">Survey estimate</h2>
-    <p class="note">Values below are geometric and first-order estimates. Currents, dive behavior, bathymetry, payload power, navigation, launch/recovery, and operational safety margins are not yet included.</p>
-    <div class="dive-card" id="dive-preview">
-      <div class="dive-visual">
-        <h3 class="anchored">Idealized dive cycle</h3>
-        <svg id="dive-svg" viewbox="0 0 620 180" role="img" aria-label="Idealized glider sawtooth dive cycle">
-          <line class="dive-surface" x1="52" y1="32" x2="590" y2="32"></line>
-          <line class="dive-grid" x1="52" y1="150" x2="590" y2="150"></line>
-          <polyline id="dive-path" class="dive-path" points="80,32 320,150 560,32"></polyline>
-          <circle cx="80" cy="32" r="5" fill="#86570A"></circle>
-          <circle cx="560" cy="32" r="5" fill="#86570A"></circle>
-          <text class="dive-label" x="6" y="36">Surface</text>
-          <text id="dive-depth-label" class="dive-label" x="6" y="154">500 m</text>
-          <text id="dive-distance-label" class="dive-label" x="320" y="174" text-anchor="middle">2.05 km per cycle</text>
-          <text id="dive-angle-label" class="dive-label" x="174" y="78">26°</text>
-        </svg>
-      </div>
-      <div class="dive-stats">
-        <h3 class="anchored">Dive-cycle estimate</h3>
-        <div class="dive-kpis">
-          <div class="dive-kpi"><div class="k">Cycle distance</div><div class="v" id="m-cycle-distance">--</div></div>
-          <div class="dive-kpi"><div class="k">Half-cycle</div><div class="v" id="m-half-cycle">--</div></div>
-          <div class="dive-kpi"><div class="k">Approx. cycles</div><div class="v" id="m-cycles">--</div></div>
-          <div class="dive-kpi"><div class="k">Profiles / 100 km</div><div class="v" id="m-profile-density">--</div></div>
-          <div class="dive-kpi"><div class="k">Surfacing markers</div><div class="v" id="m-surface-markers">--</div></div>
-        </div>
-        <p class="note" style="margin-top:9px;">Orange dots on the map show estimated surfacing locations along the generated route. Depth and glide-angle changes update this preview immediately.</p>
-      </div>
-    </div>
-    <div id="summary-empty" class="empty">Draw a study polygon and press <b>Generate survey</b> to create an estimate.</div>
-    <div id="summary-results" hidden="">
-      <div class="metrics">
-        <div class="metric"><div class="k">Study area</div><div class="v" id="m-area">--</div><div class="sub">polygon area</div></div>
-        <div class="metric"><div class="k">Transects</div><div class="v" id="m-transects">--</div><div class="sub">inside study area</div></div>
-        <div class="metric"><div class="k">Track length</div><div class="v" id="m-distance">--</div><div class="sub">survey route</div></div>
-        <div class="metric"><div class="k">Nominal duration</div><div class="v" id="m-duration">--</div><div class="sub">distance / aggregate speed</div></div>
-        <div class="metric"><div class="k">Target depth</div><div class="v" id="m-depth">--</div><div class="sub">user requirement</div></div>
-      </div>
-      <div class="status">
-        <div class="status-row warn"><span class="ic">~</span><span><b>Duration is derived.</b> It assumes constant horizontal speed and an even division of route distance among gliders.</span></div>
-        <div class="status-row warn"><span class="ic">!</span><span><b>Not an operational plan.</b> Bathymetry, energy use, station keeping, and deployment logistics are not modeled; currents are estimated separately under <a href="#dac">Depth-averaged currents</a>.</span></div>
-        <div class="status-row ok"><span class="ic">+</span><span><b>Geometry is reproducible.</b> Area, transect count, and route length are calculated directly from the polygon and generated tracks.</span></div>
-      </div>
-      <details class="assumptions">
-        <summary>Calculation assumptions</summary>
-        <ul>
-          <li>Transects are generated at the selected compass orientation and clipped to the study polygon.</li>
-          <li>For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included.</li>
-          <li>Nominal travel rate is speed in knots × 1.852 km/nmi × 24 h/day.</li>
-          <li>Dive-cycle horizontal distance is approximated as 2 × target depth / tan(glide angle), assuming a symmetric straight-line descent and ascent.</li>
-          <li>Map dots represent estimated surfacing locations, not subsurface profile positions or commanded waypoints.</li>
-          <li>With multiple gliders, route distance is divided evenly among vehicles for the duration estimate only; tracks are not yet spatially assigned to individual gliders.</li>
-        </ul>
-      </details>
-    </div>
-  </section>
-
   <section class="dac" id="dac">
-    <h2 class="anchored">Depth-averaged currents</h2>
-    <p class="note">What a glider would measure as its depth-averaged current (DAC) over the study area,
-    from 0 m to the target depth (or the seabed, if shallower), for the months of the deployment. Taken from
-    the Copernicus GLORYS12 reanalysis monthly climatology (1993–2016 mean), then flown along the
-    generated route to see what the currents do to the survey duration.</p>
+    <h2 class="anchored">Historical depth-averaged currents</h2>
+    <p class="note">The typical current over the study area, averaged from the surface to the target depth
+    (or to the seabed, if shallower), for the months of the deployment. These are <b>historical</b> values, not a forecast and not
+    what a glider will measure on the day: they come from the Copernicus GLORYS12 reanalysis, an ocean model that
+    assimilates observations (satellite sea level and temperature, Argo floats and other in-situ profiles), averaged
+    month by month over 1993–2016. That averaging smooths away tides, eddies and storms. The survey estimate below
+    flies the route through these currents.</p>
     <div class="dac-controls">
       <span class="dac-window">Deployment window <b id="dac-window">--</b></span>
       <label for="dac-month">Arrows on map
         <select id="dac-month"><option value="window">Window average</option></select></label>
-      <button class="btn" id="dac-build" type="button" disabled="">Estimate currents</button>
+      <button class="btn ghost" id="dac-build" type="button" disabled="">Reload currents</button>
     </div>
-    <div class="dac-status" id="dac-status">Generate a survey, then estimate the currents for its area.</div>
+    <div class="dac-status" id="dac-status">Generate a survey; the currents for its area are fetched automatically.</div>
 
     <div id="dac-results" hidden="">
       <div class="metrics">
         <div class="metric"><div class="k">Mean DAC</div><div class="v" id="dac-mean">--</div><div class="sub" id="dac-mean-sub">over area and window</div></div>
         <div class="metric"><div class="k">90th percentile</div><div class="v" id="dac-p90">--</div><div class="sub" id="dac-p90-sub">of grid cells × months</div></div>
         <div class="metric"><div class="k">Strongest</div><div class="v" id="dac-max">--</div><div class="sub">any cell, any window month</div></div>
-        <div class="metric"><div class="k">Duration with currents</div><div class="v" id="dac-dur">--</div><div class="sub" id="dac-dur-sub">--</div></div>
         <div class="metric"><div class="k">Current &gt; glider speed</div><div class="v" id="dac-over">--</div><div class="sub" id="dac-over-sub">of the track</div></div>
       </div>
 
@@ -861,15 +802,77 @@ ul.task-list li input[type="checkbox"] {
           <li>Eastward and northward velocity (<code>uo</code>, <code>vo</code>) on GLORYS12's 1/12° grid and 50 depth levels, monthly climatology over 1993–2016, read directly from Copernicus Marine's public ARCO store for the grid cells around the study area.</li>
           <li>DAC in each grid cell is the thickness-weighted mean velocity from the surface to the target depth; where the model seabed is shallower, it is averaged to the seabed instead.</li>
           <li>Area statistics use the grid cells inside the study polygon (all cells in its bounding box if the polygon is smaller than one cell), pooled across the deployment months.</li>
-          <li>Along the route, the glider is assumed to crab into the current to hold its track: ground speed = along-track current + √(speed² − cross-track current²). Where the cross-track current is stronger than the glider, or the result is not forward progress, the track cannot be held; that distance is left out of the duration and reported instead.</li>
-          <li>If more than 5&nbsp;% of the track cannot be held, the duration is shown as not feasible rather than as a number.</li>
-          <li>Duration with currents is the average over the deployment months of the duration flown in each month's currents; the worst month is shown beside it.</li>
-          <li>Monthly climatological means smooth out tides, eddies, storms and inter-annual variability. Currents on a given day can be considerably stronger than these values — treat them as a typical background, not a bound.</li>
+          <li>How these currents change the survey's speed, distance and duration is explained under <a href="#survey-estimate">Survey estimate</a>.</li>
+          <li>GLORYS12 is a model run that is continually corrected towards observations (data assimilation), so it is neither raw measurements nor a free-running model. Its monthly climatological means smooth out tides, eddies, storms and inter-annual variability. Currents on a given day can be considerably stronger than these values — treat them as a typical background, not a bound.</li>
         </ul>
       </details>
     </div>
     <p class="d3-credit">Currents: E.U. Copernicus Marine Service Information, Global Ocean Physics Reanalysis
     (GLOBAL_MULTIYEAR_PHY_001_030, monthly climatology), <a href="https://doi.org/10.48670/moi-00021">doi:10.48670/moi-00021</a>.</p>
+  </section>
+
+  <section class="summary" id="survey-estimate">
+    <h2 class="anchored">Survey estimate</h2>
+    <p class="note">First-order estimates from the survey geometry and the historical currents above. The current along each part of the track is added to the glider's speed where it follows the glider and subtracted where it opposes it; a cross-current makes the glider crab, which also costs speed. Dive behaviour, bathymetry, payload power, navigation, launch/recovery and operational safety margins are not included.</p>
+    <div class="dive-card" id="dive-preview">
+      <div class="dive-visual">
+        <h3 class="anchored">Idealized dive cycle</h3>
+        <svg id="dive-svg" viewbox="0 0 620 180" role="img" aria-label="Idealized glider sawtooth dive cycle">
+          <line class="dive-surface" x1="52" y1="32" x2="590" y2="32"></line>
+          <line class="dive-grid" x1="52" y1="150" x2="590" y2="150"></line>
+          <polyline id="dive-path" class="dive-path" points="80,32 320,150 560,32"></polyline>
+          <circle cx="80" cy="32" r="5" fill="#86570A"></circle>
+          <circle cx="560" cy="32" r="5" fill="#86570A"></circle>
+          <text class="dive-label" x="6" y="36">Surface</text>
+          <text id="dive-depth-label" class="dive-label" x="6" y="154">500 m</text>
+          <text id="dive-distance-label" class="dive-label" x="320" y="174" text-anchor="middle">2.05 km per cycle</text>
+          <text id="dive-angle-label" class="dive-label" x="174" y="78">26°</text>
+        </svg>
+      </div>
+      <div class="dive-stats">
+        <h3 class="anchored">Dive-cycle estimate</h3>
+        <div class="dive-kpis">
+          <div class="dive-kpi"><div class="k">Cycle distance</div><div class="v" id="m-cycle-distance">--</div></div>
+          <div class="dive-kpi"><div class="k">Half-cycle</div><div class="v" id="m-half-cycle">--</div></div>
+          <div class="dive-kpi"><div class="k">Approx. cycles</div><div class="v" id="m-cycles">--</div></div>
+          <div class="dive-kpi"><div class="k">Profiles / 100 km</div><div class="v" id="m-profile-density">--</div></div>
+          <div class="dive-kpi"><div class="k">Surfacing markers</div><div class="v" id="m-surface-markers">--</div></div>
+        </div>
+        <p class="note" style="margin-top:9px;">Orange dots on the map show estimated surfacing locations along the generated route. Depth and glide-angle changes update this preview immediately.</p>
+      </div>
+    </div>
+    <div id="summary-empty" class="empty">Draw a study polygon and press <b>Generate survey</b> to create an estimate.</div>
+    <div id="summary-results" hidden="">
+      <div class="metrics">
+        <div class="metric"><div class="k">Study area</div><div class="v" id="m-area">--</div><div class="sub">polygon area</div></div>
+        <div class="metric"><div class="k" id="m-transects-k">Transects</div><div class="v" id="m-transects">--</div><div class="sub" id="m-transects-sub">inside study area</div></div>
+        <div class="metric"><div class="k">Track length</div><div class="v" id="m-distance">--</div><div class="sub">over ground</div></div>
+        <div class="metric"><div class="k">Distance through water</div><div class="v" id="m-water">--</div><div class="sub" id="m-water-sub">--</div></div>
+        <div class="metric"><div class="k">Speed over ground</div><div class="v" id="m-sog">--</div><div class="sub" id="m-sog-sub">--</div></div>
+        <div class="metric"><div class="k" id="m-duration-k">Duration</div><div class="v" id="m-duration">--</div><div class="sub" id="m-duration-sub">--</div></div>
+        <div class="metric"><div class="k">Target depth</div><div class="v" id="m-depth">--</div><div class="sub">user requirement</div></div>
+      </div>
+      <div class="status">
+        <div class="status-row warn" id="m-current-state"><span class="ic">~</span><span><b>Currents not included yet.</b> The figures assume still water until the historical currents above have loaded.</span></div>
+        <div class="status-row warn"><span class="ic">!</span><span><b>Not an operational plan.</b> Bathymetry, energy use, station keeping, and deployment logistics are not modeled, and the currents are a historical monthly average rather than what the glider will meet.</span></div>
+        <div class="status-row ok"><span class="ic">+</span><span><b>Geometry is reproducible.</b> Area, transect count, and route length are calculated directly from the polygon and generated tracks.</span></div>
+      </div>
+      <details class="assumptions">
+        <summary>Calculation assumptions</summary>
+        <ul>
+          <li>Transects are generated at the selected compass orientation and clipped to the study polygon.</li>
+          <li>For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included.</li>
+          <li>The butterfly is four legs: two diagonals that cross near the middle of the area, and the two ends that join them. Each corner is placed as far out as the area allows in its quadrant either side of the track orientation, then pulled in until every leg stays inside the area. Its duration is for one loop; the number of loops that fit in the deployment is shown with it.</li>
+          <li>Still-water travel rate is speed in knots × 1.852 km/nmi × 24 h/day.</li>
+          <li>With currents, the route is walked in short steps and each step takes the historical current at that spot (nearest model cell). The glider is assumed to crab into the current to hold its track: ground speed = along-track current + √(speed² − cross-track current²). A current along the track therefore adds to or subtracts from the glider's speed directly; a cross-current only slows it.</li>
+          <li>Distance through water is how far the glider moves relative to the water: its speed through water × the time taken. It is longer than the track where the current opposes the glider and shorter where it helps, and it is what sets the number of dive cycles.</li>
+          <li>Where the cross-track current is stronger than the glider, or the result is no forward progress, the track cannot be held; that distance is left out of the duration and reported instead. If more than 5&nbsp;% of the track cannot be held, the duration is shown as not feasible.</li>
+          <li>Duration with currents is the average over the deployment months of the duration flown in each month's currents; the worst month is shown beside it. Surfacing dots use the average current over those months.</li>
+          <li>Dive-cycle horizontal distance is approximated as 2 × target depth / tan(glide angle), assuming a symmetric straight-line descent and ascent.</li>
+          <li>Map dots represent estimated surfacing locations, not subsurface profile positions or commanded waypoints. With currents they are bunched up where the glider is slowed and spread out where it is helped along.</li>
+        </ul>
+      </details>
+    </div>
   </section>
 
   <section class="wpt" id="waypoints">
@@ -971,7 +974,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 
 <div class="land-note">
-  <strong>Distance note:</strong> route distance and mission duration are first-order estimates. The current planner does not yet remove over-land transect segments or calculate water-only transit paths around coastlines, islands, or other barriers.
+  <strong>Distance note:</strong> route distance and mission duration are first-order estimates. The study area has to be at sea and every track stays inside it, so tracks do not cross land, but they are not routed around shallow banks or other hazards.
 </div>
 
 <script>
@@ -1017,7 +1020,7 @@ ul.task-list li input[type="checkbox"] {
     const head = {};
     let i = 0;
     for (; i < lines.length; i++) {
-      const m = lines[i].trim().match(/^([A-Za-z_]+)\s+(-?[\d.eE+]+)$/);
+      const m = lines[i].trim().match(/^([A-Za-z_]+)\s+(-?[\d.]+(?:[eE][+-]?\d+)?)$/);   // cellsize can come as 5.49E-4
       if (!m) break;
       head[m[1].toLowerCase()] = parseFloat(m[2]);
     }
@@ -1279,7 +1282,7 @@ ul.task-list li input[type="checkbox"] {
   });
   function currentNote() {
     const cur = window.studyCurrents && window.studyCurrents.vectors;
-    document.getElementById('d3-cur').textContent = cur ? cur.label + ', longest ' + cur.vmax.toFixed(2) + ' m/s' : 'press Estimate currents above';
+    document.getElementById('d3-cur').textContent = cur ? cur.label + ', longest ' + cur.vmax.toFixed(2) + ' m/s' : 'not loaded yet';
   }
 
   buildBtn.addEventListener('click', build);
@@ -1302,7 +1305,6 @@ ul.task-list li input[type="checkbox"] {
     glideAngle: document.getElementById('glide-angle'),
     glideAngleVal: document.getElementById('glide-angle-val'),
     depth: document.getElementById('depth'),
-    gliders: document.getElementById('gliders'),
     pattern: document.getElementById('pattern'),
     drawArea: document.getElementById('draw-area'),
     finishArea: document.getElementById('finish-area'),
@@ -1316,6 +1318,18 @@ ul.task-list li input[type="checkbox"] {
   els.bearing.addEventListener('input', () => els.bearingVal.textContent = els.bearing.value);
   els.speed.addEventListener('input', () => els.speedVal.textContent = Number(els.speed.value).toFixed(2));
   els.glideAngle.addEventListener('input', () => els.glideAngleVal.textContent = els.glideAngle.value);
+
+  // A butterfly is sized to the area, so transect spacing has nothing to do.
+  function showPatternControls() {
+    const fly = els.pattern.value === 'butterfly';
+    document.getElementById('spacing-field').hidden = fly;
+    document.getElementById('pattern-note').hidden = !fly;
+    document.getElementById('bearing-note').textContent = fly
+      ? 'Direction of the figure 8\'s long axis: 0° = its loops lie north and south of the crossing; 90° = east and west.'
+      : '0° = north-south transects; 90° = east-west.';
+  }
+  els.pattern.addEventListener('change', showPatternControls);
+  showPatternControls();
 
   const map = L.map('study-map', { zoomControl: true }).setView([36.75, -122.0], 7);
   // Esri World Ocean Base, the same basemap Glider Playground uses
@@ -1348,6 +1362,88 @@ ul.task-list li input[type="checkbox"] {
   const surfaceLayer = new L.FeatureGroup().addTo(map);
   // The waypoint-file panel below draws imported waypoints on this same map.
   window.studyMap = map;
+
+  // ---------------------------------------------------------------- land mask
+  // Natural Earth 1:10m land (world-atlas TopoJSON, ~0.8 MB gzipped), split into single
+  // polygons with their bounding boxes so a check only touches the coast near the study area.
+  // The study area has to be at sea: vertices on land and edges across it are refused while
+  // drawing, and a finished area that overlaps land cannot be surveyed.
+  const landStatus = document.getElementById('land-mask-status');
+  const landHitLayer = new L.FeatureGroup().addTo(map);
+  let land = null;          // [{ poly, bbox }]
+  let areaOnLand = false;
+
+  function landMsg(text, err) {
+    landStatus.textContent = text;
+    landStatus.classList.toggle('err', !!err);
+  }
+  function landNear(bbox) {
+    if (!land) return [];
+    return land.filter(({ bbox: b }) => b[0] <= bbox[2] && b[2] >= bbox[0] && b[1] <= bbox[3] && b[3] >= bbox[1]);
+  }
+  /* Land polygons cut down to a bounding box, so the big continents stay cheap to test. */
+  function landClipped(bbox) {
+    const pad = 0.01, box = [bbox[0] - pad, bbox[1] - pad, bbox[2] + pad, bbox[3] + pad];
+    const out = [];
+    landNear(box).forEach(({ poly }) => {
+      const c = turf.bboxClip(poly, box);
+      const rings = (c.geometry.coordinates || []).filter(r => r.length >= 4);
+      if (rings.length) out.push(turf.polygon(rings));
+    });
+    return out;
+  }
+  function pointOnLand(lnglat) {
+    return landNear([lnglat[0], lnglat[1], lnglat[0], lnglat[1]]).some(({ poly }) => turf.booleanPointInPolygon(lnglat, poly));
+  }
+  function lineOnLand(coords) {
+    const line = turf.lineString(coords);
+    return landClipped(turf.bbox(line)).some(p => turf.booleanIntersects(line, p));
+  }
+  /* The parts of a study polygon that are land, as polygons. */
+  function landOverlap(polygon) {
+    const parts = [];
+    landClipped(turf.bbox(polygon)).forEach(p => {
+      if (!turf.booleanIntersects(polygon, p)) return;
+      const x = turf.intersect(turf.featureCollection([polygon, p]));
+      if (x) parts.push(x);
+    });
+    return parts;
+  }
+  /* Marks the study area on or off land, draws any overlap, and says so. */
+  function checkArea(layer) {
+    landHitLayer.clearLayers();
+    areaOnLand = false;
+    if (!layer || !land) return true;
+    const polygon = layer.toGeoJSON();
+    const parts = landOverlap(polygon);
+    if (!parts.length) { landMsg('Study area is at sea.'); return true; }
+    areaOnLand = true;
+    parts.forEach(f => L.geoJSON(f, { interactive: false, style: { color: '#B3261E', weight: 2, fillColor: '#B3261E', fillOpacity: 0.45 } }).addTo(landHitLayer));
+    const km2 = parts.reduce((a, f) => a + turf.area(f), 0) / 1e6;
+    const pct = 100 * km2 / (turf.area(polygon) / 1e6);
+    landMsg('The study area overlaps land (' + fmt(km2, km2 < 10 ? 1 : 0) + ' km², ' + fmt(pct, pct < 1 ? 1 : 0) +
+            ' % of it, in red). Move the vertices offshore or redraw it; a survey cannot be generated over land.', true);
+    return false;
+  }
+
+  if (window.topojson) {
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/land-10m.json')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(topo => {
+        const loaded = [];
+        topojson.feature(topo, topo.objects.land).features.forEach(f => {
+          const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+          polys.forEach(c => { const poly = turf.polygon(c); loaded.push({ poly, bbox: turf.bbox(poly) }); });
+        });
+        land = loaded;
+        landMsg('Land check on (Natural Earth 1:10m coastline).');
+        const layer = currentPolygonLayer();
+        if (layer) { checkArea(layer); setButtons(); }
+      })
+      .catch(err => landMsg('The land mask could not be loaded (' + err.message + '), so the study area is not checked for land.', true));
+  } else {
+    landMsg('The land mask could not be loaded, so the study area is not checked for land.', true);
+  }
 
   const drawControl = new L.Control.Draw({
     position: 'topleft',
@@ -1417,6 +1513,11 @@ ul.task-list li input[type="checkbox"] {
 
   els.finishArea.addEventListener('click', function () {
     if (manualVertices.length < 3) return;
+    const first = manualVertices[0], last = manualVertices[manualVertices.length - 1];
+    if (land && lineOnLand([[last.lng, last.lat], [first.lng, first.lat]])) {
+      landMsg('Closing the polygon would cross land. Add another vertex at sea first.', true);
+      return;
+    }
     drawnItems.clearLayers();
     const poly = L.polygon(manualVertices, {
       color: '#0057B8',
@@ -1429,8 +1530,9 @@ ul.task-list li input[type="checkbox"] {
     els.drawArea.textContent = 'Draw study area';
     els.finishArea.disabled = true;
     map.getContainer().style.cursor = '';
-    els.generate.disabled = false;
-    if (typeof clearSurvey === 'function') clearSurvey();
+    clearTracksAndSummary();
+    checkArea(poly);
+    setButtons();
     map.fitBounds(poly.getBounds(), {padding: [20,20]});
     setTimeout(() => map.invalidateSize({pan:false}), 50);
   });
@@ -1440,7 +1542,9 @@ ul.task-list li input[type="checkbox"] {
     manualVertices = [];
     resetManualGuide();
     drawnItems.clearLayers();
-    if (typeof clearSurvey === 'function') clearSurvey();
+    clearTracksAndSummary();
+    checkArea(null);
+    if (land) landMsg('Land check on (Natural Earth 1:10m coastline).');
     els.drawArea.textContent = 'Draw study area';
     els.finishArea.disabled = true;
     els.generate.disabled = true;
@@ -1449,6 +1553,17 @@ ul.task-list li input[type="checkbox"] {
 
   map.on('click', function (e) {
     if (!manualDrawing) return;
+    const p = [e.latlng.lng, e.latlng.lat];
+    if (land && pointOnLand(p)) {
+      landMsg('That point is on land. Vertices have to be at sea.', true);
+      return;
+    }
+    const prev = manualVertices[manualVertices.length - 1];
+    if (land && prev && lineOnLand([[prev.lng, prev.lat], p])) {
+      landMsg('That edge would cross land. Pick a point you can reach without crossing the coast.', true);
+      return;
+    }
+    if (land) landMsg('Land check on (Natural Earth 1:10m coastline).');
     manualVertices.push(e.latlng);
     updateManualGuide();
   });
@@ -1461,13 +1576,14 @@ ul.task-list li input[type="checkbox"] {
 
   function setButtons() {
     const hasPolygon = !!currentPolygonLayer();
-    els.generate.disabled = !hasPolygon;
+    els.generate.disabled = !hasPolygon || areaOnLand;
     els.clearTracks.disabled = trackLayer.getLayers().length === 0;
   }
 
   function clearTracksAndSummary() {
     trackLayer.clearLayers();
     surfaceLayer.clearLayers();
+    lastSurveyGeometry = null;
     document.getElementById('summary-empty').hidden = false;
     document.getElementById('summary-results').hidden = true;
     setButtons();
@@ -1478,12 +1594,13 @@ ul.task-list li input[type="checkbox"] {
     drawnItems.clearLayers();
     drawnItems.addLayer(e.layer);
     clearTracksAndSummary();
+    checkArea(e.layer);
     map.invalidateSize(false);
     map.fitBounds(e.layer.getBounds(), { padding: [20, 20] });
     setTimeout(() => map.invalidateSize(false), 100);
     setButtons();
   });
-  map.on(L.Draw.Event.EDITED, clearTracksAndSummary);
+  map.on(L.Draw.Event.EDITED, () => { clearTracksAndSummary(); checkArea(currentPolygonLayer()); setButtons(); });
   map.on(L.Draw.Event.DELETED, clearTracksAndSummary);
 
   els.clearTracks.addEventListener('click', clearTracksAndSummary);
@@ -1491,13 +1608,15 @@ ul.task-list li input[type="checkbox"] {
   els.exampleArea.addEventListener('click', function () {
     drawnItems.clearLayers();
     clearTracksAndSummary();
+    // Off Monterey Bay, across the canyon, clear of the coast by several kilometres.
     const example = L.polygon([
-      [36.95, -122.35],
-      [36.95, -121.85],
-      [36.55, -121.78],
-      [36.48, -122.25]
+      [36.86, -122.40],
+      [36.86, -122.08],
+      [36.62, -122.03],
+      [36.55, -122.33]
     ], { color: '#2780E3', weight: 2, fillOpacity: 0.12 });
     drawnItems.addLayer(example);
+    checkArea(example);
     map.invalidateSize(false);
     map.fitBounds(example.getBounds(), { padding: [20, 20] });
     setTimeout(() => map.invalidateSize(false), 100);
@@ -1618,131 +1737,245 @@ ul.task-list li input[type="checkbox"] {
     document.getElementById('dive-angle-label').textContent = `${fmt(glideAngleDeg, 0)}°`;
   }
 
-  function addSurfaceMarkersToLine(line, cycleKm) {
+  /* Surfacing positions along a line, one per dive cycle. A cycle is a fixed distance through the
+     water, so with currents it covers less ground where the glider is slowed and more where it is
+     helped: `groundSpeed(lon, lat, bearingRad)` gives the speed over ground (m/s), or 0 where the
+     track cannot be held. Without it the glider makes its own speed everywhere. */
+  function addSurfaceMarkersToLine(line, cycleKm, speedMs, groundSpeed) {
     if (!line || !(cycleKm > 0)) return 0;
-    const lenKm = turf.length(line, { units: 'kilometers' });
-    let count = 0;
-    for (let d = cycleKm; d < lenKm; d += cycleKm) {
-      const p = turf.along(line, d, { units: 'kilometers' });
-      const [lng, lat] = p.geometry.coordinates;
-      L.circleMarker([lat, lng], {
-        radius: 5,
-        color: '#5A3300',
-        weight: 1.5,
-        fillColor: '#F59E0B',
-        fillOpacity: 0.95,
-        interactive: false,
-        pane: 'surfacePane',
-        className: 'profile-marker'
-      }).addTo(surfaceLayer);
-      count += 1;
+    const c = line.geometry.coordinates;
+    let water = 0, next = cycleKm, count = 0;
+    for (let k = 1; k < c.length; k++) {
+      const a = c[k - 1], b = c[k];
+      const len = turf.distance(a, b, { units: 'kilometers' });
+      if (!(len > 0)) continue;
+      const brg = turf.bearing(a, b) * Math.PI / 180;
+      const n = Math.max(1, Math.ceil(len / 0.25));
+      for (let i = 0; i < n; i++) {
+        const f0 = i / n, f1 = (i + 1) / n, fm = (f0 + f1) / 2;
+        const vg = groundSpeed ? groundSpeed(a[0] + (b[0] - a[0]) * fm, a[1] + (b[1] - a[1]) * fm, brg) : speedMs;
+        if (!(vg > 0.01)) continue;            // track not holdable here; no progress is modelled
+        const dw = (len / n) * speedMs / vg;   // km through water for this step
+        while (water + dw >= next) {
+          const f = f0 + (f1 - f0) * (next - water) / dw;
+          L.circleMarker([a[1] + (b[1] - a[1]) * f, a[0] + (b[0] - a[0]) * f], {
+            radius: 5,
+            color: '#5A3300',
+            weight: 1.5,
+            fillColor: '#F59E0B',
+            fillOpacity: 0.95,
+            interactive: false,
+            pane: 'surfacePane',
+            className: 'profile-marker'
+          }).addTo(surfaceLayer);
+          count += 1;
+          next += cycleKm;
+        }
+        water += dw;
+      }
     }
     return count;
   }
 
+  /* Butterfly (figure 8). One corner in each quadrant around the track orientation, each put
+     where the area reaches farthest between 15 and 75 degrees off the axis; the route runs
+     front-left -> back-right -> back-left -> front-right -> front-left, so the two diagonals
+     cross near the middle and the ends close the loops. Corners are pulled in together until
+     every leg lies inside the area, which matters for concave shapes. */
+  function buildButterflyRoute(polygon, bearingDeg) {
+    const edge = turf.polygonToLine(polygon);
+    const bb = turf.bbox(polygon);
+    // The crossing goes at the centroid, or, for a shape whose centroid falls outside it (an L,
+    // a crescent), at the inside point farthest from the edge on a coarse grid.
+    let center = turf.centroid(polygon);
+    if (!turf.booleanPointInPolygon(center, polygon)) {
+      let best = -1;
+      for (let a = 0.5; a < 20; a++)
+        for (let b = 0.5; b < 20; b++) {
+          const pt = turf.point([bb[0] + (bb[2] - bb[0]) * a / 20, bb[1] + (bb[3] - bb[1]) * b / 20]);
+          if (!turf.booleanPointInPolygon(pt, polygon)) continue;
+          const d = turf.pointToLineDistance(pt, edge, { units: 'kilometers' });
+          if (d > best) { best = d; center = pt; }
+        }
+    }
+    const far = 2 * turf.distance([bb[0], bb[1]], [bb[2], bb[3]], { units: 'kilometers' });
+    const reach = (brg) => {
+      const end = turf.destination(center, far, brg, { units: 'kilometers' });
+      const hits = turf.lineIntersect(turf.lineString([center.geometry.coordinates, end.geometry.coordinates]), edge).features;
+      return hits.length ? Math.min(...hits.map(h => turf.distance(center, h, { units: 'kilometers' }))) : 0;
+    };
+    const corner = (side) => {               // side(off) -> bearing of that quadrant's ray
+      let best = { d: 0, brg: side(45) };
+      for (let off = 15; off <= 75; off += 5) {
+        const d = reach(side(off));
+        if (d > best.d) best = { d, brg: side(off) };
+      }
+      return best;
+    };
+    const corners = [
+      corner(off => bearingDeg - off),         // front-left
+      corner(off => bearingDeg + 180 - off),   // back-right
+      corner(off => bearingDeg + 180 + off),   // back-left
+      corner(off => bearingDeg + off)          // front-right
+    ];
+    if (corners.some(c => !(c.d > 0))) return null;
+    for (let k = 0.92; k > 0.2; k *= 0.9) {
+      const pts = corners.map(c => turf.destination(center, c.d * k, c.brg, { units: 'kilometers' }).geometry.coordinates);
+      const coords = [...pts, pts[0]];
+      let inside = true;
+      for (let i = 1; i < coords.length && inside; i++) inside = turf.booleanWithin(turf.lineString([coords[i - 1], coords[i]]), polygon);
+      if (inside) return turf.lineString(coords);
+    }
+    return null;
+  }
 
   let lastSurveyGeometry = null;
+  let lastSurvey = null;     // { polygon, areaKm2, legs, butterfly }
 
-  function updateDivePreviewOnly() {
+  const KT = 0.514444;       // m/s per knot
+  const dur = (days) => days < 1 ? `${fmt(days * 24, 1)} h` : `${fmt(days, 1)} d`;
+  const setText = (id, text) => { document.getElementById(id).textContent = text; };
+  function surveyLines(geom) { return geom ? (geom.type === 'route' ? [geom.line] : geom.lines) : []; }
+
+  /* The survey estimate and the surfacing dots. Uses the historical currents once the section
+     above has loaded them (window.studyCurrents.summary), still water until then. */
+  function renderEstimate() {
     const depthM = Math.max(0, Number(els.depth.value) || 0);
     const glideAngleDeg = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
     const cycleKm = diveCycleDistanceKm(depthM, glideAngleDeg);
-    if (!Number.isFinite(cycleKm) || cycleKm <= 0) return;
-    updateDiveGraphic(depthM, glideAngleDeg, cycleKm);
-    document.getElementById('m-cycle-distance').textContent = `${fmt(cycleKm, cycleKm < 10 ? 2 : 1)} km`;
-    document.getElementById('m-half-cycle').textContent = `${fmt(cycleKm / 2, cycleKm < 10 ? 2 : 1)} km`;
-    document.getElementById('m-profile-density').textContent = fmt(100 / cycleKm, 1);
-
-    if (lastSurveyGeometry) {
-      surfaceLayer.clearLayers();
-      let cycles = 0;
-      if (lastSurveyGeometry.type === 'route') {
-        const markerCount = addSurfaceMarkersToLine(lastSurveyGeometry.line, cycleKm);
-        document.getElementById('m-surface-markers').textContent = fmt(markerCount, 0);
-        cycles = lastSurveyGeometry.distanceKm / cycleKm;
-      } else {
-        let markerCount = 0;
-        lastSurveyGeometry.lines.forEach(line => { markerCount += addSurfaceMarkersToLine(line, cycleKm); });
-        document.getElementById('m-surface-markers').textContent = fmt(markerCount, 0);
-        cycles = lastSurveyGeometry.distanceKm / cycleKm;
-      }
-      document.getElementById('m-cycles').textContent = fmt(cycles, 0);
-    } else {
-      document.getElementById('m-cycles').textContent = '--';
-      document.getElementById('m-surface-markers').textContent = '--';
+    const cycleOk = Number.isFinite(cycleKm) && cycleKm > 0;
+    if (cycleOk) {
+      updateDiveGraphic(depthM, glideAngleDeg, cycleKm);
+      setText('m-cycle-distance', `${fmt(cycleKm, cycleKm < 10 ? 2 : 1)} km`);
+      setText('m-half-cycle', `${fmt(cycleKm / 2, cycleKm < 10 ? 2 : 1)} km`);
+      setText('m-profile-density', fmt(100 / cycleKm, 1));
     }
+    const g = lastSurveyGeometry;
+    surfaceLayer.clearLayers();
+    if (!g) {
+      setText('m-cycles', '--');
+      setText('m-surface-markers', '--');
+      return;
+    }
+
+    const speedMs = Math.max(0.01, Number(els.speed.value)) * KT;
+    const cur = window.studyCurrents && window.studyCurrents.summary;
+    const stillDays = g.distanceKm / (speedMs * 86.4);
+    const waterKm = cur ? cur.waterKm : g.distanceKm;
+
+    let markers = 0;
+    if (cycleOk) surveyLines(g).forEach(line => { markers += addSurfaceMarkersToLine(line, cycleKm, speedMs, cur ? cur.groundSpeed : null); });
+    setText('m-cycles', cycleOk ? fmt(waterKm / cycleKm, 0) : '--');
+    setText('m-surface-markers', cycleOk ? fmt(markers, 0) : '--');
+
+    const s = lastSurvey;
+    setText('m-area', `${fmt(s.areaKm2, s.areaKm2 < 100 ? 1 : 0)} km²`);
+    setText('m-transects-k', s.butterfly ? 'Legs' : 'Transects');
+    setText('m-transects', fmt(s.legs, 0));
+    setText('m-transects-sub', s.butterfly ? 'per figure-8 loop' : 'inside study area');
+    setText('m-distance', `${fmt(g.distanceKm, g.distanceKm < 100 ? 1 : 0)} km`);
+    setText('m-depth', `${fmt(depthM, 0)} m`);
+
+    const durEl = document.getElementById('m-duration');
+    setText('m-duration-k', s.butterfly ? 'Duration per loop' : 'Duration');
+    let days = stillDays;
+    if (cur && cur.infeasible) {
+      setText('m-water', '--');
+      setText('m-water-sub', 'track cannot be held');
+    } else if (cur) {
+      setText('m-water', `${fmt(waterKm, waterKm < 100 ? 1 : 0)} km` + (cur.lostFraction > 0.001 ? '+' : ''));
+      const diff = (waterKm - cur.heldKm) / Math.max(cur.heldKm, 1e-9);
+      setText('m-water-sub', Math.abs(diff) < 0.0005 ? 'same as over ground' :
+        `${fmt(Math.abs(diff) * 100, Math.abs(diff) < 0.1 ? 1 : 0)} % ${diff > 0 ? 'more' : 'less'} than over ground`);
+    }
+    if (cur) {
+      setText('m-sog', cur.sogMs > 0 ? `${fmt(cur.sogMs, 2)} m/s` : '--');
+      setText('m-sog-sub', (cur.infeasible ? 'where the track can be held; ' : 'mean; ') + `${fmt(speedMs, 2)} m/s through water`);
+      days = cur.days;
+      durEl.textContent = cur.infeasible ? 'Not feasible' : dur(cur.days) + (cur.lostFraction > 0.001 ? '+' : '');
+      setText('m-duration-sub', cur.infeasible
+        ? `track not holdable on ${fmt(cur.lostFraction * 100, 0)} %; still water ${dur(stillDays)}`
+        : `still water ${dur(stillDays)}` + (cur.worst ? `; worst ${cur.worst.month} ${dur(cur.worst.days)}` : ''));
+    } else {
+      setText('m-water', `${fmt(g.distanceKm, g.distanceKm < 100 ? 1 : 0)} km`);
+      setText('m-water-sub', 'still water');
+      setText('m-sog', `${fmt(speedMs, 2)} m/s`);
+      setText('m-sog-sub', 'still water');
+      durEl.textContent = dur(stillDays);
+      setText('m-duration-sub', 'still water');
+    }
+    durEl.classList.toggle('flag', !!(cur && cur.infeasible));
+    if (s.butterfly && !(cur && cur.infeasible)) {
+      const opDays = Math.max(1, Number(document.getElementById('op-days').value) || 30);
+      const loops = opDays / days;
+      document.getElementById('m-duration-sub').textContent += `; ${loops < 10 ? fmt(loops, 1) : fmt(loops, 0)} loops in ${fmt(opDays, 0)} d`;
+    }
+
+    const state = document.getElementById('m-current-state');
+    state.className = 'status-row ' + (cur ? 'ok' : 'warn');
+    state.innerHTML = cur
+      ? `<span class="ic">+</span><span><b>Currents included.</b> Historical depth-averaged currents for ${cur.label} are added to the glider's speed where they follow the track and subtracted where they oppose it; cross-currents make it crab. See <a href="#dac">Historical depth-averaged currents</a>.</span>`
+      : `<span class="ic">~</span><span><b>Currents not included yet.</b> These figures assume still water until the <a href="#dac">historical currents</a> for the area have loaded.</span>`;
   }
+
   function generateSurvey() {
     const layer = currentPolygonLayer();
     if (!layer) return;
+    if (!checkArea(layer)) { setButtons(); return; }
 
     clearTracksAndSummary();
 
     const polygon = leafletPolygonToTurf(layer);
     const spacingKm = Number(els.spacing.value);
     const bearing = Number(els.bearing.value);
-    const speedKt = Math.max(0.01, Number(els.speed.value));
-    const glideAngleDeg = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
-    const gliders = Math.max(1, Math.round(Number(els.gliders.value) || 1));
+    const butterfly = els.pattern.value === 'butterfly';
     const depthM = Math.max(0, Number(els.depth.value) || 0);
+    const glideAngleDeg = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
     const cycleKm = diveCycleDistanceKm(depthM, glideAngleDeg);
+    const empty = document.getElementById('summary-empty');
 
-    const candidates = buildCandidateLines(polygon, spacingKm, bearing);
-    let segments = [];
-    candidates.forEach(line => { segments.push(...clipLineToPolygon(line, polygon)); });
-    segments = orderSegments(segments, bearing);
-
-    if (!segments.length) {
-      document.getElementById('summary-empty').innerHTML = 'No transects were generated. Try a smaller spacing value or redraw the study area.';
-      document.getElementById('summary-empty').hidden = false;
-      setButtons();
-      return;
-    }
-
-    let distanceKm = 0;
-    let estimatedCycles = 0;
-    let surfaceMarkerCount = 0;
-    if (els.pattern.value === 'parallel') {
-      segments.forEach(seg => {
-        const segKm = turf.length(seg, { units: 'kilometers' });
-        distanceKm += segKm;
-        drawFeature(seg, { color: '#0057B8', weight: 4, opacity: 1.0 });
-        if (Number.isFinite(cycleKm) && cycleKm > 0) {
-          surfaceMarkerCount += addSurfaceMarkersToLine(seg, cycleKm);
-          estimatedCycles += segKm / cycleKm;
-        }
-      });
-      lastSurveyGeometry = { type: 'segments', lines: segments, distanceKm };
-    } else {
-      const route = buildLawnmowerRoute(segments);
-      distanceKm = turf.length(route, { units: 'kilometers' });
-      drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
-      segments.forEach(seg => drawFeature(seg, { color: '#1A6B4E', weight: 5, opacity: 0.35 }));
-      if (Number.isFinite(cycleKm) && cycleKm > 0) {
-        surfaceMarkerCount += addSurfaceMarkersToLine(route, cycleKm);
-        estimatedCycles = distanceKm / cycleKm;
+    let legs = 0;
+    if (butterfly) {
+      const route = buildButterflyRoute(polygon, bearing);
+      if (!route) {
+        empty.innerHTML = 'A butterfly does not fit inside this study area. Try another track orientation or a less irregular area.';
+        empty.hidden = false;
+        setButtons();
+        return;
       }
-      lastSurveyGeometry = { type: 'route', line: route, distanceKm };
+      drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
+      lastSurveyGeometry = { type: 'route', line: route, distanceKm: turf.length(route, { units: 'kilometers' }) };
+      legs = 4;
+    } else {
+      const candidates = buildCandidateLines(polygon, spacingKm, bearing);
+      let segments = [];
+      candidates.forEach(line => { segments.push(...clipLineToPolygon(line, polygon)); });
+      segments = orderSegments(segments, bearing);
+      if (!segments.length) {
+        empty.innerHTML = 'No transects were generated. Try a smaller spacing value or redraw the study area.';
+        empty.hidden = false;
+        setButtons();
+        return;
+      }
+      legs = segments.length;
+      if (els.pattern.value === 'parallel') {
+        let distanceKm = 0;
+        segments.forEach(seg => {
+          distanceKm += turf.length(seg, { units: 'kilometers' });
+          drawFeature(seg, { color: '#0057B8', weight: 4, opacity: 1.0 });
+        });
+        lastSurveyGeometry = { type: 'segments', lines: segments, distanceKm };
+      } else {
+        const route = buildLawnmowerRoute(segments);
+        drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
+        segments.forEach(seg => drawFeature(seg, { color: '#1A6B4E', weight: 5, opacity: 0.35 }));
+        lastSurveyGeometry = { type: 'route', line: route, distanceKm: turf.length(route, { units: 'kilometers' }) };
+      }
     }
 
-    const areaKm2 = turf.area(polygon) / 1e6;
-    const kmPerDayPerGlider = speedKt * 1.852 * 24;
-    const days = distanceKm / (kmPerDayPerGlider * gliders);
-
-    document.getElementById('m-area').textContent = `${fmt(areaKm2, areaKm2 < 100 ? 1 : 0)} km²`;
-    document.getElementById('m-transects').textContent = fmt(segments.length, 0);
-    document.getElementById('m-distance').textContent = `${fmt(distanceKm, distanceKm < 100 ? 1 : 0)} km`;
-    document.getElementById('m-duration').textContent = days < 1 ? `${fmt(days * 24, 1)} h` : `${fmt(days, 1)} d`;
-    document.getElementById('m-depth').textContent = `${fmt(depthM, 0)} m`;
-    if (Number.isFinite(cycleKm) && cycleKm > 0) {
-      document.getElementById('m-cycle-distance').textContent = `${fmt(cycleKm, cycleKm < 10 ? 2 : 1)} km`;
-      document.getElementById('m-half-cycle').textContent = `${fmt(cycleKm / 2, cycleKm < 10 ? 2 : 1)} km`;
-      document.getElementById('m-cycles').textContent = fmt(estimatedCycles, 0);
-      document.getElementById('m-profile-density').textContent = fmt(100 / cycleKm, 1);
-      document.getElementById('m-surface-markers').textContent = fmt(surfaceMarkerCount, 0);
-      updateDiveGraphic(depthM, glideAngleDeg, cycleKm);
-    }
-    document.getElementById('summary-empty').hidden = true;
+    lastSurvey = { polygon, areaKm2: turf.area(polygon) / 1e6, legs, butterfly };
+    renderEstimate();
+    empty.hidden = true;
     document.getElementById('summary-results').hidden = false;
     setButtons();
 
@@ -1752,9 +1985,13 @@ ul.task-list li input[type="checkbox"] {
   }
 
   els.generate.addEventListener('click', generateSurvey);
-  els.depth.addEventListener('input', updateDivePreviewOnly);
-  els.glideAngle.addEventListener('input', updateDivePreviewOnly);
-  updateDivePreviewOnly();
+  els.depth.addEventListener('input', renderEstimate);
+  els.glideAngle.addEventListener('input', renderEstimate);
+  els.speed.addEventListener('change', renderEstimate);
+  document.getElementById('op-days').addEventListener('change', renderEstimate);
+  // The currents section publishes a new summary whenever it re-flies the route.
+  window.addEventListener('studycurrents:updated', () => { if (lastSurveyGeometry) renderEstimate(); });
+  renderEstimate();
   setButtons();
 
   // Refresh only after genuine page/window layout changes. Avoid continuously
@@ -2234,6 +2471,7 @@ ul.task-list li input[type="checkbox"] {
   let lastChart = null;  // redrawn on resize, since the chart is laid out in pixels
   let stale = null;      // the result just cleared, reused if the survey is regenerated over the same area and depth
   let arrowLayer = null;
+  let summary = null;    // what the survey estimate needs: see publishSummary()
 
   const say = (msg, err) => { statusEl.textContent = msg; statusEl.classList.toggle('err', !!err); statusEl.hidden = false; };
 
@@ -2354,7 +2592,6 @@ ul.task-list li input[type="checkbox"] {
 
   const fmt = (x, d) => Number(x).toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
   const ms = (x) => fmt(x, 2) + ' m/s';
-  const dur = (days) => days < 1 ? fmt(days * 24, 1) + ' h' : fmt(days, 1) + ' d';
   const compass = (deg) => ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(deg / 45) % 8];
 
   function render() {
@@ -2362,16 +2599,15 @@ ul.task-list li input[type="checkbox"] {
     const sd = window.studyDesign;
     const op = operation(), win = windowMonths(op);
     const speedMs = Math.max(0.01, Number(sd.els.speed.value)) * KT;
-    const gliders = Math.max(1, Math.round(Number(sd.els.gliders.value) || 1));
     const lines = flownLines(sd.geometry);
-    const nominalDays = sd.geometry.distanceKm / (speedMs * 86.4) / gliders;
+    const nominalDays = sd.geometry.distanceKm / (speedMs * 86.4);
 
     const stats = MONTHS.map((_, t) => monthStats(t));
     const flights = MONTHS.map((_, t) => flyMonth(t, lines, speedMs));
     const pooled = win.flatMap((t) => stats[t].speeds).sort((a, b) => a - b);
     const mean = pooled.reduce((a, b) => a + b, 0) / pooled.length;
     const p90 = quantile(pooled, 0.9), max = pooled[pooled.length - 1];
-    const days = (t) => flights[t].sec / 86400 / gliders;
+    const days = (t) => flights[t].sec / 86400;
     const winDays = win.reduce((a, t) => a + days(t), 0) / win.length;
     const worst = win.reduce((a, t) => (days(t) > days(a) ? t : a), win[0]);
     const totalKm = sd.geometry.distanceKm || 1;
@@ -2384,10 +2620,6 @@ ul.task-list li input[type="checkbox"] {
     $('dac-max').textContent = ms(max);
     // Past a few percent of unflyable track, a duration that skips it is more misleading than none.
     const infeasible = lost > 0.05;
-    $('dac-dur').textContent = infeasible ? 'Not feasible' : dur(winDays) + (lost > 0.001 ? '+' : '');
-    $('dac-dur').classList.toggle('flag', infeasible);
-    $('dac-dur-sub').textContent = 'nominal ' + dur(nominalDays) + (infeasible ? '; track not holdable on ' + fmt(lost * 100, 0) + ' %'
-      : win.length > 1 ? '; worst ' + MONTHS[worst] + ' ' + dur(days(worst)) : '');
     $('dac-over').textContent = fmt(over * 100, 0) + ' %';
     $('dac-over').classList.toggle('flag', over > 0.1);
     $('dac-over-sub').textContent = 'of the track, glider ' + fmt(speedMs, 2) + ' m/s';
@@ -2408,7 +2640,25 @@ ul.task-list li input[type="checkbox"] {
     resultsEl.hidden = false;            // before the chart, which sizes itself to its container
     lastChart = [stats, win, speedMs];
     chart(stats, win, speedMs);
-    drawArrows(win, speedMs);
+
+    // For the survey estimate: averages over the deployment months, and a ground-speed lookup
+    // for placing surfacing dots, using the window-mean current.
+    const avg = (f) => win.reduce((a, t) => a + f(flights[t]), 0) / win.length;
+    const heldKm = avg((f) => f.heldKm), sec = avg((f) => f.sec);
+    summary = {
+      label: windowLabel(win) + ', 0–' + fmt(model.targetM, 0) + ' m',
+      days: winDays, stillDays: nominalDays, infeasible, lostFraction: lost, heldKm,
+      waterKm: sec * speedMs / 1000,          // distance through water = time x speed through water
+      sogMs: sec > 0 ? heldKm * 1000 / sec : 0,
+      worst: win.length > 1 ? { month: MONTHS[worst], days: days(worst) } : null,
+      groundSpeed: (lon, lat, brg) => {
+        let u = 0, v = 0;
+        win.forEach((t) => { const uv = uvNear(t, lon, lat); u += uv[0] / win.length; v += uv[1] / win.length; });
+        const along = u * Math.sin(brg) + v * Math.cos(brg), cross = u * Math.cos(brg) - v * Math.sin(brg);
+        return Math.abs(cross) < speedMs ? along + Math.sqrt(speedMs * speedMs - cross * cross) : 0;
+      }
+    };
+    drawArrows(win, speedMs);              // announces studycurrents:updated, which redraws the estimate
 
     store(CUR_KEY, {
       savedAt: new Date().toISOString(), months: win.map((t) => MONTHS[t]), depthM: model.targetM,
@@ -2498,7 +2748,7 @@ ul.task-list li input[type="checkbox"] {
   function clearArrows() {
     if (arrowLayer) arrowLayer.clearLayers();
     const k = $('dac-arrow-key'); if (k) mapKey.remove();
-    if (published) { published = null; window.dispatchEvent(new CustomEvent('studycurrents:updated')); }
+    if (published || summary) { published = null; summary = null; window.dispatchEvent(new CustomEvent('studycurrents:updated')); }
   }
 
   // ------------------------------------------------------------ wiring
@@ -2511,7 +2761,6 @@ ul.task-list li input[type="checkbox"] {
   opDays.addEventListener('change', onOperationChange);
   monthSel.addEventListener('change', () => { if (model) drawArrows(windowMonths(operation()), Math.max(0.01, Number(window.studyDesign.els.speed.value)) * KT); });
   $('speed').addEventListener('change', () => { if (model && !resultsEl.hidden) render(); });
-  $('gliders').addEventListener('change', () => { if (model && !resultsEl.hidden) render(); });
   buildBtn.addEventListener('click', estimate);
   let resizeTimer = null;
   window.addEventListener('resize', () => {
@@ -2528,15 +2777,18 @@ ul.task-list li input[type="checkbox"] {
       model = stale; stale = null; render(); return;
     }
     model = null; stale = null; resultsEl.hidden = true; clearArrows();
-    say('Survey generated. Press "Estimate currents" to fetch historical currents for this area (roughly 5–20 MB, once per area).');
+    // The survey estimate depends on these, so fetch straight away (roughly 5–20 MB, once per area;
+    // chunks stay cached for the session). The button stays for a retry if the store is busy.
+    estimate();
   });
   window.addEventListener('studydesign:cleared', () => {
     if (model) stale = model;
     model = null; resultsEl.hidden = true; clearArrows(); buildBtn.disabled = true;
-    say('Generate a survey, then estimate the currents for its area.');
+    say('Generate a survey; the currents for its area are fetched automatically.');
   });
 
-  window.studyCurrents = { bloscDecode, layers, windowMonths, get model() { return model; }, get vectors() { return published; } };
+  window.studyCurrents = { bloscDecode, layers, windowMonths, get model() { return model; }, get vectors() { return published; },
+                           get summary() { return summary; } };
 })();
 </script>
 
