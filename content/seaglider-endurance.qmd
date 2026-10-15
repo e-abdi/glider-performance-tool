@@ -345,21 +345,23 @@ window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to con
   $("n_dives").textContent = M.dives.toLocaleString("en");
 
   // ------------------------------------------------------------ inputs
-  var SCI = ["SBE_CT", "CONTOPT", "ECO"];
+  // The Contros HydroFlash optode is no longer supported, so it is not offered (the model still
+  // knows it, because past missions that flew it are used to check the fit).
+  var SCI = ["SBE_CT", "ECO"];
   var LOG = [
-    { key: "PAM", name: "PAM recorder", mA: 55, above: 200 },
+    { key: "PAM", name: "Jasco AMAR G4", mA: 55, above: 200 },
     { key: "UVP", name: "UVP6", mA: 80, above: 1000 },
-    { key: "ESNDR", name: "Echosounder", mA: 400, above: 1000 },
+    { key: "ESNDR", name: "EK80 Echosounder", mA: 400, above: 1000 },
     { key: "CUSTOM", name: "Other sensor", mA: 20, above: 1000, custom: true }
   ];
   var NBINS = 4;
 
-  // Where the page opens. Our glider as it now flies: no SciCon, CT and optode on the TT8.
+  // Where the page opens: no SciCon, CT on the TT8.
   var DEFAULTS = {
     depth: 1000, w: 0.1, surface_min: 10, max_buoy: 200, sm_cc: 300, kb: 150, call_ndives: 1,
     capacity: M.glider.battery.capacity, reserve: 10, volts: M.glider.battery.volts,
     pump_factor: 1, glide_ratio: 2.5,
-    scicon: false, sci: { SBE_CT: true, CONTOPT: true, ECO: false },
+    scicon: false, sci: { SBE_CT: true, ECO: false },
     bins: [{ to: 200, interval: 5 }, { to: 1000, interval: 10 }],
     log: { PAM: false, UVP: false, ESNDR: false, CUSTOM: false }
   };
@@ -575,7 +577,6 @@ window.SEAGLIDER_MODEL = {"source":"Fitted by code/fit_seaglider_model.py to con
     if (cfg.depth > 1000) alerts.push("Deeper than 1000 m: beyond the Seaglider's rating and anything the glider has logged.");
     if (cfg.w < 0.05 || cfg.w > 0.2) alerts.push("Mean vertical speed outside 0.05–0.2 m/s, the range the glider has flown.");
     if (!cfg.scicon && cfg.science.ECO.on) alerts.push("The ECO puck has only flown on the SciCon; its cost without it is estimated.");
-    if (!cfg.scicon && cfg.science.CONTOPT.on) alerts.push("Without the SciCon the optode is charged its rated 300 mA while powered, as the glider books it. Its real draw may be lower; edit the mA if it has been measured.");
     var pam = cfg.loggers[0];
     if (pam.on && pam.mA > 0) alerts.push("The PAM is counted here, but the glider's own battery counter leaves it out: expect the glider to report more remaining than there is.");
     $("alerts").innerHTML = alerts.map(function (t) { return '<div class="alert">' + esc(t) + "</div>"; }).join("");
