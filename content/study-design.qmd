@@ -362,7 +362,7 @@ format:
           <input id="op-days" type="number" min="1" max="730" step="1" value="30">
         </div>
       </div>
-      <p class="note">Time of operation. The current estimate uses historical currents for these months. Shared with the Glider Selection Dashboard.</p>
+      <p class="note">Time of operation. The current estimate uses historical currents for these months.</p>
 
       <div class="actions">
         <button class="btn" id="draw-area">Draw study area</button>
@@ -1903,7 +1903,7 @@ format:
  * checked byte-for-byte against numcodecs on real chunks.
  *
  * Reads the route from window.studyDesign and draws on window.studyMap. The time of operation
- * (start month + days) is shared with the Glider Selection Dashboard through localStorage.
+ * (start month + days) is remembered in localStorage.
  */
 (function () {
   'use strict';
@@ -1911,7 +1911,6 @@ format:
   const ARCO = 'https://s3.waw3-1.cloudferro.com/mdl-arco-geo-026/arco/GLOBAL_MULTIYEAR_PHY_001_030/' +
                'cmems_mod_glo_phy_my_0.083deg-climatology_P1M-m_202311/geoChunked.zarr';
   const OP_KEY = 'glider-tool.operation';      // { startMonth: 1-12, days }
-  const CUR_KEY = 'glider-tool.currents';      // last area summary, read by the dashboard
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const KT = 0.514444;                         // m/s per knot
   const MAX_ARROWS = 400;
@@ -2281,12 +2280,6 @@ format:
       }
     };
     drawArrows(win, speedMs);              // announces studycurrents:updated, which redraws the estimate
-
-    store(CUR_KEY, {
-      savedAt: new Date().toISOString(), months: win.map((t) => MONTHS[t]), depthM: model.targetM,
-      center: turf.centroid(sd.polygon).geometry.coordinates, meanMs: mean, p90Ms: p90, maxMs: max,
-      speedMs, nominalDays, currentDays: winDays, lostFraction: lost
-    });
   }
 
   // ------------------------------------------------------------ monthly chart
