@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -44,14 +44,14 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0ae969d3293726db143f6e9eb89af930.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-3245a9efd2d27e2c6a1ec784bf206a0c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-d949c74a40ea39fb0bf3b5edfd17d417.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-3245a9efd2d27e2c6a1ec784bf206a0c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-639c56369ababcd5651d1515ebc0ebf5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-96c1465cffba7e4d15ba8eef75e83fbe.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-639c56369ababcd5651d1515ebc0ebf5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -538,6 +538,12 @@ ul.task-list li input[type="checkbox"] {
   .leaflet-container { font-family: var(--sans); }
   #study-map .leaflet-top, #study-map .leaflet-bottom { z-index: 1000; pointer-events: none; }
   #study-map .leaflet-control { pointer-events: auto; }
+  /* Sits under the cursor's path, so it must never swallow a click meant for the map. */
+  #study-map .leaflet-control.coord-readout {
+    pointer-events: none; padding: 3px 8px; border-radius: 6px;
+    background: var(--surface); border: 1px solid var(--line-strong); color: var(--ink);
+    font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; white-space: pre;
+  }
   .leaflet-draw-toolbar a { background-color: #fff; }
   .leaflet-draw { display: block !important; visibility: visible !important; }
   .leaflet-draw-toolbar { display: block !important; visibility: visible !important; }
@@ -1362,6 +1368,33 @@ ul.task-list li input[type="checkbox"] {
   const surfaceLayer = new L.FeatureGroup().addTo(map);
   // The waypoint-file panel below draws imported waypoints on this same map.
   window.studyMap = map;
+
+  // ---------------------------------------------------------- cursor readout
+  // Degrees and decimal minutes, e.g. 36° 45.000' N. Listens on the container rather than
+  // the map: while drawing, Leaflet.Draw's marker sits under the cursor and takes the
+  // map's mousemove, which is exactly when the position is wanted.
+  function toDegMin(dec, pos, neg) {
+    const a = Math.abs(dec);
+    let deg = Math.floor(a);
+    let min = +((a - deg) * 60).toFixed(3);
+    if (min >= 60) { deg += 1; min -= 60; }
+    return deg + '° ' + min.toFixed(3).padStart(6, '0') + "' " + (dec < 0 ? neg : pos);
+  }
+  const coordReadout = L.control({ position: 'bottomleft' });
+  coordReadout.onAdd = function () {
+    const d = L.DomUtil.create('div', 'coord-readout');
+    d.hidden = true;
+    return d;
+  };
+  coordReadout.addTo(map);
+  const mapBox = map.getContainer();
+  mapBox.addEventListener('mousemove', (e) => {
+    const p = map.mouseEventToLatLng(e).wrap();   // panning past the date line runs past ±180
+    const box = coordReadout.getContainer();
+    box.textContent = toDegMin(p.lat, 'N', 'S') + '   ' + toDegMin(p.lng, 'E', 'W');
+    box.hidden = false;
+  });
+  mapBox.addEventListener('mouseleave', () => { coordReadout.getContainer().hidden = true; });
 
   // ---------------------------------------------------------------- land mask
   // Natural Earth 1:10m land (world-atlas TopoJSON, ~0.8 MB gzipped), split into single
