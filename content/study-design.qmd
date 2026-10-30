@@ -180,6 +180,12 @@ format:
   .leaflet-container { font-family: var(--sans); }
   #study-map .leaflet-top, #study-map .leaflet-bottom { z-index: 1000; pointer-events: none; }
   #study-map .leaflet-control { pointer-events: auto; }
+  /* Sits under the cursor's path, so it must never swallow a click meant for the map. */
+  #study-map .leaflet-control.coord-readout {
+    pointer-events: none; padding: 3px 8px; border-radius: 6px;
+    background: var(--surface); border: 1px solid var(--line-strong); color: var(--ink);
+    font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; white-space: pre;
+  }
   .leaflet-draw-toolbar a { background-color: #fff; }
   .leaflet-draw { display: block !important; visibility: visible !important; }
   .leaflet-draw-toolbar { display: block !important; visibility: visible !important; }
@@ -978,6 +984,33 @@ format:
   const surfaceLayer = new L.FeatureGroup().addTo(map);
   // The waypoint-file panel below draws imported waypoints on this same map.
   window.studyMap = map;
+
+  // ---------------------------------------------------------- cursor readout
+  // Degrees and decimal minutes, e.g. 36° 45.000' N. Listens on the container rather than
+  // the map: while drawing, Leaflet.Draw's marker sits under the cursor and takes the
+  // map's mousemove, which is exactly when the position is wanted.
+  function toDegMin(dec, pos, neg) {
+    const a = Math.abs(dec);
+    let deg = Math.floor(a);
+    let min = +((a - deg) * 60).toFixed(3);
+    if (min >= 60) { deg += 1; min -= 60; }
+    return deg + '° ' + min.toFixed(3).padStart(6, '0') + "' " + (dec < 0 ? neg : pos);
+  }
+  const coordReadout = L.control({ position: 'bottomleft' });
+  coordReadout.onAdd = function () {
+    const d = L.DomUtil.create('div', 'coord-readout');
+    d.hidden = true;
+    return d;
+  };
+  coordReadout.addTo(map);
+  const mapBox = map.getContainer();
+  mapBox.addEventListener('mousemove', (e) => {
+    const p = map.mouseEventToLatLng(e).wrap();   // panning past the date line runs past ±180
+    const box = coordReadout.getContainer();
+    box.textContent = toDegMin(p.lat, 'N', 'S') + '   ' + toDegMin(p.lng, 'E', 'W');
+    box.hidden = false;
+  });
+  mapBox.addEventListener('mouseleave', () => { coordReadout.getContainer().hidden = true; });
 
   // ---------------------------------------------------------------- land mask
   // Natural Earth 1:10m land (world-atlas TopoJSON, ~0.8 MB gzipped), split into single
