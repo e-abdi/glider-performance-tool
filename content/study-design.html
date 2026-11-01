@@ -817,6 +817,57 @@ ul.task-list li input[type="checkbox"] {
     (GLOBAL_MULTIYEAR_PHY_001_030, monthly climatology), <a href="https://doi.org/10.48670/moi-00021">doi:10.48670/moi-00021</a>.</p>
   </section>
 
+  <section class="dac" id="density">
+    <h2 class="anchored">Historical water density</h2>
+    <p class="note">The lowest and highest seawater density the glider is likely to meet in the study area, for ballasting. Density here
+    is in-situ, so it includes compression under pressure. The lowest value is at the surface and the highest at the target depth (or
+    at the deepest water in the area, if shallower). These are <b>historical</b> values from the Copernicus GLORYS12 reanalysis,
+    using every individual month since 1993 rather than a long-term average, so an unusually warm or fresh year counts.</p>
+    <div class="dac-status" id="dens-status">Generate a survey; the density for its area is fetched automatically.</div>
+
+    <div id="dens-results" hidden="">
+      <div class="metrics">
+        <div class="metric"><div class="k">Lowest density</div><div class="v" id="dens-low">--</div><div class="sub" id="dens-low-sub">deployment months</div></div>
+        <div class="metric"><div class="k">Highest density</div><div class="v" id="dens-high">--</div><div class="sub" id="dens-high-sub">deployment months</div></div>
+        <div class="metric"><div class="k">Range</div><div class="v" id="dens-range">--</div><div class="sub" id="dens-range-sub">deployment months</div></div>
+        <div class="metric"><div class="k">Any time of year</div><div class="v" id="dens-all">--</div><div class="sub" id="dens-all-sub">kg/m³</div></div>
+      </div>
+      <div class="status" id="dens-flags"></div>
+      <details class="assumptions"><summary>Monthly values as a table</summary>
+        <div class="wpt-table-wrap">
+<table class="wpt-table caption-top">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Month</th>
+<th data-quarto-table-cell-role="th">Lowest (kg/m³)</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Temp (°C)</th>
+<th data-quarto-table-cell-role="th">Salinity</th>
+<th data-quarto-table-cell-role="th">Highest (kg/m³)</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Temp (°C)</th>
+<th data-quarto-table-cell-role="th">Salinity</th>
+</tr>
+</thead>
+<tbody id="dens-rows">
+</tbody>
+</table>
+</div></details>
+      <details class="assumptions">
+        <summary>How the density is worked out</summary>
+        <ul>
+          <li>Potential temperature and salinity (<code>thetao</code>, <code>so</code>) on GLORYS12's 1/12° grid, month by month since January 1993, read directly from Copernicus Marine's public ARCO store. Each grid cell inside the study polygon is used (all cells in its bounding box if the polygon is smaller than one cell).</li>
+          <li>The lowest density comes from the top model level (0.5 m) and the highest from the model level at the target depth, or the deepest level with water anywhere in the area. Only those two levels are read. On five test areas (open ocean, a western boundary current, a shelf, the Mediterranean and a river plume), this gave the same extremes as reading every level to 1,000 m.</li>
+          <li>Density uses the Jackett &amp; McDougall (1995) equation of state, with pressure from depth after Saunders (1981). Over ocean conditions it is within about 0.02 kg/m³ of TEOS-10.</li>
+          <li>Each value is a monthly mean, so it smooths out tides, storms, internal waves and short river floods. Real water can go beyond these limits, most of all near the surface and close to river mouths, so leave some margin when ballasting.</li>
+        </ul>
+      </details>
+    </div>
+    <p class="d3-credit">Density from: E.U. Copernicus Marine Service Information, Global Ocean Physics Reanalysis
+    (GLOBAL_MULTIYEAR_PHY_001_030, monthly means), <a href="https://doi.org/10.48670/moi-00021">doi:10.48670/moi-00021</a>.
+    Equation of state: Jackett &amp; McDougall (1995), <em>J. Atmos. Oceanic Technol.</em> 12, 381–389.</p>
+  </section>
+
   <section class="summary" id="survey-estimate">
     <h2 class="anchored">Survey estimate</h2>
     <p class="note">First-order estimates from the survey geometry and the historical currents above. The current along each part of the track is added to the glider's speed where it follows the glider and subtracted where it opposes it; a cross-current makes the glider crab, which also costs speed. Dive behaviour, bathymetry, payload power, navigation, launch/recovery and operational safety margins are not included.</p>
@@ -2321,6 +2372,11 @@ ul.task-list li input[type="checkbox"] {
 
   const ARCO = 'https://s3.waw3-1.cloudferro.com/mdl-arco-geo-026/arco/GLOBAL_MULTIYEAR_PHY_001_030/' +
                'cmems_mod_glo_phy_my_0.083deg-climatology_P1M-m_202311/geoChunked.zarr';
+  // The month-by-month series behind that climatology, for the density extremes. Its chunks are
+  // [68 months, 2 levels, 64, 64], about 0.7 MB each.
+  const SERIES = 'https://s3.waw3-1.cloudferro.com/mdl-arco-geo-025/arco/GLOBAL_MULTIYEAR_PHY_001_030/' +
+                 'cmems_mod_glo_phy_my_0.083deg_P1M-m_202311/geoChunked.zarr';
+  const SERIES_START = 1993;                   // first year of the series, January
   const OP_KEY = 'glider-tool.operation';      // { startMonth: 1-12, days }
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const KT = 0.514444;                         // m/s per knot
@@ -2412,8 +2468,8 @@ ul.task-list li input[type="checkbox"] {
   let meta = null;                 // { u, v: {chunks, shape, scale, fill}, lat, lon, depth (positive down) }
   const chunkCache = new Map();    // "uo/0.12.10.5" -> Int16Array | null (absent chunk = all fill)
 
-  async function getBytes(path) {
-    const r = await fetch(ARCO + '/' + path);
+  async function getBytes(path, zarr = ARCO) {
+    const r = await fetch(zarr + '/' + path);
     // An absent chunk is all fill (Zarr's rule); this bucket answers 403 rather than 404 for it.
     if (r.status === 403 || r.status === 404) return null;
     if (!r.ok) throw new Error('Copernicus Marine returned HTTP ' + r.status);
@@ -2440,13 +2496,13 @@ ul.task-list li input[type="checkbox"] {
   }
   function chunkKey(v, zc, yc, xc) { return v + '/0.' + zc + '.' + yc + '.' + xc; }
 
-  async function fetchChunks(keys, onProgress) {
+  async function fetchChunks(keys, onProgress, zarr = ARCO) {
     const todo = keys.filter((k) => !chunkCache.has(k));
     let done = 0, bytes = 0, next = 0;
     async function worker() {
       while (next < todo.length) {
         const k = todo[next++];
-        const raw = await getBytes(k);
+        const raw = await getBytes(k, zarr);
         bytes += raw ? raw.length : 0;
         chunkCache.set(k, raw ? new Int16Array(bloscDecode(raw).buffer) : null);
         onProgress(++done, todo.length, bytes);
@@ -2777,11 +2833,182 @@ ul.task-list li input[type="checkbox"] {
     if (published || summary) { published = null; summary = null; window.dispatchEvent(new CustomEvent('studycurrents:updated')); }
   }
 
+  // ------------------------------------------------------------ water density
+  const densStatus = $('dens-status'), densResults = $('dens-results');
+  let series = null;     // { T, S: {chunks, shape, scale, offset, fill}, nt }
+  let density = null;    // { key, lows, highs: per month of the year, deepM, targetM, wholeBox }
+  let densityRun = 0;    // a newer survey abandons an older fetch
+
+  const densSay = (msg, err) => { densStatus.textContent = msg; densStatus.classList.toggle('err', !!err); densStatus.hidden = !msg; };
+
+  async function loadSeries() {
+    if (series) return series;
+    const r = await fetch(SERIES + '/.zmetadata');
+    if (!r.ok) throw new Error('Copernicus Marine returned HTTP ' + r.status);
+    const m = (await r.json()).metadata;
+    const arr = (v) => ({
+      chunks: m[v + '/.zarray'].chunks, shape: m[v + '/.zarray'].shape,
+      scale: m[v + '/.zattrs'].scale_factor || 1, offset: m[v + '/.zattrs'].add_offset || 0,
+      fill: m[v + '/.zarray'].fill_value
+    });
+    series = { T: arr('thetao'), S: arr('so'), nt: m['thetao/.zarray'].shape[0] };
+    return series;
+  }
+  // thetao and so are only read from the series, so these keys cannot collide in chunkCache.
+  function seriesKey(v, t, k, j, i) {
+    const [ct, cz, cy, cx] = series.T.chunks;
+    return v + '/' + Math.floor(t / ct) + '.' + Math.floor(k / cz) + '.' + Math.floor(j / cy) + '.' + Math.floor(i / cx);
+  }
+  function seriesValue(v, t, k, j, i) {
+    const a = series[v === 'thetao' ? 'T' : 'S'], [ct, cz, cy, cx] = a.chunks;
+    const c = chunkCache.get(seriesKey(v, t, k, j, i));
+    if (!c) return NaN;
+    const raw = c[(((t % ct) * cz + k % cz) * cy + j % cy) * cx + i % cx];
+    return raw === a.fill ? NaN : raw * a.scale + a.offset;
+  }
+
+  /* In-situ density (kg/m3) from practical salinity, potential temperature (deg C) and pressure
+     (dbar): Jackett & McDougall (1995), which takes potential temperature directly. */
+  function rhoJMD(s, t, p) {
+    const b = p / 10, s15 = s * Math.sqrt(s), t2 = t * t, t3 = t2 * t, t4 = t3 * t;
+    const r0 = 999.842594 + 6.793952e-2 * t - 9.09529e-3 * t2 + 1.001685e-4 * t3 - 1.120083e-6 * t4 + 6.536332e-9 * t4 * t
+      + s * (0.824493 - 4.0899e-3 * t + 7.6438e-5 * t2 - 8.2467e-7 * t3 + 5.3875e-9 * t4)
+      + s15 * (-5.72466e-3 + 1.0227e-4 * t - 1.6546e-6 * t2) + 4.8314e-4 * s * s;
+    const k = 19659.33 + 144.4304 * t - 1.706103 * t2 + 9.648704e-3 * t3 - 4.190253e-5 * t4
+      + s * (52.84855 - 0.3101089 * t + 6.283263e-3 * t2 - 5.084188e-5 * t3)
+      + s15 * (0.388664 + 9.085835e-3 * t - 4.619924e-4 * t2)
+      + b * (3.186519 + 2.212276e-2 * t - 2.984642e-4 * t2 + 1.956415e-6 * t3
+        + s * (6.704388e-3 - 1.847318e-4 * t + 2.059331e-7 * t2) + 1.480266e-4 * s15)
+      + b * b * (2.102898e-4 - 1.202016e-5 * t + 1.39468e-7 * t2 + s * (-2.040237e-6 + 6.128773e-8 * t + 6.207323e-10 * t2));
+    return r0 / (1 - b / k);
+  }
+  /* Pressure (dbar) at a depth (m), after Saunders (1981). */
+  function pressure(depthM, lat) {
+    const sin = Math.sin(lat * Math.PI / 180), c = 5.92e-3 + 5.25e-3 * sin * sin;
+    return ((1 - c) - Math.sqrt((1 - c) * (1 - c) - 8.84e-6 * depthM)) / 4.42e-6;
+  }
+
+  async function estimateDensity() {
+    const sd = window.studyDesign;
+    if (!sd || !sd.polygon) return;
+    const targetM = Math.max(1, Number(sd.els.depth.value) || 200);
+    const key = targetM + ' ' + JSON.stringify(sd.polygon.geometry);
+    if (density && density.key === key) { renderDensity(); return; }
+    const run = ++densityRun;
+    density = null; densResults.hidden = true;
+    try {
+      densSay('Reading the Copernicus Marine catalogue…');
+      await Promise.all([loadMeta(), loadSeries()]);
+      if (run !== densityRun) return;
+      const [w, s, e, n] = turf.bbox(sd.polygon);
+      const pad = 1 / 12;
+      const [j0, j1] = indexRange(meta.lat, s - pad, n + pad);
+      const [i0, i1] = indexRange(meta.lon, w - pad, e + pad);
+      const box = [], inside = [];
+      for (let j = j0; j <= j1; j++)
+        for (let i = i0; i <= i1; i++) {
+          box.push([j, i]);
+          if (turf.booleanPointInPolygon([meta.lon[i], meta.lat[j]], sd.polygon)) inside.push([j, i]);
+        }
+      const keysFor = (cells, k, vars, tMax) => {
+        const keys = new Set();
+        vars.forEach((v) => { for (let t = 0; t < tMax; t += series.T.chunks[0]) cells.forEach(([j, i]) => keys.add(seriesKey(v, t, k, j, i))); });
+        return [...keys];
+      };
+      const noProgress = () => {};
+      const wet = (cells, k) => cells.filter(([j, i]) => isFinite(seriesValue('thetao', 0, k, j, i)));
+
+      // The land mask does not change, so one time chunk shows which levels hold water.
+      const SURFACE = meta.depth.indexOf(Math.min(...meta.depth));
+      await fetchChunks(keysFor(box, SURFACE, ['thetao'], 1), noProgress, SERIES);
+      if (run !== densityRun) return;
+      const wholeBox = !wet(inside, SURFACE).length;
+      const cells = wholeBox ? box : inside;
+      const top = wet(cells, SURFACE);
+      if (!top.length) { densSay('The model has no ocean in this area — it may be entirely land at 1/12° resolution.', true); return; }
+
+      // Deepest level with water, working up from the target depth. Over a slope the deepest cells
+      // set the maximum; a whole area shallower than the target stops at its own deepest water.
+      const lay = layers(targetM);
+      let deep = null, bottom = null, deepM = 0;
+      for (let n2 = lay.length - 1; n2 >= 0 && !deep; n2--) {
+        const k = lay[n2].k;
+        await fetchChunks(keysFor(cells, k, ['thetao'], 1), noProgress, SERIES);
+        if (run !== densityRun) return;
+        const here = wet(cells, k);
+        if (here.length) {
+          bottom = here; deep = k;
+          // The last slab contains the target itself, so use the target's pressure, not its level's.
+          deepM = n2 === lay.length - 1 ? targetM : meta.depth[k];
+        }
+      }
+      const keys = [...keysFor(top, SURFACE, ['thetao', 'so'], series.nt), ...keysFor(bottom, deep, ['thetao', 'so'], series.nt)];
+      await fetchChunks(keys, (d, t, b) => { if (run === densityRun) densSay('Fetching temperature and salinity: ' + d + ' of ' + t + ' chunks, ' + (b / 1e6).toFixed(1) + ' MB…'); }, SERIES);
+      if (run !== densityRun) return;
+
+      const lows = Array(12).fill(null), highs = Array(12).fill(null);
+      const pSurface = (j) => pressure(meta.depth[SURFACE], meta.lat[j]), pDeep = (j) => pressure(deepM, meta.lat[j]);
+      for (let t = 0; t < series.nt; t++) {
+        const m = t % 12;
+        for (const [j, i] of top) {
+          const th = seriesValue('thetao', t, SURFACE, j, i), sa = seriesValue('so', t, SURFACE, j, i);
+          if (!isFinite(th) || !isFinite(sa)) continue;
+          const r = rhoJMD(sa, th, pSurface(j));
+          if (!lows[m] || r < lows[m].rho) lows[m] = { rho: r, t, th, sa };
+        }
+        for (const [j, i] of bottom) {
+          const th = seriesValue('thetao', t, deep, j, i), sa = seriesValue('so', t, deep, j, i);
+          if (!isFinite(th) || !isFinite(sa)) continue;
+          const r = rhoJMD(sa, th, pDeep(j));
+          if (!highs[m] || r > highs[m].rho) highs[m] = { rho: r, t, th, sa };
+        }
+      }
+      density = { key, lows, highs, deepM, targetM, wholeBox };
+      densSay('');
+      renderDensity();
+    } catch (err) {
+      if (run === densityRun) densSay('Could not load density: ' + err.message + '. The Copernicus Marine store may be busy — generate the survey again to retry.', true);
+    }
+  }
+
+  function renderDensity() {
+    if (!density) return;
+    const { lows, highs, deepM, targetM, wholeBox } = density;
+    const win = windowMonths(operation());
+    const year = (x) => SERIES_START + Math.floor(x.t / 12);
+    const when = (x) => MONTHS[x.t % 12] + ' ' + year(x);
+    const lowest = (ms) => ms.map((m) => lows[m]).filter(Boolean).reduce((a, b) => (b.rho < a.rho ? b : a));
+    const highest = (ms) => ms.map((m) => highs[m]).filter(Boolean).reduce((a, b) => (b.rho > a.rho ? b : a));
+    const all = MONTHS.map((_, m) => m);
+    const lo = lowest(win), hi = highest(win), loAll = lowest(all), hiAll = highest(all);
+    const depthLabel = fmt(deepM, 0) + ' m';
+    const kg = (x) => fmt(x, 2);
+
+    $('dens-low').textContent = kg(lo.rho) + ' kg/m³';
+    $('dens-low-sub').textContent = when(lo) + ', surface' + (wholeBox ? ', nearby cells' : '');
+    $('dens-high').textContent = kg(hi.rho) + ' kg/m³';
+    $('dens-high-sub').textContent = when(hi) + ', ' + depthLabel + (wholeBox ? ', nearby cells' : '');
+    $('dens-range').textContent = kg(hi.rho - lo.rho) + ' kg/m³';
+    $('dens-range-sub').textContent = windowLabel(win) + ', since ' + SERIES_START;
+    $('dens-all').textContent = kg(loAll.rho) + ' – ' + kg(hiAll.rho);
+    $('dens-all-sub').textContent = 'kg/m³, all months since ' + SERIES_START;
+
+    const flags = [];
+    if (deepM < targetM) flags.push(['warn', '!', '<b>The area is shallower than the target depth.</b> The deepest water in the model here is about ' + depthLabel + ', so the highest density is taken there rather than at ' + fmt(targetM, 0) + ' m.']);
+    flags.push(['warn', '~', '<b>Monthly means, not absolute limits.</b> Tides, storms and river floods can take the water beyond these values, so leave a margin when ballasting.']);
+    $('dens-flags').innerHTML = flags.map(([c, ic, t]) => '<div class="status-row ' + c + '"><span class="ic">' + ic + '</span><span>' + t + '</span></div>').join('');
+
+    const cells = (x) => x ? '<td>' + kg(x.rho) + '</td><td>' + year(x) + '</td><td>' + fmt(x.th, 1) + '</td><td>' + fmt(x.sa, 2) + '</td>' : '<td colspan="4">no data</td>';
+    $('dens-rows').innerHTML = MONTHS.map((name, m) => '<tr><td>' + (win.includes(m) ? '<b>' + name + '</b>' : name) + '</td>' + cells(lows[m]) + cells(highs[m]) + '</tr>').join('');
+    densResults.hidden = false;
+  }
+
   // ------------------------------------------------------------ wiring
   function onOperationChange() {
     store(OP_KEY, operation());
     showWindow();
     if (model && !resultsEl.hidden) render();
+    renderDensity();
   }
   opStart.addEventListener('change', onOperationChange);
   opDays.addEventListener('change', onOperationChange);
@@ -2797,6 +3024,7 @@ ul.task-list li input[type="checkbox"] {
   window.addEventListener('studydesign:generated', () => {
     buildBtn.disabled = false;
     const sd = window.studyDesign;
+    estimateDensity();
     // Same area and depth: recompute from what is already loaded (no network); otherwise ask.
     // (Generate clears the old survey first, so the last result waits in `stale`.)
     if (stale && sd && stale.targetM === Math.max(1, Number(sd.els.depth.value) || 200) && stale.polygon === JSON.stringify(sd.polygon.geometry)) {
@@ -2811,10 +3039,12 @@ ul.task-list li input[type="checkbox"] {
     if (model) stale = model;
     model = null; resultsEl.hidden = true; clearArrows(); buildBtn.disabled = true;
     say('Generate a survey; the currents for its area are fetched automatically.');
+    densResults.hidden = true;
+    densSay('Generate a survey; the density for its area is fetched automatically.');
   });
 
   window.studyCurrents = { bloscDecode, layers, windowMonths, get model() { return model; }, get vectors() { return published; },
-                           get summary() { return summary; } };
+                           get summary() { return summary; }, rhoJMD, pressure, get density() { return density; } };
 })();
 </script>
 
