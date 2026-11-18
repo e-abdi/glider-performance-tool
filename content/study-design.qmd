@@ -319,10 +319,11 @@ format:
         <label for="pattern"><b>Survey pattern</b></label>
         <select id="pattern">
           <option value="lawnmower" selected>Lawnmower (connected transects)</option>
-          <option value="parallel">Parallel transects only</option>
+          <option value="line">Back and forth (between two points)</option>
           <option value="butterfly">Butterfly (figure-8 loop)</option>
         </select>
         <p class="note" id="pattern-note" hidden>A butterfly flies two diagonals that cross near the middle of the area, joined at each end into a figure 8, and repeats the loop. It is sized to fit inside the study area, so transect spacing does not apply.</p>
+        <p class="note" id="line-note" hidden>Click <b>Pick line ends</b>, then click the two ends of the line on the map. The glider flies from the first point to the second and back, and repeats; no study area is needed.</p>
       </div>
 
       <div class="field" id="spacing-field">
@@ -330,7 +331,7 @@ format:
         <input id="spacing" type="range" min="1" max="50" step="1" value="10">
       </div>
 
-      <div class="field">
+      <div class="field" id="bearing-field">
         <label for="bearing"><b>Track orientation</b><span class="val"><span id="bearing-val">0</span>&deg;</span></label>
         <input id="bearing" type="range" min="0" max="179" step="1" value="0">
         <p class="note" id="bearing-note">0&deg; = north-south transects; 90&deg; = east-west.</p>
@@ -378,11 +379,12 @@ format:
         <button class="btn ghost" id="clear-tracks" disabled>Clear tracks</button>
         <button class="btn ghost" id="example-area">Load example</button>
       </div>
+      <p class="note" id="generate-hint" aria-live="polite"></p>
     </section>
 
     <section class="panel map-panel">
       <div id="study-map" aria-label="Interactive map for drawing the study area"></div>
-      <div class="map-help"><b>Map controls:</b> click <b>Draw study area</b>, then click successive points on the map to add vertices. When you have at least three vertices, click <b>Finish polygon</b>. Use <b>Clear area</b> to start over. Then click <b>Generate survey</b>. While drawing, the rest of the map should remain fully clickable.</div>
+      <div class="map-help"><b>Map controls:</b> click <b>Draw study area</b>, then click successive points on the map to add vertices. When you have at least three vertices, click <b>Finish polygon</b>. Use <b>Clear area</b> to start over. Then click <b>Generate survey</b>. For a back-and-forth line, click <b>Pick line ends</b> and click the two ends instead. While drawing, the rest of the map should remain fully clickable.</div>
       <div class="map-help"><b>Map layers:</b> <span style="color:#0057B8;font-weight:800;">blue lines</span> = survey track; <span style="color:#F28E2B;font-weight:800;">orange dots</span> = estimated surfacing locations.</div>
       <div class="map-help"><b>Land:</b> the study area has to be at sea. A vertex on land, or an edge that crosses it, is refused while drawing, and an area that overlaps land cannot be surveyed; the overlap is shown in red. Coastline from Natural Earth (1:10m), so it is accurate to roughly a kilometre &mdash; keep a margin from the shore.</div>
       <div id="land-mask-status" class="land-mask-status">Loading land mask…</div>
@@ -512,7 +514,7 @@ format:
     <div id="summary-empty" class="empty">Draw a study polygon and press <b>Generate survey</b> to create an estimate.</div>
     <div id="summary-results" hidden>
       <div class="metrics">
-        <div class="metric"><div class="k">Study area</div><div class="v" id="m-area">--</div><div class="sub">polygon area</div></div>
+        <div class="metric"><div class="k" id="m-area-k">Study area</div><div class="v" id="m-area">--</div><div class="sub" id="m-area-sub">polygon area</div></div>
         <div class="metric"><div class="k" id="m-transects-k">Transects</div><div class="v" id="m-transects">--</div><div class="sub" id="m-transects-sub">inside study area</div></div>
         <div class="metric"><div class="k">Track length</div><div class="v" id="m-distance">--</div><div class="sub">over ground</div></div>
         <div class="metric"><div class="k">Distance through water</div><div class="v" id="m-water">--</div><div class="sub" id="m-water-sub">--</div></div>
@@ -529,7 +531,8 @@ format:
         <summary>Calculation assumptions</summary>
         <ul>
           <li>Transects are generated at the selected compass orientation and clipped to the study polygon.</li>
-          <li>For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included.</li>
+          <li>For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included. If the spacing is wider than the area, only the one transect through its middle fits.</li>
+          <li>The back-and-forth option flies the straight line between the two chosen points and back. Its duration is for one round trip; the number of round trips that fit in the deployment is shown with it. Currents and density are taken for a 1&nbsp;km band around the line.</li>
           <li>The butterfly is four legs: two diagonals that cross near the middle of the area, and the two ends that join them. Each corner is placed as far out as the area allows in its quadrant either side of the track orientation, then pulled in until every leg stays inside the area. Its duration is for one loop; the number of loops that fit in the deployment is shown with it.</li>
           <li>Still-water travel rate is speed in knots &times; 1.852 km/nmi &times; 24 h/day.</li>
           <li>With currents, the route is walked in short steps and each step takes the historical current at that spot (nearest model cell). The glider is assumed to crab into the current to hold its track: ground speed = along-track current + &radic;(speed&sup2; &minus; cross-track current&sup2;). A current along the track therefore adds to or subtracts from the glider's speed directly; a cross-current only slows it.</li>
@@ -975,17 +978,22 @@ format:
   els.speed.addEventListener('input', () => els.speedVal.textContent = Number(els.speed.value).toFixed(2));
   els.glideAngle.addEventListener('input', () => els.glideAngleVal.textContent = els.glideAngle.value);
 
-  // A butterfly is sized to the area, so transect spacing has nothing to do.
+  // A butterfly is sized to the area, so transect spacing has nothing to do. A back-and-forth
+  // line is set by its two ends, so neither spacing nor orientation applies, and it needs no area.
+  const lineMode = () => els.pattern.value === 'line';
   function showPatternControls() {
-    const fly = els.pattern.value === 'butterfly';
-    document.getElementById('spacing-field').hidden = fly;
+    const fly = els.pattern.value === 'butterfly', line = lineMode();
+    document.getElementById('spacing-field').hidden = fly || line;
+    document.getElementById('bearing-field').hidden = line;
     document.getElementById('pattern-note').hidden = !fly;
+    document.getElementById('line-note').hidden = !line;
     document.getElementById('bearing-note').textContent = fly
       ? 'Direction of the figure 8\'s long axis: 0° = its loops lie north and south of the crossing; 90° = east and west.'
       : '0° = north-south transects; 90° = east-west.';
+    if (!manualDrawing) els.drawArea.textContent = line ? 'Pick line ends' : 'Draw study area';
+    els.finishArea.hidden = line;
+    els.clearArea.textContent = line ? 'Clear line' : 'Clear area';
   }
-  els.pattern.addEventListener('change', showPatternControls);
-  showPatternControls();
 
   const map = L.map('study-map', { zoomControl: true }).setView([36.75, -122.0], 7);
   // Esri World Ocean Base, the same basemap Glider Playground uses
@@ -1098,6 +1106,13 @@ format:
     areaOnLand = false;
     if (!layer || !land) return true;
     const polygon = layer.toGeoJSON();
+    if (polygon.geometry.type === 'LineString') {
+      if (!lineOnLand(polygon.geometry.coordinates)) { landMsg('Line is at sea.'); return true; }
+      areaOnLand = true;
+      L.geoJSON(polygon, { interactive: false, style: { color: '#B3261E', weight: 5 } }).addTo(landHitLayer);
+      landMsg('The line crosses land (in red). Pick ends that can be joined without crossing the coast.', true);
+      return false;
+    }
     const parts = landOverlap(polygon);
     if (!parts.length) { landMsg('Study area is at sea.'); return true; }
     areaOnLand = true;
@@ -1190,16 +1205,31 @@ format:
     manualVertices = [];
     resetManualGuide();
     els.finishArea.disabled = true;
-    els.drawArea.textContent = 'Click map to add vertices';
+    els.drawArea.textContent = lineMode() ? 'Click the two ends' : 'Click map to add vertices';
+    setButtons();
     map.getContainer().style.cursor = 'crosshair';
   });
 
-  els.finishArea.addEventListener('click', function () {
-    if (manualVertices.length < 3) return;
+  /* A back-and-forth line is finished by its second click. */
+  function finishLine() {
+    drawnItems.clearLayers();
+    const line = L.polyline(manualVertices, { color: '#0057B8', weight: 3, opacity: 0.6, dashArray: '6,6' }).addTo(drawnItems);
+    manualDrawing = false;
+    resetManualGuide();
+    showPatternControls();
+    map.getContainer().style.cursor = '';
+    clearTracksAndSummary();
+    checkArea(line);
+    setButtons();
+    map.fitBounds(line.getBounds(), { padding: [40, 40] });
+  }
+
+  function finishPolygon() {
+    if (manualVertices.length < 3) return false;
     const first = manualVertices[0], last = manualVertices[manualVertices.length - 1];
     if (land && lineOnLand([[last.lng, last.lat], [first.lng, first.lat]])) {
       landMsg('Closing the polygon would cross land. Add another vertex at sea first.', true);
-      return;
+      return false;
     }
     drawnItems.clearLayers();
     const poly = L.polygon(manualVertices, {
@@ -1218,7 +1248,9 @@ format:
     setButtons();
     map.fitBounds(poly.getBounds(), {padding: [20,20]});
     setTimeout(() => map.invalidateSize({pan:false}), 50);
-  });
+    return true;
+  }
+  els.finishArea.addEventListener('click', finishPolygon);
 
   els.clearArea.addEventListener('click', function () {
     manualDrawing = false;
@@ -1228,10 +1260,10 @@ format:
     clearTracksAndSummary();
     checkArea(null);
     if (land) landMsg('Land check on (Natural Earth 1:10m coastline).');
-    els.drawArea.textContent = 'Draw study area';
+    showPatternControls();
     els.finishArea.disabled = true;
-    els.generate.disabled = true;
     map.getContainer().style.cursor = '';
+    setButtons();
   });
 
   map.on('click', function (e) {
@@ -1249,6 +1281,8 @@ format:
     if (land) landMsg('Land check on (Natural Earth 1:10m coastline).');
     manualVertices.push(e.latlng);
     updateManualGuide();
+    if (lineMode() && manualVertices.length === 2) finishLine();
+    else setButtons();
   });
 
   function currentPolygonLayer() {
@@ -1257,9 +1291,20 @@ format:
     return result;
   }
 
+  /* Generate says why it is not available rather than just greying out. A polygon still being
+     drawn (three or more vertices) counts: Generate finishes it first. */
   function setButtons() {
-    const hasPolygon = !!currentPolygonLayer();
-    els.generate.disabled = !hasPolygon || areaOnLand;
+    const shape = currentPolygonLayer();
+    const isLine = !!shape && !(shape instanceof L.Polygon);
+    const fits = !!shape && isLine === lineMode();
+    const drawingReady = manualDrawing && !lineMode() && manualVertices.length >= 3;
+    let hint = '';
+    if (drawingReady) hint = '';
+    else if (manualDrawing) hint = lineMode() ? 'Click the two ends of the line on the map.' : 'Add at least three vertices, then Finish polygon (or Generate survey).';
+    else if (!shape || !fits) hint = lineMode() ? 'Pick the two ends of a line first.' : 'Draw a study area first.';
+    else if (areaOnLand) hint = (isLine ? 'The line crosses land' : 'The study area overlaps land') + ', so a survey cannot be generated. See the note under the map.';
+    els.generate.disabled = !!hint;
+    document.getElementById('generate-hint').textContent = hint;
     els.clearTracks.disabled = trackLayer.getLayers().length === 0;
   }
 
@@ -1291,6 +1336,15 @@ format:
   els.exampleArea.addEventListener('click', function () {
     drawnItems.clearLayers();
     clearTracksAndSummary();
+    if (lineMode()) {
+      // Across Monterey Canyon, offshore of Moss Landing.
+      const line = L.polyline([[36.80, -122.15], [36.70, -122.40]], { color: '#0057B8', weight: 3, opacity: 0.6, dashArray: '6,6' });
+      drawnItems.addLayer(line);
+      checkArea(line);
+      map.fitBounds(line.getBounds(), { padding: [40, 40] });
+      setButtons();
+      return;
+    }
     // Off Monterey Bay, across the canyon, clear of the coast by several kilometres.
     const example = L.polygon([
       [36.86, -122.40],
@@ -1513,7 +1567,7 @@ format:
   }
 
   let lastSurveyGeometry = null;
-  let lastSurvey = null;     // { polygon, areaKm2, legs, butterfly }
+  let lastSurvey = null;     // { polygon, legs, kind: 'lawnmower' | 'butterfly' | 'line', ... }
 
   const KT = 0.514444;       // m/s per knot
   const dur = (days) => days < 1 ? `${fmt(days * 24, 1)} h` : `${fmt(days, 1)} d`;
@@ -1552,15 +1606,19 @@ format:
     setText('m-surface-markers', cycleOk ? fmt(markers, 0) : '--');
 
     const s = lastSurvey;
-    setText('m-area', `${fmt(s.areaKm2, s.areaKm2 < 100 ? 1 : 0)} km²`);
-    setText('m-transects-k', s.butterfly ? 'Legs' : 'Transects');
+    const line = s.kind === 'line', fly = s.kind === 'butterfly';
+    setText('m-area-k', line ? 'Line length' : 'Study area');
+    setText('m-area', line ? `${fmt(s.oneWayKm, s.oneWayKm < 100 ? 1 : 0)} km` : `${fmt(s.areaKm2, s.areaKm2 < 100 ? 1 : 0)} km²`);
+    setText('m-area-sub', line ? `one way, bearing ${fmt(s.bearing, 0)}°` : 'polygon area');
+    setText('m-transects-k', fly || line ? 'Legs' : 'Transects');
     setText('m-transects', fmt(s.legs, 0));
-    setText('m-transects-sub', s.butterfly ? 'per figure-8 loop' : 'inside study area');
+    setText('m-transects-sub', fly ? 'per figure-8 loop' : line ? 'out and back per round trip'
+      : s.legs === 1 ? `only one fits at ${fmt(s.spacingKm, 0)} km spacing; reduce the spacing for more` : 'inside study area');
     setText('m-distance', `${fmt(g.distanceKm, g.distanceKm < 100 ? 1 : 0)} km`);
     setText('m-depth', `${fmt(depthM, 0)} m`);
 
     const durEl = document.getElementById('m-duration');
-    setText('m-duration-k', s.butterfly ? 'Duration per loop' : 'Duration');
+    setText('m-duration-k', fly ? 'Duration per loop' : line ? 'Duration per round trip' : 'Duration');
     let days = stillDays;
     if (cur && cur.infeasible) {
       setText('m-water', '--');
@@ -1588,10 +1646,10 @@ format:
       setText('m-duration-sub', 'still water');
     }
     durEl.classList.toggle('flag', !!(cur && cur.infeasible));
-    if (s.butterfly && !(cur && cur.infeasible)) {
+    if ((fly || line) && !(cur && cur.infeasible)) {
       const opDays = Math.max(1, Number(document.getElementById('op-days').value) || 30);
       const loops = opDays / days;
-      document.getElementById('m-duration-sub').textContent += `; ${loops < 10 ? fmt(loops, 1) : fmt(loops, 0)} loops in ${fmt(opDays, 0)} d`;
+      document.getElementById('m-duration-sub').textContent += `; ${loops < 10 ? fmt(loops, 1) : fmt(loops, 0)} ${line ? 'round trips' : 'loops'} in ${fmt(opDays, 0)} d`;
     }
 
     const state = document.getElementById('m-current-state');
@@ -1602,11 +1660,13 @@ format:
   }
 
   function generateSurvey() {
+    if (manualDrawing && !lineMode() && !finishPolygon()) return;
     const layer = currentPolygonLayer();
     if (!layer) return;
     if (!checkArea(layer)) { setButtons(); return; }
 
     clearTracksAndSummary();
+    if (lineMode()) return generateLine(layer);
 
     const polygon = leafletPolygonToTurf(layer);
     const spacingKm = Number(els.spacing.value);
@@ -1641,22 +1701,36 @@ format:
         return;
       }
       legs = segments.length;
-      if (els.pattern.value === 'parallel') {
-        let distanceKm = 0;
-        segments.forEach(seg => {
-          distanceKm += turf.length(seg, { units: 'kilometers' });
-          drawFeature(seg, { color: '#0057B8', weight: 4, opacity: 1.0 });
-        });
-        lastSurveyGeometry = { type: 'segments', lines: segments, distanceKm };
-      } else {
-        const route = buildLawnmowerRoute(segments);
-        drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
-        segments.forEach(seg => drawFeature(seg, { color: '#1A6B4E', weight: 5, opacity: 0.35 }));
-        lastSurveyGeometry = { type: 'route', line: route, distanceKm: turf.length(route, { units: 'kilometers' }) };
-      }
+      const route = buildLawnmowerRoute(segments);
+      drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
+      segments.forEach(seg => drawFeature(seg, { color: '#1A6B4E', weight: 5, opacity: 0.35 }));
+      lastSurveyGeometry = { type: 'route', line: route, distanceKm: turf.length(route, { units: 'kilometers' }) };
     }
 
-    lastSurvey = { polygon, areaKm2: turf.area(polygon) / 1e6, legs, butterfly };
+    lastSurvey = { polygon, areaKm2: turf.area(polygon) / 1e6, legs, kind: butterfly ? 'butterfly' : 'lawnmower', spacingKm };
+    showSurvey(polygon, cycleKm, depthM, glideAngleDeg);
+  }
+
+  /* Back and forth between two points: out along the line and back, repeated. The currents,
+     density and 3D sections work from an area, so they get a 1 km band around the line. */
+  function generateLine(layer) {
+    const line = layer.toGeoJSON();
+    const [a, b] = line.geometry.coordinates;
+    const route = turf.lineString([a, b, a]);
+    const oneWayKm = turf.length(line, { units: 'kilometers' });
+    const polygon = turf.buffer(line, 1, { units: 'kilometers' });
+    drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
+    [a, b].forEach((p, i) => L.circleMarker([p[1], p[0]], { radius: 6, color: '#0057B8', weight: 2, fillColor: '#fff', fillOpacity: 1 })
+      .bindTooltip(i ? 'End B' : 'Start A').addTo(trackLayer));
+    lastSurveyGeometry = { type: 'route', line: route, distanceKm: 2 * oneWayKm };
+    lastSurvey = { polygon, oneWayKm, bearing: (turf.bearing(a, b) + 360) % 360, legs: 2, kind: 'line' };
+    const depthM = Math.max(0, Number(els.depth.value) || 0);
+    const glideAngleDeg = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
+    showSurvey(polygon, diveCycleDistanceKm(depthM, glideAngleDeg), depthM, glideAngleDeg);
+  }
+
+  function showSurvey(polygon, cycleKm, depthM, glideAngleDeg) {
+    const empty = document.getElementById('summary-empty');
     renderEstimate();
     empty.hidden = true;
     document.getElementById('summary-results').hidden = false;
@@ -1668,6 +1742,15 @@ format:
   }
 
   els.generate.addEventListener('click', generateSurvey);
+  // Switching between an area pattern and the line drops a shape of the other kind.
+  els.pattern.addEventListener('change', () => {
+    const shape = currentPolygonLayer();
+    if (manualDrawing || (shape && (shape instanceof L.Polygon) === lineMode())) els.clearArea.click();
+    else clearTracksAndSummary();
+    showPatternControls();
+    setButtons();
+  });
+  showPatternControls();
   els.depth.addEventListener('input', renderEstimate);
   els.glideAngle.addEventListener('input', renderEstimate);
   els.speed.addEventListener('change', renderEstimate);
