@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.20">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -40,18 +40,19 @@ ul.task-list li input[type="checkbox"] {
 <link href="../content/images/GliderRodeo.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0ae969d3293726db143f6e9eb89af930.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-447e42e69aaa9833c0ba1b986f430b20.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-639c56369ababcd5651d1515ebc0ebf5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-96c1465cffba7e4d15ba8eef75e83fbe.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-639c56369ababcd5651d1515ebc0ebf5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-eeb88b71290fc475801d3d9b727ef59c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-600864cc9fd94fae26ba65a8648bc2d4.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-eeb88b71290fc475801d3d9b727ef59c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -92,7 +93,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar docked quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -115,6 +116,7 @@ ul.task-list li input[type="checkbox"] {
       for (let i=0; i < toggles.length; i++) {
         const toggle = toggles[i];
         if (toggle) {
+          toggle.setAttribute("aria-checked", alternate ? "true" : "false");
           if (alternate) {
             toggle.classList.add("alternate");
           } else {
@@ -144,13 +146,19 @@ ul.task-list li input[type="checkbox"] {
       manageTransitions('#quarto-margin-sidebar .nav-link', true);
       // Switch the toggles
       setColorSchemeToggle(alternate)
-      // Hack to workaround the fact that safari doesn't
-      // properly recolor the scrollbar when toggling (#1455)
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455).
+    // Not run on load: stylesheets are set before first paint there, and
+    // scrolling would undo the scroll to a URL fragment (#14973).
+    // The one pixel nudge keeps the reader where they were.
+    const refreshSafariScrollbar = () => {
       if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
         manageTransitions("body", false);
-        window.scrollTo(0, 1);
+        const scrollY = window.scrollY;
+        window.scrollTo(0, scrollY > 0 ? scrollY - 1 : 1);
         setTimeout(() => {
-          window.scrollTo(0, 0);
+          window.scrollTo(0, scrollY);
           manageTransitions("body", true);
         }, 40);
       }
@@ -244,6 +252,7 @@ ul.task-list li input[type="checkbox"] {
       // Read the current dark / light value
       let toAlternate = !hasAlternateSentinel();
       toggleColorMode(toAlternate);
+      refreshSafariScrollbar();
       setStyleSentinel(toAlternate);
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
@@ -258,13 +267,13 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/study-design.html">Study Design Tool</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../content/study-design.html">Study Design Tool</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -275,7 +284,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Site">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
       <a href="../index.html" class="sidebar-logo-link">
       <img src="../content/images/GliderRodeo.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
@@ -284,7 +293,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="sidebar-tools-main tools-wide">
     <a href="https://nmfs-pam-glider.github.io/GliderRodeo/" title="NOAA Fisheries PAM-Glider Rodeo" class="quarto-navigation-tool px-1" aria-label="NOAA Fisheries PAM-Glider Rodeo"><i class="bi bi-globe"></i></a>
     <a href="https://github.com/e-abdi/glider-performance-tool" title="Source code" class="quarto-navigation-tool px-1" aria-label="Source code"><i class="bi bi-github"></i></a>
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <button type="button" role="switch" aria-checked="false" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode" aria-label="Toggle dark mode"><i class="bi"></i></button>
 </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -320,13 +329,10 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
- <span class="menu-text">Endurance calculation</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="false">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Endurance calculation</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../content/slocum-endurance.html" class="sidebar-item-text sidebar-link">
@@ -354,7 +360,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content column-page-right" id="quarto-document-content">
+<main class="content column-page-right" id="quarto-document-content" tabindex="-1">
 
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -677,10 +683,11 @@ ul.task-list li input[type="checkbox"] {
         <label for="pattern"><b>Survey pattern</b></label>
         <select id="pattern">
           <option value="lawnmower" selected="">Lawnmower (connected transects)</option>
-          <option value="parallel">Parallel transects only</option>
+          <option value="line">Back and forth (between two points)</option>
           <option value="butterfly">Butterfly (figure-8 loop)</option>
         </select>
         <p class="note" id="pattern-note" hidden="">A butterfly flies two diagonals that cross near the middle of the area, joined at each end into a figure 8, and repeats the loop. It is sized to fit inside the study area, so transect spacing does not apply.</p>
+        <p class="note" id="line-note" hidden="">Click <b>Pick line ends</b>, then click the two ends of the line on the map. The glider flies from the first point to the second and back, and repeats; no study area is needed.</p>
       </div>
 
       <div class="field" id="spacing-field">
@@ -688,7 +695,7 @@ ul.task-list li input[type="checkbox"] {
         <input id="spacing" type="range" min="1" max="50" step="1" value="10">
       </div>
 
-      <div class="field">
+      <div class="field" id="bearing-field">
         <label for="bearing"><b>Track orientation</b><span class="val"><span id="bearing-val">0</span>°</span></label>
         <input id="bearing" type="range" min="0" max="179" step="1" value="0">
         <p class="note" id="bearing-note">0° = north-south transects; 90° = east-west.</p>
@@ -736,11 +743,12 @@ ul.task-list li input[type="checkbox"] {
         <button class="btn ghost" id="clear-tracks" disabled="">Clear tracks</button>
         <button class="btn ghost" id="example-area">Load example</button>
       </div>
+      <p class="note" id="generate-hint" aria-live="polite"></p>
     </section>
 
     <section class="panel map-panel">
       <div id="study-map" aria-label="Interactive map for drawing the study area"></div>
-      <div class="map-help"><b>Map controls:</b> click <b>Draw study area</b>, then click successive points on the map to add vertices. When you have at least three vertices, click <b>Finish polygon</b>. Use <b>Clear area</b> to start over. Then click <b>Generate survey</b>. While drawing, the rest of the map should remain fully clickable.</div>
+      <div class="map-help"><b>Map controls:</b> click <b>Draw study area</b>, then click successive points on the map to add vertices. When you have at least three vertices, click <b>Finish polygon</b>. Use <b>Clear area</b> to start over. Then click <b>Generate survey</b>. For a back-and-forth line, click <b>Pick line ends</b> and click the two ends instead. While drawing, the rest of the map should remain fully clickable.</div>
       <div class="map-help"><b>Map layers:</b> <span style="color:#0057B8;font-weight:800;">blue lines</span> = survey track; <span style="color:#F28E2B;font-weight:800;">orange dots</span> = estimated surfacing locations.</div>
       <div class="map-help"><b>Land:</b> the study area has to be at sea. A vertex on land, or an edge that crosses it, is refused while drawing, and an area that overlaps land cannot be surveyed; the overlap is shown in red. Coastline from Natural Earth (1:10m), so it is accurate to roughly a kilometre — keep a margin from the shore.</div>
       <div id="land-mask-status" class="land-mask-status">Loading land mask…</div>
@@ -901,7 +909,7 @@ ul.task-list li input[type="checkbox"] {
     <div id="summary-empty" class="empty">Draw a study polygon and press <b>Generate survey</b> to create an estimate.</div>
     <div id="summary-results" hidden="">
       <div class="metrics">
-        <div class="metric"><div class="k">Study area</div><div class="v" id="m-area">--</div><div class="sub">polygon area</div></div>
+        <div class="metric"><div class="k" id="m-area-k">Study area</div><div class="v" id="m-area">--</div><div class="sub" id="m-area-sub">polygon area</div></div>
         <div class="metric"><div class="k" id="m-transects-k">Transects</div><div class="v" id="m-transects">--</div><div class="sub" id="m-transects-sub">inside study area</div></div>
         <div class="metric"><div class="k">Track length</div><div class="v" id="m-distance">--</div><div class="sub">over ground</div></div>
         <div class="metric"><div class="k">Distance through water</div><div class="v" id="m-water">--</div><div class="sub" id="m-water-sub">--</div></div>
@@ -918,7 +926,8 @@ ul.task-list li input[type="checkbox"] {
         <summary>Calculation assumptions</summary>
         <ul>
           <li>Transects are generated at the selected compass orientation and clipped to the study polygon.</li>
-          <li>For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included.</li>
+          <li>For the lawnmower option, transect segments are alternated and connected in sequence; connector distance is included. If the spacing is wider than the area, only the one transect through its middle fits.</li>
+          <li>The back-and-forth option flies the straight line between the two chosen points and back. Its duration is for one round trip; the number of round trips that fit in the deployment is shown with it. Currents and density are taken for a 1&nbsp;km band around the line.</li>
           <li>The butterfly is four legs: two diagonals that cross near the middle of the area, and the two ends that join them. Each corner is placed as far out as the area allows in its quadrant either side of the track orientation, then pulled in until every leg stays inside the area. Its duration is for one loop; the number of loops that fit in the deployment is shown with it.</li>
           <li>Still-water travel rate is speed in knots × 1.852 km/nmi × 24 h/day.</li>
           <li>With currents, the route is walked in short steps and each step takes the historical current at that spot (nearest model cell). The glider is assumed to crab into the current to hold its track: ground speed = along-track current + √(speed² − cross-track current²). A current along the track therefore adds to or subtracts from the glider's speed directly; a cross-current only slows it.</li>
@@ -1376,17 +1385,22 @@ ul.task-list li input[type="checkbox"] {
   els.speed.addEventListener('input', () => els.speedVal.textContent = Number(els.speed.value).toFixed(2));
   els.glideAngle.addEventListener('input', () => els.glideAngleVal.textContent = els.glideAngle.value);
 
-  // A butterfly is sized to the area, so transect spacing has nothing to do.
+  // A butterfly is sized to the area, so transect spacing has nothing to do. A back-and-forth
+  // line is set by its two ends, so neither spacing nor orientation applies, and it needs no area.
+  const lineMode = () => els.pattern.value === 'line';
   function showPatternControls() {
-    const fly = els.pattern.value === 'butterfly';
-    document.getElementById('spacing-field').hidden = fly;
+    const fly = els.pattern.value === 'butterfly', line = lineMode();
+    document.getElementById('spacing-field').hidden = fly || line;
+    document.getElementById('bearing-field').hidden = line;
     document.getElementById('pattern-note').hidden = !fly;
+    document.getElementById('line-note').hidden = !line;
     document.getElementById('bearing-note').textContent = fly
       ? 'Direction of the figure 8\'s long axis: 0° = its loops lie north and south of the crossing; 90° = east and west.'
       : '0° = north-south transects; 90° = east-west.';
+    if (!manualDrawing) els.drawArea.textContent = line ? 'Pick line ends' : 'Draw study area';
+    els.finishArea.hidden = line;
+    els.clearArea.textContent = line ? 'Clear line' : 'Clear area';
   }
-  els.pattern.addEventListener('change', showPatternControls);
-  showPatternControls();
 
   const map = L.map('study-map', { zoomControl: true }).setView([36.75, -122.0], 7);
   // Esri World Ocean Base, the same basemap Glider Playground uses
@@ -1499,6 +1513,13 @@ ul.task-list li input[type="checkbox"] {
     areaOnLand = false;
     if (!layer || !land) return true;
     const polygon = layer.toGeoJSON();
+    if (polygon.geometry.type === 'LineString') {
+      if (!lineOnLand(polygon.geometry.coordinates)) { landMsg('Line is at sea.'); return true; }
+      areaOnLand = true;
+      L.geoJSON(polygon, { interactive: false, style: { color: '#B3261E', weight: 5 } }).addTo(landHitLayer);
+      landMsg('The line crosses land (in red). Pick ends that can be joined without crossing the coast.', true);
+      return false;
+    }
     const parts = landOverlap(polygon);
     if (!parts.length) { landMsg('Study area is at sea.'); return true; }
     areaOnLand = true;
@@ -1591,16 +1612,31 @@ ul.task-list li input[type="checkbox"] {
     manualVertices = [];
     resetManualGuide();
     els.finishArea.disabled = true;
-    els.drawArea.textContent = 'Click map to add vertices';
+    els.drawArea.textContent = lineMode() ? 'Click the two ends' : 'Click map to add vertices';
+    setButtons();
     map.getContainer().style.cursor = 'crosshair';
   });
 
-  els.finishArea.addEventListener('click', function () {
-    if (manualVertices.length < 3) return;
+  /* A back-and-forth line is finished by its second click. */
+  function finishLine() {
+    drawnItems.clearLayers();
+    const line = L.polyline(manualVertices, { color: '#0057B8', weight: 3, opacity: 0.6, dashArray: '6,6' }).addTo(drawnItems);
+    manualDrawing = false;
+    resetManualGuide();
+    showPatternControls();
+    map.getContainer().style.cursor = '';
+    clearTracksAndSummary();
+    checkArea(line);
+    setButtons();
+    map.fitBounds(line.getBounds(), { padding: [40, 40] });
+  }
+
+  function finishPolygon() {
+    if (manualVertices.length < 3) return false;
     const first = manualVertices[0], last = manualVertices[manualVertices.length - 1];
     if (land && lineOnLand([[last.lng, last.lat], [first.lng, first.lat]])) {
       landMsg('Closing the polygon would cross land. Add another vertex at sea first.', true);
-      return;
+      return false;
     }
     drawnItems.clearLayers();
     const poly = L.polygon(manualVertices, {
@@ -1619,7 +1655,9 @@ ul.task-list li input[type="checkbox"] {
     setButtons();
     map.fitBounds(poly.getBounds(), {padding: [20,20]});
     setTimeout(() => map.invalidateSize({pan:false}), 50);
-  });
+    return true;
+  }
+  els.finishArea.addEventListener('click', finishPolygon);
 
   els.clearArea.addEventListener('click', function () {
     manualDrawing = false;
@@ -1629,10 +1667,10 @@ ul.task-list li input[type="checkbox"] {
     clearTracksAndSummary();
     checkArea(null);
     if (land) landMsg('Land check on (Natural Earth 1:10m coastline).');
-    els.drawArea.textContent = 'Draw study area';
+    showPatternControls();
     els.finishArea.disabled = true;
-    els.generate.disabled = true;
     map.getContainer().style.cursor = '';
+    setButtons();
   });
 
   map.on('click', function (e) {
@@ -1650,6 +1688,8 @@ ul.task-list li input[type="checkbox"] {
     if (land) landMsg('Land check on (Natural Earth 1:10m coastline).');
     manualVertices.push(e.latlng);
     updateManualGuide();
+    if (lineMode() && manualVertices.length === 2) finishLine();
+    else setButtons();
   });
 
   function currentPolygonLayer() {
@@ -1658,9 +1698,20 @@ ul.task-list li input[type="checkbox"] {
     return result;
   }
 
+  /* Generate says why it is not available rather than just greying out. A polygon still being
+     drawn (three or more vertices) counts: Generate finishes it first. */
   function setButtons() {
-    const hasPolygon = !!currentPolygonLayer();
-    els.generate.disabled = !hasPolygon || areaOnLand;
+    const shape = currentPolygonLayer();
+    const isLine = !!shape && !(shape instanceof L.Polygon);
+    const fits = !!shape && isLine === lineMode();
+    const drawingReady = manualDrawing && !lineMode() && manualVertices.length >= 3;
+    let hint = '';
+    if (drawingReady) hint = '';
+    else if (manualDrawing) hint = lineMode() ? 'Click the two ends of the line on the map.' : 'Add at least three vertices, then Finish polygon (or Generate survey).';
+    else if (!shape || !fits) hint = lineMode() ? 'Pick the two ends of a line first.' : 'Draw a study area first.';
+    else if (areaOnLand) hint = (isLine ? 'The line crosses land' : 'The study area overlaps land') + ', so a survey cannot be generated. See the note under the map.';
+    els.generate.disabled = !!hint;
+    document.getElementById('generate-hint').textContent = hint;
     els.clearTracks.disabled = trackLayer.getLayers().length === 0;
   }
 
@@ -1692,6 +1743,15 @@ ul.task-list li input[type="checkbox"] {
   els.exampleArea.addEventListener('click', function () {
     drawnItems.clearLayers();
     clearTracksAndSummary();
+    if (lineMode()) {
+      // Across Monterey Canyon, offshore of Moss Landing.
+      const line = L.polyline([[36.80, -122.15], [36.70, -122.40]], { color: '#0057B8', weight: 3, opacity: 0.6, dashArray: '6,6' });
+      drawnItems.addLayer(line);
+      checkArea(line);
+      map.fitBounds(line.getBounds(), { padding: [40, 40] });
+      setButtons();
+      return;
+    }
     // Off Monterey Bay, across the canyon, clear of the coast by several kilometres.
     const example = L.polygon([
       [36.86, -122.40],
@@ -1914,7 +1974,7 @@ ul.task-list li input[type="checkbox"] {
   }
 
   let lastSurveyGeometry = null;
-  let lastSurvey = null;     // { polygon, areaKm2, legs, butterfly }
+  let lastSurvey = null;     // { polygon, legs, kind: 'lawnmower' | 'butterfly' | 'line', ... }
 
   const KT = 0.514444;       // m/s per knot
   const dur = (days) => days < 1 ? `${fmt(days * 24, 1)} h` : `${fmt(days, 1)} d`;
@@ -1953,15 +2013,19 @@ ul.task-list li input[type="checkbox"] {
     setText('m-surface-markers', cycleOk ? fmt(markers, 0) : '--');
 
     const s = lastSurvey;
-    setText('m-area', `${fmt(s.areaKm2, s.areaKm2 < 100 ? 1 : 0)} km²`);
-    setText('m-transects-k', s.butterfly ? 'Legs' : 'Transects');
+    const line = s.kind === 'line', fly = s.kind === 'butterfly';
+    setText('m-area-k', line ? 'Line length' : 'Study area');
+    setText('m-area', line ? `${fmt(s.oneWayKm, s.oneWayKm < 100 ? 1 : 0)} km` : `${fmt(s.areaKm2, s.areaKm2 < 100 ? 1 : 0)} km²`);
+    setText('m-area-sub', line ? `one way, bearing ${fmt(s.bearing, 0)}°` : 'polygon area');
+    setText('m-transects-k', fly || line ? 'Legs' : 'Transects');
     setText('m-transects', fmt(s.legs, 0));
-    setText('m-transects-sub', s.butterfly ? 'per figure-8 loop' : 'inside study area');
+    setText('m-transects-sub', fly ? 'per figure-8 loop' : line ? 'out and back per round trip'
+      : s.legs === 1 ? `only one fits at ${fmt(s.spacingKm, 0)} km spacing; reduce the spacing for more` : 'inside study area');
     setText('m-distance', `${fmt(g.distanceKm, g.distanceKm < 100 ? 1 : 0)} km`);
     setText('m-depth', `${fmt(depthM, 0)} m`);
 
     const durEl = document.getElementById('m-duration');
-    setText('m-duration-k', s.butterfly ? 'Duration per loop' : 'Duration');
+    setText('m-duration-k', fly ? 'Duration per loop' : line ? 'Duration per round trip' : 'Duration');
     let days = stillDays;
     if (cur && cur.infeasible) {
       setText('m-water', '--');
@@ -1989,10 +2053,10 @@ ul.task-list li input[type="checkbox"] {
       setText('m-duration-sub', 'still water');
     }
     durEl.classList.toggle('flag', !!(cur && cur.infeasible));
-    if (s.butterfly && !(cur && cur.infeasible)) {
+    if ((fly || line) && !(cur && cur.infeasible)) {
       const opDays = Math.max(1, Number(document.getElementById('op-days').value) || 30);
       const loops = opDays / days;
-      document.getElementById('m-duration-sub').textContent += `; ${loops < 10 ? fmt(loops, 1) : fmt(loops, 0)} loops in ${fmt(opDays, 0)} d`;
+      document.getElementById('m-duration-sub').textContent += `; ${loops < 10 ? fmt(loops, 1) : fmt(loops, 0)} ${line ? 'round trips' : 'loops'} in ${fmt(opDays, 0)} d`;
     }
 
     const state = document.getElementById('m-current-state');
@@ -2003,11 +2067,13 @@ ul.task-list li input[type="checkbox"] {
   }
 
   function generateSurvey() {
+    if (manualDrawing && !lineMode() && !finishPolygon()) return;
     const layer = currentPolygonLayer();
     if (!layer) return;
     if (!checkArea(layer)) { setButtons(); return; }
 
     clearTracksAndSummary();
+    if (lineMode()) return generateLine(layer);
 
     const polygon = leafletPolygonToTurf(layer);
     const spacingKm = Number(els.spacing.value);
@@ -2042,22 +2108,36 @@ ul.task-list li input[type="checkbox"] {
         return;
       }
       legs = segments.length;
-      if (els.pattern.value === 'parallel') {
-        let distanceKm = 0;
-        segments.forEach(seg => {
-          distanceKm += turf.length(seg, { units: 'kilometers' });
-          drawFeature(seg, { color: '#0057B8', weight: 4, opacity: 1.0 });
-        });
-        lastSurveyGeometry = { type: 'segments', lines: segments, distanceKm };
-      } else {
-        const route = buildLawnmowerRoute(segments);
-        drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
-        segments.forEach(seg => drawFeature(seg, { color: '#1A6B4E', weight: 5, opacity: 0.35 }));
-        lastSurveyGeometry = { type: 'route', line: route, distanceKm: turf.length(route, { units: 'kilometers' }) };
-      }
+      const route = buildLawnmowerRoute(segments);
+      drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
+      segments.forEach(seg => drawFeature(seg, { color: '#1A6B4E', weight: 5, opacity: 0.35 }));
+      lastSurveyGeometry = { type: 'route', line: route, distanceKm: turf.length(route, { units: 'kilometers' }) };
     }
 
-    lastSurvey = { polygon, areaKm2: turf.area(polygon) / 1e6, legs, butterfly };
+    lastSurvey = { polygon, areaKm2: turf.area(polygon) / 1e6, legs, kind: butterfly ? 'butterfly' : 'lawnmower', spacingKm };
+    showSurvey(polygon, cycleKm, depthM, glideAngleDeg);
+  }
+
+  /* Back and forth between two points: out along the line and back, repeated. The currents,
+     density and 3D sections work from an area, so they get a 1 km band around the line. */
+  function generateLine(layer) {
+    const line = layer.toGeoJSON();
+    const [a, b] = line.geometry.coordinates;
+    const route = turf.lineString([a, b, a]);
+    const oneWayKm = turf.length(line, { units: 'kilometers' });
+    const polygon = turf.buffer(line, 1, { units: 'kilometers' });
+    drawFeature(route, { color: '#0057B8', weight: 4, opacity: 1.0 });
+    [a, b].forEach((p, i) => L.circleMarker([p[1], p[0]], { radius: 6, color: '#0057B8', weight: 2, fillColor: '#fff', fillOpacity: 1 })
+      .bindTooltip(i ? 'End B' : 'Start A').addTo(trackLayer));
+    lastSurveyGeometry = { type: 'route', line: route, distanceKm: 2 * oneWayKm };
+    lastSurvey = { polygon, oneWayKm, bearing: (turf.bearing(a, b) + 360) % 360, legs: 2, kind: 'line' };
+    const depthM = Math.max(0, Number(els.depth.value) || 0);
+    const glideAngleDeg = Math.max(1, Math.min(89, Number(els.glideAngle.value) || 26));
+    showSurvey(polygon, diveCycleDistanceKm(depthM, glideAngleDeg), depthM, glideAngleDeg);
+  }
+
+  function showSurvey(polygon, cycleKm, depthM, glideAngleDeg) {
+    const empty = document.getElementById('summary-empty');
     renderEstimate();
     empty.hidden = true;
     document.getElementById('summary-results').hidden = false;
@@ -2069,6 +2149,15 @@ ul.task-list li input[type="checkbox"] {
   }
 
   els.generate.addEventListener('click', generateSurvey);
+  // Switching between an area pattern and the line drops a shape of the other kind.
+  els.pattern.addEventListener('change', () => {
+    const shape = currentPolygonLayer();
+    if (manualDrawing || (shape && (shape instanceof L.Polygon) === lineMode())) els.clearArea.click();
+    else clearTracksAndSummary();
+    showPatternControls();
+    setButtons();
+  });
+  showPatternControls();
   els.depth.addEventListener('input', renderEstimate);
   els.glideAngle.addEventListener('input', renderEstimate);
   els.speed.addEventListener('change', renderEstimate);
@@ -3055,15 +3144,50 @@ ul.task-list li input[type="checkbox"] {
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-      const a = window.document.createElement('a');
-      a.classList.add('top-right');
-      a.classList.add('quarto-color-scheme-toggle');
-      a.href = "";
-      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const toggle = window.document.createElement('button');
+      toggle.type = "button";
+      toggle.setAttribute("role", "switch");
+      toggle.setAttribute("aria-checked", "false");
+      toggle.classList.add('top-right');
+      toggle.classList.add('quarto-color-scheme-toggle');
+      toggle.setAttribute("aria-label", "Toggle dark mode");
+      toggle.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
       const i = window.document.createElement("i");
       i.classList.add('bi');
-      a.appendChild(i);
-      window.document.body.appendChild(a);
+      toggle.appendChild(i);
+      // Put the toggle in a landmark of its own, so that landmark navigation
+      // can reach it.
+      //
+      // The container is always a fresh direct child of body, and the toggle is
+      // never moved into page furniture that the theme or the author controls.
+      // The toggle is positioned against the page, so any ancestor that
+      // establishes a containing block captures it: a positioned element or a
+      // grid for position: absolute, and transform, filter, will-change or
+      // contain for position: fixed. A direct child of body has none of these
+      // to inherit, and the shift when one appears is silent and visual.
+      //
+      // ARIA says a document should have at most one banner, and axe reports a
+      // duplicate whether or not the banners carry distinct labels. So use a
+      // header when the page has no banner yet, and a named region otherwise.
+      //
+      // A header is a banner wherever it sits, unless it is inside sectioning
+      // content, so this cannot just look at the children of body: a custom
+      // page layout wraps the title block header in a plain div. An explicit
+      // role="banner" always counts.
+      const sectioning = 'article, aside, main, nav, section, [role="article"], [role="complementary"], [role="main"], [role="navigation"], [role="region"]';
+      const hasBanner = Array.from(
+        window.document.querySelectorAll('header:not([role]), [role="banner"]')
+      ).some(function(el) {
+        return el.hasAttribute("role") || el.closest(sectioning) === null;
+      });
+      const container = window.document.createElement(hasBanner ? "div" : "header");
+      if (hasBanner) {
+        container.setAttribute("role", "region");
+        container.setAttribute("aria-label", "Toggle dark mode");
+      }
+      container.classList.add('quarto-color-scheme-toggle-container');
+      container.appendChild(toggle);
+      window.document.body.appendChild(container);
     }
     setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
@@ -3142,7 +3266,8 @@ ul.task-list li input[type="checkbox"] {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -3151,8 +3276,69 @@ ul.task-list li input[type="checkbox"] {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -3166,6 +3352,7 @@ ul.task-list li input[type="checkbox"] {
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -3328,44 +3515,54 @@ ul.task-list li input[type="checkbox"] {
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -3464,7 +3661,10 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
-<nav class="page-navigation column-page-right">
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation column-page-right" aria-label="Page">
   <div class="nav-page nav-page-previous">
       <a href="../content/direct-comparison.html" class="pagination-link" aria-label="Direct Comparison">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Direct Comparison</span>
